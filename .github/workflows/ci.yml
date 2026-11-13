@@ -134,6 +134,7 @@ jobs:
         if: steps.scope.outputs.full == 'true'
         run: |
           npm run check
+          npm run design:test
           npm run typecheck:studio
 
   studio:
@@ -267,6 +268,7 @@ jobs:
         if: steps.scope.outputs.full == 'true'
         run: |
           npm run build:studio
+          node --test tests/design-system.test.ts
           npm run build:tracking
           node --experimental-strip-types --test tests/tracking.test.ts
       - name: Validate standalone installation and packaging

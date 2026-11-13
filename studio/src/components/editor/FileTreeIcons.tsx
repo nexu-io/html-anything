@@ -23,27 +23,27 @@ const W = "duotone" as const;
 
 type Icon = typeof File;
 // Brand hues; each light half is darkened to hold 3:1 on a hovered or selected row.
-const RED = "text-[light-dark(oklch(0.59_0.194_35),oklch(0.71_0.194_35))]";
-const BLUE = "text-[light-dark(oklch(0.56_0.14_253),oklch(0.69_0.14_253))]";
-const GREEN = "text-[light-dark(oklch(0.53_0.192_150),#22C55E)]";
-const GRAY = "text-[light-dark(oklch(0.56_0.019_261),#9CA3AF)]";
-export const DIM = "text-[light-dark(oklch(0.55_0.023_264),oklch(0.69_0.023_264))]";
+const RED = "text-file-html";
+const BLUE = "text-file-typescript";
+const GREEN = "text-file-image";
+const GRAY = "text-file-document";
+export const DIM = "text-file-muted";
 const ICONS = new Map<string, [Icon, string]>([
   ["html", [FileHtml, RED]],
-  ["css", [FileCss, "text-[light-dark(oklch(0.5_0.2_266),oklch(0.71_0.2_266))]"]],
-  ["js", [FileJs, "text-[light-dark(oklch(0.56_0.156_101),#F0DB4F)]"]],
-  ["jsx", [FileJsx, "text-[light-dark(oklch(0.55_0.117_219),#61DAFB)]"]],
+  ["css", [FileCss, "text-file-css"]],
+  ["js", [FileJs, "text-file-javascript"]],
+  ["jsx", [FileJsx, "text-file-react"]],
   ["ts", [FileTs, BLUE]],
   ["tsx", [FileTsx, BLUE]],
-  ["json", [FileCode, "text-[light-dark(oklch(0.54_0.182_152),#4ADE80)]"]],
-  ["svg", [FileSvg, "text-[light-dark(oklch(0.58_0.187_48),#F97316)]"]],
+  ["json", [FileCode, "text-file-json"]],
+  ["svg", [FileSvg, "text-file-svg"]],
   ["md", [FileMd, GRAY]],
   ["txt", [FileTxt, GRAY]],
   ["png", [FilePng, GREEN]],
   ["jpg", [FileJpg, GREEN]],
   ["webp", [PhImage, GREEN]],
-  ["mp4", [FileVideo, "text-[light-dark(oklch(0.59_0.2_304),oklch(0.71_0.2_304))]"]],
-  ["mp3", [Waveform, "text-[light-dark(oklch(0.53_0.159_165),#3CE6AC)]"]],
+  ["mp4", [FileVideo, "text-file-video"]],
+  ["mp3", [Waveform, "text-file-audio"]],
   ["woff", [TextAa, DIM]],
 ]);
 const ALIAS = new Map(

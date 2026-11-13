@@ -10,7 +10,7 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 
 ## Product logo
 
-The [OpenMotion logo](openmotion-logo.svg) uses the symbol and Albert Sans wordmark from the [OpenMotion prototype](https://opendesign-motion-standard-prototype.inovixissu.chatgpt.site/). The lettering is outlined so the mark renders identically across README languages. [Font license](../../web/design-system/fonts/NOTICES.txt)
+The [OpenMotion logo](openmotion-logo.svg) uses the symbol and Albert Sans wordmark from the [OpenMotion prototype](https://opendesign-motion-standard-prototype.inovixissu.chatgpt.site/). The lettering is outlined so the mark renders identically across README languages. [Font license](../../packages/design-system/fonts/NOTICES.txt)
 
 ## Community badges
 

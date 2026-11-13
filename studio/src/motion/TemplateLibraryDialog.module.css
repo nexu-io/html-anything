@@ -17,11 +17,6 @@
   background: var(--library-bg);
   color: var(--library-fg);
   color-scheme: inherit;
-  --motion-floating-surface: var(--library-bg);
-  --color-text-0: var(--library-fg);
-  --color-text-1: var(--library-fg);
-  --color-hover: var(--color-template-hover);
-  --color-border-input: var(--library-line);
   font-family: inherit;
   overflow: auto;
   overscroll-behavior: contain;

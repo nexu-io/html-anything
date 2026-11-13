@@ -7,6 +7,7 @@ import { isMain } from '../shared/entry.ts';
 import { integrationConfig } from '../shared/integration.ts';
 import type { IntegrationInfo } from '../shared/integration.ts';
 import { zip } from './package.ts';
+import { designSystemDocuments } from '../packages/design-system/index.js';
 
 // Local adapters reference one installed runtime; these ZIPs are not portable installers.
 export async function exportAdapters(runtimePath: string, dataPath: string, outputPath: string) {
@@ -71,9 +72,9 @@ export async function exportAdapters(runtimePath: string, dataPath: string, outp
     }
   }
   for (const directory of ['skills', 'docs']) await readDocuments(directory);
-  for (const name of ['web/design-system/remix-icon-LICENSE.txt', 'web/design-system/remix-icon-NOTICE.txt']) documents.push({ name: path.basename(name), data: await readFile(path.join(runtime, name)) });
-  for (const name of ['AGENTS.md', 'CLAUDE.md']) documents.push({ name, data: await readFile(path.join(runtime, name)) });
-  const filmIcon = (await readFile(path.join(runtime, 'web/design-system/icons.svg'), 'utf8')).match(/<symbol id="icon-film" viewBox="0 0 24 24"[^>]*>([\s\S]*?)<\/symbol>/)?.[1];
+  for (const name of ['packages/design-system/remix-icon-LICENSE.txt', 'packages/design-system/remix-icon-NOTICE.txt']) documents.push({ name: path.basename(name), data: await readFile(path.join(runtime, name)) });
+  for (const name of ['AGENTS.md', 'CLAUDE.md', 'cloud.md', ...designSystemDocuments]) documents.push({ name, data: await readFile(path.join(runtime, name)) });
+  const filmIcon = (await readFile(path.join(runtime, 'packages/design-system/icons.svg'), 'utf8')).match(/<symbol id="icon-film" viewBox="0 0 24 24"[^>]*>([\s\S]*?)<\/symbol>/)?.[1];
   assert(filmIcon, 'Missing shared film icon.');
   await mkdir(path.dirname(output), { recursive: true });
   await mkdir(output); // EEXIST deliberately leaves an earlier export untouched.

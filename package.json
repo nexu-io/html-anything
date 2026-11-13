@@ -34,7 +34,9 @@
     "templates:export": "node --experimental-strip-types scripts/template-library.ts export",
     "templates:manifest": "node --experimental-strip-types scripts/template-library.ts manifest",
     "media:prepare": "node --experimental-strip-types scripts/prepare-pr-media.ts",
-    "media:pull": "node --experimental-strip-types scripts/repository-media.ts"
+    "media:pull": "node --experimental-strip-types scripts/repository-media.ts",
+    "design:dev": "node packages/design-system/workbench/server.js",
+    "design:test": "node --test packages/design-system/workbench/*.test.js"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

@@ -1,0 +1,20 @@
+{
+  "name": "@openmotion/design-system",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Shared OpenMotion interface tokens, styles, assets and brand guidance",
+  "exports": {
+    ".": "./index.js",
+    "./ui.css": "./ui.css",
+    "./studio.css": "./studio.css",
+    "./tailwind.css": "./tailwind.css",
+    "./loading.css": "./loading.css",
+    "./tokens.json": "./tokens.json"
+  },
+  "license": "Apache-2.0",
+  "scripts": {
+    "dev": "node workbench/server.js",
+    "test": "node --test workbench/*.test.js"
+  }
+}

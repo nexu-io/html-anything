@@ -1,3 +1,4 @@
+import { brand, designSystemAsset } from "../../../packages/design-system/index.js";
 import { FeedbackLayer } from "../components/FeedbackLayer";
 import { createContext, useContext, useState, useRef, useCallback, lazy, Suspense, type ReactNode } from 'react';
 import { useI18n } from '../i18n/I18n';
@@ -116,7 +117,7 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
     <div className="motion-sidebar-brand">
       <Dialog.Close className="motion-icon-button" aria-label={t('Close project list')}><MotionIcon name="sidebar" size={16} /></Dialog.Close>
       <div className="motion-brand">
-        <img className="motion-brand-logo" src={`/web/design-system/opendesign-${theme === 'dark' ? 'light' : 'dark'}.svg`} alt="OpenDesign" width="104" height="18" />
+        <img className="motion-brand-logo" src={designSystemAsset(brand.editorLogo[theme])} alt={brand.editorName} width="104" height="18" />
       </div>
     </div>
     <div className="motion-session-heading">

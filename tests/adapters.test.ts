@@ -21,7 +21,7 @@ test('local adapters share one runtime, launch outside its cwd and preserve prev
     for (const host of exported.hosts) {
       const scope = JSON.parse(await readFile(path.join(output, host, 'openmotion/scope.json'), 'utf8'));
       assert.equal(scope.mcpProfile, 'phase1');
-      assert.equal(await readFile(path.join(output, host, 'openmotion/remix-icon-LICENSE.txt'), 'utf8'), await readFile(path.join(source, 'web/design-system/remix-icon-LICENSE.txt'), 'utf8'));
+      assert.equal(await readFile(path.join(output, host, 'openmotion/remix-icon-LICENSE.txt'), 'utf8'), await readFile(path.join(source, 'packages/design-system/remix-icon-LICENSE.txt'), 'utf8'));
       const { readdir } = await import('node:fs/promises');
       assert.deepEqual((await readdir(path.join(output, host, 'openmotion/skills'))).sort(), [...packagedSkills].sort());
       for (const skill of ['openmotion-director', 'openmotion-template-to-video', 'openmotion-video-to-template']) {
@@ -107,13 +107,14 @@ test('bundled runtime adapters preserve the Node preload and launch with a minim
   const directory = await realpath(await mkdtemp(path.join(tmpdir(), 'motion-bundled-adapter-')));
   try {
     const runtime = path.join(directory, 'runtime with spaces');
+    await copyDesignGuides(runtime);
     const node = path.join(runtime, 'runtime/node', process.platform === 'win32' ? 'node.exe' : 'bin/node');
     await mkdir(path.dirname(node), { recursive: true });
     await mkdir(path.join(runtime, 'skills'));
     await cp(process.execPath, node);
     await mkdir(path.join(runtime, 'docs'));
-    for (const name of ['AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(runtime, name), '# Fixture');
-    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/zip.mjs', 'scripts/distribution.ts', 'shared/entry.ts', 'shared/integration.ts', 'shared/template-locale.ts', 'shared/template-prompts.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'shared/public-names.mjs', 'web/design-system/icons.svg', 'web/design-system/remix-icon-LICENSE.txt', 'web/design-system/remix-icon-NOTICE.txt']) {
+    for (const name of ['AGENTS.md', 'CLAUDE.md', 'cloud.md']) await writeFile(path.join(runtime, name), '# Fixture');
+    for (const filename of ['scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/zip.mjs', 'scripts/distribution.ts', 'packages/design-system/index.js', 'shared/entry.ts', 'shared/integration.ts', 'shared/template-locale.ts', 'shared/template-prompts.ts', 'shared/workflow.ts', 'shared/workflow-entry.js', 'shared/public-names.mjs', 'packages/design-system/icons.svg', 'packages/design-system/remix-icon-LICENSE.txt', 'packages/design-system/remix-icon-NOTICE.txt']) {
       await mkdir(path.dirname(path.join(runtime, filename)), { recursive: true });
       await cp(path.join(source, filename), path.join(runtime, filename));
     }
@@ -141,10 +142,11 @@ test('adapter export rejects invalid runtime discovery manifest fields', async (
   const directory = await realpath(await mkdtemp(path.join(tmpdir(), 'motion-adapter-manifest-')));
   try {
     const data = path.join(directory, 'projects'), runtime = path.join(directory, 'runtime');
+    await copyDesignGuides(runtime);
     await mkdir(path.join(runtime, 'skills'), { recursive: true }); await mkdir(path.join(runtime, 'docs'));
-    for (const name of ['AGENTS.md', 'CLAUDE.md', 'mcp.ts']) await writeFile(path.join(runtime, name), '');
-    await mkdir(path.join(runtime, 'web/design-system'), { recursive: true });
-    for (const name of ['icons.svg', 'remix-icon-LICENSE.txt', 'remix-icon-NOTICE.txt']) await cp(path.join(source, 'web/design-system', name), path.join(runtime, 'web/design-system', name));
+    for (const name of ['AGENTS.md', 'CLAUDE.md', 'cloud.md', 'mcp.ts']) await writeFile(path.join(runtime, name), '');
+    await mkdir(path.join(runtime, 'packages/design-system'), { recursive: true });
+    for (const name of ['icons.svg', 'remix-icon-LICENSE.txt', 'remix-icon-NOTICE.txt']) await cp(path.join(source, 'packages/design-system', name), path.join(runtime, 'packages/design-system', name));
     await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ version: '0.6.3' }));
     await mkdir(path.join(runtime, '.codex-plugin'));
     const manifestFile = path.join(runtime, '.codex-plugin/plugin.json');
@@ -173,10 +175,11 @@ test('failed adapter writes remove only the new output and preserve runtime and 
     await mkdir(data); await writeFile(path.join(data, 'keep.txt'), 'user data');
     // An unreasonably long ZIP filename fails after output creation on supported filesystems.
     const runtime = path.join(directory, 'runtime');
+    await copyDesignGuides(runtime);
     await mkdir(path.join(runtime, 'skills'), { recursive: true }); await mkdir(path.join(runtime, 'docs'));
-    for (const name of ['AGENTS.md', 'CLAUDE.md', 'mcp.ts']) await writeFile(path.join(runtime, name), '');
-    await mkdir(path.join(runtime, 'web/design-system'), { recursive: true });
-    for (const name of ['icons.svg', 'remix-icon-LICENSE.txt', 'remix-icon-NOTICE.txt']) await cp(path.join(source, 'web/design-system', name), path.join(runtime, 'web/design-system', name));
+    for (const name of ['AGENTS.md', 'CLAUDE.md', 'cloud.md', 'mcp.ts']) await writeFile(path.join(runtime, name), '');
+    await mkdir(path.join(runtime, 'packages/design-system'), { recursive: true });
+    for (const name of ['icons.svg', 'remix-icon-LICENSE.txt', 'remix-icon-NOTICE.txt']) await cp(path.join(source, 'packages/design-system', name), path.join(runtime, 'packages/design-system', name));
     await writeFile(path.join(runtime, 'package.json'), JSON.stringify({ version: '0.6.1-' + 'a'.repeat(260) }));
     await assert.rejects(exportAdapters(runtime, data, output), { code: 'ENAMETOOLONG' });
     assert.equal(existsSync(output), false);
@@ -184,3 +187,11 @@ test('failed adapter writes remove only the new output and preserve runtime and 
     assert.equal(existsSync(path.join(runtime, 'mcp.ts')), true);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
+
+async function copyDesignGuides(runtime: string) {
+  for (const name of ['README.md', 'brand/BRANDKIT.md', 'brand/MOTION_DESIGN.md', 'opendesign-logo-SOURCE.md']) {
+    const file = 'packages/design-system/' + name;
+    await mkdir(path.dirname(path.join(runtime, file)), { recursive: true });
+    await cp(path.join(source, file), path.join(runtime, file));
+  }
+}
