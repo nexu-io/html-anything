@@ -14,7 +14,7 @@ describe("timeline performance diagnostics", () => {
 
   it("reads mounted resources without mutating the timeline", () => {
     document.body.innerHTML = `
-      <div aria-label="Timeline track view" data-timeline-scheduler-queued="3"
+      <div aria-label="时间轴轨道视图" data-timeline-element-count="4" data-timeline-scheduler-queued="3"
            data-timeline-scheduler-active="2" data-timeline-cache-bytes="4096">
         <div data-timeline-row><div data-clip="true"></div><div data-clip="true"></div></div>
         <div data-timeline-row><div data-clip="true"></div></div>

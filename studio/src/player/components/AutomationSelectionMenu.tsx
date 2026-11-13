@@ -61,7 +61,7 @@ export const AutomationSelectionMenu = memo(function AutomationSelectionMenu({
             onClose();
           }}
         >
-          {shape.label}
+          {t(shape.label)}
         </button>
       ))}
       <div className={menuClasses.divider} />

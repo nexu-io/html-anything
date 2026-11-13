@@ -1,0 +1,104 @@
+{
+  "background": {
+    "color": "#eeeae0",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "打字游标",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "主张句",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "历史插画",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "纸页",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "早期网页",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "浏览器窗",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#eeeae0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#171717",
+      "status": "inferred"
+    },
+    {
+      "hex": "#3367bc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9b978c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c2c7c8",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "开场打字机短句；后段采用早期浏览器的小字、蓝链接和灰色立体边框",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "奶油色底配深色文字，游标先出现，再从左向右输入一句话。句子居中偏上，图像加入前至少形成可以读懂的短语。",
+      "status": "inferred"
+    },
+    {
+      "rule": "解剖、自然与天文插画先作为纸片进入，随后换成早期网页和灰色浏览器边框。新窗口覆盖部分旧内容但保留边缘，密度越来越高，中心主张不必一直保持最前。",
+      "status": "inferred"
+    },
+    {
+      "rule": "新主题准备三至五类有时间关系的资料：早期记录、图解、网页与工具。维持纸白、黑字、链接蓝与灰边框，数量通过叠放增加，不缩成规整九宫格。",
+      "status": "inferred"
+    }
+  ]
+}

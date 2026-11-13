@@ -1,7 +1,7 @@
 import { useI18n } from "../i18n/I18n";
 import { useCallback, useState } from "react";
 import { createPortal } from "react-dom";
-import { LinkSimple } from "../icons/RemixIcons";
+import { Check, LinkSimple } from "../icons/RemixIcons";
 import { useContextMenuDismiss } from "../hooks/useContextMenuDismiss";
 import { useMenuKeyboardNav } from "../player/components/menuKeyboardNav";
 import { useLinkedClipPreferences } from "../utils/linkedClipPreferences";
@@ -33,7 +33,7 @@ function SyncIndicatorMenu({ x, y, onClose }: { x: number; y: number; onClose: (
           onClose();
         }}
       >
-        <span className="w-3 text-studio-accent">{visible ? "✓" : ""}</span>
+        <span className="w-3 text-studio-accent">{visible && <Check size={12} />}</span>
         {t("Show out-of-sync indicators")}</button>
     </div>,
     document.body,

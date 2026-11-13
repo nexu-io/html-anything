@@ -72,23 +72,23 @@ async function run(stage) {
     result.snapshots.push(record); return record;
   }
   try {
-    await clients[0].initialize(); await clients[0].call('motion_open_preview'); registry = await readRegistry(root);
+    await clients[0].initialize(); await clients[0].call('openmotion_open_preview'); registry = await readRegistry(root);
     oldDaemon = await request(registry, '/health');
     assert.equal(oldDaemon.dataDirectory, root);
-    const project = await clients[0].call('motion_get_project');
+    const project = await clients[0].call('openmotion_get_project');
     projectId = project.projectId;
     const html = `<!doctype html><html><head><meta charset="utf-8"><script src="assets/gsap.min.js"></script><style>body{margin:0}#main{width:1280px;height:720px;overflow:hidden;background:#f3efe4;color:#0078b4;font:800 72px Arial;position:relative}#pattern{position:absolute;inset:-500px;background:repeating-conic-gradient(#0078b4 0% 25%,#ff4fa5 0% 50%) 0 0/53px 53px;opacity:.45}#label{position:absolute;top:260px;left:60px}</style></head><body><div id="main" data-composition-id="main" data-start="0" data-duration="12" data-width="1280" data-height="720" data-fps="30"><div id="pattern"></div><div id="label">CRASH RECOVERY TEST</div></div><script>window.__timelines={main:gsap.timeline({paused:true}).fromTo('#label',{x:0},{x:250,duration:12,ease:'none'}).to('#pattern',{x:300,rotation:40,duration:12,ease:'none'},0)};</script></body></html>`;
-    await clients[0].call('motion_write_files', { projectId, expectedRevision: project.revision, files: [{ path: 'index.html', content: html }] });
-    const publicPreview = await clients[0].call('motion_open_preview', { projectId });
+    await clients[0].call('openmotion_write_files', { projectId, expectedRevision: project.revision, files: [{ path: 'index.html', content: html }] });
+    const publicPreview = await clients[0].call('openmotion_open_preview', { projectId });
     result.publicPreviewUrl = publicPreview.previewUrl;
     previewUrl = (await (await fetch(new URL('/api/health', publicPreview.previewUrl))).json()).nativeStudioUrl;
     assert.ok(previewUrl, 'Observe the native Studio URL, not only the killed proxy');
-    const current = await clients[0].call('motion_get_project', { projectId });
-    const submitted = await clients[0].call('motion_request_export', { projectId, expectedRevision: current.revision });
+    const current = await clients[0].call('openmotion_get_project', { projectId });
+    const submitted = await clients[0].call('openmotion_request_export', { projectId, expectedRevision: current.revision });
     jobId = submitted.job.id;
     const jobFile = path.join(root, 'export.json');
     const archive = path.join(root, 'jobs', jobId, 'job.json');
-    const output = path.join(root, 'exports', jobId + '.mp4');
+    const output = path.join(root, 'exports', jobId, submitted.job.outputName);
     const deadline = Date.now() + 90_000;
     let before;
     while (Date.now() < deadline) {
@@ -132,12 +132,12 @@ async function run(stage) {
     const replacements = Array.from({ length: 4 }, () => new Client(root, { legacy: true })); clients.push(...replacements);
     const reconnectStarted = Date.now();
     await Promise.all(replacements.map(c => c.initialize()));
-    const identities = await Promise.all(replacements.map(async c => { await c.call('motion_get_project', { projectId }); return request(await readRegistry(root), '/health'); }));
+    const identities = await Promise.all(replacements.map(async c => { await c.call('openmotion_get_project', { projectId }); return request(await readRegistry(root), '/health'); }));
     result.reconnectElapsedMs = Date.now() - reconnectStarted;
     assert.equal(new Set(identities.map(i => i.instanceId)).size, 1);
     assert.notEqual(identities[0].instanceId, oldDaemon.instanceId);
     registry = await readRegistry(root); result.identityAfter = identities[0];
-    const recovered = await replacements[0].call('motion_get_export', { projectId, jobId });
+    const recovered = await replacements[0].call('openmotion_get_export', { projectId, jobId });
     result.recoveredJob = recovered.job;
     result.persistedJob = await json(jobFile); result.persistedArchive = await json(archive);
     assert.equal(recovered.job.id, jobId); assert.equal(recovered.job.projectId, projectId);
@@ -159,7 +159,7 @@ async function run(stage) {
       await pause(Math.max(0, killedAt + offset - Date.now()));
       snapshot(`${offset}ms-after-kill`);
       result[`outputBytesAt${offset}ms`] = await size(output);
-      result[`jobAt${offset}ms`] = (await replacements[0].call('motion_get_export', { projectId, jobId })).job;
+      result[`jobAt${offset}ms`] = (await replacements[0].call('openmotion_get_export', { projectId, jobId })).job;
     }
     const last = result.snapshots.at(-1);
     const oldIdentities = new Set(before.processes.map(identity));

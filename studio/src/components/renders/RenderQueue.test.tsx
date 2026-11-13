@@ -359,18 +359,15 @@ describe("GIF frame-rate controls", () => {
   });
 });
 
-it("MVP offers native GIF and a disabled WebP placeholder", async () => {
+it("MVP offers only supported export formats", async () => {
   const host = mountRenderQueue(vi.fn(), undefined, true);
   act(() => triggerFor(host, "Format").click());
   await settle();
   const options = Array.from(document.querySelectorAll('[role="option"]'));
   const gif = options.find(option => option.textContent === "GIF");
-  const webp = options.find(option => option.textContent?.startsWith("WebP"));
-  expect(webp?.textContent).toBe("WebP");
-  expect(options.some(option => option.textContent === "MOV")).toBe(true);
+  expect(options.map(option => option.textContent)).toEqual(["MP4", "MOV", "WebM", "GIF"]);
   expect(gif).toBeDefined();
   expect(gif?.getAttribute("aria-disabled")).not.toBe("true");
-  expect(webp?.getAttribute("aria-disabled")).toBe("true");
 });
 
 it("MVP restores GIF preferences with the native frame-rate cap and ignores hidden GPU preferences", async () => {
@@ -379,7 +376,8 @@ it("MVP restores GIF preferences with the native frame-rate cap and ignores hidd
   const host = mountRenderQueue(start, undefined, true);
   expect(triggerFor(host, "Format").textContent).toContain("GIF");
   expect(triggerFor(host, "Frame rate").textContent).toContain("30 fps");
-  expect(host.querySelector<HTMLInputElement>('input[type="number"]')?.value).toBe("0");
+  expect(host.querySelector('input[type="number"]')).toBeNull();
+  expect(host.textContent).not.toContain("GIF loop count");
   expect(host.textContent).not.toContain("GPU");
   fire(exportButtonIn(host), "click");
   await settle();

@@ -11,18 +11,19 @@ vi.mock('./tracking', () => ({ trackMotion: vi.fn() }));
 const id = '11111111-1111-1111-1111-111111111111';
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 afterEach(() => vi.unstubAllGlobals());
-it.each([false, true])('browses templates without opening a project, and creates only the selected template (existing=%s)', async existing => {
+it.each([false, true])('prepares only existing projects while browsing, and creates only the selected template (existing=%s)', async existing => {
   history.replaceState(null, '', '/?templates=1&embed=1');
   vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
   const assign = vi.spyOn(location, 'assign').mockImplementation(() => {});
-  const artifact = { id: 'project', kind: 'motion-project', projectId: 'project', title: 'Existing project' };
-  const catalog = { activeId: 'project', projects: existing ? [{ id: 'project', title: 'Existing project' }] : [], sessions: existing ? [{ id: 'project', artifacts: [artifact] }] : [] };
+  const artifact = { id, kind: 'motion-project', projectId: id, title: 'Existing project' };
+  const catalog = { activeId: existing ? id : 'project', projects: existing ? [{ id, title: 'Existing project' }] : [], sessions: existing ? [{ id, artifacts: [artifact] }] : [] };
   const fetcher = vi.fn(async (url: string, init?: RequestInit) => Response.json(
     url.includes('/template-catalog') ? { items: [{ id: 'product-promo', title: 'Product Promo', kind: 'builtin', tags: [], author: 'OpenMotion', hasHtmlProject: true }], total: 1, next: null, catalogVersion: 'test' }
     : url.endsWith('/projects') ? catalog
     : url.endsWith('/sessions') && init?.method === 'POST' ? { sessionId: id, session: { artifacts: [] } }
-    : url.endsWith('/artifacts') ? { sessionId: id, projectId: id }
-    : { projectId: 'project', revision: 'r' },
+    : url.split('?')[0].endsWith('/artifacts') ? { sessionId: id, projectId: id }
+    : url.includes('/sessions/') ? { id, artifacts: [artifact] }
+    : { projectId: existing ? id : 'project', revision: 'r' },
   ));
   vi.stubGlobal('fetch', fetcher);
   const container = document.createElement('div'); document.body.append(container);
@@ -31,14 +32,14 @@ it.each([false, true])('browses templates without opening a project, and creates
     await act(async () => root.render(<I18nProvider initialLocale="en"><MotionApp /></I18nProvider>));
     expect(container.querySelector('[role="alert"]')).toBeNull();
     expect(container.querySelector('dialog[aria-label="Template library"]')).not.toBeNull();
-    expect(fetcher.mock.calls.some(([url]) => url.includes('/preview/open') || url.includes('/sessions/'))).toBe(false);
-    const posts = () => fetcher.mock.calls.filter(([, init]) => init?.method === 'POST');
+    expect(fetcher.mock.calls.some(([url]) => url.includes('/preview/open'))).toBe(existing);
+    const posts = () => fetcher.mock.calls.filter(([url, init]) => init?.method === 'POST' && !url.includes('/preview/open'));
     expect(posts()).toHaveLength(0);
     await act(async () => container.querySelector<HTMLButtonElement>('[data-template-id="product-promo"] button')!.click());
     expect(posts()).toHaveLength(0);
     const open = [...container.querySelectorAll<HTMLButtonElement>('button')].find(button => button.textContent?.includes('Open and edit'))!;
     await act(async () => open.click());
-    expect(posts().map(([url]) => url)).toEqual(['/design-api/sessions', `/design-api/sessions/${id}/artifacts`]);
+    expect(posts().map(([url]) => url.split('?')[0])).toEqual(['/design-api/sessions', `/design-api/sessions/${id}/artifacts`]);
     expect(JSON.parse(String(posts()[0][1]!.body)).templateId).toBe('product-promo');
     expect(assign).toHaveBeenCalledWith(expect.stringContaining(`project=${id}`));
     expect(assign).toHaveBeenCalledWith(expect.not.stringContaining('templates=1'));

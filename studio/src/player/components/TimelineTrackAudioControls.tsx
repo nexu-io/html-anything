@@ -5,6 +5,9 @@ import { RemixIcon } from '../../icons/RemixIcons';
 import { useTimelineEditContextOptional } from '../../contexts/TimelineEditContext';
 import { useStudioShellContextOptional } from '../../contexts/StudioContext';
 import type { TimelineElement } from '../store/timelineElement';
+import { usePlayerStore } from '../store/playerStore';
+import { probeMediaUrl } from '../lib/mediaProbe';
+import { authoredSrcPath, resolveMediaPreviewUrl } from './thumbnailUtils';
 
 const buttonClass = 'flex h-6 w-6 shrink-0 items-center justify-center rounded text-text-3 hover:bg-hover hover:text-text-0 disabled:opacity-40';
 
@@ -19,7 +22,27 @@ export function TimelineTrackAudioControls({ elements, trackLabel, isAudioOnly, 
   const { t } = useI18n();
   const { onSetElementsAttributeQuiet } = useTimelineEditContextOptional();
   const shell = useStudioShellContextOptional();
-  const clips = elements.filter(el => el.tag === 'audio' || (el.tag === 'video' && (el.hasAudio === true || el.muted === true)));
+  const projectId = usePlayerStore(state => state.timelineProjectId);
+  const sourceUrl = (el: TimelineElement) => el.src
+    ? projectId ? resolveMediaPreviewUrl(authoredSrcPath(el.src), projectId, window.location.origin) : el.src
+    : undefined;
+  const sources = JSON.stringify([...new Set(elements.filter(el => el.tag === 'video').map(sourceUrl).filter((src): src is string => !!src))]);
+  const [sourceAudio, setSourceAudio] = useState<Record<string, boolean>>({});
+  useEffect(() => {
+    let active = true;
+    void Promise.all((JSON.parse(sources) as string[]).map(async src => {
+      const metadata = await probeMediaUrl(src);
+      return metadata ? [src, metadata.hasAudio] as const : null;
+    })).then(results => {
+      if (active) setSourceAudio(Object.fromEntries(results.filter(result => result !== null)));
+    });
+    return () => { active = false; };
+  }, [sources]);
+  // Source audio capability is independent of current mute/gain. Runtime manifests
+  // can omit hasAudio after unmuting; keep unknown video controls until a probe
+  // positively identifies a silent source. Reuse the shared bounded probe cache.
+  const clips = elements.filter(el => el.tag === 'audio' ||
+    (el.tag === 'video' && (sourceAudio[sourceUrl(el) ?? ''] ?? el.hasAudio) !== false));
   const signature = clips.map(el => `${el.key ?? el.id}:${el.volume ?? 1}:${!!el.muted}`).join('|');
   const volume = Math.round((clips[0]?.volume ?? 1) * 100);
   const sliderVolume = Math.min(100, Math.max(0, volume));
@@ -42,7 +65,7 @@ export function TimelineTrackAudioControls({ elements, trackLabel, isAudioOnly, 
       const result = await onSetElementsAttributeQuiet(clips.map(element => ({ element, value })), attr, label);
       return !result || result.status === 'saved';
     } catch (error) {
-      shell?.showToast(error instanceof Error ? error.message : t('Could not save changes'), 'error');
+      shell?.showToast(error instanceof Error ? error.message : 'Changes could not be saved.', 'error');
       return false;
     } finally { running.current = false; setBusy(false); }
   };

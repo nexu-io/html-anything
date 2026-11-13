@@ -14,7 +14,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-function mount(x = 100, y = 200) {
+function mount(x = 100, y = 200, mvpEditor = true) {
   const host = document.createElement("div");
   host.style.overflow = "hidden";
   host.style.containerType = "inline-size";
@@ -23,7 +23,7 @@ function mount(x = 100, y = 200) {
   const callbacks = { onClose: vi.fn(), onCopy: vi.fn(), onRename: vi.fn(), onDelete: vi.fn() };
   act(() => root.render(
     <I18nProvider initialLocale="zh-CN">
-      <StudioHostContext.Provider value={{ mvpEditor: true }}>
+      <StudioHostContext.Provider value={{ mvpEditor }}>
         <ContextMenu x={x} y={y} asset="assets/clip.mp4" {...callbacks} />
       </StudioHostContext.Provider>
     </I18nProvider>,
@@ -46,13 +46,30 @@ it("escapes the clipping panel while retaining locale and MVP menu actions", () 
   click("重命名");
   expect(document.querySelector("input")?.value).toBe("clip.mp4");
   click("取消");
-  click("删除");
-  expect(menu.textContent).toContain("clip.mp4?");
-  click("取消");
   expect(onDelete).not.toHaveBeenCalled();
   expect(onRename).not.toHaveBeenCalled();
   act(() => document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true })));
   expect(onClose).toHaveBeenCalledOnce();
+});
+
+it("deletes an MVP asset once directly from the menu and closes without a confirmation", () => {
+  const { onDelete, onClose } = mount();
+  click("删除");
+  click("删除");
+  expect(onDelete).toHaveBeenCalledExactlyOnceWith("assets/clip.mp4");
+  expect(onClose).toHaveBeenCalledOnce();
+  expect(document.querySelector('[role="menu"]')?.textContent).not.toContain("clip.mp4?");
+  expect(document.querySelector('[role="menu"]')?.textContent).not.toContain("取消");
+});
+
+it("retains the full editor confirmation and permits cancelling it", () => {
+  const { onDelete, onClose } = mount(100, 200, false);
+  click("删除");
+  expect(document.querySelector('[role="menu"]')?.textContent).toContain("clip.mp4?");
+  expect(onDelete).not.toHaveBeenCalled();
+  click("取消");
+  expect(onDelete).not.toHaveBeenCalled();
+  expect(onClose).not.toHaveBeenCalled();
 });
 
 it("keeps menus opened at the bottom right inside the viewport", () => {

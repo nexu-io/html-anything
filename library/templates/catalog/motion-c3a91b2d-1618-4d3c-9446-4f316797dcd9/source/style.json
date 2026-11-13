@@ -1,0 +1,122 @@
+{
+  "background": {
+    "color": "#eee9dc",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "需求输入",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模型附件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "层叠结构",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "数据集卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "检查清单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "进度条",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发现图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-7",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "后续按钮",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#eee9dc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#352a20",
+      "status": "inferred"
+    },
+    {
+      "hex": "#94714c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d7cbb5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7c9278",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "衬线标题与正文带研究笔记感；状态、路径与数字用小号等宽",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "奶油色纸面上放一句衬线提问，用户输入检查目标并附模型路径。回答后将模型表现为棕色层叠结构，层数与名称贴近对象。",
+      "status": "inferred"
+    },
+    {
+      "rule": "数据集卡先出现，用户确认后再列检查清单。七项检查对齐成列，启动按钮靠近清单底部；不要越过确认直接播放结果。",
+      "status": "inferred"
+    },
+    {
+      "rule": "待执行、进行中与完成依次替换，进度条只作用于当前项目。完成后把发现展开为图与短结论，不在整个页面同时跳出多个警告。",
+      "status": "inferred"
+    },
+    {
+      "rule": "用一个主要发现、一段解释和一个后续操作收尾。更换科学任务时重写数据集、检查项与发现，不把演示数值当作真实评估结论。",
+      "status": "inferred"
+    }
+  ]
+}

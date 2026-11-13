@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：ChromaticCylinder",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：MagneticGallery",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：ImageWheel",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "固定紫色画布边界",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "粒子球",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "图片拖尾",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "文字滚筒",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "磁吸网格",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6554b5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2d79b0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d067ae",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "黑色展示区配细紫框；组件名称使用极小的紫色字。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "固定紫色描边与组件名称，使五段快速演示看起来属于同一套工具。每次切换只更换内部对象，不移动展示舞台。",
+      "status": "inferred"
+    },
+    {
+      "rule": "图片沿弧线依次追随并叠压；文字则围绕水平轴纵向滚动，中央清楚，上下逐渐模糊变小。两者不要共享同一种平移。",
+      "status": "inferred"
+    },
+    {
+      "rule": "最后把图片组织成连续上下滑动的圆角网格，较前面的散开状态更整齐。迁移时替换图片组与词库，保留五种机制的对比。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,106 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：NOUS",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：OMARCHY",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "透视隧道",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "双品牌标志",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "折叠网片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "扫描纹",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e0ead7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#93b47b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#355c3f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#17241c",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "黑底绿色 CRT 网格，标志与线条带微弱辉光和扫描纹。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "透视线从中央小孔扩展成四面网格，前进一段后向两边收窄，留出双标志的对称位置。",
+      "status": "inferred"
+    },
+    {
+      "rule": "线条使用低饱和绿白，黑底不加其他彩色装饰。扫描纹、少量抖动与轻微色散统一覆盖网格和标志。",
+      "status": "inferred"
+    },
+    {
+      "rule": "双标志停留后各自折成网片，再拉长成新的通道，最终淡黑。替换合作方时保持左右重量一致，折叠动作在留读后发生。",
+      "status": "inferred"
+    }
+  ]
+}

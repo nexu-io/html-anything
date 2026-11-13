@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#fff5eb",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：send me a daily morning briefing at",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Today 7:58 AM",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：oh and make it a voice note",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "定时请求",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "格式补充",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "语音卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "播放钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "波形进度",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fff5eb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#262321",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ec9a60",
+      "status": "inferred"
+    },
+    {
+      "hex": "#955aa0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d9dddd",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "橙色光晕手机、文字聊天与可播放波形卡",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先规定内容和时间，再补充输出形式，结果变成语音卡。",
+      "status": "inferred"
+    },
+    {
+      "rule": "点击后播放钮转暂停，进度颜色沿波形推进。",
+      "status": "inferred"
+    },
+    {
+      "rule": "示例语音长度不是本视频长度，不把 1:37 当动画时长。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Magistral 发布 · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#151515;--brand-ink:#f0f0ee;--accent:#ec5e29;--sample-font:ui-monospace, monospace">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Mistral <span>/</span> V036</div><div class="intro-line"><h1>Magistral 发布</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>先交代程序要完成的具体要求，再让代码旁边出现连续运行的结果。整个画面围绕同一个编程任务推进。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 36.3, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 33.5, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Magistral&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#ec5e29&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Magistral&quot;, &quot;accent&quot;: &quot;#ec5e29&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="36.3" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 36.30 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Magistral 发布 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#151515}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Mistral</div><div class="type-sample">Magistral</div><p>深色聊天录屏、密集等宽代码、九宫格物理示例</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#151515" style="--swatch:#151515" aria-label="复制色值 #151515"><span></span><code>#151515</code></button><button class="swatch" data-color="#f0f0ee" style="--swatch:#f0f0ee" aria-label="复制色值 #f0f0ee"><span></span><code>#F0F0EE</code></button><button class="swatch" data-color="#ec5e29" style="--swatch:#ec5e29" aria-label="复制色值 #ec5e29"><span></span><code>#EC5E29</code></button><button class="swatch" data-color="#6ac69e" style="--swatch:#6ac69e" aria-label="复制色值 #6ac69e"><span></span><code>#6AC69E</code></button><button class="swatch" data-color="#a384d9" style="--swatch:#a384d9" aria-label="复制色值 #a384d9"><span></span><code>#A384D9</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>提示词</span><span>思考段落</span><span>说明</span><span>代码</span><span>九宫格多边形</span><span>彩色小球</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>长提示词分成可扫读的要求</h2></div><div class="rule-copy">
+<p>深色聊天界面上，提示框居中，正文按条目排列。等宽字用于代码，普通无衬线用于说明；橙色标志和少量彩色小球提供强调。</p>
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>从要求走到解释与代码</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;从要求走到解释与代码&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 29, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;0–29 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>从要求走到解释与代码</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="从要求走到解释与代码" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="29" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 29.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>0–29 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Magistral 发布 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#151515}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;0&quot; data-end=&quot;29&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>提示输入完成后缩回聊天布局，接上分段说明。镜头跟随当前重点向下移动，保留一部分上文，帮助阅读顺序衔接。</p>
+
+</div></section><section class="rule has-demo" id="section-3"><div class="rule-label"><span>03</span><h2>运行结果占据完整一侧</h2></div><figure class="demo" id="demo-clip-3" data-demo="{&quot;id&quot;: &quot;clip-3&quot;, &quot;title&quot;: &quot;运行结果占据完整一侧&quot;, &quot;src&quot;: &quot;demos/clip-3.html&quot;, &quot;duration&quot;: 7.299999999999997, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;29–36.3 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>运行结果占据完整一侧</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="运行结果占据完整一侧" data-src="demos/clip-3.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="7.299999999999997" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 7.30 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>29–36.3 秒 · 动作示意 <a href="demos/clip-3.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Magistral 发布 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#151515}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;29&quot; data-end=&quot;36.3&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>代码留在左边，右边展示九种多边形。边数递增形成规则，小球颜色区分个体；图形旋转、缩放时始终留在各自格内。</p>
+<p>运行段保持足够长的连续运动，让观众能看见边界、球体与变化之间的关系。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>换一种编程案例</h2></div><div class="rule-copy">
+<p>可改成图表、布局或交互组件。先写可看见的要求，再选择对应结果画面；保留提示、说明、代码、运行四层，但不必让每层占相同时间。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>长要求输入</b></button><button class="beat" data-time="9.0"><span>9.00<small>s</small></span><b>提交任务</b></button><button class="beat" data-time="12.0"><span>12.00<small>s</small></span><b>推理展开</b></button><button class="beat" data-time="23.0"><span>23.00<small>s</small></span><b>程序说明</b></button><button class="beat" data-time="29.0"><span>29.00<small>s</small></span><b>代码与结果并排</b></button><button class="beat" data-time="32.0"><span>32.00<small>s</small></span><b>九种多边形运行</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="9.00 秒的构图参考" loading="lazy"><figcaption>9.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="12.00 秒的构图参考" loading="lazy"><figcaption>12.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="23.00 秒的构图参考" loading="lazy"><figcaption>23.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="29.00 秒的构图参考" loading="lazy"><figcaption>29.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="32.00 秒的构图参考" loading="lazy"><figcaption>32.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可换成其他编程任务，但必须有可视化验收结果。</li><li>多边形边界和球体运动共同承担验收画面，保持九格清晰分离。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>提示词 / 思考段落 / 说明 / 代码 / 九宫格多边形 / 彩色小球</p>
+<ul><li>先展示具体约束，再显示解释和代码，最后并排运行结果。</li><li>多边形边数逐格增加，小球在边界内运动，形成可见验证。</li><li>镜头从输入近景拉远到聊天，再推近最终双栏。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Mistral / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Magistral 发布
+
+先交代程序要完成的具体要求，再让代码旁边出现连续运行的结果。整个画面围绕同一个编程任务推进。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 36.3,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 33.5,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Magistral&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#ec5e29&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Magistral&quot;,
+        &quot;accent&quot;: &quot;#ec5e29&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 长提示词分成可扫读的要求
+
+深色聊天界面上，提示框居中，正文按条目排列。等宽字用于代码，普通无衬线用于说明；橙色标志和少量彩色小球提供强调。
+
+## 从要求走到解释与代码
+
+提示输入完成后缩回聊天布局，接上分段说明。镜头跟随当前重点向下移动，保留一部分上文，帮助阅读顺序衔接。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;从要求走到解释与代码&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 29,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;0–29 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 运行结果占据完整一侧
+
+代码留在左边，右边展示九种多边形。边数递增形成规则，小球颜色区分个体；图形旋转、缩放时始终留在各自格内。
+
+运行段保持足够长的连续运动，让观众能看见边界、球体与变化之间的关系。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-3&quot;,
+  &quot;title&quot;: &quot;运行结果占据完整一侧&quot;,
+  &quot;src&quot;: &quot;demos/clip-3.html&quot;,
+  &quot;duration&quot;: 7.299999999999997,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;29–36.3 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 换一种编程案例
+
+可改成图表、布局或交互组件。先写可看见的要求，再选择对应结果画面；保留提示、说明、代码、运行四层，但不必让每层占相同时间。
+
+## 配色与字形
+
+深色聊天录屏、密集等宽代码、九宫格物理示例。
+
+#151515 · #f0f0ee · #ec5e29 · #6ac69e · #a384d9
+
+## 元素与制作规则
+
+提示词 / 思考段落 / 说明 / 代码 / 九宫格多边形 / 彩色小球
+
+- 先展示具体约束，再显示解释和代码，最后并排运行结果。
+- 多边形边数逐格增加，小球在边界内运动，形成可见验证。
+- 镜头从输入近景拉远到聊天，再推近最终双栏。
+
+## 内容替换
+
+- 可换成其他编程任务，但必须有可视化验收结果。
+- 多边形边界和球体运动共同承担验收画面，保持九格清晰分离。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Mistral&quot;,
+  &quot;id&quot;: &quot;V036&quot;,
+  &quot;palette&quot;: [
+    &quot;#151515&quot;,
+    &quot;#f0f0ee&quot;,
+    &quot;#ec5e29&quot;,
+    &quot;#6ac69e&quot;,
+    &quot;#a384d9&quot;
+  ],
+  &quot;typography&quot;: &quot;深色聊天录屏、密集等宽代码、九宫格物理示例&quot;,
+  &quot;sample&quot;: &quot;Magistral&quot;,
+  &quot;objects&quot;: [
+    &quot;提示词&quot;,
+    &quot;思考段落&quot;,
+    &quot;说明&quot;,
+    &quot;代码&quot;,
+    &quot;九宫格多边形&quot;,
+    &quot;彩色小球&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 9.0,
+      &quot;frameId&quot;: &quot;K0021&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 12.0,
+      &quot;frameId&quot;: &quot;K0029&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 23.0,
+      &quot;frameId&quot;: &quot;K0044&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 29.0,
+      &quot;frameId&quot;: &quot;K0065&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 32.0,
+      &quot;frameId&quot;: &quot;K0078&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;长要求输入&quot;,
+      &quot;end&quot;: 9,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 9,
+      &quot;label&quot;: &quot;提交任务&quot;,
+      &quot;end&quot;: 12,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 12,
+      &quot;label&quot;: &quot;推理展开&quot;,
+      &quot;end&quot;: 23,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 23,
+      &quot;label&quot;: &quot;程序说明&quot;,
+      &quot;end&quot;: 29,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 29,
+      &quot;label&quot;: &quot;代码与结果并排&quot;,
+      &quot;end&quot;: 32,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 32,
+      &quot;label&quot;: &quot;九种多边形运行&quot;,
+      &quot;end&quot;: 36.3,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 36.3,
+  &quot;fontFamily&quot;: &quot;ui-monospace, monospace&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

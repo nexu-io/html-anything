@@ -1,0 +1,86 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "连续外轮廓",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "凹口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "眼形孔洞",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地球分块",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#888888",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "主体为圆角矢量形；不依赖正文，负空间保持清晰",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "闪电、折角和对话形使用相近面积。先移动外轮廓的转折点，再让新形状短暂停留；圆角半径保持相近，避免中途出现尖锐毛刺。",
+      "status": "inferred"
+    },
+    {
+      "rule": "眼形先压扁再张开，中心孔跟随高度变化；转到地球后，白色区域之间用黑色间隙区分经纬块。全程黑底白形，新符号也应有清楚的剪影。",
+      "status": "inferred"
+    },
+    {
+      "rule": "选择相邻形状可以共享转折点的符号，提前决定中心孔何时出现、何时闭合。最多保留五至六种形状，给每个符号一个能辨认的停顿。",
+      "status": "inferred"
+    }
+  ]
+}

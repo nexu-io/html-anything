@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type RefObject } from "react";
-import { TIMELINE_ASSET_MIME, TIMELINE_BLOCK_MIME } from "../../utils/timelineAssetDrop";
+import { parseTimelineAssetPayload, TIMELINE_ASSET_MIME, TIMELINE_BLOCK_MIME } from "../../utils/timelineAssetDrop";
 import {
   parseTimelineCompositionPayload,
   TIMELINE_COMPOSITION_MIME,
@@ -290,7 +290,12 @@ export function useTimelineAssetDrop({
       }
 
       if (applyFileDrop(e.dataTransfer, onFileDrop, placement)) return;
-      if (applyTypedJsonDrop(e.dataTransfer, TIMELINE_ASSET_MIME, "path", onAssetDrop, placement)) {
+      const asset = types.includes(TIMELINE_ASSET_MIME)
+        ? parseTimelineAssetPayload(e.dataTransfer.getData(TIMELINE_ASSET_MIME)) : null;
+      if (asset && onAssetDrop) {
+        invokeDropCallback(() => asset.duration == null
+          ? onAssetDrop(asset.path, placement)
+          : onAssetDrop(asset.path, placement, asset.duration));
         return;
       }
       applyTypedJsonDrop(e.dataTransfer, TIMELINE_BLOCK_MIME, "name", onBlockDrop, placement);

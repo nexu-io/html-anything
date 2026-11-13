@@ -5,7 +5,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { classifyWebAudioMediaRoute } from "@hyperframes/core/runtime/web-audio-route";
 import { InlineAssetRename } from "./InlineAssetRename";
 import { ContextMenu } from "./AssetContextMenu";
-import { basename, getAudioSubtype, type CopyFeedback } from "./assetHelpers";
+import { filename, getAudioSubtype, type CopyFeedback } from "./assetHelpers";
 import { TIMELINE_ASSET_MIME } from "../../utils/timelineAssetDrop";
 import { usePlayerStore } from "../../player/store/playerStore";
 import { useAssetPreviewStore } from "../../utils/assetPreviewStore";
@@ -48,8 +48,9 @@ export function AudioRow({
   const analyserRef = useRef<AnalyserNode | null>(null);
   const sourceRef = useRef<MediaElementAudioSourceNode | null>(null);
   const animRef = useRef<number>(0);
-  const name = basename(asset);
+  const name = filename(asset);
   const subtype = getAudioSubtype(asset);
+  const subtypeLabel = subtype === "Audio" ? "" : t(subtype);
   const serveUrl = resolveMediaPreviewUrl(asset, projectId);
   const isCopied = copyFeedback?.path === asset && copyFeedback.ok;
   const copyFailed = copyFeedback?.path === asset && !copyFeedback.ok;
@@ -228,7 +229,7 @@ export function AudioRow({
         }}
         onDragStart={(e) => {
           e.dataTransfer.effectAllowed = "copy";
-          e.dataTransfer.setData(TIMELINE_ASSET_MIME, JSON.stringify({ path: asset }));
+          e.dataTransfer.setData(TIMELINE_ASSET_MIME, JSON.stringify({ path: asset, duration: meta?.duration }));
           e.dataTransfer.setData("text/plain", asset);
         }}
         onContextMenu={(e) => {
@@ -261,21 +262,21 @@ export function AudioRow({
           )}
         </button>
         <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
             {renaming && onRename ? <InlineAssetRename asset={asset} onRename={onRename} onDone={() => setRenaming(false)} /> : <span
-              className={`text-[12px] font-medium truncate ${used ? "text-panel-text-1" : "text-panel-text-3"}`}
+              className={`min-w-0 max-w-full text-[12px] font-medium [overflow-wrap:anywhere] ${used ? "text-panel-text-1" : "text-panel-text-3"}`}
             >
               {name}
             </span>}
-            {!playing && (
+            {!playing && (meta?.duration || subtypeLabel) && (
               <span className="text-[11px] text-panel-text-5 shrink-0">
-                {meta?.duration ? `${meta.duration}s · ` : ""}
-                {t(subtype)}
+                {meta?.duration ? `${meta.duration}s${subtypeLabel ? " · " : ""}` : ""}
+                {subtypeLabel}
               </span>
             )}
             {used && (
               <span className="text-[9px] font-medium text-accent-ink bg-panel-accent/10 px-1.5 py-px rounded-sm shrink-0">
-                {t("in use")}</span>
+                {t("In use")}</span>
             )}
             {(isCopied || copyFailed) && (
               <span

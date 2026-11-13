@@ -2,7 +2,7 @@ import { useI18n } from "../../i18n/I18n";
 import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import { Plus, Type } from "../../icons/SystemIcons";
 import { isTextEditableSelection, type DomEditSelection } from "./domEditing";
-import type { ImportedFontAsset } from "./fontAssets";
+import type { ImportedFontAsset, FontImportInput } from "./fontAssets";
 import { FIELD, LABEL, normalizeTextMetricValue, RESPONSIVE_GRID } from "./propertyPanelHelpers";
 import { MetricField, Section, SelectField } from "./propertyPanelPrimitives";
 import { ColorField } from "./propertyPanelColor";
@@ -310,7 +310,7 @@ function TextFieldEditor({
   field: DomEditSelection["textFields"][number];
   styles: Record<string, string>;
   fontAssets: ImportedFontAsset[];
-  onImportFonts?: (files: FileList | File[]) => Promise<ImportedFontAsset[]>;
+  onImportFonts?: (files: FontImportInput) => Promise<ImportedFontAsset[]>;
   showRemove: boolean;
   onSetText: (value: string, fieldKey?: string) => void;
   onSetTextFieldStyle: (fieldKey: string, property: string, value: string) => void;
@@ -419,7 +419,7 @@ export function TextSection({
   element: DomEditSelection;
   styles: Record<string, string>;
   fontAssets: ImportedFontAsset[];
-  onImportFonts?: (files: FileList | File[]) => Promise<ImportedFontAsset[]>;
+  onImportFonts?: (files: FontImportInput) => Promise<ImportedFontAsset[]>;
   onSetText: (value: string, fieldKey?: string) => void;
   onSetTextFieldStyle: (fieldKey: string, property: string, value: string) => void;
   onAddTextField: (afterFieldKey?: string) => string | Promise<string | null> | null;

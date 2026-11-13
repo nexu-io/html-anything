@@ -5,10 +5,13 @@ import { buildProjectApiPath } from "./projectRouting";
 import { studioWriteHeaders } from "./studioFileVersion";
 import { deriveTimelineStoreKeyForDomId } from "../player/lib/timelineElementHelpers";
 import { studioApiFetch } from "./studioApiFetch";
+import type { TimelineElement } from "../player";
 
 interface TimelineCompositionInsertionResult {
   path: string;
   hostId: string;
+  track: number;
+  duration: number;
   before: string;
   after: string;
   version: string;
@@ -64,8 +67,10 @@ export async function commitTimelineCompositionInsertion(input: {
   selectHost: (key: string) => void;
   resync?: () => void;
   refresh: () => void;
-}): Promise<void> {
-  await serializeStudioFileMutation(input.writeFile, input.targetPath, async () => {
+  isActive?: () => boolean;
+}): Promise<TimelineElement | undefined> {
+  return serializeStudioFileMutation(input.writeFile, input.targetPath, async () => {
+    if (input.isActive?.() === false) return;
     const result = await insertTimelineComposition(input);
     input.observeVersion?.(input.targetPath, result.version);
     try {
@@ -77,7 +82,14 @@ export async function commitTimelineCompositionInsertion(input: {
       await input.writeFile(input.targetPath, result.before, result.after);
       throw error;
     }
-    input.selectHost(deriveTimelineStoreKeyForDomId(result.hostId, input.targetPath));
+    const key = deriveTimelineStoreKeyForDomId(result.hostId, input.targetPath);
+    const element: TimelineElement = {
+      id: result.hostId, key, domId: result.hostId, sourceFile: input.targetPath,
+      tag: "div", start: Math.round(input.start * 100) / 100, duration: result.duration,
+      track: result.track, authoredTrack: result.track, compositionSrc: input.sourcePath,
+    };
+    if (input.isActive?.() === false) return element;
+    input.selectHost(key);
     try {
       input.resync?.();
     } catch (error) {
@@ -88,5 +100,6 @@ export async function commitTimelineCompositionInsertion(input: {
     } catch (error) {
       console.error("[Studio] Composition insertion committed but refresh failed", error);
     }
+    return element;
   });
 }

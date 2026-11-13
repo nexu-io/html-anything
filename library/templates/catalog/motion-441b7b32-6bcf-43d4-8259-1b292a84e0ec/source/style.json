@@ -1,0 +1,93 @@
+{
+  "background": {
+    "color": "#ffffff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "标志弧线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "材质层",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "外围装饰",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "局部光泽",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "编辑线框",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2b0b24",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e5269c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8938cf",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ece9e7",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "以标志轮廓与材质为主；文字只是拼贴或编辑辅助",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "切片环、拼贴与排版网格都围绕同一弧形搭建。玫红区域持续出现，旁边的选框、字样与游标只承担设计语境。",
+      "status": "inferred"
+    },
+    {
+      "rule": "最后去掉外围编辑元素，保留银白轮廓和一段粉色高光。新主题可更换媒介，但避免最后一帧比中段更复杂。",
+      "status": "inferred"
+    }
+  ]
+}

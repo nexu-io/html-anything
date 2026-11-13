@@ -1,10 +1,11 @@
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type { DragEventHandler } from "react";
-import { CLIP_Y, GUTTER, LABEL_COL_W, RULER_H, TRACK_H, TRACKS_TOP_PAD } from "./timelineLayout";
+import { CLIP_Y, GUTTER, MVP_LABEL_COL_W, RULER_H, TRACK_H, TRACKS_TOP_PAD } from "./timelineLayout";
 import { useMediaGateway } from "../../motion/MediaGatewayContext";
 import { usePlayerStore } from "../store/playerStore";
 import { mediaPopoverAnchor } from "../../motion/mediaPopoverPosition";
+import { TimelinePendingAssetDrops } from "./TimelinePendingAssetDrops";
 
 function EmptyGenerationRange() {
   const range = usePlayerStore(s => s.rangeSelection);
@@ -34,17 +35,23 @@ export function TimelineEmptyState({
   const { t } = useI18n();
   const mvp = useMvpEditor();
   const gateway = useMediaGateway();
-  const emptyOrigin = mvp ? (contentOrigin ?? LABEL_COL_W + GUTTER) : GUTTER;
+  const emptyOrigin = mvp ? (contentOrigin ?? MVP_LABEL_COL_W + GUTTER) : GUTTER;
   const hideGuide = !!gateway?.generationOpen && !isDragOver;
   return (
     <div
-      className={`h-full border-t bg-[var(--timeline-shell-bg)] flex flex-col select-none transition-colors duration-150 ${
+      className={`${mvp ? "motion-timeline-empty" : ""} relative h-full border-t bg-[var(--timeline-shell-bg)] flex flex-col select-none transition-colors duration-150 ${
         isDragOver ? "border-studio-accent/50 bg-studio-accent/3" : "border-neutral-800/50"
       }`}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
       onDrop={onDrop}
     >
+      <TimelinePendingAssetDrops
+        contentOrigin={emptyOrigin}
+        pixelsPerSecond={14}
+        trackOrder={[]}
+        rowTop={() => RULER_H + trackTopPadding}
+      />
       {/* Ruler */}
       <div
         className="shrink-0 border-b border-neutral-800/40 flex items-end relative"
@@ -73,7 +80,7 @@ export function TimelineEmptyState({
           style={{ top: trackTopPadding, height: TRACK_H }}
           aria-hidden={!isDragOver}
         >
-          <span className="motion-empty-timeline-label" style={{ width: LABEL_COL_W }}>A-roll</span>
+          <span className="motion-empty-timeline-label" style={{ width: MVP_LABEL_COL_W }}>A-roll</span>
           <div className="motion-empty-timeline-lane" style={{ left: emptyOrigin, top: CLIP_Y, bottom: CLIP_Y }}>{isDragOver && <span>{t("Drop media files to import")}</span>}</div>
         </div> : <div
           data-motion-empty-media

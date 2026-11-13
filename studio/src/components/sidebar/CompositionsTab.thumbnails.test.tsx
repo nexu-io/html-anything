@@ -115,14 +115,19 @@ describe("composition card thumbnails", () => {
     usePlayerStore.getState().reset();
     const host = mount();
     expect(renders).toHaveLength(0);
+    expect(host.querySelector('[data-testid="composition-cover-placeholder"]')).toBeTruthy();
 
     act(() => usePlayerStore.getState().markPreviewBooted());
     expect(renders.map((r) => [r.url.pathname, r.url.searchParams.get("t")])).toEqual([
       ["/api/projects/demo/thumbnail/compositions/headline.html", "3.00"],
     ]);
+    expect(host.querySelector('[data-testid="composition-cover-placeholder"]')).toBeTruthy();
     renders[0]!.answer();
     await settle();
     expect(shown(host)).toBe("blob:frame-1");
+    expect(host.querySelector('[data-testid="composition-cover-placeholder"]')).toBeTruthy();
+    act(() => host.querySelector("img")!.dispatchEvent(new Event("load")));
+    expect(host.querySelector('[data-testid="composition-cover-placeholder"]')).toBeNull();
     expect(host.querySelector("iframe")).toBeNull();
 
     act(() => usePlayerStore.getState().setTimelineReady(false));
@@ -294,7 +299,21 @@ describe("composition card thumbnails", () => {
     const host = mount();
     renders[0]!.answer(500);
     await settle();
-    expect(host.textContent).toContain("Preview unavailable");
+    expect(host.textContent).not.toContain("Preview unavailable");
+    expect(host.querySelector('[data-testid="composition-cover-placeholder"]')).toBeTruthy();
     await nextRevisionShows(host, "1", "blob:frame-1");
+  });
+
+  it("uses the same placeholder if the poster image fails, and recovers on a new revision", async () => {
+    const host = mount();
+    renders[0]!.answer();
+    await settle();
+    act(() => host.querySelector("img")!.dispatchEvent(new Event("error")));
+    expect(shown(host)).toBeNull();
+    expect(host.querySelector('[data-testid="composition-cover-placeholder"]')).toBeTruthy();
+    expect(host.textContent).not.toContain("Preview unavailable");
+    await nextRevisionShows(host, "1", "blob:frame-2");
+    act(() => host.querySelector("img")!.dispatchEvent(new Event("load")));
+    expect(host.querySelector('[data-testid="composition-cover-placeholder"]')).toBeNull();
   });
 });

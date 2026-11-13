@@ -8,6 +8,7 @@ import { Menu as BaseMenu } from "@base-ui/react/menu";
 import { useRef } from "react";
 import type { ComponentPropsWithoutRef, ElementType, ReactElement, ReactNode } from "react";
 import { cn } from "./cn";
+import { Check } from "../../icons/RemixIcons";
 
 /**
  * Base UI lets `className` be a function of the part's state. Studio's parts
@@ -209,7 +210,7 @@ export function MenuItem({ shortcut, tone, className, children, ...props }: Menu
   );
 }
 
-/** Single-choice group; selection is `aria-checked` on each item, which the dot indicator draws from. */
+/** Single-choice group; selection is `aria-checked` on each item. */
 export function MenuRadioGroup(props: ComponentPropsWithoutRef<typeof BaseMenu.RadioGroup>) {
   return <BaseMenu.RadioGroup {...props} />;
 }
@@ -218,14 +219,14 @@ interface MenuRadioItemProps extends StyledProps<typeof BaseMenu.RadioItem> {
   "data-preview-state"?: "hover";
 }
 
-/** One choice in a `MenuRadioGroup`. The dot renders only while it is checked. */
+/** One choice in a `MenuRadioGroup`. The check renders only while it is checked. */
 export function MenuRadioItem({ className, children, ...props }: MenuRadioItemProps) {
   return (
     <BaseMenu.RadioItem className={cn(itemBase, className)} {...props}>
       <span className="truncate">{children}</span>
       {/* Fixed box so a checked and an unchecked row keep the same width. */}
       <span className="flex size-3 shrink-0 items-center justify-center">
-        <BaseMenu.RadioItemIndicator className="size-1.5 rounded-full bg-accent" />
+        <BaseMenu.RadioItemIndicator className="flex text-accent-ink"><Check size={12} /></BaseMenu.RadioItemIndicator>
       </span>
     </BaseMenu.RadioItem>
   );
@@ -241,7 +242,7 @@ export function MenuCheckboxItem({
     <BaseMenu.CheckboxItem className={cn(itemBase, className)} {...props}>
       <span className="truncate">{children}</span>
       <span className="flex size-3 shrink-0 items-center justify-center text-accent-ink">
-        <BaseMenu.CheckboxItemIndicator>✓</BaseMenu.CheckboxItemIndicator>
+        <BaseMenu.CheckboxItemIndicator className="flex"><Check size={12} /></BaseMenu.CheckboxItemIndicator>
       </span>
     </BaseMenu.CheckboxItem>
   );

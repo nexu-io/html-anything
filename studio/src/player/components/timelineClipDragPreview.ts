@@ -12,7 +12,11 @@ import {
   getTimelineRowGeometry,
   type TimelineRowGeometry,
 } from "./timelineLayout";
-import { isMusicTrack, isAudioTimelineElement } from "../../utils/timelineInspector";
+import {
+  isMusicTrack,
+  isAudioTimelineElement,
+  isStillImageTimelineElement,
+} from "../../utils/timelineInspector";
 import {
   TIMELINE_SNAP_PX,
   snapMoveToTargets,
@@ -378,9 +382,11 @@ export function computeResizePreview(
       minStart,
       maxEnd,
       playbackStart:
-        resize.edge === "start" && canSeedPlaybackStart
-          ? (resize.element.playbackStart ?? 0)
-          : resize.element.playbackStart,
+        isStillImageTimelineElement(resize.element)
+          ? undefined
+          : resize.edge === "start" && canSeedPlaybackStart
+            ? (resize.element.playbackStart ?? 0)
+            : resize.element.playbackStart,
       playbackRate: resize.element.playbackRate,
     },
     resize.edge,

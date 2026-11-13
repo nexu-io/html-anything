@@ -1,7 +1,7 @@
 import type { RefObject } from "react";
 import type { ArcPathSegment, GsapAnimation } from "@hyperframes/parsers/gsap-parser";
 import type { DomEditSelection } from "./domEditing";
-import type { ImportedFontAsset } from "./fontAssets";
+import type { ImportedFontAsset, FontImportInput } from "./fontAssets";
 import type { GsapAnimationEditCallbacks } from "./gsapAnimationCallbacks";
 import type { CommitDomAttributeBatch } from "../../hooks/domEditCommitTypes";
 
@@ -104,7 +104,7 @@ export interface PropertyPanelProps {
   onImportAssets?: (files: FileList, dir?: string) => Promise<string[]>;
   onAddMediaOverlay?: AddMediaOverlayHandler;
   fontAssets?: ImportedFontAsset[];
-  onImportFonts?: (files: FileList | File[]) => Promise<ImportedFontAsset[]>;
+  onImportFonts?: (files: FontImportInput) => Promise<ImportedFontAsset[]>;
   previewIframeRef?: RefObject<HTMLIFrameElement | null>;
   gsapAnimations?: GsapAnimation[];
   gsapMultipleTimelines?: boolean;

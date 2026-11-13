@@ -1,0 +1,104 @@
+{
+  "background": {
+    "color": "#f6f6f3",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "工具标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "检索记录",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地址行",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "对照表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌名",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f6f6f3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#18191b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#245be8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#147d46",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e7e8e8",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "界面正文无衬线，工具调用与地址用等宽；介绍句保留蓝色关键词",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "开场文字将工具名与宿主名分色，进入白色输入窗后完整输入研究问题。工具标签留在输入栏附近，避免被误解为普通聊天。",
+      "status": "inferred"
+    },
+    {
+      "rule": "搜索记录与终端地址快速经过，最终停在公司、反馈和变化三列对照表。蓝色外框承接不同界面，表格纵向移动时标题行保持稳定。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可换竞品、文献或客户研究；给出真实可用的查询与列定义。终端输出不需要占满整片，结尾用一句简短可用性说明和品牌即可。",
+      "status": "inferred"
+    }
+  ]
+}

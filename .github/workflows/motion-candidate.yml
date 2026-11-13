@@ -15,7 +15,7 @@ on:
         required: false
         default: ''
       source_sha:
-        description: 'Optional reviewed full SHA integrated into feature/motion; empty freezes the selected dispatch commit'
+        description: 'Optional reviewed full SHA integrated into main; empty freezes the selected dispatch commit'
         type: string
         required: false
         default: ''
@@ -26,7 +26,7 @@ permissions:
 jobs:
   candidate:
     name: Build immutable candidate
-    if: github.repository == 'nexu-io/html-anything'
+    if: github.repository == 'nexu-io/openmotion'
     runs-on: ubuntu-24.04
     timeout-minutes: 45
     env:
@@ -41,8 +41,8 @@ jobs:
     steps:
       - name: Require Motion integration branch
         run: |
-          if [ "$GITHUB_REF" != 'refs/heads/feature/motion' ]; then
-            echo '::error::Select feature/motion in Run workflow for Motion operations.'
+          if [ "$GITHUB_REF" != 'refs/heads/main' ]; then
+            echo '::error::Select main in Run workflow for Motion operations.'
             exit 1
           fi
       - uses: actions/checkout@v6.0.2
@@ -57,13 +57,24 @@ jobs:
       - name: Resolve and freeze the integrated source
         id: source
         run: |
-          git -C control fetch origin feature/motion:refs/remotes/origin/feature/motion
+          git -C control fetch origin main:refs/remotes/origin/main
           node control/.github/scripts/motion-release.mjs source control
       - uses: actions/checkout@v6.0.2
         with:
           path: source
           ref: ${{ steps.source.outputs.source_sha }}
           persist-credentials: false
+      - name: Cache optional LFS media
+        uses: actions/cache@v4
+        with:
+          path: source/.git/lfs/objects
+          key: optional-lfs-${{ runner.os }}-${{ hashFiles('source/**/*.mp4', 'source/**/*.motion', '!source/library/templates/catalog/**') }}
+          restore-keys: optional-lfs-${{ runner.os }}-
+      - name: Download full-bundle media explicitly
+        working-directory: source
+        run: |
+          git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
+          node scripts/repository-media.ts
       - name: Scan tracked source before dependency installation
         run: |
           node control/.github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
@@ -105,10 +116,10 @@ jobs:
           npm run typecheck:studio
           npm run build:studio
           npm run build:tracking
-          node --experimental-strip-types --test tests/tracking.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
+          node --experimental-strip-types --test tests/tracking.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/library-install.test.mjs tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts
           npm run test:studio -- --maxWorkers=2
           npm run package:phase1
-          archive="$PWD/dist/motion-$(node -p "require('./package.json').version")-phase1.zip"
+          archive="$PWD/dist/openmotion-$(node -p "require('./package.json').version")-phase1.zip"
           node tests/phase1-package.mjs "$archive" "$RUNNER_TEMP/phase1-e2e"
       - name: Build the final application tgz once and scan both archives
         env:

@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#020404",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Domains",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：3d ago",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：6min ago",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "收件箱窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "巨型标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝青光晕",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "邮件行",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#020404",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#126dff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1c8b9b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#161a1d",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线窄体大写标题；小号界面文字，强烈大小对比",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "把一个安静的深色收件箱推到前景，再用巨大标题与背光完成发布揭示。",
+      "status": "inferred"
+    },
+    {
+      "rule": "收件箱从远处进入并占据下半画面，侧栏、邮件行和右上操作保持同一坐标关系。镜头的推进先于标题，让功能界面先建立存在感。",
+      "status": "inferred"
+    },
+    {
+      "rule": "标题位于窗口之后、光晕之前，出现后稳定在上半区。黑底与蓝青背光衬托白色窄体大写字，界面小字仅承担质感，不与发布名称争抢。",
+      "status": "inferred"
+    }
+  ]
+}

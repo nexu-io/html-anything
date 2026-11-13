@@ -1,5 +1,40 @@
 # 公开变更记录
 
+
+## 2026-11-13: Share material sourcing priorities across production routes
+
+- Centralize source priority, acquisition and usability checks in one shared material reference: explicit choices first, suitable existing assets next, original sources for established subjects, and generated/procedural content for original or supporting expression.
+- Link all five canonical Skills conditionally, retain compatibility forwarding entries, and expose the reference through the canonical workflow resource and legacy URI alias. Existing media support, reference fidelity and preview/export-only scope remain unchanged.
+- Consolidate the director, intake, template and execution rules rather than maintaining competing acquisition policies. No new media service, Tool, permission or release is introduced.
+- Retain the prior local Harry Potter trial as a single execution observation: one user message, original footage retrieved and used, ten excerpts totaling 20.5 seconds in a 32-second film. It is an existing example and a prior local snapshot, not a behavioral rerun of this PR head, a generalization result or a listening/visual acceptance claim. The viewing copy is attached to the PR; film media and private traces are excluded from product distributions.
+
+## 2026-11-12: Version motion guidance source in the product repository
+
+- Import 286 public guidance templates with stable IDs, existing eleven-locale metadata and authored text examples; preserve pending conversion state and original source attribution.
+- Include unpacked text source and 1,419 images at most 100 KB in Git (about 104 MB with metadata); link 236 larger originals through verified existing CMS WebP renditions. Keep reference videos and duplicate ZIP downloads at existing CMS URLs.
+- Add staged/index and new-history storage checks, source manifest refresh, 100 KB local asset limits and verified CMS rendition identities and a CI policy job. No publishing credentials or media downloads are needed for the policy check.
+- Source Studio and MCP read repository templates directly. Local tools return a searchable index, Motion document content and absolute source paths; local edits appear on the next read. CMS mode remains available for published catalog testing.
+- Export the existing CMS catalog shape for review, including collection facets; CMS publication remains separate. Source-only catalog files are excluded from npm/plugin distribution.
+
+
+## 2026-11-12: Match stable installation reports to the candidate manifest
+
+- Stable promotion and archive recovery compare native MCP Tool and Skill counts with the verified candidate manifest. Packages with compatibility Skill aliases no longer fail the obsolete five-Skill assertion, while mismatched reports still block promotion.
+- Regression coverage includes ten-Skill promotion and archiving, older five-Skill candidates, and missing or extra Tools/Skills on either platform. The existing stable npm packaging test also passes its real generated manifest through the promotion report gate, catching contract drift during both PR checks and candidate builds. Native reports and external writes are simulated; publication remains a separate authorized operation.
+
+## 2026-11-12: Save SVG styles and initialize the initial project on open
+
+- SVG inline-style edits use the existing source patcher, guarded file writer and edit history when the pinned engine cannot persist SVG targets. Missing element identities and concurrent source changes still reject the edit and keep navigation blocked.
+- Opening the initial project from the sidebar or a direct preview initializes the bundled six-second example if its sources are absent. Existing edits, partial-project refusal and legacy migration safeguards remain unchanged.
+- Validation: static checks, Studio typecheck/build, 79 targeted Studio tests, 14 project/session/legacy/cold-start tests and the phase-one creation regression passed locally. Installed-host, cross-platform and human visual acceptance remain separate.
+
+## 2026-11-12: Complete visible editor delivery after video creation
+
+- **Problem:** A queued host acknowledgment with a hidden panel could send an Agent into waiting for the user to return without evidence that the calling chat was inactive. A separate hidden inspection tab or successful MP4 export could then end the turn without visible editor delivery.
+- **Implementation:** Hidden/unavailable display receipts retain native-panel presentation recovery and its tab reuse hint. Only explicit host-confirmed inactive-chat deferral returns the wait action. First delivery follows the same visibility and latest-content checks as continued edits, and unresolved display failures remain visible in the final handoff.
+- **Validation:** 53 targeted contract, workflow, adapter, naming-compatibility and packaging tests passed, alongside static checks, Studio type checking and the Studio build. Regression coverage separates queued acknowledgments from observed visibility, preserves inactive-chat deferral and verifies that the updated Skill and Tool sources ship together.
+- **Limits:** Original-machine host reproduction and a new model-driven video creation/handoff acceptance run remain unverified. The service records host-reported evidence; it does not independently measure the outer host panel. This change does not publish a package.
+
 ## 2026-11-11: Check historical media before offering MCP restoration
 
 - **Problem and audience:** Agents and creators could be told that a historical version was restorable after its media blobs had disappeared; restoration then exposed a low-level file-copy error.
@@ -46,7 +81,7 @@
 
 - **问题与对象：** README 对 `MOTION_DESIGN.md` 的介绍不足以让创作者和媒体 Agent 理解如何把参考视频的表现方式沉淀为可复用资产；同时用户将英文主叙事从 AI Cut 调整为 AI editing / AI video editing，主定位保持 AI-native、open-source CapCut alternative。
 - **选择与架构：** 参考 MotionGit 的内容、运行时与分发分层，以及 Hypit、rea-video 的内容变体 / 前后对比表达，将 Motion Design Skill 包分为创作规则、Agent 方法、可编辑源码、替换输入、预览证据与社区分发。采用可复制的文字图说明，保留 Motion MD v0.1 的显式 Agent 上下文定位；不新增 Markdown 解释器、`.motion` 导入器、模板自动注册或任意视频还原评测。
-- **实际示例：** 从现有 registry 资源选六个 profile，固定 Hyperframes 上游 revision，保留 Apache / 字体许可与网络依赖说明。可选 `motion-design-remix` Skill 附每种 Motion MD、替换 preset、独立工程生成脚本，以及六组同一时刻采样的原内容 / 新内容 GIF、MP4 和 JPEG。脚本校验源哈希与替换次数，拒绝覆盖已有目录或符号链接；复用现有托管工程 revision 与导出契约。
+- **实际示例：** 从现有 registry 资源选六个 profile，固定 Hyperframes 上游 revision，保留 Apache / 字体许可与网络依赖说明。可选 `openmotion-design-remix` Skill 附每种 Motion MD、替换 preset、独立工程生成脚本，以及六组同一时刻采样的原内容 / 新内容 GIF、MP4 和 JPEG。脚本校验源哈希与替换次数，拒绝覆盖已有目录或符号链接；复用现有托管工程 revision 与导出契约。
 - **术语与美术：** 当前英文公开介绍统一为 AI editing / AI video editing，封面改为 Edit with AI，保留水墨品牌风格并重新派生 GIF 与分享图。Claude Motion 仍为 Motion 创作参照；不宣称行业首创或市场上没有竞品。本条取代 REQ-20261108-003 的 AI Cut 主标题选择；历史记录与历史生图提示词保留说明演进。
 - **文档维护：** 更新双语 README、Motion MD 规范与示例专题、架构、媒体事实包、Library、Brandkit、Skill 入口、来源记录和分发清单；不改变用户数据、运行时依赖或两份依赖锁。画像与商业化无新证据，不改写相关判断。
 - **实际验证：** CI 固定 Node 26.11.1 下 `npm ci`、`npm run check`、Studio 类型检查与构建通过；54 项安装、适配器、目录、工作流、打包与新脚本定向测试通过。十二份独立工程完成原生 lint，零错误、二十条上游警告；六组预览从 792 张实际采样帧编码，GIF / MP4 全量解码及源码 / preset / 成品哈希验证通过。随包渲染脚本另用一组代表帧实际运行验证；两个可选 Skill 格式及隔离安装通过。新素材与两个示例文档共 87 个文件在本地 npm 应用归档内逐字节核对。
@@ -174,7 +209,7 @@
 ## 2026-11-06：五个 Skill、界面与双语介绍同步
 
 - **问题与对象：** 现有 Agent 用户、模板作者和仓库贡献者需要一致的 Skill 名称、安装包和使用说明，避免改名后引导失效或打包漏项。
-- **选择与影响：** 一期同装 motion-production、motion-director、motion-template-to-video、motion-recreate、motion-video-to-template。MCP 短 workflow ID 保持兼容，专业任务可直接进入；production 承接既定创作决定下的工程操作。公开 Tools 仍为九个。
+- **选择与影响：** 一期同装 openmotion-production、openmotion-director、openmotion-template-to-video、openmotion-recreate、openmotion-video-to-template。MCP 短 workflow ID 保持兼容，专业任务可直接进入；production 承接既定创作决定下的工程操作。公开 Tools 仍为九个。
 - **界面：** 同步 OpenDesign 双主题、字体、按钮、表单与浮层材质，不改变作品 iframe 的样式、工程格式与原有布局职责。
 - **文档：** 新增中英文介绍、Motion MD v0.1 提案、示例与资源索引。Motion MD 由用户显式提供给 Agent，尚无自动导入器；主题集合站与 Arena 仍为规划。旧中文首页保留跳转，仓库仍以 feature/motion 开发，main 与 legacy 留档流程见迁移说明。
 - **公开与分发：** 保留独立 npm、两套依赖锁、正向打包清单、Apache-2.0 和上游/字体许可，以及浏览器统计发送逻辑移除。五入口与所引用的公开文档、工作流发现模块一起进入 npm/ZIP；不导入私有历史、过程档案或发布配置。
@@ -191,7 +226,7 @@
 ## 2026-11-06：独立分发与复刻工作流
 
 - Motion 源码位于仓库根目录；保持独立 npm lockfile、安装器、MCP 与 Skills，不依赖 OD 的应用私有代码或工作区链接。
-- 复刻入口已实现：参考视频使用 motion-recreate，原生工程、重建与验收指引通过同一套 MCP resources 提供。区域测量脚本不把无效范围或测量失败写成成功；一期继续只有九个公开 Tool 和四个 Skills。
+- 复刻入口已实现：参考视频使用 openmotion-recreate，原生工程、重建与验收指引通过同一套 MCP resources 提供。区域测量脚本不把无效范围或测量失败写成成功；一期继续只有九个公开 Tool 和四个 Skills。
 - npm 应用归档、插件 ZIP 与完整 ZIP 共用 `scripts/distribution.ts` 的正向清单。只分发运行所需源码、构建资源、指定使用文档、Skills 和许可证；不分发开发测试、Studio 源码、过程记录或发布辅助工具。新增文档和脚本必须显式加入清单。
 - 删除上游浏览器统计密钥与网络发送实现，保留编辑器调用接口；自动实验分组关闭。引擎子进程继续使用 `HYPERFRAMES_NO_TELEMETRY=1`。本机编辑、预览、渲染与技术验证不依赖使用统计。
 - 验证入口：`npm run check`、`npm run typecheck:studio`、打包与复刻单测、Studio 回归、独立 npm 安装和真实出片验收。具体结果绑定对应 PR 的提交及 CI；没有执行的目标平台或模型回合不记为通过。

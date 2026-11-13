@@ -28,7 +28,7 @@ test('public Motion sources contain no company endpoints, workstation paths or e
   }
 });
 
-test('source installation clones the standalone Motion feature branch and invokes its installer', { skip: process.platform === 'win32' }, async () => {
+for (const ref of [undefined, 'migration-review']) test(`source installation clones openmotion ${ref || 'main by default'} and invokes its installer`, { skip: process.platform === 'win32' }, async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion source install '));
   try {
     const bin = path.join(directory, 'bin'), log = path.join(directory, 'git.jsonl');
@@ -48,12 +48,12 @@ if (args[0] === 'clone') {
     const destination = path.join(directory, 'selected install');
     const result = spawnSync('bash', [fileURLToPath(new URL('../install.sh', import.meta.url))], {
       encoding: 'utf8', env: { ...process.env, PATH: bin + path.delimiter + process.env.PATH,
-        MOTION_GIT_LOG: log, OPENMOTION_INSTALL_DIR: destination, OPENMOTION_REF: 'migration-review' },
+        MOTION_GIT_LOG: log, OPENMOTION_INSTALL_DIR: destination, OPENMOTION_REF: ref },
     });
     assert.equal(result.status, 0, result.stderr);
     assert.match(result.stdout, /nested-motion-installer/);
     const calls = (await readFile(log, 'utf8')).trim().split('\n').map(line => JSON.parse(line));
-    assert.deepEqual(calls[0], ['clone', '--depth', '1', '--branch', 'migration-review', '--', 'https://github.com/nexu-io/html-anything.git', destination]);
+    assert.deepEqual(calls[0], ['clone', '--depth', '1', '--branch', ref || 'main', '--', 'https://github.com/nexu-io/openmotion.git', destination]);
     assert.equal(calls.length, 1);
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

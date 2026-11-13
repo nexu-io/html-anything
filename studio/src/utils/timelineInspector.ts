@@ -5,6 +5,14 @@ const AUDIO_TIMELINE_TAGS = new Set(["audio", "music", "sfx", "sound", "narratio
 const AUDIO_SOURCE_EXT_RE = /\.(aac|flac|m4a|mp3|ogg|opus|wav)(?:[?#].*)?$/i;
 const MUSIC_ID_RE = /\b(music|bgm|soundtrack|background[-_]?music)\b/i;
 
+/** An image thumbnail does not make a timed sub-composition a still image. */
+export function isStillImageTimelineElement(element: Pick<TimelineElement, "kind" | "tag">): boolean {
+  return (
+    element.kind !== "composition" &&
+    (element.kind === "image" || element.tag.toLowerCase() === "img")
+  );
+}
+
 /**
  * Is this DOM node an audio clip, judged the way `isAudioTimelineElement`
  * judges a timeline element?

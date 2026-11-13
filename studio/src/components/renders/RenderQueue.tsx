@@ -284,8 +284,8 @@ function FormatExportButton({
   const fps = resolveRenderFps(format, requestedFps);
   const [gpu, setGpu] = useState(persisted.gpu);
   const [gifLoop, setGifLoop] = useState("0");
-  const loopCount = Number(gifLoop);
-  const invalidGifLoop = isInvalidGifLoop(format, gifLoop);
+  const loopCount = mvp ? 0 : Number(gifLoop);
+  const invalidGifLoop = !mvp && isInvalidGifLoop(format, gifLoop);
 
   // Only a definite "not installed" blocks Export. A null status means the
   // probe gave no answer, and refusing to export on no answer would break
@@ -315,7 +315,7 @@ function FormatExportButton({
           <Select
             label={t("Format")}
             value={format}
-            options={mvp ? [...FORMAT_OPTIONS.map(option => option.value === "mov" ? { ...option, label: "MOV" } : option), { value: "webp", label: "WebP", disabled: true }] : FORMAT_OPTIONS}
+            options={mvp ? FORMAT_OPTIONS.map(option => option.value === "mov" ? { ...option, label: "MOV" } : option) : FORMAT_OPTIONS}
             disabled={isRendering}
             onCommit={(next) => {
               const v = resolveRenderFormat(next);
@@ -369,13 +369,13 @@ function FormatExportButton({
           </div>
         )}
       </div>
-      <GifLoopInput
+      {!mvp && <GifLoopInput
         format={format}
         value={gifLoop}
         disabled={isRendering}
         invalid={invalidGifLoop}
         onChange={setGifLoop}
-      />
+      />}
       {!mvp && (
         <GpuEncodingToggle
           format={format}

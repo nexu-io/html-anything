@@ -46,14 +46,20 @@ export async function smokeNpm(filename, codexJS) {
   const installed = JSON.parse(await runFile(process.execPath, [codexJS, 'mcp', 'get', 'openmotion', '--json'], { env, cwd: project }));
   assert.equal(installed.transport.command, process.execPath); assert.deepEqual(installed.transport.args, [first.launcher]);
   const native = await nativeConfiguration(first.appRoot);
-  await assert.rejects(access(path.join(home, 'cache/native')), { code: 'ENOENT' });
-  // Three sequential native downloads each have a five-minute bound; allow extraction as well.
+  // Setup already starts background preparation, so the cache can be present or ready.
+  const nativeStatusAfterSetup = JSON.parse(await runFile(process.execPath, ['--input-type=module', '-e', `
+    import { nativeRuntimeStatus } from './scripts/npm-runtime.mjs';
+    console.log(JSON.stringify(await nativeRuntimeStatus(process.cwd())));
+  `], { cwd: first.appRoot, env }));
+  assert.equal(nativeStatusAfterSetup.managed, true);
+  assert.deepEqual(nativeStatusAfterSetup.components.map(component => component.id), native.components);
+  // Native downloads have a five-minute bound; allow lock waiting and extraction as well.
   await runFile(process.execPath, [npm, 'exec', '--yes', '--package', candidate, '--', 'openmotion', 'prepare', '--home', home], { env, cwd: project, timeout: 16 * 60_000 });
   const reportFile = path.join(path.dirname(filename), `smoke-npm-${target}.json`);
   const report = await acceptTransport({ transport: { ...installed.transport, cwd: first.appRoot },
     env: { ...env, PATH: process.platform === 'win32' ? path.join(process.env.SystemRoot, 'System32') : '/usr/bin:/bin' }, data,
     metadata: { ...manifest, target }, archive: installer, ffmpeg: native.paths.HYPERFRAMES_FFMPEG_PATH, reportFile,
-    installation: { format: 'npm', applicationSHA256: manifest.application.sha256, npmLockSHA256: manifest.locks.npm, nativeLockSHA256: manifest.locks.native, repeatInstall: 'passed', nativeSkills: 'passed', setupDefersNativeDownload: 'passed', explicitNativePreparation: 'passed', bundledApplicationInstall: 'passed', isolatedDirectory: out } });
+    installation: { format: 'npm', applicationSHA256: manifest.application.sha256, npmLockSHA256: manifest.locks.npm, nativeLockSHA256: manifest.locks.native, repeatInstall: 'passed', nativeSkills: 'passed', nativeStatusAfterSetup, explicitNativePreparation: 'passed', bundledApplicationInstall: 'passed', isolatedDirectory: out } });
   const before = await readFile(path.join(native.cache, 'browser-' + native.info.browser.sha256, 'ready.json'), 'utf8');
   await runFile(process.execPath, [npm, 'exec', '--yes', '--package', candidate, '--', 'openmotion', 'prepare', '--home', home], { env, cwd: project });
   assert.equal(await readFile(path.join(native.cache, 'browser-' + native.info.browser.sha256, 'ready.json'), 'utf8'), before);

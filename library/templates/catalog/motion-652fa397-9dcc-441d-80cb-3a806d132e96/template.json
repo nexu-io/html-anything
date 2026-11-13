@@ -1,0 +1,400 @@
+{
+  "templateId": "motion-652fa397-9dcc-441d-80cb-3a806d132e96",
+  "entry": {
+    "templateId": "motion-652fa397-9dcc-441d-80cb-3a806d132e96",
+    "sortOrder": 113,
+    "original": {
+      "templateName": "四手机并列：应用生成能力演示",
+      "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+      "summary": "四个等高手机并列，共用背景而各自独立推进",
+      "styleDescription": "无衬线界面文字与清晰大小层级",
+      "promotionalUseCases": "产品演示",
+      "visualPresentation": "界面动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+      "reviewFocus": "四个等高手机并列，共用背景而各自独立推进；标题与应用类别固定，内部滚动、切换、输入在不同拍点发生；多样性由内容类型而非四种外框表达",
+      "category": "",
+      "durationSeconds": "17.87508",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+      "exampleVideo": "",
+      "templateId": "V058",
+      "sourceVideoTitle": "x1959315762419785821.mp4"
+    },
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "files": [],
+    "previewUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+    "coverUrl": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+    "motionDocumentUrl": "https://r.open-design.ai/files/daac8a0f057e5cc6e6d9f513b48e300e0e08a36c99840208cf75d981bfda3de8",
+    "motionGuideUrl": "https://r.open-design.ai/files/5b1aac59620ba99fbf5273880ac58333eb8174c35f1c3f6e414eae807737c09b",
+    "projectFileUrl": null,
+    "brand": "Emergent",
+    "colors": [
+      "monochrome"
+    ],
+    "width": 1280,
+    "height": 720,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。",
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "passed"
+    },
+    "featuredOrder": null
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Vier Handys nebeneinander: App-Generierung demonstrieren",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "Vier gleich hohe Handys stehen nebeneinander und teilen den Hintergrund, während jedes seinen eigenen Ablauf zeigt",
+        "styleDescription": "Serifenlose Oberflächentexte mit klarer Größenhierarchie",
+        "promotionalUseCases": "Produktdemo",
+        "visualPresentation": "Oberflächenanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "Vier gleich hohe Handys stehen nebeneinander und teilen den Hintergrund, während jedes seinen eigenen Ablauf zeigt. Titel und App-Kategorien bleiben fest; internes Scrollen, Wechseln und Eingeben erfolgen zu unterschiedlichen Takten. Vielfalt entsteht durch Inhaltstypen, nicht vier verschiedene Rahmen.",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "original": {
+        "templateName": "Four-app parallel showcase",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "Place four equal-height phones side by side on a shared background, with each progressing independently",
+        "styleDescription": "Sans-serif interface text with a clear size hierarchy",
+        "promotionalUseCases": "Product demo",
+        "visualPresentation": "Interface animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "Place four equal-height phones side by side on a shared background, with each progressing independently; keep headings and app categories fixed while internal scrolling, switching and input occur on different beats; express diversity through content types rather than four different frames",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/2f60dd486f8bad9670f47156a50279ad95afc562797984e079e672e1a4574c95",
+      "motionGuideUrl": "https://r.open-design.ai/files/a97570d1f6dcb045f33855ef9c95aa0d1313784e6066b22333d89fd6ac9b3d96",
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Cuatro teléfonos en paralelo: demostración de generación de apps",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "Alinear cuatro teléfonos de la misma altura sobre un fondo compartido, cada uno avanzando de forma independiente",
+        "styleDescription": "Texto de interfaz sin serifa con una jerarquía clara de tamaños",
+        "promotionalUseCases": "Demostración de producto",
+        "visualPresentation": "Animación de interfaz",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "Alinear cuatro teléfonos de la misma altura sobre un fondo compartido, cada uno avanzando de forma independiente; fijar títulos y categorías mientras desplazamientos, cambios y entradas ocurren en momentos distintos; expresar diversidad mediante contenido, no cuatro marcos diferentes",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Quatre téléphones côte à côte : démonstration de génération d’applications",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "Quatre téléphones de même hauteur partagent un fond mais progressent indépendamment",
+        "styleDescription": "Textes d’interface sans empattement avec une hiérarchie de tailles claire",
+        "promotionalUseCases": "Démonstration produit",
+        "visualPresentation": "Animation d’interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "Quatre téléphones de même hauteur partagent un fond mais progressent indépendamment. Titres et catégories d’applications restent fixes ; défilements, changements et saisies internes ont lieu à des temps différents. La diversité vient des contenus, pas de quatre cadres différents.",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Quattro telefoni affiancati: dimostrazione della generazione di app",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "Quattro telefoni della stessa altezza condividono lo sfondo, ma avanzano indipendentemente",
+        "styleDescription": "Testi dell’interfaccia senza grazie con una chiara gerarchia delle dimensioni",
+        "promotionalUseCases": "Demo di prodotto",
+        "visualPresentation": "Animazione dell’interfaccia",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "Quattro telefoni della stessa altezza condividono lo sfondo, ma avanzano indipendentemente. Titoli e categorie delle app restano fissi; scorrimenti, cambi e input interni avvengono in momenti diversi. La varietà nasce dai contenuti, non da quattro cornici differenti.",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "4台のスマートフォンで並列表示：アプリ生成のデモ",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "同じ高さの4台のスマートフォンを並べ、背景を共有しながらそれぞれ独立して進行させる",
+        "styleDescription": "サンセリフの UI テキストと明確な文字サイズの階層",
+        "promotionalUseCases": "製品デモ",
+        "visualPresentation": "UIアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "同じ高さの4台のスマートフォンを並べ、背景を共有しながらそれぞれ独立して進行させる；タイトルとアプリのカテゴリを固定し、内部のスクロール、切り替え、入力を異なるタイミングで行う；多様性は4種類の外枠ではなく、内容の種類で表す",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "휴대폰 네 대 병렬 배치: 앱 생성 기능 시연",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "높이가 같은 휴대폰 네 대를 나란히 배치하고 배경은 공유하되 각각 독립적으로 진행한다",
+        "styleDescription": "산세리프 인터페이스 글자와 명확한 크기 계층",
+        "promotionalUseCases": "제품 시연",
+        "visualPresentation": "인터페이스 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "높이가 같은 휴대폰 네 대를 나란히 배치하고 배경은 공유하되 각각 독립적으로 진행한다；제목과 앱 범주는 고정하고 내부 스크롤, 전환, 입력은 서로 다른 박자에 일어나게 한다；다양성은 서로 다른 네 프레임이 아닌 콘텐츠 유형으로 표현한다",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Quatro telefones lado a lado: demonstração de geração de apps",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "Alinhar quatro telefones da mesma altura em fundo compartilhado, cada um avançando independentemente",
+        "styleDescription": "Texto de interface sem serifa, com hierarquia clara de tamanhos",
+        "promotionalUseCases": "Demonstração de produto",
+        "visualPresentation": "Animação de interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "Alinhar quatro telefones da mesma altura em fundo compartilhado, cada um avançando independentemente; fixar títulos e categorias enquanto rolagens, mudanças e entradas acontecem em momentos diferentes; expressar diversidade pelo conteúdo, não por quatro molduras distintas",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Четыре телефона рядом: демонстрация генерации приложений",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "Четыре телефона одинаковой высоты расположены рядом на общем фоне, но каждый развивается независимо",
+        "styleDescription": "Текст интерфейса без засечек с чёткой иерархией размеров",
+        "promotionalUseCases": "Демонстрация продукта",
+        "visualPresentation": "Анимация интерфейса",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "Четыре телефона одинаковой высоты расположены рядом на общем фоне, но каждый развивается независимо；Заголовки и категории приложений закреплены; внутренняя прокрутка, переключения и ввод происходят в разные моменты ритма；Разнообразие выражается типами содержимого, а не четырьмя разными рамками",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Yan yana dört telefon: uygulama üretme yeteneği gösterimi",
+        "videoPreview": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "summary": "Eş yükseklikte dört telefon ortak arka planda yan yana durur ve bağımsız ilerler",
+        "styleDescription": "Net boyut hiyerarşisine sahip sans serif arayüz metinleri",
+        "promotionalUseCases": "Ürün demosu",
+        "visualPresentation": "Arayüz animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/1befa003cd44b3fd8622036976b0f1d4c0591602e6baefa730f7f720a64a8c8a",
+        "reviewFocus": "Eş yükseklikte dört telefon ortak arka planda yan yana durur ve bağımsız ilerler. Başlık ve uygulama kategorileri sabittir; iç kaydırma, geçiş ve giriş farklı vuruşlarda gerçekleşir. Çeşitlilik dört çerçeveden değil içerik türlerinden gelir.",
+        "category": "",
+        "durationSeconds": "17.87508",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ceb7ec1da8ccb16d4eeaf0d034138efee34168b76c2a5a6ae96dd6e137a62c97",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/emergentlabs/status/1959315762419785821",
+        "exampleVideo": "",
+        "templateId": "V058",
+        "sourceVideoTitle": "x1959315762419785821.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/daac8a0f057e5cc6e6d9f513b48e300e0e08a36c99840208cf75d981bfda3de8",
+    "bytes": 693999,
+    "sha256": "daac8a0f057e5cc6e6d9f513b48e300e0e08a36c99840208cf75d981bfda3de8"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 125104,
+        "sha256": "cd54810cbc5ff9386fc625c6cbeb1647f8e0a288497a24e4a73f109befcb032a"
+      },
+      "url": "https://r.open-design.ai/files/bbe2a4411cc20db2e91a829c8d5ac00285c2fa1fafda9a2f1569e06e00fa9166",
+      "bytes": 42600,
+      "sha256": "bbe2a4411cc20db2e91a829c8d5ac00285c2fa1fafda9a2f1569e06e00fa9166"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 116641,
+        "sha256": "419cca3582cfe4cf00da72097db9450290a5565e0b0405a9f0a0d5f03c8978b9"
+      },
+      "url": "https://r.open-design.ai/files/7c67c1a95edc260f828c35ead12f563dbb0e18a3c3f6f67bcfd39379caf2b5d6",
+      "bytes": 38194,
+      "sha256": "7c67c1a95edc260f828c35ead12f563dbb0e18a3c3f6f67bcfd39379caf2b5d6"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 120953,
+        "sha256": "45d8dcbf3715634a0d73f3f18adcde7a50873a9c7b74093923e163a5de0bdacf"
+      },
+      "url": "https://r.open-design.ai/files/5b20efd3824c74ad8c69f2e2341ff399bc91b42254d88557442c6e804f12ee56",
+      "bytes": 40630,
+      "sha256": "5b20efd3824c74ad8c69f2e2341ff399bc91b42254d88557442c6e804f12ee56"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 123363,
+        "sha256": "0e29d6a5b3940a8fc35bc154afe154b452119973661b68cd946c08a119857350"
+      },
+      "url": "https://r.open-design.ai/files/36606d169c3aa6a57eedb3b65c816f9da75ebf63647e2cac1c1a490b8cfc97f3",
+      "bytes": 43198,
+      "sha256": "36606d169c3aa6a57eedb3b65c816f9da75ebf63647e2cac1c1a490b8cfc97f3"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 123383,
+        "sha256": "9466d5543301dbdff842ec57c9a536c3cd952d54703d00acb5c9cdd2a0598577"
+      },
+      "url": "https://r.open-design.ai/files/d61ae683f90bbcc27c056e99af7b7f80ef4f9e97a9e0988fa91cd91117a8bbf8",
+      "bytes": 41426,
+      "sha256": "d61ae683f90bbcc27c056e99af7b7f80ef4f9e97a9e0988fa91cd91117a8bbf8"
+    },
+    {
+      "source": {
+        "path": "assets/reference-6.jpg",
+        "bytes": 106850,
+        "sha256": "2f78a8b480cd0848deb4dc687e273dfdb51a52e2ad3cf45c6d59e0cb92de0d3b"
+      },
+      "url": "https://r.open-design.ai/files/6549056109054a47cb65070e111a4cbb907ee9abbf418e032d85f926421fe004",
+      "bytes": 33560,
+      "sha256": "6549056109054a47cb65070e111a4cbb907ee9abbf418e032d85f926421fe004"
+    }
+  ]
+}

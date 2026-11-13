@@ -1,12 +1,13 @@
+import { publicToolName, legacyToolName, publicToolResult } from './shared/public-names.mjs';
 import { createInterface } from 'node:readline';
-import { statSync } from 'node:fs';
+import { readFileSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { WorkspaceStore } from './workspace.ts';
 import { ensureService, VERSION } from './preview.ts';
 import { tools, callTool } from './mcp-tools.ts';
 export { tools, callTool } from './mcp-tools.ts';
 import { createToolRegistry, releaseProfile } from './shared/mcp-registry.ts';
-import { phase1Tools, validateInput } from './shared/phase1-tools.ts';
+import { phase1Tools, validateInput, phase1TransportTool } from './shared/phase1-tools.ts';
 import { workflowResources, readWorkflowResource, workflowEntryGuide } from './shared/workflow.ts';
 import { ensureEditor, editorRequest, editorHeaders, sharedEditorEnabled } from './editor-runtime.ts';
 import { isMain } from './shared/entry.ts';
@@ -14,6 +15,8 @@ import type { Selection } from './editor-runtime.ts';
 import { createAppTracking, closeTracking, trackingError, type OmTracking } from './shared/tracking.ts';
 import { uuid } from './tracking/core.ts';
 import { toolNames } from './tracking/events.ts';
+import { templateCatalogFor } from './prism-templates.ts';
+import { templateConfig } from './shared/template-config.ts';
 
 export function mcpRegistry(profile = releaseProfile) { return createToolRegistry(profile === 'phase1' ? phase1Tools : tools, profile); }
 export const releaseRegistry = mcpRegistry();
@@ -28,14 +31,18 @@ function trackingFor(store: WorkspaceStore) {
 }
 const runtimeRoot = fileURLToPath(new URL('./', import.meta.url));
 const runtimeDirectory = statSync(runtimeRoot);
+const serverIcons = ['light', 'dark'].map(theme => ({
+  src: 'data:image/svg+xml;base64,' + readFileSync(new URL(`./docs/readme/opendesign-symbol${theme === 'dark' ? '-dark' : ''}.svg`, import.meta.url)).toString('base64'),
+  mimeType: 'image/svg+xml', sizes: ['any'], theme,
+}));
 
 export async function rpc(message: any, store = new WorkspaceStore(), registry = releaseRegistry, connection?: { selection: Selection }) {
-  const name = message?.params?.name;
+  const name = legacyToolName(message?.params?.name);
   if (message?.jsonrpc !== '2.0' || message.id === undefined || message.method !== 'tools/call'
     || registry.profile !== 'phase1' || !(toolNames as readonly unknown[]).includes(name)) return invokeRpc(message, store, registry, connection);
   const tracking = await trackingFor(store), started = performance.now(), callId = crypto.randomUUID();
   let accepted = false;
-  try { validateInput(phase1Tools.find(tool => tool.name === name)!.inputSchema, message.params.arguments ?? {}); accepted = true; } catch {}
+  try { validateInput(phase1Tools.find(tool => tool.name === publicToolName(name))!.inputSchema, message.params.arguments ?? {}); accepted = true; } catch {}
   const fields = { tool_name: name as typeof toolNames[number], call_id: callId, accepted,
     ...(uuid.test(message.params.arguments?.requestId) ? { operation_id: message.params.arguments.requestId } : {}) };
   if (accepted) tracking.track('mcp_tool_started', fields);
@@ -53,7 +60,10 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
   if (!message || message.jsonrpc !== '2.0' || typeof message.method !== 'string') return { jsonrpc: '2.0', id: message?.id ?? null, error: { code: -32600, message: 'Invalid request' } };
   if (message.id === undefined) return null;
   const result = (value: unknown) => ({ jsonrpc: '2.0', id: message.id, result: value });
-  if (message.method === 'initialize') return result({ protocolVersion: ['2024-11-05', '2025-03-26', '2025-06-18', '2025-11-25'].includes(message.params?.protocolVersion) ? message.params.protocolVersion : '2025-11-25', capabilities: { tools: {}, ...(registry.profile === 'phase1' ? { resources: {} } : {}) }, serverInfo: { name: 'motion', version: VERSION }, instructions: registry.instructions ?? workflowEntryGuide + ' Load only references needed by the current task and reuse already loaded documentId/contentHash. Reuse saved decisions for small edits. Motion wraps Hyperframes Studio and its renderer. Only for tasks that require working in the editor or authoring a project, call motion_open_preview, read its pinned authoringGuide and open previewUrl with the host built-in browser before reporting it opened. Author native HTML compositions with seekable GSAP timelines, never custom shot JSON or canvas recording. Read motion_get_project before source edits and pass its revision as expectedRevision; inspect lint/timeline afterwards. Only when the user scope includes export/final delivery, query any applicable existing export to avoid duplicate jobs and export the inspected revision in the background, wait for completed, then call motion_verify_export with that job ID/revision and the brief audio policy. Separately inspect final visuals, sound and actual player playback before claiming full verification. MCP previewUrl defaults to embed=1; preserve its query and hash. Use sessionUrl or embedded=false only for the full OpenDesign workspace. Do not restart the host Agent or ask users to start a terminal server.' });
+  if (message.method === 'initialize') {
+    const protocolVersion = ['2024-11-05', '2025-03-26', '2025-06-18', '2025-11-25'].includes(message.params?.protocolVersion) ? message.params.protocolVersion : '2025-11-25';
+    return result({ protocolVersion, capabilities: { tools: {}, ...(registry.profile === 'phase1' ? { resources: {} } : {}) }, serverInfo: { name: 'openmotion', title: 'OpenMotion', version: VERSION, ...(protocolVersion === '2025-11-25' ? { icons: serverIcons } : {}) }, instructions: registry.instructions ?? workflowEntryGuide + ' Load only references needed by the current task and reuse already loaded documentId/contentHash. Reuse saved decisions for small edits. OpenMotion wraps Hyperframes Studio and its renderer. Only for tasks that require working in the editor or authoring a project, call openmotion_open_preview, read its pinned authoringGuide and open previewUrl with the host built-in browser before reporting it opened. Author native HTML compositions with seekable GSAP timelines, never custom shot JSON or canvas recording. Read openmotion_get_project before source edits and pass its revision as expectedRevision; inspect lint/timeline afterwards. Only when the user scope includes export/final delivery, query any applicable existing export to avoid duplicate jobs and export the inspected revision in the background, wait for completed, then call openmotion_verify_export with that job ID/revision and the brief audio policy. Separately inspect final visuals, sound and actual player playback before claiming full verification. MCP previewUrl defaults to embed=1; preserve its query and hash. Use sessionUrl or embedded=false only for the full OpenMotion workspace. Do not restart the host Agent or ask users to start a terminal server.' });
+  }
   if (message.method === 'ping') return result({});
   if (registry.profile === 'phase1' && message.method === 'resources/list') return result({ resources: workflowResources() });
   if (registry.profile === 'phase1' && message.method === 'resources/read') {
@@ -66,32 +76,38 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
       if (registry.profile !== 'phase1') {
         const current = statSync(runtimeRoot, { throwIfNoEntry: false });
         if (!current || current.dev !== runtimeDirectory.dev || current.ino !== runtimeDirectory.ino) throw Object.assign(
-          new Error('The Motion plugin directory was replaced or removed. Reload this internal legacy MCP connection before retrying; no project operation was applied.'),
+          new Error('The OpenMotion plugin directory was replaced or removed. Reload this internal legacy MCP connection before retrying; no project operation was applied.'),
           { code: 'MCP_RUNTIME_RELOAD_REQUIRED' },
         );
       }
-      if (!registry.tools.some(tool => tool.name === message.params?.name)) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + String(message.params?.name));
+      const name = publicToolName(message.params?.name);
+      if (!registry.tools.some(tool => tool.name === name)) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + String(message.params?.name));
       if (registry.profile === 'phase1') {
-        const name = message.params.name;
+        const internalName = legacyToolName(name);
         const args = { ...(message.params.arguments ?? {}) };
-        const definition = phase1Tools.find(tool => tool.name === name)!;
+        const definition = phase1Tools.find(tool => tool.name === publicToolName(name))!;
         validateInput(definition.inputSchema, args);
-        if (name === 'motion_open_preview' && args.target !== 'templates' && !args.projectId && !args.sessionId && args.action !== 'record_review') args.sessionId = selections.get(store)?.sessionId;
+        if (internalName === 'motion_open_preview' && args.target !== 'templates' && !args.projectId && !args.sessionId && args.action !== 'record_review') args.sessionId = selections.get(store)?.sessionId;
         if (args.sessionId === undefined) delete args.sessionId;
+        if (templateConfig().source === 'repository' && ['motion_list_templates', 'motion_get_template'].includes(internalName)) {
+          const catalog = templateCatalogFor(store.directory);
+          const value = internalName === 'motion_list_templates' ? await catalog.index() : await catalog.detail(args.templateId);
+          return result({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value });
+        }
         const service = await ensureService(store, undefined, name), origin = new URL(service.previewUrl).origin;
         const response = await fetch(origin + '/motion-api/phase1/call', { method: 'POST', headers: await editorHeaders(store, origin),
-          body: JSON.stringify({ name, arguments: args }), signal: AbortSignal.timeout(600_000) });
-        const value = await response.json();
+          body: JSON.stringify({ name: phase1TransportTool(service, name) ?? name, arguments: args }), signal: AbortSignal.timeout(600_000) });
+        const value = publicToolResult(await response.json());
         if (!response.ok) throw Object.assign(new Error(value.error || 'Tool failed'), { code: value.code, details: value.runtime });
         if (value.projectId && value.sessionId) selections.set(store, { projectId: value.projectId, sessionId: value.sessionId });
         return result({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value });
       }
       let value;
-      if (connection && !['motion_get_workflow', 'motion_list_templates', 'motion_get_template'].includes(message.params?.name)) {
+      if (connection && !['motion_get_workflow', 'motion_list_templates', 'motion_get_template'].includes(legacyToolName(name))) {
         const editor = await ensureEditor(store.directory);
-        const reply = await editorRequest(editor, '/editor-api/tools/call', { name: message.params?.name, arguments: message.params?.arguments || {}, selection: connection.selection });
+        const reply = await editorRequest(editor, '/editor-api/tools/call', { name: legacyToolName(name), arguments: message.params?.arguments || {}, selection: connection.selection });
         connection.selection = reply.selection; value = reply.result;
-      } else value = await callTool(message.params?.name, message.params?.arguments || {}, store);
+      } else value = await callTool(name, message.params?.arguments || {}, store);
       return result({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Tool failed';

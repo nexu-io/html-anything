@@ -1,0 +1,104 @@
+{
+  "background": {
+    "color": "#faf7f0",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "人物照片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网站",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "演示稿",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "竖版广告",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "任务清单",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#faf7f0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#24211e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e52a0a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a48e79",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d7c8b8",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "温暖米白背景，咖啡品牌使用褐色摄影与衬线字，平台标记橙红。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "输入创建咖啡网站后，继续要求演示稿和发布图。三类成果共享照片、褐色色盘与衬线标题，用内容一致性说明上下文复用。",
+      "status": "inferred"
+    },
+    {
+      "rule": "网站先居中，再扇开多页 deck；下一次输入在已有成果之间出现，最后排成三张竖版海报。不要每段都彻底清空画面。",
+      "status": "inferred"
+    },
+    {
+      "rule": "外层米白留白充足，输入卡用细阴影，橙红平台标记固定在右上。结束时回到人物照片，配一条短结论即可。",
+      "status": "inferred"
+    }
+  ]
+}

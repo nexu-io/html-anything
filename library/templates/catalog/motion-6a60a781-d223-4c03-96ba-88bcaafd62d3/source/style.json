@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#dec3ae",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：A BRILLIANT BLOOM",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：FUTURE",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：There are many futures.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "主角",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "书写台",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "纸面世界",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "发光文字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "其他创作者",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "空间路径",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#dec3ae",
+      "status": "inferred"
+    },
+    {
+      "hex": "#292c45",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a6bc65",
+      "status": "inferred"
+    },
+    {
+      "hex": "#758bd2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f5d9b5",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "柔和三维黏土感人物、粉彩建筑与发光文字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先以个体书写触发世界变化，再从单一理想转向多人的多种未来。",
+      "status": "inferred"
+    },
+    {
+      "rule": "空间从局促台面扩大到环绕场景、暗场反思、开放群像。",
+      "status": "inferred"
+    },
+    {
+      "rule": "人物视线与镜头推进共同引导关注，不仅是背景换色。",
+      "status": "inferred"
+    }
+  ]
+}

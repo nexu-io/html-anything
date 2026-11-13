@@ -334,7 +334,7 @@ export function ColorGradingControls({
         >
           {HF_COLOR_GRADING_PRESETS.map((preset) => (
             <option key={preset.id} value={preset.id}>
-              {preset.label}
+              {t(preset.label)}
             </option>
           ))}
         </select>

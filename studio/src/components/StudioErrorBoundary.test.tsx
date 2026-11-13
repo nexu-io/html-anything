@@ -6,6 +6,8 @@ import { StudioHostContext, useStudioHost } from "../motion/StudioHost";
 import { createRoot } from "react-dom/client";
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 
+vi.mock('../motion/diagnostics', () => ({ recordBrowserDiagnostic: vi.fn(), browserDiagnostics: () => [], nextDiagnosticRequest: () => 'fixture-request', diagnosticsActive: () => false }));
+
 vi.mock("../utils/studioTelemetry", () => ({ trackStudioEvent: vi.fn() }));
 vi.mock("../telemetry/policy", () => ({ browserTelemetryAllowed: () => true }));
 vi.mock("../telemetry/events", () => ({
@@ -56,7 +58,9 @@ describe("StudioErrorBoundary", () => {
   it("shows the crash screen with the error message and both recovery paths", () => {
     renderCrashed();
     expect(container.textContent).toContain("Something went wrong");
-    expect(container.textContent).toContain("timeline exploded");
+    expect(container.textContent).not.toContain("timeline exploded");
+    act(() => container.querySelector<HTMLButtonElement>('[aria-label="Error details"]')!.click());
+    expect(container.querySelector("pre")?.textContent).toBe("timeline exploded");
     expect(container.textContent).toContain("Try again");
     expect(container.textContent).toContain("Reload Studio");
   });
@@ -106,6 +110,19 @@ it("localizes crash recovery inside the product host and respects its feedback s
   act(() => root.render(<Product />));
   expect(container.textContent).toContain(translate('ja', 'Something went wrong'));
   expect(container.textContent).toContain(translate('ja', 'Reload Studio'));
-  expect(container.textContent).toContain('timeline exploded');
+  expect(container.textContent).not.toContain('timeline exploded');
+  act(() => container.querySelector<HTMLButtonElement>(`[aria-label="${translate('ja', 'Error details')}"]`)!.click());
+  expect(container.querySelector('pre')?.textContent).toBe('timeline exploded');
   expect(container.querySelector('[aria-label="Send feedback to the HyperFrames team"]')).toBeNull();
+});
+
+it("localizes Chinese crash prompts, chips and hints without changing answer IDs", () => {
+  act(() => root.render(<I18nProvider initialLocale="zh-CN"><StudioErrorBoundary><Boom /></StudioErrorBoundary></I18nProvider>));
+  expect(container.textContent).toContain('编辑器崩溃了。你刚才在做什么？');
+  expect(container.textContent).toContain('选择一项，或填写其他情况。');
+  expect(container.querySelector('input')?.placeholder).toBe(translate('zh-CN', 'The last thing you touched'));
+  const chip = [...container.querySelectorAll('button')].find(b => b.textContent?.trim() === '编辑时间轴')!;
+  expect(chip.getAttribute('aria-label')).toBe('编辑时间轴. 拖动、裁剪或分割片段');
+  act(() => chip.dispatchEvent(new FocusEvent('focusin', { bubbles: true })));
+  expect(container.textContent).toContain('拖动、裁剪或分割片段');
 });

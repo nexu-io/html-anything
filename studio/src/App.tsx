@@ -1,6 +1,6 @@
 import { useOwnPreviewIframe, usePreviewIframeStore } from "./player/store/previewIframeStore";
 import { buildProjectApiPath } from "./utils/projectRouting";
-import { Fragment, useState, useCallback, useRef, useMemo, type SetStateAction } from "react";
+import { Fragment, useState, useCallback, useRef, useMemo, useEffect, type SetStateAction } from "react";
 import { useStableHandlers } from "./hooks/useStableHandlers";
 import { useHistoryFlags, useToolbarSession } from "./hooks/useShellSlices";
 import { useDismissingTabSetter, useRightPanelIntent } from "./hooks/useRightPanelIntents";
@@ -63,6 +63,7 @@ import { readStudioUrlStateFromWindow, resolveMasterCompositionPath } from "./ut
 import { useActiveComposition } from "./hooks/useActiveComposition";
 import { requestPreviewReload } from "./player/previewReloading";
 import { useStudioHost } from "./motion/StudioHost";
+import { preloadFontLists } from "./components/editor/propertyPanelFont";
 const getTimelineSelectionSet = () => usePlayerStore.getState().selectedElementIds;
 
 export interface StudioAppProps {
@@ -77,6 +78,9 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
   const AppFrame = useStudioHost()?.AppFrame ?? Fragment;
   const EditorFrame = useStudioHost()?.EditorFrame ?? Fragment;
   const { projectId, resolving, waitingForServer } = useServerConnection();
+  useEffect(() => {
+    if (!resolving && !waitingForServer && projectId) preloadFontLists();
+  }, [projectId, resolving, waitingForServer]);
   const initialUrlStateRef = useRef(readStudioUrlStateFromWindow());
   useStudioSessionStart(projectId, resolving, waitingForServer);
   const [compIdToSrc, setCompIdToSrc] = useState<Map<string, string>>(new Map());
@@ -305,6 +309,7 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
     editHistory: { recordEdit: editHistory.recordEdit },
     fileTree: fileManager.fileTree,
     importedFontAssetsRef: fileManager.importedFontAssetsRef,
+    fontAssets: fileManager.fontAssets,
     projectDir: fileManager.projectDir,
     projectIdRef: fileManager.projectIdRef,
     previewIframe,

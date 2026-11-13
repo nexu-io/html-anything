@@ -125,7 +125,7 @@ export const PropertyPanel = memo(function PropertyPanel(props: PropertyPanelPro
     && timelineElements.some((item) => (item.key ?? item.id) === selectedElementId);
   const toggleTimelineVisibility = hasVisibilityTarget ? onToggleElementHidden : undefined;
   const selectedElementHidden = isSelectedElementHidden(timelineElements, selectedElementId);
-  const visibilityToggleLabel = selectedElementHidden ? "Show element" : "Hide element";
+  const visibilityToggleLabel = t(selectedElementHidden ? "Show element" : "Hide element");
   // Audio gets no visibility toggle in this classic panel; the timeline and the flat panel offer it as a mute.
   const audioSelection = isAudioDomElement(element?.element);
   // Live during playback, the store's when paused — see the hook. Shared with the

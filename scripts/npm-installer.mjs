@@ -9,7 +9,9 @@ import { parseArgs } from 'node:util';
 import { canonical, extractArchive, nativeComponents, obtainAsset, readJSON, relativePath, runFile, withLock, writeAtomic, writeJSON } from './runtime-assets.mjs';
 import { ensureNativeRuntime, startNativePreparation } from './npm-runtime.mjs';
 import { hosts, hostPlan, skillTargets, obsoleteSkills, checkSkillOwner, copyHostSkills } from './npm-hosts.mjs';
+import { installedTool } from './mcp-client.mjs';
 import { checkTransport, redact } from './check-installed-mcp.mjs';
+import { exportDiagnostics, recordDiagnostic } from './diagnostics.mjs';
 
 // Keep ownership stable so earlier local installations remain upgradable.
 export const managedBy = '@openmotion/installer';
@@ -20,6 +22,9 @@ const usage = `Usage:
   openmotion setup --host <${hosts.join('|')}> [options]
   openmotion prepare [--home DIR]
   openmotion diagnose --host <${hosts.join('|')}> [--home DIR] [host options]
+  openmotion tools --host HOST [--home DIR]
+  openmotion call TOOL --args-file FILE.json --host HOST [--home DIR]
+  openmotion diagnostics [--home DIR] [--data-dir DIR] [--output FILE.zip]
   openmotion --version
 
 Select the current Agent host explicitly; installed CLIs do not identify the current host.
@@ -39,6 +44,10 @@ Use prepare to wait explicitly for every video component or retry failed prepara
 Refresh the selected host's Tools/Skills; registration alone does not prove loading.
 Diagnose checks the installed host configuration and probes its MCP command without changing configuration.
 It does not reconnect the host; follow its recovery guidance and verify a read in the active Agent chat.
+Diagnostics saves a redacted local ZIP without contacting hosts or uploading anything.
+Reuse the original --home; --data-dir also works when setup has not completed. Output files are never overwritten.
+tools lists the installed public MCP schemas. call sends one JSON-object file unchanged through the registered transport.
+Use these in the current Agent chat when native tools are missing or still point at an older installation; no new chat or host restart is required.
 Use separate host configuration, home, data and Skills paths for test candidates.
   -h, --help         Show this help without installing or changing configuration
   --version          Show this package's version`;
@@ -101,12 +110,12 @@ export async function setup(options) {
         const pkg = await readJSON(path.join(temporary, 'package.json'));
         assert.equal(pkg?.version, manifest.version, 'Application version does not match manifest');
         if (manifest.templateEnvironment) assert.equal((await readJSON(path.join(temporary, 'shared/template-config.json')))?.environment, templateEnvironment, 'Application template environment does not match manifest');
-        for (const file of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'skills/motion-production/SKILL.md']) await readFile(path.join(temporary, file));
+        for (const file of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'skills/openmotion-production/SKILL.md']) await readFile(path.join(temporary, file));
         assert(!contains(temporary, process.execPath), 'Node must remain external to the lightweight application');
         const npm = process.env.npm_execpath || path.join(path.dirname(process.execPath), process.platform === 'win32' ? 'node_modules/npm/bin/npm-cli.js' : '../lib/node_modules/npm/bin/npm-cli.js');
         console.error('OpenMotion: installing locked npm runtime (no native media/browser download).');
         await runFile(process.execPath, [npm, 'ci', '--omit=dev', '--ignore-scripts', '--no-audit', '--no-fund'], { cwd: temporary });
-        await writeJSON(path.join(temporary, '.npm-install.json'), { schemaVersion: 1, applicationSHA256: manifest.application.sha256,
+        await writeJSON(path.join(temporary, '.npm-install.json'), { schemaVersion: 1, applicationSHA256: manifest.application.sha256, installHome: home, commit: manifest.commit,
           cacheDirectory: path.join(home, 'cache/native'), runtime: manifest.runtime, allowLocalAssets: true });
         await rename(temporary, appRoot);
       } finally { await rm(temporary, { recursive: true, force: true }); }
@@ -142,7 +151,7 @@ export async function setup(options) {
       for (const item of directories) await rm(item.backup, { recursive: true, force: true }).catch(error => console.error('Old instruction backup retained: ' + error.message));
       await startNativePreparation(appRoot).catch(error => console.error('OpenMotion: background preparation could not start; retry in Studio or run prepare. ' + error.message));
       onboarding.preview = await prepareInstallationPreview({ appRoot, dataDirectory });
-      return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'background-preparation; status and retry available in Studio', onboarding };
+      return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'background-preparation; status and retry available in Studio', onboarding: { ...onboarding, directAccess: directAccess(home, plan.host, appRoot, options) } };
     } catch (error) {
       if (wroteLauncher && !previous) await rm(launcher, { force: true });
       if (wroteState) { if (previous) await writeJSON(stateFile, previous); else await rm(stateFile, { force: true }); }
@@ -156,6 +165,35 @@ export async function setup(options) {
   });
 }
 
+export function directAccess(home, host, appRoot, options = {}) {
+  const flags = ['--home', home, '--host', host];
+  for (const key of ['codex', 'claude', 'dsh', 'profile']) if (options[key]) flags.push('--' + key, options[key]);
+  const cli = path.join(appRoot, 'scripts/npm-installer.mjs');
+  return { command: process.execPath, toolsArgs: [cli, 'tools', ...flags],
+    callArgs: [cli, 'call', 'TOOL', '--args-file', 'FILE.json', ...flags],
+    instructions: 'Use working native tools for this installation first. Otherwise execute toolsArgs with command in this same chat, read the returned inputSchema, then execute callArgs after replacing TOOL and FILE.json. Write arguments as a JSON object in a local file, without shell interpolation. Reuse the chosen template, project and request IDs; revision/version guards still apply. This is direct installed MCP access, not native host discovery or reconnection. Do not ask the user to restart or open a new chat to use it. Do not bypass disabled tools, permission denials or host policy. If shell execution is unavailable, use supported host recovery; ask for user action only when no permitted path works.' };
+}
+
+async function installedConnection(options) {
+  const host = options.host || 'codex';
+  const environment = (await readJSON(bundledManifest))?.templateEnvironment;
+  const home = await canonical(options.home || defaultHome(environment));
+  const state = await readJSON(path.join(home, 'install.json'));
+  assert(state?.managedBy === managedBy, 'Run setup for the selected host and installation home first.');
+  assert(state.hosts?.[host] || host === 'codex' && state.skillsDirectory, 'This installation is not registered for the selected host.');
+  const saved = state.hosts?.[host];
+  try {
+    const plan = await hostPlan({ ...options, skillsDirectory: saved?.skillsDirectory, profile: options.profile || saved?.profile }, home, state.launcher, state);
+    const connection = plan.readConnection ? await plan.readConnection() : plan.connection;
+    return { state, connection, home, host };
+  } catch (error) { error.stage = 'host_configuration'; throw error; }
+}
+
+export async function callInstalled(options, name, args = {}) {
+  const { state, connection } = await installedConnection(options);
+  return installedTool(state, connection, name, args);
+}
+
 export async function diagnose(options) {
   let stage = 'installation';
   const host = options.host || 'codex';
@@ -163,22 +201,14 @@ export async function diagnose(options) {
     ? 'After correcting the reported cause, open /mcp in the current Claude Code session and select Reconnect for openmotion.'
     : `After correcting the reported cause, refresh or reconnect openmotion in the current ${host} host${options.profile ? ' profile ' + options.profile : ''}.`;
   try {
-    const environment = (await readJSON(bundledManifest))?.templateEnvironment;
-    const home = await canonical(options.home || defaultHome(environment));
-    const state = await readJSON(path.join(home, 'install.json'));
-    assert(state?.managedBy === managedBy, 'Run setup for the selected host and installation home first.');
-    assert(state.hosts?.[host] || host === 'codex' && state.skillsDirectory, 'This installation is not registered for the selected host.');
-    stage = 'host_configuration';
-    const saved = state.hosts?.[host];
-    const plan = await hostPlan({ ...options, skillsDirectory: saved?.skillsDirectory, profile: options.profile || saved?.profile }, home, state.launcher, state);
-    const connection = plan.readConnection ? await plan.readConnection() : plan.connection;
+    const { state, connection, home } = await installedConnection(options);
     stage = 'mcp_probe';
     const expectedTools = (await readJSON(path.join(state.appRoot, 'shared/mcp-profiles.json'))).phase1.tools;
     const checked = checkTransport(connection, state.version, { expectedTools, dataDirectory: state.dataDirectory });
-    return { status: 'passed', host, ...checked, hostSessionVerified: false,
-      nextAction: 'Call motion_get_project through the active host connection and verify the original project and version. This independent probe does not verify the active chat connection. If that chat still lacks Motion tools: ' + recovery };
+    return { status: 'passed', host, ...checked, hostSessionVerified: false, directAccess: directAccess(home, host, state.appRoot, options),
+      nextAction: 'Use working native tools for this installation, otherwise use directAccess in this same chat. Verify openmotion_get_project and the original project/version before continuing. This probe does not refresh native discovery. Request host recovery only if permitted direct access also fails.' };
   } catch (error) {
-    return { status: 'failed', host, stage, code: error.code || 'MCP_DIAGNOSIS_FAILED', message: redact(error.message, process.env),
+    return { status: 'failed', host, stage: error.stage || stage, code: error.code || 'MCP_DIAGNOSIS_FAILED', message: redact(error.message, process.env),
       hostSessionVerified: false, nextAction: recovery + ' Keep existing projects and exports; do not create replacement work or blindly replay a mutation.' };
   }
 }
@@ -186,14 +216,26 @@ export async function diagnose(options) {
 async function main() {
   const { positionals, values } = parseArgs({ allowPositionals: true, options: {
     manifest: { type: 'string' }, home: { type: 'string' }, 'data-dir': { type: 'string' }, 'skills-dir': { type: 'string' }, host: { type: 'string' }, codex: { type: 'string' }, claude: { type: 'string' }, dsh: { type: 'string' }, profile: { type: 'string' },
-    help: { type: 'boolean', short: 'h' }, version: { type: 'boolean' },
+    help: { type: 'boolean', short: 'h' }, version: { type: 'boolean' }, output: { type: 'string' }, 'args-file': { type: 'string' },
   } });
   if (values.help) { console.log(usage); return; }
   if (values.version) { console.log((await readJSON(new URL('../package.json', import.meta.url))).version); return; }
   const [command] = positionals;
-  assert(positionals.length === 1, usage);
+  assert(positionals.length === (command === 'call' ? 2 : 1), usage);
   if (command === 'setup') {
-    console.log(JSON.stringify(await setup({ manifest: values.manifest, home: values.home, dataDirectory: values['data-dir'], skillsDirectory: values['skills-dir'], host: values.host, codex: values.codex, claude: values.claude, dsh: values.dsh, profile: values.profile }), null, 2));
+    try {
+      console.log(JSON.stringify(await setup({ manifest: values.manifest, home: values.home, dataDirectory: values['data-dir'], skillsDirectory: values['skills-dir'], host: values.host, codex: values.codex, claude: values.claude, dsh: values.dsh, profile: values.profile }), null, 2));
+    } catch (error) {
+      const environment = (await readJSON(bundledManifest).catch(() => null))?.templateEnvironment;
+      await recordDiagnostic(values.home || defaultHome(environment), { kind: 'installation_failed', message: error.message });
+      throw error;
+    }
+  } else if (command === 'tools' || command === 'call') {
+    assert(command !== 'call' || values['args-file'], 'call requires --args-file FILE.json');
+    const result = await callInstalled(values, command === 'call' ? positionals[1] : undefined,
+      command === 'call' ? JSON.parse(await readFile(values['args-file'], 'utf8')) : {});
+    console.log(JSON.stringify(result, null, 2));
+    if (result.isError) process.exitCode = 1;
   } else if (command === 'prepare') {
     const environment = (await readJSON(bundledManifest))?.templateEnvironment;
     const state = await readJSON(path.join(values.home || defaultHome(environment), 'install.json'));
@@ -204,6 +246,12 @@ async function main() {
     const result = await diagnose({ home: values.home, host: values.host, codex: values.codex, claude: values.claude, dsh: values.dsh, profile: values.profile });
     console.log(JSON.stringify(result, null, 2));
     if (result.status !== 'passed') process.exitCode = 1;
-  } else throw new Error('Supported commands: setup, prepare, diagnose');
+  } else if (command === 'diagnostics') {
+    const environment = (await readJSON(bundledManifest))?.templateEnvironment;
+    const home = path.resolve(values.home || defaultHome(environment));
+    const state = await readJSON(path.join(home, 'install.json')).catch(() => null);
+    const dataDirectory = values['data-dir'] || state?.dataDirectory || path.join(home, 'data');
+    console.log(JSON.stringify(await exportDiagnostics({ appRoot: state?.appRoot || fileURLToPath(new URL('../', import.meta.url)), installHome: home, dataDirectory, output: values.output }), null, 2));
+  } else throw new Error('Supported commands: setup, prepare, tools, call, diagnose, diagnostics');
 }
 if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) main().catch(error => { console.error(error.message + '\nRun openmotion --help for supported hosts and installation options.'); process.exitCode = 1; });

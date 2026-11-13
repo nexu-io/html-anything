@@ -58,7 +58,7 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
   }
 
   return (
-    <div className="flex flex-col flex-1 min-h-0">
+    <div data-motion-catalog className="flex flex-col flex-1 min-h-0">
       {/* Search */}
       <div className="px-3 pt-2 pb-1 shrink-0">
         <SearchInput
@@ -85,7 +85,7 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
       </div>
 
       {/* Block grid */}
-      <div className="flex-1 overflow-y-auto min-h-0 px-2 pb-2 [scrollbar-gutter:stable]">
+      <div className="flex-1 overflow-y-auto min-h-0 px-2 pb-2 motion-sidebar-scroll">
         {category === "vfx" && (
           <div className="mb-2 px-2 py-1.5 rounded-md bg-purple-500/10 border border-purple-500/20 text-[9px] text-text-2 leading-relaxed">
             {t("VFX blocks use WebGL via HTML-in-Canvas. Enable")}{" "}
@@ -414,10 +414,8 @@ function BlockCard({
         ) : poster ? (
           <img src={poster} alt={title} loading="lazy" onError={() => setFailedPoster(poster)} className="w-full h-full object-cover" />
         ) : (
-          <div className="flex h-full w-full items-center justify-center bg-panel-bg">
-            <span className="text-[10px] text-panel-text-3">
-              {t("Preview unavailable")}
-            </span>
+          <div className="motion-composition-placeholder absolute inset-0 flex items-center justify-center" data-testid="catalog-cover-placeholder" aria-hidden="true">
+            <span className="motion-composition-placeholder-mark" />
           </div>
         )}
 

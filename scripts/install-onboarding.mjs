@@ -73,7 +73,7 @@ export async function prepareInstallationPreview({ appRoot, dataDirectory }) {
   } catch (error) {
     return { status: 'unavailable', openedByHost: false, projectCreated: false,
       warning: 'Template library could not be prepared: ' + error.message,
-      nextAction: 'Installation succeeded; report the preview failure and retry motion_open_preview with target=templates after connecting MCP. Do not create a placeholder project.' };
+      nextAction: 'Installation succeeded; report the preview failure and retry openmotion_open_preview with target=templates after connecting MCP. Do not create a placeholder project.' };
   }
 }
 

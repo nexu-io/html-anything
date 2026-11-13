@@ -1,0 +1,228 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 1920,
+    "height": 1080
+  },
+  "fps": 30,
+  "durationSeconds": 15.2,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "1dc731ac7df71e9d2a4e86f92d87c3969de86db694f24d0d3c21d9792ac40f6c"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "timeSeconds": 1,
+      "frameId": "K0002",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "timeSeconds": 4,
+      "frameId": "K0010",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "timeSeconds": 9,
+      "frameId": "K0023",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "timeSeconds": 12,
+      "frameId": "K0029",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "timeSeconds": 14,
+      "frameId": "K0037",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 4.182696791000126,
+    "measurementSeconds": 0.3476932920002582,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "球体3D光照、纹理UV与真实材质未逆向；Canvas采用程序纹理近似。",
+    "HTML 为 authored 机制示例，不是完整原样复刻。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V077",
+      "sha256": "1dc731ac7df71e9d2a4e86f92d87c3969de86db694f24d0d3c21d9792ac40f6c",
+      "sourceUrl": "https://studiofreight.com/work/perplexity-comet"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.webp",
+      "bytes": 24208,
+      "sha256": "55a59f5ecfd11a4e89a18bd0f064cbbcb9e2f0b07c91f6ea9f7055d25b36d400"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "bytes": 24124,
+      "sha256": "fe4f5f5ff7e04dfd047324985a46b55a02b322ab56ac36cfcd24fd568580455c"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "bytes": 23362,
+      "sha256": "a69b0b20b71526cca98d8306f626acb81ca284bd31f537209acee649a97dd6e0"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "bytes": 22616,
+      "sha256": "51257e7ff242016c8eb855aa03b604f55a6f3691cfefab40befb7b394179f92f"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "bytes": 20972,
+      "sha256": "d000f347e10128b7774aa37cfd8ad3e445d0d35e6fd9bf2da7e5f60e8ae4ab7f"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "bytes": 23934,
+      "sha256": "01d0623d7e0abe31d81309f7a345a97a35366889c8b7278cd2cfff925461b586"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 10160,
+      "sha256": "c5aa7c450232b95255610f3e81ffab5b06f4c2f69833f1938c72ad59355e9adc"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 1881,
+      "sha256": "b0de97b8c4feb2efd7440b123773236948b74b6b47d3128827deccd629f899fc"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 539,
+      "sha256": "0f4bc3573e0bcc78ca1be4adb51c3c947fa0edb1528adf9362090710815e90a9"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 5600,
+      "sha256": "1c06d84d9482a79d621e86bece359e638fe69cfe7012b0b49335b0a708479fc2"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 17581,
+      "sha256": "7fe59be42b409dcc5c0c1f66e9376fa718d1b26b549c5396917268126d765d26"
+    },
+    {
+      "path": "style.json",
+      "bytes": 3083,
+      "sha256": "23e734841fec9c21f7f5cd1273dec6f2a89f55e7166ca2770a112db9d246835f"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 1870,
+      "sha256": "89b7bf0eef13b175df190460e72cc249bfec87eccd6622d51014e4440cff3f2e"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 9253,
+      "sha256": "5689c1d418599a75c7211254f30ee72f0dd9444dd388def4179f24dc2091de45"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12500,
+      "sha256": "dbafb8d810e47ec5e6cad17f29f0d1f2912f5a802013f70431656b01109db576"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4965,
+      "sha256": "0dbd862b0d39894ce3149f39a094e991b9a401784cf1b392b8bfa0f5273e968d"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Comet planets"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#347c89"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 1
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 15.2,
+      "status": "authored"
+    }
+  ]
+}

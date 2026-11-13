@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { Check } from "../../icons/RemixIcons";
 import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { HF_AUDIO_FX_ATTR } from "@hyperframes/core/audio-fx";
 import { HF_COLOR_GRADING_ATTR } from "@hyperframes/core/color-grading";
@@ -97,6 +98,7 @@ function ChoiceSubmenu({
   onPick: (id: string | null) => void;
   preview?: HoverPreview;
 }) {
+  const { t } = useI18n();
   const [open, setOpen] = useState(false);
   const [anchor, setAnchor] = useState<{ top: number; left?: number; right?: number }>({ top: 0 });
   const rowRef = useRef<HTMLButtonElement | null>(null);
@@ -158,9 +160,9 @@ function ChoiceSubmenu({
     >
       <span className="flex items-center gap-1.5">
         <span aria-hidden="true" className="w-3 text-center">
-          {activeId === id ? "✓" : ""}
+          {activeId === id && <Check size={12} />}
         </span>
-        {text}
+        {t(text)}
       </span>
     </button>
   );
@@ -200,7 +202,7 @@ function ChoiceSubmenu({
                 <>
                   <div className={menuClasses.divider} />
                   <div className="px-3 py-1 text-[9px] uppercase tracking-wide text-neutral-500">
-                    {section.heading}
+                    {t(section.heading)}
                   </div>
                 </>
               )}

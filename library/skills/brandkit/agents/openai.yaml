@@ -1,0 +1,4 @@
+interface:
+  display_name: "OpenMotion · brandkit compatibility alias"
+policy:
+  allow_implicit_invocation: false

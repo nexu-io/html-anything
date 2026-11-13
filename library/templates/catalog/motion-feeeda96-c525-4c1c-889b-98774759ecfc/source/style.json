@@ -1,0 +1,99 @@
+{
+  "background": {
+    "color": "#f8f8f5",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Claude Haiku 5.5",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "三列图形槽位",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "方形与 L 形遮罩",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "纹理填充",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "弧线基线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "产品标题",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f8f8f5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#171716",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e1b93e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#cb5c8d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#366288",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "中等字重衬线产品名；黑色细弧线；三列拼贴块与大留白",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "三列位置保持稳定，内部纹理与 L 形朝向离散切换；切换素材不等于整体图块平移。",
+      "status": "inferred"
+    },
+    {
+      "rule": "低位细弧线承接三列图块，再承接产品名，靠同一基线维持连续性。",
+      "status": "inferred"
+    },
+    {
+      "rule": "标题留读后消失，图块回到起始构图；尾段是循环回接。",
+      "status": "inferred"
+    }
+  ]
+}

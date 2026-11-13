@@ -1,3 +1,4 @@
+import { CommunityLink } from './CommunityLink';
 import { StudioErrorBoundary } from '../components/StudioErrorBoundary';
 import { I18nProvider, useI18n } from "../i18n/I18n";
 import { useEffect, useRef, useState, type ReactNode } from 'react';
@@ -75,8 +76,8 @@ function WorkspaceProject() {
   const finishEditing = () => { editingRef.current = false; setEditing(false); };
   const saveTitle = async () => {
     if (!editingRef.current || savingRef.current) return;
-    const nextTitle = title.trim();
-    if (!project || !nextTitle || nextTitle === project.title) { finishEditing(); return; }
+    const nextTitle = title.trim() || t('Untitled');
+    if (!project || nextTitle === project.title) { finishEditing(); return; }
     savingRef.current = true;
     try { if (await workspace.rename(project.id, nextTitle)) finishEditing(); }
     finally { savingRef.current = false; }
@@ -87,7 +88,7 @@ function WorkspaceProject() {
       maxLength={100}
       aria-label={t('Project name')}
       value={editing ? title : project?.title || ''}
-      placeholder={t('Connecting…')}
+      placeholder={t(project ? 'Untitled' : 'Connecting…')}
       disabled={workspace.busy || switchingDisabled || !project}
       onFocus={() => {
         if (editingRef.current) return;
@@ -126,10 +127,11 @@ function WorkspaceHistoryActions() {
 }
 
 function WorkspaceActions() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const label = locale === 'en' ? 'Template' : t('Template library');
   const { switchingDisabled, openLibrary } = useWorkspaceChrome();
   return <div className="motion-workspace-actions">
-    <button className="motion-button motion-button-quiet" aria-label={t("Template library")} title={t("Template library")} aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => openLibrary(event.currentTarget)}><MotionIcon name="grid" /><span className="motion-template-label">{t("Template library")}</span></button>
+    <button className="motion-button motion-button-quiet" aria-label={label} title={label} aria-haspopup="dialog" disabled={switchingDisabled} onClick={event => openLibrary(event.currentTarget)}><MotionIcon name="grid" /><span className="motion-template-label">{label}</span></button>
   </div>;
 }
 
@@ -138,6 +140,7 @@ const host: StudioHost = {
   brand: <WorkspaceBrand />,
   projectLabel: <WorkspaceProject />,
   headerActions: <WorkspaceActions />,
+  communityAction: <CommunityLink />,
   historyActions: <WorkspaceHistoryActions />,
   previewAction: <></>,
   windowMenu: <></>,

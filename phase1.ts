@@ -1,4 +1,7 @@
+import { publicToolName, legacyToolName, publicToolResult } from './shared/public-names.mjs';
 import { requireNativeRuntime } from './scripts/npm-runtime.mjs';
+import { recordDiagnostic } from './scripts/diagnostics.mjs';
+import { MAX_ASSET_BYTES, isAssetFileWithinLimit } from './shared/asset-limits.ts';
 import { createHash } from 'node:crypto';
 import { constants } from 'node:fs';
 import { copyFile, lstat, mkdir, open, readFile, readdir, rm, stat, writeFile } from 'node:fs/promises';
@@ -27,11 +30,11 @@ function previewHandoff(origin: string, target: { projectId: string; sessionId: 
   const confirmed = display?.visibility === 'visible' && display.contentVerified === true;
   const background = presentation === 'background';
   const now = presentation === 'now';
-  const onReturn = { tool: 'motion_open_preview', arguments: { projectId: target.projectId } };
-  const deferred = !now && display?.visibility !== 'visible' && (display?.hostStatus === 'queued' || display?.visibility === 'queued');
+  const onReturn = { tool: 'openmotion_open_preview', arguments: { projectId: target.projectId } };
+  const deferred = !now && display?.visibility === 'queued';
   const recovery = now ? { when: 'hidden_after_queued_ack', tool: 'navigate_to_codex_page', scope: 'calling_chat_only',
     threadIdFrom: 'open_in_codex.response.threadId', then: 'present_same_tab_and_recheck_visibility' } :
-    { when: 'calling_chat_not_visible', operation: 'wait_for_calling_chat', onReturn };
+    { when: 'calling_chat_confirmed_inactive', operation: 'wait_for_calling_chat', onReturn };
   return { ...target, previewUrl, placement: 'right', reuseExistingTab: true, presentation,
     focusPolicy: background ? 'background' : now ? 'switch_to_calling_chat' : 'preserve_current_chat',
     state: background ? 'background' : confirmed ? 'confirmed' : 'pending', openedByHost: confirmed,
@@ -39,16 +42,16 @@ function previewHandoff(origin: string, target: { projectId: string; sessionId: 
     nextAction: background || confirmed ? null : deferred ? { kind: 'host', operation: 'wait_for_calling_chat', onReturn } : prepared ? { kind: 'host', operation: 'present_preview',
       previewUrl, placement: 'right', reuseExistingTab: true, codex: { tool: 'open_in_codex', arguments: {
         placement: 'right', target: { type: 'browser', url: previewUrl, ...(hostTabId ? { tabId: hostTabId } : {}) } },
-        tabIdentity: 'Validate any stored Tab ID against the current host inventory; reuse the actual native host Tab ID (providerTabId), never a CUA wrapper id. After presenting, rebind the matching native panel tab before observing visibility; a hidden browser-use tab is separate.',
+        tabIdentity: 'Validate any stored Tab ID against the current host inventory; reuse the actual native host Tab ID (providerTabId), never a CUA wrapper id. After presenting, rebind the matching native panel tab before observing visibility. A separate visible:false or browser-use: automation tab and markDeliverable do not satisfy presentation; if the native project tab is missing, retry the same host presentation once, then report the gap.',
         visibilitySync: { capability: 'visibility', method: 'set', value: true,
           when: 'after_binding_native_tab', scope: 'calling_chat_only', navigation: false },
         observation: { visibility: 'get', settleTimeoutMs: 6000, content: 'latest_live_preview', recheckVisibilityAfterContent: true },
-        recovery } } : { kind: 'motion', tool: 'motion_open_preview', arguments: {
+        recovery } } : { kind: 'motion', tool: 'openmotion_open_preview', arguments: {
       projectId: target.projectId, expectedRevision: target.revision, expectedVersionId: target.versionId, presentation } },
     instructions: background ? 'Keep this edit in the background as explicitly requested by the user.' :
       (now ? 'The user explicitly requested immediate display for this turn; current-chat recovery may navigate to the calling chat. ' :
-        'Preserve the current chat. Queue the preview for its calling chat without navigating; if queued or hidden, wait for the user to return. On return, prepare the latest project version rather than replaying an old version-bound action. ') +
-      'Bind the native project tab and request Codex IAB visibility for the calling chat without navigation; inactive chats queue this request. Observe settled visibility and changed live content/time, recheck visibility, then record_display for the currently observed revision/version. A queued acknowledgment alone is not display confirmation. Follow motion://workflow/production/native#continuing-edits.' };
+        'Preserve the current chat. Wait for return only when the host confirms the calling chat is inactive; queued acknowledgment or hidden panel alone does not establish inactivity. On return, prepare the latest project version rather than replaying an old version-bound action. ') +
+      'For first delivery and continued edits, bind the native project tab and request Codex IAB visibility for the calling chat without navigation. Observe settled visibility and changed live content/time, recheck visibility, then record_display for the currently observed revision/version. Use visibility=queued only for confirmed inactive-chat deferral; otherwise record hidden or unavailable and report the display failure. Hidden-tab playback, markDeliverable and completed MP4 export do not complete editor delivery. Follow openmotion://workflow/production/native#continuing-edits.' };
 }
 function cursor(value: any) { return Buffer.from(JSON.stringify(value)).toString('base64url'); }
 function parseCursor(value: string | undefined, kind: string, scope: string) {
@@ -77,21 +80,24 @@ export class Phase1Service {
   constructor(store: WorkspaceStore, runtimeRoot: string, context: Phase1Context) { this.store = store; this.runtimeRoot = runtimeRoot; this.context = context; }
   versions(projectId: string) { return new ProjectVersions(this.store.forProject(projectId), this.runtimeRoot, this.context.nativeUrl(projectId)); }
   async call(name: string, args: any) {
+    name = legacyToolName(name);
     try {
       const result = await this.invoke(name, args);
       if (name === 'motion_restore_version') this.restoreErrors.delete(args.projectId);
       trackPhase1Result(this.context.tracking, name, args, result);
-      return result;
+      return publicToolResult(result);
     } catch (error) {
       if (name === 'motion_restore_version' && errorText(error).startsWith('VERSION_NOT_RESTORABLE:')) {
         this.restoreErrors.set(args.projectId, { requestId: args.requestId, message: errorText(error) });
       }
       trackPhase1Result(this.context.tracking, name, args, undefined, error);
+      await recordDiagnostic(this.store.directory, { kind: 'mcp_failure', tool: name, requestId: args?.requestId,
+        projectId: args?.projectId, message: errorText(error), stack: error instanceof Error ? error.stack : undefined });
       throw error;
     }
   }
   private async invoke(name: string, args: any) {
-    const definition = phase1Tools.find(tool => tool.name === name);
+    const definition = phase1Tools.find(tool => tool.name === publicToolName(name));
     if (!definition) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + name);
     validateInput(definition.inputSchema, args);
     if (name === 'motion_open_preview' && args.target === 'templates') {
@@ -206,7 +212,7 @@ export class Phase1Service {
         projectType: meta.projectType ?? 'legacy', source: meta.source ?? null, assets, file, exportJob,
         previewDisplay: await this.previewDisplay(projectId, version),
         exports: jobs.map(({ token, workerPid, ...job }) => job), reviews: await jsonFile(path.join(this.store.directory, 'phase1', 'reviews', projectId + '.json'), []),
-        limits: { textBatchFiles: 100, textBatchBytes: 8388608, textReadBytes: 2097152, assetBytes: 2147483648, attachmentTransport: 'local_path' } };
+        limits: { textBatchFiles: 100, textBatchBytes: 8388608, textReadBytes: 2097152, assetBytes: MAX_ASSET_BYTES, attachmentTransport: 'local_path' } };
     });
   }
   async previewDisplay(projectId: string, version: ContentVersion) {
@@ -227,7 +233,7 @@ export class Phase1Service {
     const current = await this.detail(detail.projectId);
     if (current.revision !== detail.revision || current.currentVersionId !== detail.currentVersionId) throw new Error('VERSION_CONFLICT: content changed during display confirmation');
     return { projectId: detail.projectId, changed: false, previewHandoff: previewHandoff(this.context.origin(), {
-      projectId: detail.projectId, sessionId: detail.sessionId, revision: detail.revision, versionId: detail.currentVersionId }, args.presentation, record, true, display.previewUrl), display: record };
+      projectId: detail.projectId, sessionId: detail.sessionId, revision: detail.revision, versionId: detail.currentVersionId }, args.presentation, record, true, display.previewUrl, record.hostTabId), display: record };
   }
   async review(args: any, objectId?: string) {
     if (!args.review) throw new Error('INVALID_ARGUMENT: review is required');
@@ -410,9 +416,9 @@ export class Phase1Service {
             }
             if (!path.isAbsolute(item.sourcePath)) throw new Error('ATTACHMENT_NOT_READABLE: 需要本机实际绝对路径');
             const info = await stat(item.sourcePath);
-            if (!info.isFile() || info.size >= 2147483648) throw new Error('ASSET_TOO_LARGE_OR_NOT_FILE');
+            if (!isAssetFileWithinLimit(info)) throw new Error('ASSET_TOO_LARGE_OR_NOT_FILE: max 500 MB (500000000 bytes)');
             const staged = path.join(staging, crypto.randomUUID()); await cloneFile(item.sourcePath, staged);
-            if ((await stat(staged)).size >= 2147483648) throw new Error('ASSET_TOO_LARGE_OR_NOT_FILE');
+            if (!isAssetFileWithinLimit(await stat(staged))) throw new Error('ASSET_TOO_LARGE_OR_NOT_FILE: max 500 MB (500000000 bytes)');
             const probe = await execute(verificationBinaries().ffprobe, ['-v', 'error', '-show_streams', '-show_format', '-of', 'json', staged], staging, 60_000);
             if (probe.code) throw new Error('INVALID_MEDIA: 无法读取真实媒体');
             const media = JSON.parse(probe.stdout), stream = media.streams?.find((s: any) => s.codec_type === 'video' && !s.disposition?.attached_pic) ?? media.streams?.find((s: any) => s.codec_type === 'audio');

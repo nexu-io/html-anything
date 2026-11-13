@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'node:http';
-import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, realpath, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
@@ -10,6 +10,7 @@ import { pluginRoot } from '../hyperframes.ts';
 import { rpc } from '../mcp.ts';
 import { copyRuntimeFixture } from './fixtures.ts';
 import { WorkspaceStore } from '../workspace.ts';
+import { openPreview } from '../preview.ts';
 
 async function incompatibleEditor(directory: string, changed: Record<string, unknown>, toolError?: string) {
   const { data, runtime } = await editorDirectory(directory);
@@ -21,7 +22,7 @@ async function incompatibleEditor(directory: string, changed: Record<string, unk
   const server = createServer(async (req, res) => {
     requests.push(req.url!);
     res.setHeader('Content-Type', 'application/json');
-    if (req.url === '/editor-api/preview') return res.end(JSON.stringify({ previewUrl: registry.endpoint, ready: true, dataDirectory: data }));
+    if (req.url === '/editor-api/preview') return res.end(JSON.stringify({ previewUrl: registry.endpoint, studioUrl: 'http://127.0.0.1:59999/', editorReady: true, ready: true, dataDirectory: data }));
     if (req.url === '/motion-api/phase1/call') {
       let body = ''; for await (const chunk of req) body += chunk;
       calls.push(JSON.parse(body));
@@ -38,16 +39,26 @@ async function incompatibleEditor(directory: string, changed: Record<string, unk
   } };
 }
 
-const exportCall = { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'motion_export_request', arguments: {
+const exportCall = { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'openmotion_export_request', arguments: {
   projectId: 'project', requestId: 'must-not-export', expectedRevision: '0'.repeat(64), versionId: 'unavailable', audio: 'silent',
 } } };
+
+test('a compatible older shared backend cannot hand off its internal Studio URL', { skip: !sharedEditorEnabled }, async () => {
+  const directory = await realpath(await mkdtemp(path.join(tmpdir(), 'motion-old-preview-url-')));
+  const editor = await incompatibleEditor(directory, { build: 'older-build', mcp: { protocol: 1, tools: ['openmotion_open_preview'] } });
+  try {
+    const opened = await openPreview(new WorkspaceStore(directory), undefined, { editor: true, mcpTool: 'openmotion_open_preview' });
+    assert.equal(new URL(opened.studioUrl!).origin, new URL(editor.registry.endpoint).origin);
+    assert.equal(new URL(opened.studioUrl!).hash, '#project/project');
+  } finally { await editor.close(); await rm(directory, { recursive: true, force: true }); }
+});
 
 test('MCP reports unavailable historical files as not applied', { skip: !sharedEditorEnabled }, async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-unavailable-version-'));
   const message = 'VERSION_NOT_RESTORABLE: Historical files are missing, unreadable or corrupt: assets/audio.wav';
-  const editor = await incompatibleEditor(directory, { mcp: { protocol: 1, tools: ['motion_restore_version'] } }, message);
+  const editor = await incompatibleEditor(directory, { mcp: { protocol: 1, tools: ['openmotion_restore_version'] } }, message);
   try {
-    const response: any = await rpc({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'motion_restore_version', arguments: {
+    const response: any = await rpc({ jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'openmotion_restore_version', arguments: {
       projectId: 'project', requestId: 'missing-media', versionId: 'unavailable', expectedVersionId: 'current', expectedRevision: '0'.repeat(64),
     } } }, new WorkspaceStore(directory));
     assert.equal(response.result.isError, true);
@@ -80,7 +91,7 @@ test('a live phase1 MCP connection survives a replaced or removed plugin directo
     const temporary = await mkdtemp(path.join(tmpdir(), 'motion-stale-plugin-'));
     const app = path.join(temporary, 'app'), directory = path.join(temporary, 'data');
     await copyRuntimeFixture(app);
-    const editor = await incompatibleEditor(directory, { version: '0.6.4', build: '0'.repeat(64), mcp: { protocol: 1, tools: ['motion_get_project', 'motion_export_request'] } });
+    const editor = await incompatibleEditor(directory, { version: '0.6.4', build: '0'.repeat(64), mcp: { protocol: 1, tools: ['openmotion_get_project', 'openmotion_export_request'] } });
     const { Client } = await import(pathToFileURL(path.join(app, 'tests/shared-editor-client.mjs')).href);
     const client = new Client(directory);
     try {
@@ -88,14 +99,14 @@ test('a live phase1 MCP connection survives a replaced or removed plugin directo
       const pid = client.child.pid;
       await rename(app, path.join(temporary, 'previous'));
       if (replaced) await mkdir(app);
-      for (const params of [{ name: 'motion_get_project', arguments: {} }, exportCall.params]) {
+      for (const params of [{ name: 'openmotion_get_project', arguments: {} }, exportCall.params]) {
         const response = await client.rpc('tools/call', params);
         assert.equal(response.isError, undefined);
         assert.equal(response.structuredContent.authority, 'compatible-backend');
       }
       assert.equal(client.child.pid, pid);
       assert.equal(client.trace.filter((item: any) => item.method === 'initialize').length, 1);
-      assert.deepEqual(editor.calls, [{ name: 'motion_get_project', arguments: {} }, exportCall.params]);
+      assert.deepEqual(editor.calls, [{ name: 'openmotion_get_project', arguments: {} }, exportCall.params]);
       assert.ok(!editor.requests.includes('/editor-api/shutdown'));
       assert.deepEqual((await readdir(directory)).sort(), ['.editor-runtime', 'preview.json']);
     } finally { await client.close(); await editor.close(); await rm(temporary, { recursive: true, force: true }); }
@@ -103,9 +114,9 @@ test('a live phase1 MCP connection survives a replaced or removed plugin directo
 });
 
 test('phase1 recovery still refuses unsupported tools, incompatible protocols and a different authority', { skip: !sharedEditorEnabled }, async t => {
-  const mcp = { protocol: 1, tools: ['motion_export_request'] };
+  const mcp = { protocol: 1, tools: ['openmotion_export_request'] };
   for (const changed of [
-    { version: '0.6.4', mcp: { ...mcp, tools: ['motion_get_project'] } },
+    { version: '0.6.4', mcp: { ...mcp, tools: ['openmotion_get_project'] } },
     { version: '0.6.4', mcp: { ...mcp, protocol: 2 } },
     { mcp: { ...mcp, protocol: 2 } },
     { protocol: 999, mcp },

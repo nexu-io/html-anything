@@ -1,12 +1,16 @@
 {
-  "name": "motion",
+  "name": "openmotion",
   "version": "0.6.3",
-  "description": "Plan, create, animate, edit, preview, and export motion graphics and motion videos in OpenMotion, including original videos on a user-supplied topic, template-based creation and reference video recreation. 用于构思和制作 motion 视频、动效视频、动画、赛事回顾、科普讲解和参考视频复刻。",
+  "description": "Plan, create, animate, edit, preview, and export motion graphics and motion videos in OpenMotion, including original videos on a user-supplied topic, template-based creation and reference video recreation. 使用 OpenMotion 构思和制作视频、动效视频、动画、赛事回顾、科普讲解和参考视频复刻。",
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "requires_local_executor": true,
   "interface": {
-    "displayName": "OpenDesign",
-    "shortDescription": "制作、复刻和编辑 Motion 视频"
+    "displayName": "OpenMotion",
+    "shortDescription": "用 OpenMotion 制作、复刻和编辑视频",
+    "composerIcon": "./docs/readme/opendesign-symbol-auto.svg",
+    "composerIconDark": "./docs/readme/opendesign-symbol-dark.svg",
+    "logo": "./docs/readme/opendesign-symbol-auto.svg",
+    "logoDark": "./docs/readme/opendesign-symbol-dark.svg"
   }
 }

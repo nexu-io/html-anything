@@ -40,7 +40,7 @@ env:
 
 jobs:
   verify:
-    if: github.repository == 'nexu-io/html-anything'
+    if: github.repository == 'nexu-io/openmotion'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
     outputs:
@@ -49,8 +49,8 @@ jobs:
     steps:
       - name: Require Motion integration branch
         run: |
-          if [ "$GITHUB_REF" != 'refs/heads/feature/motion' ]; then
-            echo '::error::Select feature/motion in Run workflow for Motion operations.'
+          if [ "$GITHUB_REF" != 'refs/heads/main' ]; then
+            echo '::error::Select main in Run workflow for Motion operations.'
             exit 1
           fi
       - uses: actions/checkout@v6.0.2
@@ -71,7 +71,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           MOTION_EXPECTED_SHA256: ${{ steps.download.outputs.tgz_sha256 }}
         run: |
-          git fetch origin feature/motion:refs/remotes/origin/feature/motion
+          git fetch origin main:refs/remotes/origin/main
           node .github/scripts/motion-scan.mjs install "$RUNNER_TEMP/scanner"
           node .github/scripts/motion-release.mjs rescan "$RUNNER_TEMP/candidate" "$PWD" "$RUNNER_TEMP/scanner/gitleaks"
       - uses: actions/upload-artifact@v7.0.2

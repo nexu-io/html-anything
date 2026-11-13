@@ -94,6 +94,7 @@ it('restores and synchronizes every supported preference without replacing edito
     act(() => host.querySelector<HTMLButtonElement>(`[data-locale="${locale}"]`)!.click());
     expect(readLocale()).toBe(locale);
     expect(document.documentElement.lang).toBe(locale);
+    expect(document.title).toBe(translate(locale, 'OpenMotion Studio'));
     expect(host.querySelector('h1')?.textContent).toBe(translate(locale, 'Preview'));
     expect(host.querySelector('input')).toBe(input);
     expect(host.querySelector('iframe')).toBe(preview);
@@ -172,17 +173,17 @@ it('updates an already visible toast when the interface language changes', () =>
   expect(host.querySelector('[role="status"]')?.textContent).toContain('Undid: Edit layer style');
 });
 
-it('renders a dismissible restore error with a localized summary and unchanged diagnostic details', () => {
+it('renders a dismissible restore error with a concise localized cause and no details controls', () => {
   const dismiss = vi.fn();
   const message = 'VERSION_NOT_RESTORABLE: Historical files are missing, unreadable or corrupt: assets/原始配乐.wav';
   act(() => root.render(<I18nProvider initialLocale="zh-CN"><StudioToast message={message} tone="error" onDismiss={dismiss} /></I18nProvider>));
   const alert = host.querySelector('[role="alert"]')!;
-  expect(alert.textContent).toBe('操作未能完成，可查看错误详情。');
+  expect(alert.textContent).toBe('历史文件不可用，未恢复该版本');
   expect(host.textContent).not.toContain('assets/原始配乐.wav');
   expect(host.textContent).not.toContain('VERSION_NOT_RESTORABLE');
-  act(() => host.querySelector<HTMLButtonElement>('button[aria-expanded]')!.click());
-  expect(host.querySelector('pre')?.textContent).toBe(message);
-  act(() => host.querySelector<HTMLButtonElement>('.motion-error-notice-close')!.click());
+  expect(host.querySelector('button[aria-expanded]')).toBeNull();
+  expect(host.querySelector('pre')).toBeNull();
+  act(() => host.querySelector<HTMLButtonElement>('[aria-label="关闭错误提示"]')!.click());
   expect(dismiss).toHaveBeenCalledOnce();
 });
 

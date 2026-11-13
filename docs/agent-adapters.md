@@ -2,7 +2,7 @@
 
 适配器继承外置运行时的 MCP 发布 profile，`scope.json.mcpProfile` 记录 legacy／phase1，不单独维护 Tool allowlist。注册与构建规则见[一期 MCP 契约](mcp-phase1-tools.md)；旧运行时没有此标记时按 legacy 记录，不据此宣称一期已验收。
 
-Codex、Claude Code、DeepSeek Harness（DSH）与 WorkBuddy 从同一份已安装的 OpenDesign Motion 运行时生成薄适配器。适配器包含宿主清单、连接配置、制作 Skills、AGENTS.md、CLAUDE.md 和产品文档，不包含服务源码、node_modules、Node、浏览器、FFmpeg、用户工程或账号凭据。
+Codex、Claude Code、DeepSeek Harness（DSH）与 WorkBuddy 从同一份已安装的 OpenMotion 运行时生成薄适配器。适配器包含宿主清单、连接配置、制作 Skills、AGENTS.md、CLAUDE.md 和产品文档，不包含服务源码、node_modules、Node、浏览器、FFmpeg、用户工程或账号凭据。
 
 各宿主分别启动 stdio MCP 进程，业务能力仍由同一份 `mcp.ts`、会话/工程、Model Gateway、Hyperframes 编辑器和渲染器提供。它们可以使用相同或不同的 `MOTION_DATA_DIR`；共用代码不代表共用一个 MCP 进程。macOS 同一数据目录的连接现在复用完整编辑器后台，各自保留工程绑定，Studio 仍只有一个活动工程；协议、版本或代码不兼容时拒绝复用，见 [共享编辑器](shared-editor.md)。Windows / Linux 保留原预览服务复用。Agent 仍需按最新工具契约读取会话、选择产物和校验 revision。
 
@@ -31,7 +31,7 @@ Codex、Claude Code、DeepSeek Harness（DSH）与 WorkBuddy 从同一份已安�
 
 ```sh
 npx skills add ./skills --list
-npx skills add ./skills --skill motion-director motion-production motion-template-to-video motion-recreate motion-video-to-template
+npx skills add ./skills --skill openmotion-director openmotion-production openmotion-template-to-video openmotion-recreate openmotion-video-to-template
 ```
 
 显式选择五个正式入口，保留相互引用的同级目录；源码中的 `reference-video` 仅为兼容入口，不作为第六个正式 Skill。选择目标宿主后按 CLI 提示安装，不使用 `--all` 扩大安装范围。Skills CLI 有自己的 Node 要求；README 使用 CI 固定的 Node 26.11.1。
@@ -66,7 +66,7 @@ Mac 对应使用 `runtime/node/bin/node`。完整内部测试包保留原有 `mo
 | `openmotion-<host>-<version>-local.zip` | 各宿主的本机目录归档，非完整应用安装程序 |
 | `launch-spec.json` | 四家共用的 Node、参数、工作目录和工程路径 |
 
-ZIP 使用安装机器的绝对路径；跨机器、移动运行时或切换版本后重新生成，不能作为通用安装包公开分发。展示品牌为 OpenDesign，兼容保留 `motion` 插件和 MCP 标识，以及已有 `openmotion` 目录/市场名。
+ZIP 使用安装机器的绝对路径；跨机器、移动运行时或切换版本后重新生成，不能作为通用安装包公开分发。New plugin manifests, marketplace entries and MCP registrations use `openmotion`. Old explicit Skill invocations and Tool/resource names remain compatibility aliases; existing `motion` MCP configurations may still launch the same runtime. Refresh the host discovery after replacing an old package.
 
 ## Codex / Claude Code
 
@@ -85,7 +85,11 @@ Codex 声明 `requires_local_executor`；两家原生插件均引用同一外置
 
 Generated Codex and Claude plugin descriptions reuse the selected runtime's `.codex-plugin/plugin.json` discovery description, and Codex also retains its short description. Older runtimes without that manifest retain the generic adapter description, while an invalid manifest (a non-object manifest or interface, or an empty/non-string `description` or `interface.shortDescription`) is rejected with a clear error before any adapter is written. The five Skills carry their own intent descriptions across plugin and npm installation paths. Regenerate adapters after updating this metadata and refresh the host's discovery as described in [installation and recovery](npm-installation.md#missing-mcp-tools-or-a-failed-connection).
 
-独立验证使用临时 `CODEX_HOME` / `CLAUDE_CONFIG_DIR`，安装后读取宿主实际解析的启动配置，检查工具和 `motion_get_project.dataDirectory`。卸载仅移除薄入口，保留外置运行时和用户数据。旧自带服务源码的 `check-installed-mcp.mjs` / `resolve-installed.mjs` 不用于新适配器缓存；本轮不改变旧安装器行为。
+Codex plugin icons are configured by `interface.logo`, `logoDark`, `composerIcon` and `composerIconDark` in `.codex-plugin/plugin.json`. Generated Codex adapters preserve the runtime interface and include its square brand symbols under `docs/readme/`. Direct MCP connections, including npm setup, receive the same light/dark symbols as embedded `serverInfo.icons` when negotiating protocol `2025-11-25`; older protocol responses omit icons. Icon rendering and placement depend on the host. Updating source metadata does not refresh an already installed plugin or an existing MCP connection.
+
+The default plugin logo/composer SVG also switches its fill through `prefers-color-scheme`. This supports host surfaces that use only the default logo, including the local-MCP row of the Codex plugin detail page; dedicated dark-logo fields remain available for surfaces that select them explicitly.
+
+独立验证使用临时 `CODEX_HOME` / `CLAUDE_CONFIG_DIR`，安装后读取宿主实际解析的启动配置，检查工具和 `openmotion_get_project.dataDirectory`。卸载仅移除薄入口，保留外置运行时和用户数据。旧自带服务源码的 `check-installed-mcp.mjs` / `resolve-installed.mjs` 不用于新适配器缓存；本轮不改变旧安装器行为。
 
 For an npm-managed installation, the installed `scripts/npm-installer.mjs diagnose --host HOST --home HOME` reuses the transport probe with that installation's launcher, host configuration and expected data directory; it does not inspect an assumed plugin cache. Missing/disabled registration, startup errors, invalid protocol output, version/tool mismatches and a different workspace are reported separately. Its independent probe cannot observe every active host session or reconnect a closed chat transport. Follow [connection diagnosis and recovery](npm-installation.md#missing-mcp-tools-or-a-failed-connection), then verify the original project through the real host MCP connection.
 
@@ -95,7 +99,7 @@ For an npm-managed installation, the installed `scripts/npm-installer.mjs diagno
 dsh --profile headless --patch "$motionAdapters/deepseek/openmotion/cordis.patch.yml" --json   '仅查询Motion工作流和builtin模板，不修改工程或导出。'
 ```
 
-需要活动 profile 已具备可用模型接入。patch 使用 `insert`，保留已有插件和设置；stdio 启动不需要 DeepSeek 模型 API Key，模型账号由 Harness 管理。工具通常显示为 `mcp__motion__motion_get_project`，以实际发现的名称为准。参见 [DSH 官方 MCP 客户端](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/mcp/mcp-client/README.md)。
+需要活动 profile 已具备可用模型接入。patch 使用 `insert`，保留已有插件和设置；stdio 启动不需要 DeepSeek 模型 API Key，模型账号由 Harness 管理。工具通常显示为 `mcp__openmotion__openmotion_get_project`，以实际发现的名称为准。参见 [DSH 官方 MCP 客户端](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/mcp/mcp-client/README.md)。
 
 ## WorkBuddy
 

@@ -1,0 +1,390 @@
+{
+  "templateId": "motion-dc52ebb8-adb7-442a-b57b-8e647e68863f",
+  "entry": {
+    "templateId": "motion-dc52ebb8-adb7-442a-b57b-8e647e68863f",
+    "sortOrder": 158,
+    "original": {
+      "templateName": "Apple｜跨设备剪贴板",
+      "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+      "summary": "手机文本为输入来源，电脑文档为目标；核心变化在文本选择与粘贴，设备外框基本稳定。",
+      "styleDescription": "无衬线中粗主标题；细边框界面与小号功能文字",
+      "promotionalUseCases": "产品演示",
+      "visualPresentation": "界面动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+      "reviewFocus": "手机文本为输入来源，电脑文档为目标；核心变化在文本选择与粘贴，设备外框基本稳定。；不应为强调跨端而编造大幅飞行轨迹。",
+      "category": "",
+      "durationSeconds": "5",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://www.apple.com/macbook-air/",
+      "exampleVideo": "",
+      "templateId": "V289",
+      "sourceVideoTitle": "apple614daee6309a.mp4"
+    },
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "files": [],
+    "previewUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+    "coverUrl": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+    "motionDocumentUrl": "https://r.open-design.ai/files/717e3db0e1788c6c3d1e43b0b26cf3642f888a93e6f6b1eb0a34350dfc0cd009",
+    "motionGuideUrl": "https://r.open-design.ai/files/ea1d944cbd7ccb18e012033a04c376fca74a4927ccbe8adbcd87e2d38c9c012d",
+    "projectFileUrl": null,
+    "brand": "Apple",
+    "colors": [
+      "monochrome"
+    ],
+    "width": 980,
+    "height": 580,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。",
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "passed"
+    },
+    "featuredOrder": null
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Apple｜Geräteübergreifende Zwischenablage",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "Text auf dem Smartphone ist die Eingabequelle, das Dokument auf dem Computer das Ziel. Die wesentliche Änderung liegt in Textauswahl und Einfügen; die Geräteumrisse bleiben weitgehend stabil.",
+        "styleDescription": "Halbfette serifenlose Hauptüberschrift; Oberfläche mit feinen Rahmen und kleinen Funktionstexten",
+        "promotionalUseCases": "Produktdemo",
+        "visualPresentation": "Oberflächenanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "Text auf dem Smartphone ist die Eingabequelle, das Dokument auf dem Computer das Ziel. Die wesentliche Änderung liegt in Textauswahl und Einfügen; die Geräteumrisse bleiben weitgehend stabil. Keine weiten Flugbahnen erfinden, nur um den geräteübergreifenden Ablauf zu betonen.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "original": {
+        "templateName": "Apple — Across devices",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "Phone text is the input source and the computer document the destination; changes focus on text selection and pasting while device frames remain largely stable.",
+        "styleDescription": "Medium-bold sans-serif headlines; fine-bordered interface and small functional text",
+        "promotionalUseCases": "Product demo",
+        "visualPresentation": "Interface animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "Phone text is the input source and the computer document the destination; changes focus on text selection and pasting while device frames remain largely stable. Do not invent large flying trajectories merely to emphasize the cross-device interaction.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "motionDocumentUrl": "https://r.open-design.ai/files/dc96a392e30f61a2e645d84fbb98b2cc5ba920ac12b9b89cde20e2c0ae918d5a",
+      "motionGuideUrl": "https://r.open-design.ai/files/0068775320a426aff28fc41e3802adf935cf35cdd3d187155f5d408fb733a4ea",
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Apple | Portapapeles entre dispositivos",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "El texto móvil es la fuente y el documento del ordenador el destino; centrar cambios en selección y pegado, manteniendo estables los marcos.",
+        "styleDescription": "Título principal seminegrita sin serifa; interfaz con bordes finos y textos funcionales pequeños",
+        "promotionalUseCases": "Demostración de producto",
+        "visualPresentation": "Animación de interfaz",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "El texto móvil es la fuente y el documento del ordenador el destino; centrar cambios en selección y pegado, manteniendo estables los marcos. No inventar grandes trayectorias de vuelo para enfatizar el paso entre dispositivos.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Apple｜Presse-papiers entre appareils",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "Le texte du téléphone est la source, le document de l’ordinateur la destination. L’essentiel se joue dans la sélection et le collage du texte ; les cadres des appareils restent presque fixes.",
+        "styleDescription": "Titre principal sans empattement semi-gras ; interface aux bordures fines et petits textes fonctionnels",
+        "promotionalUseCases": "Démonstration produit",
+        "visualPresentation": "Animation d’interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "Le texte du téléphone est la source, le document de l’ordinateur la destination. L’essentiel se joue dans la sélection et le collage du texte ; les cadres des appareils restent presque fixes. Ne pas inventer de grandes trajectoires aériennes pour souligner le passage entre appareils.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Apple｜Appunti tra dispositivi",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "Il testo del telefono è la fonte, il documento del computer la destinazione. Il cambiamento centrale è nella selezione e nell’incollaggio del testo; le cornici dei dispositivi rimangono quasi ferme.",
+        "styleDescription": "Titolo principale senza grazie semigrassetto; interfaccia con bordi sottili e piccoli testi funzionali",
+        "promotionalUseCases": "Demo di prodotto",
+        "visualPresentation": "Animazione dell’interfaccia",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "Il testo del telefono è la fonte, il documento del computer la destinazione. Il cambiamento centrale è nella selezione e nell’incollaggio del testo; le cornici dei dispositivi rimangono quasi ferme. Non inventare ampie traiettorie di volo per enfatizzare il passaggio tra dispositivi.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "Apple｜端末間クリップボード",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "スマートフォンの文字を入力元、コンピューターの文書を転送先とし、文字の選択と貼り付けを中心の変化にする；端末の枠はほぼ固定する。",
+        "styleDescription": "サンセリフの中太字メインタイトル；細い枠線の UI と小さな機能テキスト",
+        "promotionalUseCases": "製品デモ",
+        "visualPresentation": "UIアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "スマートフォンの文字を入力元、コンピューターの文書を転送先とし、文字の選択と貼り付けを中心の変化にする；端末の枠はほぼ固定する。；端末間の移動を強調するために、大きく飛ぶ架空の軌跡を作らない。",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "Apple｜기기 간 클립보드",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "휴대폰 텍스트는 입력 출처이고 컴퓨터 문서는 대상이다；주요 변화는 텍스트 선택과 붙여넣기에 있으며 기기 외곽은 거의 고정한다.",
+        "styleDescription": "중간 굵기의 산세리프 주 제목；얇은 테두리의 인터페이스와 작은 기능 설명",
+        "promotionalUseCases": "제품 시연",
+        "visualPresentation": "인터페이스 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "휴대폰 텍스트는 입력 출처이고 컴퓨터 문서는 대상이다；주요 변화는 텍스트 선택과 붙여넣기에 있으며 기기 외곽은 거의 고정한다.；기기 간 이동을 강조하려고 큰 비행 궤적을 만들어 내지 않는다.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Apple | Área de transferência entre dispositivos",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "Texto no telefone é a fonte e documento no computador é o destino; focar mudanças em seleção e colagem, mantendo as molduras estáveis.",
+        "styleDescription": "Título principal sem serifa e seminegrito; interface com bordas finas e textos funcionais pequenos",
+        "promotionalUseCases": "Demonstração de produto",
+        "visualPresentation": "Animação de interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "Texto no telefone é a fonte e documento no computador é o destino; focar mudanças em seleção e colagem, mantendo as molduras estáveis. Não inventar grandes trajetórias de voo para enfatizar a passagem entre dispositivos.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Apple｜буфер обмена между устройствами",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "Текст на телефоне служит источником, документ на компьютере — целью；Основные изменения — выделение и вставка текста; рамки устройств почти неподвижны.",
+        "styleDescription": "Главный заголовок полужирным шрифтом без засечек；Интерфейс с тонкими рамками и мелкими подписями функций",
+        "promotionalUseCases": "Демонстрация продукта",
+        "visualPresentation": "Анимация интерфейса",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "Текст на телефоне служит источником, документ на компьютере — целью；Основные изменения — выделение и вставка текста; рамки устройств почти неподвижны.；Не следует придумывать большие траектории полёта ради подчёркивания связи устройств.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Apple｜Cihazlar arası pano",
+        "videoPreview": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "summary": "Telefon metni girdi kaynağı, bilgisayar belgesi hedeftir. Temel değişim metin seçimi ve yapıştırmadadır; cihaz çerçeveleri büyük ölçüde sabittir.",
+        "styleDescription": "Yarı kalın sans serif ana başlık; ince çerçeveli arayüz ve küçük işlev metinleri",
+        "promotionalUseCases": "Ürün demosu",
+        "visualPresentation": "Arayüz animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/f84c0c53700b5b18e7f7e8064bacb3d95286086e7b4a87fd39a6af5a47a29495",
+        "reviewFocus": "Telefon metni girdi kaynağı, bilgisayar belgesi hedeftir. Temel değişim metin seçimi ve yapıştırmadadır; cihaz çerçeveleri büyük ölçüde sabittir. Cihazlar arası geçişi vurgulamak için büyük uçuş yörüngeleri uydurulmamalıdır.",
+        "category": "",
+        "durationSeconds": "5",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/0cb2d1cd98ccab75fe981f42315933ea3d618552231f5ea22da2247008bb59ae",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://www.apple.com/macbook-air/",
+        "exampleVideo": "",
+        "templateId": "V289",
+        "sourceVideoTitle": "apple614daee6309a.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/717e3db0e1788c6c3d1e43b0b26cf3642f888a93e6f6b1eb0a34350dfc0cd009",
+    "bytes": 748546,
+    "sha256": "717e3db0e1788c6c3d1e43b0b26cf3642f888a93e6f6b1eb0a34350dfc0cd009"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 148923,
+        "sha256": "44c3359cb95110b305a3ac238d087c8842695dd4f9ff99aaa54d9ed9dc1b090c"
+      },
+      "url": "https://r.open-design.ai/files/92779af717ff4da0ad4c1e3ba60de6318b42cabf992dd0a7fe78aff70ab57677",
+      "bytes": 56314,
+      "sha256": "92779af717ff4da0ad4c1e3ba60de6318b42cabf992dd0a7fe78aff70ab57677"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 149156,
+        "sha256": "e90ce8c094a07e7f3d84e7d3b2b4c2044436ce61c298705d27a4142804e680f5"
+      },
+      "url": "https://r.open-design.ai/files/3042dc15f144f9d0aa5ce0cf97b1255d088820836fa23dad8275ca002818d533",
+      "bytes": 56558,
+      "sha256": "3042dc15f144f9d0aa5ce0cf97b1255d088820836fa23dad8275ca002818d533"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 149766,
+        "sha256": "73adbf62ec4406c018dbf52e78d72095e1588117ad7f23070883e171df418081"
+      },
+      "url": "https://r.open-design.ai/files/f1451295a2c21e3f92b724de8a31fff5a9490587a46cf26a69ab2da45898ea8f",
+      "bytes": 56388,
+      "sha256": "f1451295a2c21e3f92b724de8a31fff5a9490587a46cf26a69ab2da45898ea8f"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 150103,
+        "sha256": "c5a735d06e7a1efb0b1e09b114fc036dd0ca8322482081f4d7dff0e4ef86b936"
+      },
+      "url": "https://r.open-design.ai/files/cda3d0e0b01a838ffb71ff6083bec696c814255ac2d673f6c9137c8c4538d95c",
+      "bytes": 56422,
+      "sha256": "cda3d0e0b01a838ffb71ff6083bec696c814255ac2d673f6c9137c8c4538d95c"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 157482,
+        "sha256": "3a2fbe14cbb619a2ca0f310b089564e16960c94e5773d3895673bc9c617a5d9c"
+      },
+      "url": "https://r.open-design.ai/files/4086d3c3415f3419ed6410cd54bf3740ca16fe579f70374f664ca8cc3132fff4",
+      "bytes": 61910,
+      "sha256": "4086d3c3415f3419ed6410cd54bf3740ca16fe579f70374f664ca8cc3132fff4"
+    }
+  ]
+}

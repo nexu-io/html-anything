@@ -13,13 +13,13 @@ openmotion 0.6.2 是面向 Agent 的本地创作工作区与 Codex 插件，一�
 
 编辑器使用固定面板布局，分隔线大小按项目保存。原生撤销/重做保留在顶栏；右侧「版本历史」标签展示全部记录和保留版本，可以查看修改文件、保留当前版本、取消保留及恢复历史版本。已有项目会自动补上此标签，并保留原有分隔线大小。版本数据继续由 Hyperframes 原生历史服务管理，恢复前等待保存并建立检查点，恢复不会删除后续记录。
 
-首页提供新建创作、最近会话和分类模板；输入框一期只有 Motion 模式。选择模板后提交需求，创建一个会话和对应工程，通过「模板 + motion-production skill」继续制作。所有页面共享最左侧会话列表。会话与右侧浏览器顶格并列，完整 Motion 编辑器放在浏览器 Tab 内；关闭浏览器可继续完整会话，收起会话可沉浸编辑，新 Tab 可以打开另一个所属工程或网页。会话名与工程名独立保存。旧工程、需求与书签兼容，切换前等待原生保存，失败保留当前页。会话的 Agent 推理与工具编排仍由外部 MCP 客户端负责，网页不包含聊天 Agent 运行器；外部 Agent 可通过 `design_append_message` 写回真实回复。详细行为、网页浏览能力与单活动工程边界见 [会话与 Artifact 浏览器](project-workspace.md)。
+首页提供新建创作、最近会话和分类模板；输入框一期只有 Motion 模式。选择模板后提交需求，创建一个会话和对应工程，通过「模板 + openmotion-production skill」继续制作。所有页面共享最左侧会话列表。会话与右侧浏览器顶格并列，完整 Motion 编辑器放在浏览器 Tab 内；关闭浏览器可继续完整会话，收起会话可沉浸编辑，新 Tab 可以打开另一个所属工程或网页。会话名与工程名独立保存。旧工程、需求与书签兼容，切换前等待原生保存，失败保留当前页。会话的 Agent 推理与工具编排仍由外部 MCP 客户端负责，网页不包含聊天 Agent 运行器；外部 Agent 可通过 `openmotion_append_message` 写回真实回复。详细行为、网页浏览能力与单活动工程边界见 [会话与 Artifact 浏览器](project-workspace.md)。
 
 全局面包屑与设置顶栏已移除。会话标题与右侧标签栏同色、顶格对齐，中间有分隔线。浏览器展开／恢复按钮固定在标签栏最右侧、关闭按钮左边。会话顶部按钮可完全收起列表；会话隐藏时由浏览器顶部恢复，首页由左上角按钮恢复。连接 Agent、模型设置、主题与语言收纳到侧栏。
 
 地址栏支持直接输入 `baidu.com`、前进、后退、刷新和停止；网页由独立本地 Chromium 承载，支持点击、滚动与文字输入，切回 Motion 仍保留编辑状态。需要本机 Chrome / Chromium，或设置 `MOTION_BROWSER_PATH` / `HYPERFRAMES_BROWSER_PATH`。网站音频、文件上传/下载管理等当前边界见 [浏览器运行架构](browser-runtime.md)。
 
-产品名为 openmotion，已有工作区界面保留 OpenDesign 标识。产品内会话、模板、媒体生成与通用 API 继续保留；当前一期给宿主 Agent 的公开 MCP 只含下方 11 个 motion_ Tool，未公开的产品能力不因此删除。
+产品名为 openmotion，已有工作区界面保留 OpenDesign 标识。产品内会话、模板、媒体生成与通用 API 继续保留；当前一期给宿主 Agent 的公开 MCP 只含下方 11 个 openmotion_ Tool，未公开的产品能力不因此删除。
 
 MCP 打开预览、创建产物、应用/复刻模板时，`previewUrl` 默认包含 `embed=1`，Codex 等宿主直接打开完整地址即可只显示编辑器，隐藏侧栏、会话和产品浏览器外框。`sessionUrl` 或显式 `embedded=false` 返回完整工作区；空会话仍显示会话入口。也可分别配置 `sidebar=0`、`conversation=0`。这些视图使用同一会话与产物。完整接口、失败语义与后续模式扩展见 [会话技术架构](session-architecture.md)。
 
@@ -64,7 +64,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ### 复制到 Codex 安装并体验
 
-适用于 macOS / Linux。先克隆本公开仓库的 `feature/motion` 分支，并用 Codex 打开该目录。需要支持插件的 Codex CLI、Git 和 Node.js 22.18+（含 npm）。将下面这段发到 Codex 对话框：
+适用于 macOS / Linux。先克隆本公开仓库的 `main` 分支，并用 Codex 打开该目录。需要支持插件的 Codex CLI、Git 和 Node.js 22.18+（含 npm）。将下面这段发到 Codex 对话框：
 
 ```text
 请在当前仓库目录运行 bash scripts/install-motion.command 安装 openmotion。
@@ -75,23 +75,23 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ### 安装完成后的引导（Codex / Agent）
 
-所有 Agent 安装入口共用[安装成功后的回复规则](install.md#installation-success-reply)。安装完成后，Agent 用 `motion_open_preview({target:"templates"})` 打开模板库；当前聊天尚未加载 MCP 时，直接打开安装结果中的 `onboarding.preview.previewUrl`。宿主没有浏览器时提供实际链接，不声称已自动打开。模板库启动失败时说明具体原因，不创建占位工程。
+All Agent installation entries share the [installation-success reply rules](install.md#installation-success-reply). Briefly confirm installation and open the template library with `openmotion_open_preview({target:"templates"})`, or setup's `onboarding.preview.previewUrl` before native discovery. Report the actual presentation result; do not create a placeholder project. Keep technical verification internal. Missing or stale native tools can use `onboarding.directAccess` under its installed transport and policy checks, without requesting a restart or a new chat by default.
 
 ### 首次体验默认规则
 
 浏览、筛选、查看模板详情和播放预览均不创建工程。用户选择可编辑模板的“打开并编辑”后，Studio 才创建独立副本；Agent 后续继续该工程，不再重复创建。仅有参考视频的条目仍需用户明确要求复刻。
 
-用户明确要求 Agent 使用某个模板时，进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md)，沿用准确模板 ID、原生时长和默认内容。未选模板只回复“体验”时先问具体模板；拒绝或暂不体验则停止。不固定推荐模板，不重复追问可选素材，也不静默替换失败模板。
+用户明确要求 Agent 使用某个模板时，进入 [openmotion-template-to-video](../skills/openmotion-template-to-video/SKILL.md)，沿用准确模板 ID、原生时长和默认内容。未选模板只回复“体验”时先问具体模板；拒绝或暂不体验则停止。不固定推荐模板，不重复追问可选素材，也不静默替换失败模板。
 
-创建后保留原有工作；同一次体验已创建则续用。按[首次体验交付规则](../skills/motion-production/references/templates.md#first-run-experience-defaults)打开并检查真实可编辑工程，用户要求视频文件时才导出。
+创建后保留原有工作；同一次体验已创建则续用。按[首次体验交付规则](../skills/openmotion-production/references/templates.md#first-run-experience-defaults)打开并检查真实可编辑工程，用户要求视频文件时才导出。
 
 ### 开始创作
 
-新工程先 `motion_create_project`；已有工程先 `motion_get_project` 明确 projectId、revision、currentVersionId，再保存或打开。`motion_open_preview({projectId})` 运行 lint 并返回真实预览 URL，由宿主内置浏览器打开。它不隐式创建新工程；无浏览器时可以手动打开返回地址。
+新工程先 `openmotion_create_project`；已有工程先 `openmotion_get_project` 明确 projectId、revision、currentVersionId，再保存或打开。`openmotion_open_preview({projectId})` 运行 lint 并返回真实预览 URL，由宿主内置浏览器打开。它不隐式创建新工程；无浏览器时可以手动打开返回地址。
 
 macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个会话保留自己的工程选择；所有会话退出后导出仍继续。新安装默认使用 `~/Library/Application Support/OpenDesign`，已有 `.motion-data` 或显式 `MOTION_DATA_DIR` 沿用；不同目录仍是不同后台。原生 Studio 使用一个服务进程支持多个工程页面；每个页面按 URL 工程读取状态和编辑，不跟随其他会话。后台导出仍只运行一个任务，Windows / Linux 保留原后台启动方式。停止、旧服务升级和故障恢复见 [共享编辑器](shared-editor.md)。
 
-仅导出时只启动后台服务，不启动 Studio 改写当前源文件；冷启动套模板也不会先创建无关 starter。随后调用 `motion_open_preview` 可在同一服务中启动编辑器。真实外部编辑仍受 revision 校验保护。
+仅导出时只启动后台服务，不启动 Studio 改写当前源文件；冷启动套模板也不会先创建无关 starter。随后调用 `openmotion_open_preview` 可在同一服务中启动编辑器。真实外部编辑仍受 revision 校验保护。
 
 点击全局「连接 Agent」或编辑器「模板库」，在同一个弹框里连接 Agent、浏览模板、观看视频并一键复制复刻指令。模板入口会直接定位到画廊，接入指南也在弹框中展开。旧的 `?templates=1` 与 `/connect` 链接仍可使用。
 
@@ -105,7 +105,7 @@ macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个
 
 > 请读取 http://localhost:4173/connect/guide?host=codex&template=hf-moment-M953 并在 openmotion 复刻模板 hf-moment-M953，完成后打开可编辑工程。
 
-链接由当前工作区生成；详细配置、工作区目录、视频/源码、制作流程和原生 MCP 步骤放在链接里。Agent 读取真实来源后，通过 `motion_create_project`、`motion_import_assets`、`motion_edit_project` 制作可编辑的 Hyperframes 工程，检查实际预览。复制按钮不会修改当前工程，也不会把其他示例冒充复刻结果。完整来源与更新方式见 [模板目录说明](template-catalog.md)。
+链接由当前工作区生成；详细配置、工作区目录、视频/源码、制作流程和原生 MCP 步骤放在链接里。Agent 读取真实来源后，通过 `openmotion_create_project`、`openmotion_import_assets`、`openmotion_edit_project` 制作可编辑的 Hyperframes 工程，检查实际预览。复制按钮不会修改当前工程，也不会把其他示例冒充复刻结果。完整来源与更新方式见 [模板目录说明](template-catalog.md)。
 
 三个可直接打开的官方示例是 **Product Promo**（20 秒产品宣传）、**NYT Graph**（15 秒动态图表）、**Decision Tree**（10 秒流程动画）。首页模板先选择再提交，内置模板创建可二次剪辑的独立工程；外部参考保存模板身份并由 Agent 制作。原工程始终保留在所属会话中。统一接入弹框仍提供精确参考的复制指令。源码、真实渲染封面与 Apache-2.0 许可证已内置，GSAP 使用本地依赖；首次使用模板字体仍可能需要联网。
 
@@ -119,36 +119,37 @@ macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个
 
 ```sh
 npm ci
-npm run dev
+npm run build:studio
+npm start
 ```
 
-默认访问 `http://localhost:4173` 首页；`/?project=<id>` 或 `/#project/<id>` 打开对应项目。插件启动会校验服务版本与工程目录，避开已占用端口。Hyperframes 原生服务使用另一个回环端口；我们的服务转发原生 API、文件事件和预览请求，直接提供自有编辑器页面。视频作品仍在独立 composition iframe 中预览，以隔离 UI 样式和作品样式。
+Open the printed `studioUrl` or `previewUrl`; do not assume port 4173. `npm start` and MCP share the existing startup logic and reuse a compatible service for the same workspace. macOS selects a port dynamically; other platforms try `PORT` (default 4173) and the next nine ports, skipping occupied ones. The service remains in the background after the launcher exits. Project links use `/?project=<id>` or `/#project/<id>` at the returned origin. Hyperframes uses a separate loopback port; OpenMotion proxies its APIs, file events and preview requests while serving its own editor. Compositions remain in isolated preview iframes. `npm run dev` retains the direct foreground server entry for development.
 
 ## Agent 工具
 
-仓库 Agent 从 [AGENTS.md](../AGENTS.md) 进入，Claude Code 同时读取 [CLAUDE.md](../CLAUDE.md)。按本轮意图直达专业入口：原创/大幅重编进入 [motion-director v1.4.5](../skills/motion-director/SKILL.md)，已有模板出片或适配进入 [motion-template-to-video](../skills/motion-template-to-video/SKILL.md)，参考视频复刻进入 [motion-recreate](../skills/motion-recreate/SKILL.md)（先读用户资料、最多问一次，用现有九个 Tool 在可编辑工程中重建，导出片对照原片测量后，交付在编辑器中打开的工程；规则与测量脚本随该 Skill 分发）。明确要求视频转可复用模板或 ZIP 时，单独进入 [motion-video-to-template](../skills/motion-video-to-template/SKILL.md)。[motion-production](../skills/motion-production/SKILL.md) 承接既定决定下的工程修改、预览、技术检查、排错与导出；重新设计局部动作或声音仍可直达 director。已有内容的修改统一复用 [edit 流程](../skills/motion-production/references/edit.md)，核对保持项及后续延续；首次补读的结果须先返回模型，再执行依赖操作。
+仓库 Agent 从 [AGENTS.md](../AGENTS.md) 进入，Claude Code 同时读取 [CLAUDE.md](../CLAUDE.md)。按本轮意图直达专业入口：原创/大幅重编进入 [openmotion-director v1.4.5](../skills/openmotion-director/SKILL.md)，已有模板出片或适配进入 [openmotion-template-to-video](../skills/openmotion-template-to-video/SKILL.md)，参考视频复刻进入 [openmotion-recreate](../skills/openmotion-recreate/SKILL.md)（先读用户资料、最多问一次，用现有九个 Tool 在可编辑工程中重建，导出片对照原片测量后，交付在编辑器中打开的工程；规则与测量脚本随该 Skill 分发）。明确要求视频转可复用模板或 ZIP 时，单独进入 [openmotion-video-to-template](../skills/openmotion-video-to-template/SKILL.md)。[openmotion-production](../skills/openmotion-production/SKILL.md) 承接既定决定下的工程修改、预览、技术检查、排错与导出；重新设计局部动作或声音仍可直达 director。已有内容的修改统一复用 [edit 流程](../skills/openmotion-production/references/edit.md)，核对保持项及后续延续；首次补读的结果须先返回模型，再执行依赖操作。
 
-仅有 MCP 时通过 resources/list 与 resources/read 读取 `motion://workflow/production/start`；已选专业入口直接读对应路线，无需重新选路。固定引擎指南为 `motion://engine/SKILL.md`。详见 [Skill 路由](skills.md)。一期包含 motion-production、motion-director、motion-template-to-video、motion-recreate、motion-video-to-template 五个入口及参考。MCP workflow 短 ID 依次为 production/director/template/recreate/video-to-template；reference-video 仅留源码兼容入口。
+仅有 MCP 时通过 resources/list 与 resources/read 读取 `openmotion://workflow/production/start`；已选专业入口直接读对应路线，无需重新选路。固定引擎指南为 `openmotion://engine/SKILL.md`。详见 [Skill 路由](skills.md)。一期包含 openmotion-production、openmotion-director、openmotion-template-to-video、openmotion-recreate、openmotion-video-to-template 五个入口及参考。MCP workflow 短 ID 依次为 production/director/template/recreate/video-to-template；reference-video 仅留源码兼容入口。
 
 共享上下文列出各范围的必读依赖，Agent 只补齐尚未读取的正文，并复用同一份已读记录。这个约定不等于工具强制执行；七份 Motion 质量参考保持原有内容与风格边界。
 
 | 公开 Tool | 复用来源 | 本次实现到的边界 |
 | --- | --- | --- |
-| motion_create_project | 项目目录、空白工程、模板复制、会话归属 | 新建独立载体、保存需求/来源、返回初始内容版本；宿主 Agent 制作影片 |
-| motion_open_preview | 原预览、项目选择、原生 lint | 打开指定已有工程；仅明确绑定的 openmotion 会话可省 projectId；返回真实 URL |
-| motion_import_assets | 素材目录、FFprobe/FFmpeg | 实际本机媒体批量持久化、逐项结果、稳定素材 ID、去重；不自动排入时间线 |
-| motion_get_project | 项目目录与原生文件读取、导出记录 | 项目分页5条、显式工程详情、分段文本读取、当前版本、具名导出任务状态 |
-| motion_edit_project | 原写文件职责、Studio 原生 history | 双重版本校验；文本批量保存及需求一起写入；失败恢复保护；通知原生文件监听 |
-| motion_export_request | 原 request/get/verify export、原生渲染器 | 冻结工程版本和本地素材、后台 MP4、自动 lint/规格/完整解码校验；同请求找回任务 |
-| motion_list_versions | Studio history/checkpoint | 内容快照、稳定 ID/vN、来源/摘要、可恢复标记；每页5条，不限制只留5条 |
-| motion_restore_version | Studio history 与保留的媒体内容 | 旧快照恢复成新版本；保留后续历史；历史资源缺失或并发冲突时拒绝覆盖 |
-| motion_export_cancel | 现有导出队列、进程生命周期 | 指定项目/任务；排队取消、运行中 cancelling、进程退出后 cancelled；完成竞态保持 completed |
+| openmotion_create_project | 项目目录、空白工程、模板复制、会话归属 | 新建独立载体、保存需求/来源、返回初始内容版本；宿主 Agent 制作影片 |
+| openmotion_open_preview | 原预览、项目选择、原生 lint | 打开指定已有工程；仅明确绑定的 openmotion 会话可省 projectId；返回真实 URL |
+| openmotion_import_assets | 素材目录、FFprobe/FFmpeg | 实际本机媒体批量持久化、逐项结果、稳定素材 ID、去重；不自动排入时间线 |
+| openmotion_get_project | 项目目录与原生文件读取、导出记录 | 项目分页5条、显式工程详情、分段文本读取、当前版本、具名导出任务状态 |
+| openmotion_edit_project | 原写文件职责、Studio 原生 history | 双重版本校验；文本批量保存及需求一起写入；失败恢复保护；通知原生文件监听 |
+| openmotion_export_request | 原 request/get/verify export、原生渲染器 | 冻结工程版本和本地素材、后台 MP4、自动 lint/规格/完整解码校验；同请求找回任务 |
+| openmotion_list_versions | Studio history/checkpoint | 内容快照、稳定 ID/vN、来源/摘要、可恢复标记；每页5条，不限制只留5条 |
+| openmotion_restore_version | Studio history 与保留的媒体内容 | 旧快照恢复成新版本；保留后续历史；历史资源缺失或并发冲突时拒绝覆盖 |
+| openmotion_export_cancel | 现有导出队列、进程生命周期 | 指定项目/任务；排队取消、运行中 cancelling、进程退出后 cancelled；完成竞态保持 completed |
 
 全局「连接 Agent」保留 Codex、Claude Code、DeepSeek Harness 与通用 stdio 客户端的配置下载和接入指引；配置绑定当前工作区。ChatGPT 云端远程 MCP 尚未提供。
 
 模板从 Studio 画廊或已有指引选择，当前3个 builtin 可由创建工具复制；没有单独公开目录查询 Tool。其他外部源码/视频由宿主实际检查并重建。
 
-编辑须同时传 expectedRevision 与 expectedVersionId；文本批量/需求保存和版本恢复使用原生独占历史窗口、暂存与恢复日志。旧 `motion_write_files` 的逐文件行为仅留内部兼容。8 MiB/100文件与2 MiB分段读取是传输限制；媒体小于2 GiB/项并实际探测。恢复旧版本创建新 vN，保留后续历史。
+编辑须同时传 expectedRevision 与 expectedVersionId；文本批量/需求保存和版本恢复使用原生独占历史窗口、暂存与恢复日志。旧 `openmotion_write_files` 的逐文件行为仅留内部兼容。8 MiB/100文件与2 MiB分段读取是传输限制；Media imports allow at most 500 MB (500000000 bytes) per file and probe actual media. Studio limits each complete multipart request to the same decimal 500 MB, including form overhead; split larger batches into separate uploads. 500.5 MB is rejected without rounding. 恢复旧版本创建新 vN，保留后续历史。
 
 
 ## 本地文件与升级
@@ -171,11 +172,11 @@ npm run dev
 
 首次启动发现旧 `workspace.json` 且不存在原生工程时，会转换其素材、镜头时间、文字、位置和颜色为 HTML compositions，保留原 `workspace.json` 不动。旧版无素材的 Canvas 演示图形转换成静态背景；需要逐帧保留旧演示效果时请先在旧版导出视频。已有原生工程不会被旧 JSON 覆盖。
 
-旧的镜头 JSON 编辑接口、Canvas 播放/录制、IndexedDB 草稿和离线 HTML 编辑页已移除。参考视频通过 Studio 或 `motion_import_assets` 批量导入，在原生时间轴编排；Agent 用 `data-start`、`data-duration`、`data-media-start` 表达镜头节奏。旧 `.motion.json` 文件不是新 Studio 的工程格式。
+旧的镜头 JSON 编辑接口、Canvas 播放/录制、IndexedDB 草稿和离线 HTML 编辑页已移除。参考视频通过 Studio 或 `openmotion_import_assets` 批量导入，在原生时间轴编排；Agent 用 `data-start`、`data-duration`、`data-media-start` 表达镜头节奏。旧 `.motion.json` 文件不是新 Studio 的工程格式。
 
-后台导出每次使用独立源文件快照，后续编辑不会改变该任务的本地输入；远程 URL 指向的媒体仍由上游获取，需稳定复现时先导入本地。当前一个工作区只运行一个插件导出任务；通过 `motion_get_project({projectId,exportJobId})` 查询具名历史任务，历史 MP4 留在 `exports/`。任务最长 30 分钟，失败可读取错误和 `render.log` 后重试。Studio 自带导出面板由上游管理，任务不会自动成为 Motion MCP 的导出任务。
+后台导出每次使用独立源文件快照，后续编辑不会改变该任务的本地输入；远程 URL 指向的媒体仍由上游获取，需稳定复现时先导入本地。当前一个工作区只运行一个插件导出任务；通过 `openmotion_get_project({projectId,exportJobId})` 查询具名历史任务，历史 MP4 留在 `exports/`。任务最长 30 分钟，失败可读取错误和 `render.log` 后重试。Studio 自带导出面板由上游管理，任务不会自动成为 Motion MCP 的导出任务。
 
-请求导出时从快照读取尺寸、fps 和时长，保存在任务的 `expected` 中，随后才执行后台 lint/render。`motion_export_request` 自动执行技术验证，通过 `motion_get_project` 查询该任务的报告；发起导出时按 brief 指定 `audio: "required"` 或 `"silent"`；默认 `optional` 只允许有声或无声，不能证明要求的配音已经存在。校验覆盖 MP4/H.264/yuv420p、尺寸/帧率/时长、AAC 音轨策略、完整视频/音频解码、首中尾 seek 和文件哈希。缺少工具返回 blocked；旧任务没有快照规格时需重新导出。
+请求导出时从快照读取尺寸、fps 和时长，保存在任务的 `expected` 中，随后才执行后台 lint/render。`openmotion_export_request` 自动执行技术验证，通过 `openmotion_get_project` 查询该任务的报告；发起导出时按 brief 指定 `audio: "required"` 或 `"silent"`；默认 `optional` 只允许有声或无声，不能证明要求的配音已经存在。校验覆盖 MP4/H.264/yuv420p、尺寸/帧率/时长、AAC 音轨策略、完整视频/音频解码、首中尾 seek 和文件哈希。缺少工具返回 blocked；旧任务没有快照规格时需重新导出。
 
 保留历史文件后也可用独立脚本，参数来自存档任务和 brief，不能从待检文件反推预期值：
 
@@ -189,7 +190,7 @@ node --experimental-strip-types scripts/verify-export.ts /absolute/path/final.mp
 
 ## 视频转模板与模板出片
 
-视频转模板入口仅在要求可复用模板时使用，要求原样重建尽量匹配参考画面、构图、运动和节奏；素材与源码保持可编辑。原样使用模板时在编辑器里打开即完成，不渲染、不比对。制作时对照原片；打包后另外检查 ZIP 解压到别处能独立渲染，不缺文件、字体和素材，帧率、帧数、时长和预览一致；不做逐帧像素比对，不为肉眼看不出的差异返工。具体规范见 [模板制作验证](../skills/motion-video-to-template/references/verify.md)。视频转模板时不向用户提问，由 Agent 自行选择最贴近原片的方案并记录在模板内唯一的说明文件 `TEMPLATE.md`；常用修改声明为变量，在 Studio Variables 面板修改；交付回复只给预览、模板、原片对照、能改什么和与原片的差异，技术检查写在 `TEMPLATE.md`；用模板生成视频时，缺少品牌、产品、价格、图片等只有用户能提供的内容，或要求有明显歧义时，Agent 会一次性提问。motion-video-to-template 不承接普通视频复刻或直接混入修改要求；普通复刻由 motion-recreate 实现，已有模板的修改由 motion-template-to-video 处理。
+视频转模板入口仅在要求可复用模板时使用，要求原样重建尽量匹配参考画面、构图、运动和节奏；素材与源码保持可编辑。原样使用模板时在编辑器里打开即完成，不渲染、不比对。制作时对照原片；打包后另外检查 ZIP 解压到别处能独立渲染，不缺文件、字体和素材，帧率、帧数、时长和预览一致；不做逐帧像素比对，不为肉眼看不出的差异返工。具体规范见 [模板制作验证](../skills/openmotion-video-to-template/references/verify.md)。视频转模板时不向用户提问，由 Agent 自行选择最贴近原片的方案并记录在模板内唯一的说明文件 `TEMPLATE.md`；常用修改声明为变量，在 Studio Variables 面板修改；交付回复只给预览、模板、原片对照、能改什么和与原片的差异，技术检查写在 `TEMPLATE.md`；用模板生成视频时，缺少品牌、产品、价格、图片等只有用户能提供的内容，或要求有明显歧义时，Agent 会一次性提问。openmotion-video-to-template 不承接普通视频复刻或直接混入修改要求；普通复刻由 openmotion-recreate 实现，已有模板的修改由 openmotion-template-to-video 处理。
 
 ## 多 Agent 薄适配器
 
@@ -211,7 +212,7 @@ npm run package:plugin
 
 `npm run dev` 先构建编辑器再启动服务；只改前端后可运行 `npm run build:studio` 并刷新页面。`npm run test:studio` 运行上游单元/DOM 回归与宿主集成测试；`npm run typecheck:studio` 检查前端类型；`npm run design:check` 检查主题变量与对比度。`check` 校验清单、版本、锁定依赖、技能入口、服务 TypeScript 语法及设计规范。测试覆盖原生源文件共享、并发 revision、路径隔离、旧工程迁移、Studio 编辑数据快照、真实 stdio MCP、原生 Studio HTTP 接口、完整目录与同源版本、封面筛选、短指令与参数化指南、三个官方模板的打开/编辑/切换/保留和带音轨的真实 MP4 渲染。没有 FFmpeg 或 Chrome 的机器会跳过渲染集成测试；PR CI 的 phase1-package-e2e 独立任务安装 Chromium、FFmpeg/ffprobe，重新构建并隔离安装真实ZIP，自动跑全部11个Tool；依赖缺失或测试失败直接标红，日志与MP4证据保留14天。合并阻断须同时启用main的必需状态检查，配置与边界见[测试覆盖](mcp-phase1-tools.md#测试代码与ci范围)。
 
-打包产物为 `dist/motion-0.6.2-phase1.zip`，包含编辑器构建产物、设计系统与字体许可、原生模板、完整目录与已校验封面、技能、lockfile、AGENTS.md、CLAUDE.md 和产品文档，排除个人媒体、草稿、node_modules 和原生程序。`bash scripts/install-motion.command` 可注册并安装本地插件，并按 Codex 实际解析的启动配置验证 MCP 握手；它不会重启 Codex。代码改动和打包不会自动替换用户已安装的插件版本。
+打包产物为 `dist/openmotion-0.6.3-phase1.zip`，包含编辑器构建产物、设计系统与字体许可、原生模板、完整目录与已校验封面、技能、lockfile、AGENTS.md、CLAUDE.md 和产品文档，排除个人媒体、草稿、node_modules 和原生程序。`bash scripts/install-motion.command` 可注册并安装本地插件，并按 Codex 实际解析的启动配置验证 MCP 握手；它不会重启 Codex。代码改动和打包不会自动替换用户已安装的插件版本。
 
 主要实现：`hyperframes.ts` 管理锁定的上游 CLI 与 Studio 进程；`workspace.ts` 管理原生文件、迁移和快照；`server.ts` 提供薄壳与后台任务；`mcp.ts` 向 Agent 暴露工具；`template-library.ts` 创建官方模板的可编辑副本，`template-catalog.ts` 提供完整参考目录及热度；`editor-server.ts` 提供自有编辑器资源并流式转发原生 API；`studio/src/motion/` 是我们的界面入口，`web/design-system/` 是共享设计规范。`shared/legacy.ts` 仅用于读取旧版工程。
 
@@ -221,12 +222,12 @@ Hyperframes 使用 Apache-2.0 许可证，依赖从 npm 官方包安装；其源
 
 ## Template production and reuse
 
-The phase-one plugin and all four local host adapters ship the five canonical motion-* Skills, including motion-template-to-video and motion-video-to-template. Existing workflow IDs remain stable; MCP Resources expose the same guidance and supporting references. The eleven public Tools do not provide video comparison, reference downloading/analysis or ZIP packaging: these require available host capabilities. Legacy comparison handlers stay internal. Native HyperFrames source, local assets, previews and editing notes remain portable; human review decides visual acceptance.
+The phase-one plugin and all four local host adapters ship the five canonical motion-* Skills, including openmotion-template-to-video and openmotion-video-to-template. Existing workflow IDs remain stable; MCP Resources expose the same guidance and supporting references. The eleven public Tools do not provide video comparison, reference downloading/analysis or ZIP packaging: these require available host capabilities. Legacy comparison handlers stay internal. Native HyperFrames source, local assets, previews and editing notes remain portable; human review decides visual acceptance.
 
 The plugin name, install script, data directory and Studio ports are the team base, unchanged by this extension. See [scope](motion-extension-scope.md).
 
-内部兼容诊断 `motion_compare_video`（一期不公开）接受视频绝对路径，候选还可用 `latest-export`。工程先导出再比较；执行错误与画面差异分别返回，指标不代替人工视觉验收。
+内部兼容诊断 `openmotion_compare_video`（一期不公开）接受视频绝对路径，候选还可用 `latest-export`。工程先导出再比较；执行错误与画面差异分别返回，指标不代替人工视觉验收。
 
 ## Preview after continued edits
 
-Each saved content edit or restore requests the latest preview in the calling chat. The default preserves your current chat: show the right panel here, or queue it while you are elsewhere and open it when you return. Only an explicit show-now request permits switching back for that turn. Background requests skip presentation. A queued acknowledgment, saved source or hidden screenshot does not prove you saw the latest result; the Agent checks live content and visibility separately. See the [shared handoff](../skills/motion-production/references/native.md#continuing-edits) for host capabilities and receipt limits.
+Each saved content edit or restore requests the latest preview in the calling chat. The default preserves your current chat: show the right panel here, or queue it while you are elsewhere and open it when you return. Only an explicit show-now request permits switching back for that turn. Background requests skip presentation. A queued acknowledgment, saved source or hidden screenshot does not prove you saw the latest result; the Agent checks live content and visibility separately. See the [shared handoff](../skills/openmotion-production/references/native.md#continuing-edits) for host capabilities and receipt limits.

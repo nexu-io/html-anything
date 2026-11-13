@@ -71,6 +71,26 @@ describe("buildTimelineGroupResizeMembers (legacy 36413da7f semantics)", () => {
 });
 
 describe("resolveTimelineGroupResizeChanges (rigid group patch set)", () => {
+  it("extends selected images without treating their stale offsets as source bounds", () => {
+    const images = [
+      el("a", { kind: "image", tag: "img", start: 3, duration: 2, playbackStart: 0 }),
+      el("b", { kind: "image", tag: "div", start: 5, duration: 3, playbackStart: 1 }),
+    ];
+    const members = buildTimelineGroupResizeMembers(images, keys("a", "b"), "a", "start")!;
+    const changes = resolveTimelineGroupResizeChanges(members, "start", -2);
+    expect(changes.map(({ start, duration, playbackStart }) => ({ start, duration, playbackStart }))).toEqual([
+      { start: 1, duration: 4, playbackStart: undefined },
+      { start: 3, duration: 5, playbackStart: undefined },
+    ]);
+  });
+
+  it("keeps an image-thumbnail composition bounded by its own source start", () => {
+    const composition = el("a", { kind: "composition", tag: "img", start: 3, playbackStart: 0 });
+    const image = el("b", { kind: "image", tag: "img", start: 5, playbackStart: 0 });
+    const members = buildTimelineGroupResizeMembers([composition, image], keys("a", "b"), "a", "start")!;
+    expect(resolveTimelineGroupResizeChanges(members, "start", -2).map(c => c.start)).toEqual([3, 5]);
+  });
+
   it("END edge: extends every member's duration by the shared delta", () => {
     const members = buildTimelineGroupResizeMembers(
       [el("a", { duration: 2 }), el("b", { duration: 3 })],

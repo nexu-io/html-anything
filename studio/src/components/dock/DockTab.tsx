@@ -57,7 +57,7 @@ export function DockTab({ api }: IDockviewPanelHeaderProps) {
     ? TAB_ICONS[api.id]
     : null;
   return (
-    <div className="hf-dock-tab" data-panel-zone={isPanelId(api.id) ? PANEL_DEFINITIONS[api.id].zone : undefined}>
+    <div className="hf-dock-tab" data-preview-heading={mvp && api.id === "preview" || undefined} data-panel-zone={isPanelId(api.id) ? PANEL_DEFINITIONS[api.id].zone : undefined}>
       {TypeIcon ? <TypeIcon className="hf-dock-tab-icon" size={14} aria-hidden /> : null}
       <span className="hf-dock-tab-label">{title}</span>
       {/* Same shape as dockview's own close control: a tab cannot hold a focusable button. */}

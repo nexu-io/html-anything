@@ -12,7 +12,9 @@ import { checkReleaseVersion, releaseTemplateEnvironment } from './release-versi
 const root = fileURLToPath(new URL('../', import.meta.url));
 // GitHub serves the full showcase. npm ships the application and its technical documentation.
 function isShowcaseAsset(file) {
-  return /^(?:examples|library)\//.test(file) || file.startsWith('docs/readme/');
+  // Plugin and MCP branding reads these symbols from the installed application.
+  if (/^docs\/readme\/opendesign-symbol(?:-dark|-auto)?\.svg$/.test(file)) return false;
+  return file === 'scripts/install-library-skill.mjs' || /^(?:examples|library)\//.test(file) || file.startsWith('docs/readme/');
 }
 
 function rewriteGuideLinks(text, file, commit, localPaths = new Set()) {
@@ -21,7 +23,7 @@ function rewriteGuideLinks(text, file, commit, localPaths = new Set()) {
     if (/^(?:#|[a-z][a-z\d+.-]*:|\/\/)/i.test(target)) return target;
     const pathname = target.split(/[?#]/, 1)[0];
     if (localPaths.has(path.posix.join(directory, pathname).replace(/\/$/, ''))) return target;
-    const base = image ? 'https://raw.githubusercontent.com/nexu-io/html-anything/' : 'https://github.com/nexu-io/html-anything/blob/';
+    const base = image ? 'https://raw.githubusercontent.com/nexu-io/openmotion/' : 'https://github.com/nexu-io/openmotion/blob/';
     return new URL(target, base + commit + '/' + (directory === '.' ? '' : directory + '/')).href;
   };
   return text
@@ -94,8 +96,9 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
       }
     }
     await writeJSON(path.join(application, 'shared/template-config.json'), templateConfig);
+    await writeJSON(path.join(application, 'shared/build-info.json'), { commit });
     const skills = (await readdir(path.join(application, 'skills'))).sort();
-    for (const name of ['runtime-assets.mjs', 'npm-runtime.mjs', 'npm-hosts.mjs', 'npm-installer.mjs', 'check-installed-mcp.mjs']) await cp(path.join(root, 'scripts', name), path.join(installer, 'scripts', name));
+    for (const name of ['runtime-assets.mjs', 'npm-runtime.mjs', 'npm-hosts.mjs', 'npm-installer.mjs', 'check-installed-mcp.mjs', 'mcp-client.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) await cp(path.join(root, 'scripts', name), path.join(installer, 'scripts', name));
     await chmod(path.join(installer, 'scripts/npm-installer.mjs'), 0o755);
     const installerPkg = JSON.parse(await readFile(path.join(root, 'packages/npm/package.json'), 'utf8'));
     assert.equal(installerPkg.private, true, 'Keep the source package protected; publish only an explicitly versioned artifact');

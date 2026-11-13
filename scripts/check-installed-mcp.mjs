@@ -12,7 +12,7 @@ export function redact(message, environment) {
     .replace(/([\w-]*(?:token|secret|password|authorization|api.?key)[\w-]*["']?\s*[:=]\s*)("(?:\\.|[^"\\])*"|'[^']*'|[^\s,;}]+)/gi, '$1[redacted]').slice(-1500);
 }
 
-export function checkTransport(config, expectedVersion, { expectedTools, dataDirectory } = {}) {
+export function validateTransport(config) {
   if (!config) throw failure('MCP_NOT_REGISTERED', 'OpenMotion MCP is not registered in this host. Run setup for the selected host.');
   if (config.enabled === false) throw failure('MCP_DISABLED', 'OpenMotion MCP is disabled. Enable it in the selected host before reconnecting.');
   if (config.transport?.type !== 'stdio') throw failure('MCP_CONFIG_INVALID', 'OpenMotion requires a local stdio MCP connection.');
@@ -22,12 +22,17 @@ export function checkTransport(config, expectedVersion, { expectedTools, dataDir
   if (JSON.stringify([transport.command, transport.cwd, transport.args]).includes('${')) throw failure('MCP_CONFIG_INVALID', 'The resolved MCP command contains an unexpanded placeholder. Fix the host configuration.');
   if (typeof transport.command !== 'string' || !transport.command || !Array.isArray(transport.args) || transport.args.some(arg => typeof arg !== 'string')) throw failure('MCP_CONFIG_INVALID', 'MCP requires an executable command and string arguments.');
   if (transport.cwd && (!path.isAbsolute(transport.cwd) || !fs.existsSync(transport.cwd) || !fs.statSync(transport.cwd).isDirectory())) throw failure('MCP_CONFIG_INVALID', 'The resolved MCP working directory does not exist or is not absolute.');
+  return transport;
+}
+
+export function checkTransport(config, expectedVersion, { expectedTools, dataDirectory } = {}) {
+  const transport = validateTransport(config);
   const messages = [
-    { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'motion-install-check', version: '1' } } },
+    { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'openmotion-install-check', version: '1' } } },
     { jsonrpc: '2.0', method: 'notifications/initialized' },
     { jsonrpc: '2.0', id: 2, method: 'tools/list' },
   ];
-  if (dataDirectory) messages.push({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'motion_get_project', arguments: {} } });
+  if (dataDirectory) messages.push({ jsonrpc: '2.0', id: 3, method: 'tools/call', params: { name: 'openmotion_get_project', arguments: {} } });
   const environment = { ...process.env, ...(transport.env || {}) };
   const result = spawnSync(transport.command, transport.args, { cwd: transport.cwd,
     env: environment, encoding: 'utf8', timeout: 15_000, maxBuffer: 4 * 1024 * 1024,
@@ -49,9 +54,9 @@ export function checkTransport(config, expectedVersion, { expectedTools, dataDir
   if (names.length !== expected.length || !expected.every(name => names.includes(name))) throw failure('MCP_TOOLS_MISMATCH', 'The MCP tool list does not match this installation. Refresh the host tool discovery after correcting the installation.');
   if (dataDirectory) {
     const read = responses.find(response => response.id === 3);
-    if (!read?.result || read.error || read.result.isError) throw failure('MCP_READ_FAILED', 'motion_get_project failed: ' + redact(JSON.stringify(read?.error || read?.result?.structuredContent || read?.result?.content || 'No result returned'), environment));
+    if (!read?.result || read.error || read.result.isError) throw failure('MCP_READ_FAILED', 'openmotion_get_project failed: ' + redact(JSON.stringify(read?.error || read?.result?.structuredContent || read?.result?.content || 'No result returned'), environment));
     const directory = read?.result?.structuredContent?.dataDirectory;
-    if (typeof directory !== 'string' || path.resolve(directory) !== path.resolve(dataDirectory)) throw failure('MCP_WORKSPACE_MISMATCH', 'motion_get_project did not confirm the installation data directory. Do not switch workspaces or create a replacement project.');
+    if (typeof directory !== 'string' || path.resolve(directory) !== path.resolve(dataDirectory)) throw failure('MCP_WORKSPACE_MISMATCH', 'openmotion_get_project did not confirm the installation data directory. Do not switch workspaces or create a replacement project.');
   }
   return { version: expectedVersion, cwd: transport.cwd, tools: names, ...(dataDirectory ? { dataDirectory } : {}) };
 }
@@ -59,7 +64,8 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
   try {
     const root = fileURLToPath(new URL('../', import.meta.url));
     const version = JSON.parse(fs.readFileSync(path.join(root, '.codex-plugin/plugin.json'), 'utf8')).version;
-    const result = spawnSync('codex', ['mcp', 'get', 'motion', '--json'], { encoding: 'utf8', timeout: 15_000 });
+    let result = spawnSync('codex', ['mcp', 'get', 'openmotion', '--json'], { encoding: 'utf8', timeout: 15_000 });
+    if (!result.error && result.status !== 0 && /No MCP server named ['\"]openmotion['\"] found/.test(result.stderr)) result = spawnSync('codex', ['mcp', 'get', 'motion', '--json'], { encoding: 'utf8', timeout: 15_000 });
     if (result.error || result.status !== 0) throw new Error('无法读取 Codex 实际 MCP 配置：' + (result.error?.message || result.stderr.slice(-500)));
     const checked = checkTransport(JSON.parse(result.stdout), version);
     console.log('安装预检通过：Codex 解析后的真实启动命令可完成 MCP 握手并列出工具。');

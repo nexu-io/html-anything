@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#06e928",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Savings",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：to goal",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Transfer in",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "竖版手机",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "台座与卡片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "功能标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "圆形余额",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "胶囊高亮",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#06e928",
+      "status": "inferred"
+    },
+    {
+      "hex": "#101010",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b8f135",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d8d8d8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线粗短句，逐行换词；大数字与胶囊强调交替",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用同一手机串联利益点，黑、灰、荧光绿背景切换承担章节节奏。",
+      "status": "inferred"
+    },
+    {
+      "rule": "台座场景先建立产品，随后用倾斜手机近景展示余额与进度。主张按短行排布，数字变化只发生在屏幕内，边框维持亮绿色身份。",
+      "status": "inferred"
+    },
+    {
+      "rule": "转到荧光绿全屏后，黑色圆角条在费用短句中逐项移动。粗无衬线大字与黑白灰产品面构成强对比，每次背景切换对应一个新信息点。",
+      "status": "inferred"
+    }
+  ]
+}

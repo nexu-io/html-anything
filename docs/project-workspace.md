@@ -6,9 +6,9 @@
 
 服务已有 Agent 用户和需要继续手工编辑的创作者。用户需要围绕一项创作保持对话，同时打开、切换或关闭多个编辑产物；工程工具栏不能成为会话的上级。
 
-**会话是父级，Motion 工程是会话的产物。** OpenDesign 使用通用会话、模式注册表、模板与 skill 的结构。一期仅开放 Motion：对应 `motion-production` skill、Motion 模板目录和 `motion-project` 产物。其他模式是已确认的扩展方向，当前没有图片、网页等创作模式的执行能力。网页 Tab 只是浏览功能，不代表另一种生成模式。
+**会话是父级，Motion 工程是会话的产物。** OpenDesign 使用通用会话、模式注册表、模板与 skill 的结构。一期仅开放 Motion：对应 `openmotion-production` skill、Motion 模板目录和 `motion-project` 产物。其他模式是已确认的扩展方向，当前没有图片、网页等创作模式的执行能力。网页 Tab 只是浏览功能，不代表另一种生成模式。
 
-会话的 Agent 推理与工具编排仍由已连接的外部 MCP 客户端负责。网页保存用户需求和产物关系，提供会话专属的「复制给 Agent」，不会把保存需求显示为模型已经执行。当前不包含内置聊天 Agent 运行器；外部 Agent 可以通过同一消息 API 或 `design_append_message` 写回真实回复，网页轮询展示，不自动抓取宿主聊天记录。Motion Viewer 内的素材生成则由共用 [Model Gateway](model-gateway.md) 执行。
+会话的 Agent 推理与工具编排仍由已连接的外部 MCP 客户端负责。网页保存用户需求和产物关系，提供会话专属的「复制给 Agent」，不会把保存需求显示为模型已经执行。当前不包含内置聊天 Agent 运行器；外部 Agent 可以通过同一消息 API 或 `openmotion_append_message` 写回真实回复，网页轮询展示，不自动抓取宿主聊天记录。Motion Viewer 内的素材生成则由共用 [Model Gateway](model-gateway.md) 执行。
 
 右侧浏览器关闭、切到网页 Tab 或窄屏切回会话时，所属 Viewer 的时间轴菜单和媒体生成浮层也隐藏。恢复 Viewer 后可继续编辑，未提交的生成描述保留；已提交的媒体任务仍在后台运行。
 
@@ -61,7 +61,7 @@
 
 旧 `/projects` 创建、打开、conversation 及 `/templates/:id/open` 入口继续兼容；旧 conversation API 解析到工程所属会话。新建/切换使用 `expectedRevision` 和 `expectedProjectId` 防止竞争。
 
-一期公开 MCP 使用 [11 Tool 契约](mcp-phase1-tools.md)：motion_create_project 创建会话下工程，motion_get_project 读工程/所属 sessionId/当前版本，motion_open_preview 打开明确工程。以下 design_* 与旧模板 Tool 描述保留内部兼容，不是一期公开接口。通用接口命名空间为 `/design-api`，`/motion-api` 保留别名。MCP 的 `design_create_session` 先建会话再按需生成产物；`design_create_artifact` 向已有会话生成；`design_get_session` 读取会话与 skill，`design_open_artifact` 校验归属后选择已有产物。`motion_get_project` 同时返回 `session`、`projectId` 和兼容 `conversation`；`motion_apply_template` 在指定或当前会话添加工程。Agent 写入前应先确认会话与产物身份，再使用最新 revision 操作。macOS 多个 MCP 连接按数据目录共用后台，但每条连接保留自己的工程选择，网页切换不改变已有绑定；一个原生 Studio 服务进程可同时服务多个工程页面。详见 [共享编辑器](shared-editor.md)。
+一期公开 MCP 使用 [11 Tool 契约](mcp-phase1-tools.md)：openmotion_create_project 创建会话下工程，openmotion_get_project 读工程/所属 sessionId/当前版本，openmotion_open_preview 打开明确工程。以下 design_* 与旧模板 Tool 描述保留内部兼容，不是一期公开接口。通用接口命名空间为 `/design-api`，`/motion-api` 保留别名。MCP 的 `openmotion_create_session` 先建会话再按需生成产物；`openmotion_create_artifact` 向已有会话生成；`openmotion_get_session` 读取会话与 skill，`openmotion_open_artifact` 校验归属后选择已有产物。`openmotion_get_project` 同时返回 `session`、`projectId` 和兼容 `conversation`；`openmotion_apply_template` 在指定或当前会话添加工程。Agent 写入前应先确认会话与产物身份，再使用最新 revision 操作。macOS 多个 MCP 连接按数据目录共用后台，但每条连接保留自己的工程选择，网页切换不改变已有绑定；一个原生 Studio 服务进程可同时服务多个工程页面。详见 [共享编辑器](shared-editor.md)。
 
 一个本地原生服务进程按 projectId 服务多个工程，各页面的 URL 与工程保持绑定。当前页面显式切换工程时仍先保存、再整页重建；其他客户端打开工程不触发该页面跳转。activeId 只作为最近选择和旧入口的兼容默认值，不决定已打开页面的数据目标。创建时先检查源 revision 并登记工程，原生上下文启动失败时保留已登记工程供重试，不删除源文件。
 

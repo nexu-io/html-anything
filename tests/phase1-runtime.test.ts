@@ -36,38 +36,44 @@ test('real phase1 MCP, active Studio history, confirmed running cancellation and
   const waitFor = async (pid: string, jobId: string, predicate: (job: any) => boolean) => {
     const end = Date.now() + 100_000;
     for (;;) {
-      const value = await call('motion_get_project', { projectId: pid, exportJobId: jobId });
+      const value = await call('openmotion_get_project', { projectId: pid, exportJobId: jobId });
       assert.notEqual(value.exportJob.state, 'failed', JSON.stringify(value.exportJob));
       if (predicate(value.exportJob)) return value.exportJob;
       assert.ok(Date.now() < end, JSON.stringify(value.exportJob)); await delay(250);
     }
   };
   try {
-    let p = await call('motion_create_project', { requestId: 'create', projectType: 'natural_language', title: 'Runtime smoke', requirements: '静音小方块原生动画' });
-    let saved = await call('motion_edit_project', { projectId: p.projectId, requestId: 'long', expectedRevision: p.revision, expectedVersionId: p.version.versionId, files: [{ path: 'index.html', content: film(90) }] });
-    p = await call('motion_open_preview', { projectId: p.projectId });
+    let p = await call('openmotion_create_project', { requestId: 'create', projectType: 'natural_language', title: 'Runtime smoke', requirements: '静音小方块原生动画' });
+    let saved = await call('openmotion_edit_project', { projectId: p.projectId, requestId: 'long', expectedRevision: p.revision, expectedVersionId: p.version.versionId, files: [{ path: 'index.html', content: film(90) }] });
+    p = await call('openmotion_open_preview', { projectId: p.projectId });
     assert.equal((await fetch(p.previewUrl)).status, 200);
-    assert.equal((await call('motion_open_preview')).projectId, p.projectId, 'same MCP client binds only its own session');
-    const activeSave = await call('motion_edit_project', { projectId: p.projectId, requestId: 'active-edit', expectedRevision: p.revision, expectedVersionId: p.version.versionId, files: [{ path: 'note.txt', content: 'Studio owns history' }] });
+    assert.equal((await call('openmotion_open_preview')).projectId, p.projectId, 'same MCP client binds only its own session');
+    const activeSave = await call('openmotion_edit_project', { projectId: p.projectId, requestId: 'active-edit', expectedRevision: p.revision, expectedVersionId: p.version.versionId, files: [{ path: 'note.txt', content: 'Studio owns history' }] });
     assert.equal(activeSave.previewSync, 'file_watcher_notified');
-    p = await call('motion_get_project', { projectId: p.projectId });
-    const long = await call('motion_export_request', { projectId: p.projectId, requestId: 'long-export', expectedRevision: p.revision, versionId: p.version.versionId, audio: 'silent' });
+    p = await call('openmotion_get_project', { projectId: p.projectId });
+    const long = await call('openmotion_export_request', { projectId: p.projectId, requestId: 'long-export', expectedRevision: p.revision, versionId: p.version.versionId, audio: 'silent' });
     await waitFor(p.projectId, long.job.id, job => job.stage === 'rendering');
-    const cancelled = await call('motion_export_cancel', { projectId: p.projectId, requestId: 'cancel', jobId: long.job.id });
+    const cancelled = await call('openmotion_export_cancel', { projectId: p.projectId, requestId: 'cancel', jobId: long.job.id });
     assert.ok(['cancelling', 'cancelled'].includes(cancelled.job.state));
     const stopped = await waitFor(p.projectId, long.job.id, job => job.state === 'cancelled');
     assert.equal(stopped.state, 'cancelled');
-    await assert.rejects(access(path.join(store.directory, 'exports', long.job.id + '.mp4')));
-    saved = await call('motion_edit_project', { projectId: p.projectId, requestId: 'short', expectedRevision: p.revision, expectedVersionId: p.version.versionId, files: [{ path: 'index.html', content: film() }] });
-    const requested = await call('motion_export_request', { projectId: p.projectId, requestId: 'short-export', expectedRevision: saved.revision, versionId: saved.version.versionId, audio: 'silent' });
+    await assert.rejects(access(store.exportPath(long.job)));
+    saved = await call('openmotion_edit_project', { projectId: p.projectId, requestId: 'short', expectedRevision: p.revision, expectedVersionId: p.version.versionId, files: [{ path: 'index.html', content: film() }] });
+    const exportArgs = { projectId: p.projectId, requestId: 'short-export', expectedRevision: saved.revision, versionId: saved.version.versionId, audio: 'silent' };
+    const requested = await call('openmotion_export_request', exportArgs);
+    const legacyReplay = await call('motion_export_request', exportArgs);
+    assert.equal(legacyReplay.replayed, true);
+    assert.equal(legacyReplay.job.id, requested.job.id, 'a legacy retry must not queue another render');
     const completed = await waitFor(p.projectId, requested.job.id, job => job.state === 'completed');
     assert.equal(completed.verification.status, 'passed', JSON.stringify(completed.verification));
     assert.equal(completed.expected.width, 320); assert.equal(completed.expected.fps, 10);
     assert.equal((await fetch(completed.downloadUrl)).status, 200);
     assert.ok((await readFile(completed.path)).length > 1000);
-    assert.equal((await call('motion_get_project', { projectId: p.projectId, exportJobId: long.job.id })).exportJob.state, 'cancelled');
-    assert.equal((await call('motion_export_cancel', { projectId: p.projectId, requestId: 'cancel-completed', jobId: completed.id })).job.state, 'completed');
-    const review = await call('motion_export_request', { action: 'record_review', projectId: p.projectId, jobId: completed.id, requestId: 'review', review: { objectId: completed.id, versionId: completed.versionId, source: 'agent', conclusion: 'pending', evidence: 'Technical checks passed; actual playback not yet reviewed' } });
+    const legacyRead = await call('motion_get_project', { projectId: p.projectId, exportJobId: requested.job.id });
+    assert.equal(legacyRead.exportJob.path, completed.path, 'both names expose the same verified MP4');
+    assert.equal((await call('openmotion_get_project', { projectId: p.projectId, exportJobId: long.job.id })).exportJob.state, 'cancelled');
+    assert.equal((await call('openmotion_export_cancel', { projectId: p.projectId, requestId: 'cancel-completed', jobId: completed.id })).job.state, 'completed');
+    const review = await call('openmotion_export_request', { action: 'record_review', projectId: p.projectId, jobId: completed.id, requestId: 'review', review: { objectId: completed.id, versionId: completed.versionId, source: 'agent', conclusion: 'pending', evidence: 'Technical checks passed; actual playback not yet reviewed' } });
     assert.equal(review.review.verifiedUserAdoption, false); assert.equal(review.changed, false);
   } finally { await running.close(); }
 }, false));

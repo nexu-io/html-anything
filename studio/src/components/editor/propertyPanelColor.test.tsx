@@ -102,6 +102,31 @@ describe("ColorField flat trigger", () => {
   });
 });
 
+describe("ColorField pending save", () => {
+  it.each(["resolve", "reject"])("keeps the picker steady until an async save %ss", async (outcome) => {
+    let resolve!: () => void;
+    let reject!: (error: Error) => void;
+    const saved = new Promise<void>((done, fail) => { resolve = done; reject = fail; });
+    const onCommit = vi.fn(() => saved);
+    const onPreview = vi.fn();
+    openHexInput(renderColorField({ value: "#FF0000", onCommit, onPreview }));
+    const hue = document.querySelector<HTMLElement>('[role="slider"][aria-label="Hue"]')!;
+    act(() => hue.dispatchEvent(new KeyboardEvent("keydown", { bubbles: true, key: "ArrowRight" })));
+    const previewed = onPreview.mock.lastCall![0];
+    const position = hue.getAttribute("aria-valuenow");
+    act(() => hue.dispatchEvent(new KeyboardEvent("keyup", { bubbles: true, key: "ArrowRight" })));
+    expect(onCommit).toHaveBeenCalledOnce();
+    expect(onPreview).toHaveBeenLastCalledWith(previewed);
+    expect(hue.getAttribute("aria-valuenow")).toBe(position);
+    await act(async () => {
+      if (outcome === "resolve") resolve();
+      else reject(new Error("Save failed"));
+      await saved.catch(() => {});
+    });
+    expect(onPreview).toHaveBeenLastCalledWith(outcome === "resolve" ? previewed : "rgb(255, 0, 0)");
+  });
+});
+
 describe("ColorField hex editing", () => {
   it.each([0, 0.5])("displays hex and separate alpha without changing a translucent color (%s)", (alpha) => {
     const onCommit = vi.fn();

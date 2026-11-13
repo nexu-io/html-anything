@@ -59,5 +59,5 @@ export function MotionTimelineMedia({ projectId, compositionId, disabled, onFile
     return () => { bound = false; bind(null); };
   }, [bind, projectId, compositionId, t]);
   if (!gateway) return null;
-  return <div className="motion-timeline-media-actions">{!mvp && <button disabled={disabled} onClick={event => gateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t('Generate media')}</button>}<button disabled={disabled || !onFileDrop} onClick={gateway.importFiles}>{t('Import files')}</button></div>;
+  return <div className="motion-timeline-media-actions">{!mvp && <button disabled={disabled} onClick={event => gateway.openGenerator({ anchor: mediaPopoverAnchor(event.currentTarget) })}>{t('Generate media')}</button>}<button className={mvp ? "motion-import-button" : undefined} disabled={disabled || !onFileDrop} onClick={gateway.importFiles}>{t(mvp ? 'Import' : 'Import files')}</button></div>;
 }

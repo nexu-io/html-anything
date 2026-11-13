@@ -150,7 +150,7 @@ function EaseTypeDropdown({
           ref={menuRef}
           id={menuId}
           role="menu"
-          aria-label={t("{value0} ease presets", { value0: MODE_LABELS[kind] })}
+          aria-label={t("{value0} ease presets", { value0: t(MODE_LABELS[kind]) })}
           onKeyDown={handleMenuKeyDown}
           className="absolute inset-x-0 top-full z-20 mt-1 rounded-md border border-border bg-raised p-2 shadow-xl"
         >
@@ -396,14 +396,14 @@ export function EaseCurveSection({
 
   return (
     <div className="rounded-lg bg-neutral-900/50 p-2">
-      <EaseTypeDropdown kind={mode} ease={displayedEase} label={label} onSelect={commitEase} />
+      <EaseTypeDropdown kind={mode} ease={displayedEase} label={t(label)} onSelect={commitEase} />
       {collidingAnimationTargets && collidingAnimationTargets.length > 1 && (
         <p className="mb-1 text-[9px] text-neutral-500">
           {t("Applies to")}{" "}{collidingAnimationTargets.length} {t("animations")}</p>
       )}
       <EaseModeToggle mode={mode} onCommit={commitEase} />
       <span className="sr-only" aria-live="polite">
-        {MODE_LABELS[mode]} {t("ease editor selected")}</span>
+        {t(MODE_LABELS[mode])} {t("ease editor selected")}</span>
       {showGraph ? (
         <>
           <div
@@ -511,7 +511,7 @@ export function EaseCurveSection({
                       fill="transparent"
                       role="slider"
                       tabIndex={0}
-                      aria-label={t("{value0} bezier control point", { value0: key === "p1" ? "First" : "Second" })}
+                      aria-label={t("{value0} bezier control point", { value0: t(key === "p1" ? "First" : "Second") })}
                       aria-valuemin={0}
                       aria-valuemax={1}
                       aria-valuenow={key === "p1" ? x1 : x2}

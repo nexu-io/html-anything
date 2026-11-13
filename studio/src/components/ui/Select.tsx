@@ -1,4 +1,4 @@
-import { RemixIcon } from "../../icons/RemixIcons";
+import { Check, RemixIcon } from "../../icons/RemixIcons";
 /**
  * Select: Base UI select in Input's box. The trigger keeps `role="combobox"`, which both hotkey selector
  * lists match. Options are data, not children, so typeahead and the value display can read labels.
@@ -91,7 +91,10 @@ export function Select({
                     "data-[disabled]:cursor-not-allowed data-[disabled]:opacity-40",
                   )}
                 >
-                  <BaseSelect.ItemText className="truncate">{option.label}</BaseSelect.ItemText>
+                  <BaseSelect.ItemText className="min-w-0 flex-1 truncate">{option.label}</BaseSelect.ItemText>
+                  <span className="flex size-3 shrink-0 items-center justify-center text-accent-ink">
+                    <BaseSelect.ItemIndicator className="flex"><Check size={12} /></BaseSelect.ItemIndicator>
+                  </span>
                 </BaseSelect.Item>
               ))}
             </BaseSelect.List>

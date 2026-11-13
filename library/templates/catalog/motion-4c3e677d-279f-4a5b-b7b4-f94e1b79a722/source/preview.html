@@ -1,0 +1,257 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Scheduled Tasks 2.0 (Manus) — Scheduled Tasks 2.0 — a… · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f7f8f6;--brand-ink:#222522;--accent:#538cbe;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Manus <span>/</span> V049</div><div class="intro-line"><h1>Scheduled Tasks 2.0 (Manus) — Scheduled Tasks 2.0 — a…</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>把一句日程需求落到日历，再展示它如何反复运行。日历负责时间安排，任务列表与日志负责执行情况。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 41.866667, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 9.2, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Scheduled Tasks&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#538cbe&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Scheduled Tasks&quot;, &quot;accent&quot;: &quot;#538cbe&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="41.866667" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 41.87 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Scheduled Tasks 2.0 (Manus) — Scheduled Tasks 2.0 — a… · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f8f6}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Manus</div><div class="type-sample">Scheduled Tasks</div><p>无衬线界面文字与清晰大小层级</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f7f8f6" style="--swatch:#f7f8f6" aria-label="复制色值 #f7f8f6"><span></span><code>#F7F8F6</code></button><button class="swatch" data-color="#222522" style="--swatch:#222522" aria-label="复制色值 #222522"><span></span><code>#222522</code></button><button class="swatch" data-color="#538cbe" style="--swatch:#538cbe" aria-label="复制色值 #538cbe"><span></span><code>#538CBE</code></button><button class="swatch" data-color="#b6cbb9" style="--swatch:#b6cbb9" aria-label="复制色值 #b6cbb9"><span></span><code>#B6CBB9</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>日历网格</span><span>任务卡</span><span>聊天输入</span><span>计划开关</span><span>执行记录</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>日历先建立时间坐标</h2></div><div class="rule-copy">
+<p>开场用月历或周历展示任务密度，选中项和当前日期要可区分。日期数字、任务短名和时间各有层级，避免每个格子堆满完整句子。</p>
+<p>采用浅底和低对比网格，强调色用于任务块和当前选择。界面字体保持统一的无衬线，日期数字适合使用等宽数字。</p>
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>从聊天创建一个重复任务</h2></div><div class="rule-copy">
+<p>输入需求后，弹出频率、时间和任务内容的配置。确认配置再把事件放进日历；创建动作与新任务出现之间不要插入无关页面。</p>
+<p>将“每隔多久执行”写在计划位置，将“这次执行是否完成”写在运行记录里，二者不能共用一个状态标签。</p>
+<div class="table-wrap"><table><thead><tr><th>信息</th><th>所在位置</th></tr></thead><tbody>
+<tr><td>周期与计划时间</td><td>任务配置与日历</td></tr>
+<tr><td>本次开始时间</td><td>运行日志</td></tr>
+<tr><td>本次结果</td><td>完成状态与成果</td></tr>
+<tr><td>任务集合</td><td>列表或卡片视图</td></tr>
+</tbody></table></div>
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>切换视图时保留同一任务</h2></div><div class="rule-copy">
+<p>日历、列表和卡片视图之间，用相同任务名或选中色承接。进入日志后再返回任务集合，说明这些结果属于同一套计划。</p>
+<p>迁移时可替换为周报、库存或项目提醒，保留任务内容、周期和执行结果的一致关系。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>日历介绍</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>日程概览</b></button><button class="beat" data-time="8.0"><span>8.00<small>s</small></span><b>聊天转任务</b></button><button class="beat" data-time="14.0"><span>14.00<small>s</small></span><b>计划设置</b></button><button class="beat" data-time="18.0"><span>18.00<small>s</small></span><b>应用定时执行</b></button><button class="beat" data-time="25.0"><span>25.00<small>s</small></span><b>运行记录</b></button><button class="beat" data-time="29.0"><span>29.00<small>s</small></span><b>列表与卡片视图</b></button><button class="beat" data-time="38.0"><span>38.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="3.00 秒的构图参考" loading="lazy"><figcaption>3.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="14.00 秒的构图参考" loading="lazy"><figcaption>14.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="18.00 秒的构图参考" loading="lazy"><figcaption>18.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/c767d3cb17c195b0a5083efe5a22479859f67ec15e0d7e9ac36de31e53ee5dea" alt="29.00 秒的构图参考" loading="lazy"><figcaption>29.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/c045c757959a36ff0ce6b1ade17a465d15d9ccc53c651ab265f8f3db60946b64" alt="38.00 秒的构图参考" loading="lazy"><figcaption>38.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可换为设计评审或内容发布排期，保留日历→设置→记录</li><li>时间与名称可改，但重复周期与结果对应</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>日历网格 / 任务卡 / 聊天输入 / 计划开关 / 执行记录</p>
+<ul><li>日历先给全局分布，推近单个任务说明设置</li><li>聊天内容转为任务卡，保留名称与执行周期身份</li><li>从创建展示到执行历史，证明不是单次对话</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Manus / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Scheduled Tasks 2.0 (Manus) — Scheduled Tasks 2.0 — a…
+
+把一句日程需求落到日历，再展示它如何反复运行。日历负责时间安排，任务列表与日志负责执行情况。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 41.866667,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 9.2,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Scheduled Tasks&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#538cbe&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Scheduled Tasks&quot;,
+        &quot;accent&quot;: &quot;#538cbe&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 日历先建立时间坐标
+
+开场用月历或周历展示任务密度，选中项和当前日期要可区分。日期数字、任务短名和时间各有层级，避免每个格子堆满完整句子。
+
+采用浅底和低对比网格，强调色用于任务块和当前选择。界面字体保持统一的无衬线，日期数字适合使用等宽数字。
+
+## 从聊天创建一个重复任务
+
+输入需求后，弹出频率、时间和任务内容的配置。确认配置再把事件放进日历；创建动作与新任务出现之间不要插入无关页面。
+
+将“每隔多久执行”写在计划位置，将“这次执行是否完成”写在运行记录里，二者不能共用一个状态标签。
+
+| 信息 | 所在位置 |
+| --- | --- |
+| 周期与计划时间 | 任务配置与日历 |
+| 本次开始时间 | 运行日志 |
+| 本次结果 | 完成状态与成果 |
+| 任务集合 | 列表或卡片视图 |
+
+## 切换视图时保留同一任务
+
+日历、列表和卡片视图之间，用相同任务名或选中色承接。进入日志后再返回任务集合，说明这些结果属于同一套计划。
+
+迁移时可替换为周报、库存或项目提醒，保留任务内容、周期和执行结果的一致关系。
+
+## 配色与字形
+
+无衬线界面文字与清晰大小层级。
+
+#f7f8f6 · #222522 · #538cbe · #b6cbb9 · #ffffff
+
+## 元素与制作规则
+
+日历网格 / 任务卡 / 聊天输入 / 计划开关 / 执行记录
+
+- 日历先给全局分布，推近单个任务说明设置
+- 聊天内容转为任务卡，保留名称与执行周期身份
+- 从创建展示到执行历史，证明不是单次对话
+
+## 内容替换
+
+- 可换为设计评审或内容发布排期，保留日历→设置→记录
+- 时间与名称可改，但重复周期与结果对应
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Manus&quot;,
+  &quot;id&quot;: &quot;V049&quot;,
+  &quot;palette&quot;: [
+    &quot;#f7f8f6&quot;,
+    &quot;#222522&quot;,
+    &quot;#538cbe&quot;,
+    &quot;#b6cbb9&quot;,
+    &quot;#ffffff&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线界面文字与清晰大小层级&quot;,
+  &quot;sample&quot;: &quot;Scheduled Tasks&quot;,
+  &quot;objects&quot;: [
+    &quot;日历网格&quot;,
+    &quot;任务卡&quot;,
+    &quot;聊天输入&quot;,
+    &quot;计划开关&quot;,
+    &quot;执行记录&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 3.0,
+      &quot;frameId&quot;: &quot;K0005&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 14.0,
+      &quot;frameId&quot;: &quot;K0035&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 18.0,
+      &quot;frameId&quot;: &quot;K0046&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/c767d3cb17c195b0a5083efe5a22479859f67ec15e0d7e9ac36de31e53ee5dea&quot;,
+      &quot;timeSeconds&quot;: 29.0,
+      &quot;frameId&quot;: &quot;K0084&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/c045c757959a36ff0ce6b1ade17a465d15d9ccc53c651ab265f8f3db60946b64&quot;,
+      &quot;timeSeconds&quot;: 38.0,
+      &quot;frameId&quot;: &quot;K0100&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0.0,
+      &quot;label&quot;: &quot;日历介绍&quot;,
+      &quot;end&quot;: 3.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3.0,
+      &quot;label&quot;: &quot;日程概览&quot;,
+      &quot;end&quot;: 8.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 8.0,
+      &quot;label&quot;: &quot;聊天转任务&quot;,
+      &quot;end&quot;: 14.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 14.0,
+      &quot;label&quot;: &quot;计划设置&quot;,
+      &quot;end&quot;: 18.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 18.0,
+      &quot;label&quot;: &quot;应用定时执行&quot;,
+      &quot;end&quot;: 25.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 25.0,
+      &quot;label&quot;: &quot;运行记录&quot;,
+      &quot;end&quot;: 29.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 29.0,
+      &quot;label&quot;: &quot;列表与卡片视图&quot;,
+      &quot;end&quot;: 38.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 38.0,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 41.866667,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 41.866667,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

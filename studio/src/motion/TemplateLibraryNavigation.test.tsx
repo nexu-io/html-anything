@@ -47,8 +47,8 @@ async function closeLibrary(container: HTMLElement, method: string) {
   });
 }
 
-it.each([false, true])('returns the installation library to the root editor (existing=%s)', async existing => {
-  workspace(existing);
+it.each([false, true])('dismisses the installation library in place without remounting a prepared editor (existing=%s)', async existing => {
+  const { fetcher } = workspace(existing);
   const assign = vi.spyOn(location, 'assign').mockImplementation(() => {});
   const replace = vi.spyOn(location, 'replace').mockImplementation(() => {});
   const container = document.createElement('div'); document.body.append(container);
@@ -56,17 +56,25 @@ it.each([false, true])('returns the installation library to the root editor (exi
   try {
     for (const method of ['close', 'escape']) {
       assign.mockClear(); replace.mockClear();
+      editor.mounts = 0; editor.unmounts = 0; fetcher.mockClear();
       history.replaceState(null, '', '/?templates=1&embed=1');
       await act(async () => root.render(<I18nProvider initialLocale="en"><MotionApp key={method} /></I18nProvider>));
       expect(container.querySelector('dialog[aria-label="Template library"]')).not.toBeNull();
-      expect(container.querySelector('[data-testid="editor"]')).toBeNull();
+      const preparedEditor = container.querySelector('[data-testid="editor"]');
+      if (existing) expect(preparedEditor).not.toBeNull();
+      else {
+        expect(preparedEditor).toBeNull();
+        expect(fetcher.mock.calls.some(([url]) => url.includes('/preview/open'))).toBe(false);
+      }
+      const previewRequests = () => fetcher.mock.calls.filter(([url]) => url.includes('/preview/open')).length;
+      const preparedRequests = previewRequests();
       await closeLibrary(container, method);
-      expect(replace).toHaveBeenLastCalledWith('/?embed=1');
-      expect(assign).not.toHaveBeenCalled();
-      // Follow the document navigation, including the first-run default project.
-      history.replaceState(null, '', replace.mock.lastCall![0]);
-      await act(async () => root.render(<I18nProvider initialLocale="en"><MotionApp key={`${method}-home`} /></I18nProvider>));
+      if (preparedEditor) expect(previewRequests()).toBe(preparedRequests);
+      expect(replace).not.toHaveBeenCalled(); expect(assign).not.toHaveBeenCalled();
+      expect(new URLSearchParams(location.search).has('templates')).toBe(false);
+      expect(new URLSearchParams(location.search).get('embed')).toBe('1');
       expect(container.querySelector('[data-testid="editor"]')).not.toBeNull();
+      if (preparedEditor) expect(container.querySelector('[data-testid="editor"]')).toBe(preparedEditor);
       expect(container.querySelector('dialog[aria-label="Template library"]')).toBeNull();
       expect(container.querySelector('[role="alert"]')).toBeNull();
     }
@@ -91,9 +99,10 @@ it.each(['failed', 'pending'] as const)('allows installation-library dismissal w
       await act(async () => { open.click(); container.querySelector<HTMLButtonElement>('button[aria-label="Close template preview"]')!.click(); });
       await closeLibrary(container, method);
       expect(container.querySelector('dialog[aria-label="Template library"]')).toBeNull();
-      expect(replace).toHaveBeenCalledExactlyOnceWith('/?embed=1');
+      expect(replace).not.toHaveBeenCalled();
+      expect(new URLSearchParams(location.search).has('templates')).toBe(false);
     }
-    expect(fetcher.mock.calls.some(([, init]) => init?.method === 'POST')).toBe(false);
+    expect(fetcher.mock.calls.some(([url, init]) => init?.method === 'POST' && !url.includes('/preview/open'))).toBe(false);
   } finally { act(() => root.unmount()); container.remove(); }
 });
 
@@ -116,7 +125,8 @@ it('still blocks dismissal while project creation is in flight and allows it aft
     await act(async () => finish(Response.json({ error: 'Creation failed' }, { status: 503 })));
     expect(container.querySelector<HTMLButtonElement>('button[aria-label="Close template library"]')!.disabled).toBe(false);
     await closeLibrary(container, 'close');
-    expect(replace).toHaveBeenCalledExactlyOnceWith('/?embed=1');
+    expect(replace).not.toHaveBeenCalled();
+    expect(new URLSearchParams(location.search).has('templates')).toBe(false);
   } finally { act(() => root.unmount()); container.remove(); }
 });
 

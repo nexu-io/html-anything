@@ -1,0 +1,11 @@
+
+function paper(x,y,w,h,title,color='#fff'){rect(x,y,w,h,color,12);text(title,x+18,y+24,18,(/^#[0-9a-f]{6}$/i.test(color)&&[1,3,5].reduce((v,j)=>v+parseInt(color.slice(j,j+2),16),0)<350)?'#fff':'#25262b','left','Arial',600,w-35);}
+function rows(x,y,w,n=4,c='#b8bdc2',gap=22){for(let j=0;j<n;j++)rect(x,y+j*gap,w*(.64+rand(j)*.32),5,c,2)}
+function ring(x,y,r,c,width=3){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.strokeStyle=c;ctx.lineWidth=width;ctx.stroke()}
+function pill(x,y,w,txt,c='#fff',ink='#222'){rect(x-w/2,y-22,w,44,c,22);text(txt,x,y,18,ink,'center','Arial',500,w-26)}
+function arrow(x,y,xx,yy,c){line(x,y,xx,yy,c,2);let a=Math.atan2(yy-y,xx-x);poly([[xx,yy],[xx-10*cos(a-.5),yy-10*sin(a-.5)],[xx-10*cos(a+.5),yy-10*sin(a+.5)]],c)}
+function header(t,color=CONFIG.palette[1]){fittedText(P.title,500,55,30,color,870,'Arial',600)}
+function foot(t,color=CONFIG.palette[1]){text(CONFIG.stages[stageAt(t)].label,500,557,16,color)}
+function orbitNode(x,y,r,c,labelText){ellipse(x,y,r,r,c);text(labelText,x,y,16,'#25262b','center','Arial',500,r*1.65)}
+function wave(x,y,w,h,c,t,phaseOffset=0){ctx.beginPath();for(let j=0;j<=80;j++){let xx=x+j*w/80,yy=y+sin(j*.15+t+phaseOffset)*h*(.4+.6*sin(j/80*Math.PI));j?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)}ctx.strokeStyle=c;ctx.lineWidth=3;ctx.stroke()}
+function drawScene(t){bg();header(t);let n=stageAt(t),u=stageProgress(t);ellipse(500,130,30,34,'#d9ccb5');ellipse(490,125,3,3,'#333');ellipse(510,125,3,3,'#333');pill(500,178,180,n===4?'Waiting for permission':'Muse is working','#fff');if(n<2){pill(580,275,360,progressText('This week has been hectic.',phase(u,0,.6)),'#cce7fb');pill(405,350,260,'Let me help.','#e7e8e9')}else if(n<5){paper(280,235,440,260,n===4?'Review order':'School supply list');['Backpack','Crayons','Notebook'].forEach((v,j)=>{rect(305,290+j*43,26,26,P.accent,5);text(v,350,303+j*43,18,'#333','left')});if(n===4){pill(410,458,135,'Deny','#e7e8e9');pill(590,458,135,u>.5?'Approved':'Allow',P.accent,'#fff');cursor(590,470-10*sin(u*3))}}else if(n<7){paper(300,235,400,250,'Autumn Trail 10K');rows(325,285,310,4);pill(500,445,220,u>.6?'You are in!':'Sign me up',P.accent,'#fff')}else{paper(270,235,460,250,n<9?'Update your flight':'Calendar updated');text('SFO  →  DEN',500,330,35,'#222');pill(500,430,260,u>.4?'Confirmed ✓':'Yes, please',P.accent,'#fff')}foot(t)}

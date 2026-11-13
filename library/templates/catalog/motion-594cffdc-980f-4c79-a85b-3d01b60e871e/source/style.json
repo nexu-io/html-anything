@@ -1,0 +1,145 @@
+{
+  "background": {
+    "color": "#070909",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：FFFFFF",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：HOSTILE",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：The quick brown fox jumps over the lazy dog",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "竞速轨道",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "节奏箭头",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "纸牌列",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "玻璃控件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "旋钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "编辑器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "步进格子",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#070909",
+      "status": "inferred"
+    },
+    {
+      "hex": "#eaf1ee",
+      "status": "inferred"
+    },
+    {
+      "hex": "#55efba",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d553a2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#eac34f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8b68f5",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线紧凑游戏标题与等宽状态数字；不同作品保留自身字体，外部舞台纯黑",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用一连串真正发生状态变化的作品说明交互能力：游戏、控件、设计系统和音序器各演示一个清楚动作。",
+      "status": "inferred"
+    },
+    {
+      "rule": "竞速轨道有前进速度，节奏游戏有击中反馈，纸牌有位置变化。每个作品独占一屏，不把所有案例缩成同时播放的小格。",
+      "status": "inferred"
+    },
+    {
+      "rule": "作品之间可有不同配色和字体，但四周保留黑色边距。状态数字、选中颜色与动作结果足够亮；控件的暗色基底不应吞掉边缘。",
+      "status": "inferred"
+    }
+  ]
+}

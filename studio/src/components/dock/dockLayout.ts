@@ -11,11 +11,12 @@ const DEFAULT_TIMELINE_H = 360;
 const DEFAULT_LEFT = ["compositions", "assets", "code", "catalog"] as const;
 const DEFAULT_RIGHT = ["design", "layers", "renders", "variables", "motionBlur"] as const;
 export const COLLAPSED_SIDE_WIDTH = 48;
-const COMPACT_SIDE_WIDTH = 320;
+const BREAKPOINT_SIDE_WIDTH = 320;
+const MIN_MVP_SIDE_WIDTH = 260;
 export const DOCK_GAPS = 12;
-// Breakpoints derive from usable panel sizes, not an independent viewport guess.
-export const COMPACT_DOCK_WIDTH = MIN_PREVIEW_W + 2 * COMPACT_SIDE_WIDTH + DOCK_GAPS;
-export const PREVIEW_ONLY_DOCK_WIDTH = MIN_PREVIEW_W + COMPACT_SIDE_WIDTH + COLLAPSED_SIDE_WIDTH + DOCK_GAPS;
+// Preserve existing narrow-host collapse breakpoints independently of resizable side minimums.
+export const COMPACT_DOCK_WIDTH = MIN_PREVIEW_W + 2 * BREAKPOINT_SIDE_WIDTH + DOCK_GAPS;
+export const PREVIEW_ONLY_DOCK_WIDTH = MIN_PREVIEW_W + BREAKPOINT_SIDE_WIDTH + COLLAPSED_SIDE_WIDTH + DOCK_GAPS;
 export const collapsedSideWidth = (width: number, fixedLayout = false) =>
   fixedLayout && width < PREVIEW_ONLY_DOCK_WIDTH ? 0 : COLLAPSED_SIDE_WIDTH;
 export const isSideCollapsed = (group: DockviewApi["groups"][number]) =>
@@ -37,7 +38,7 @@ export function defaultSideWidths(viewportWidth: number) {
  * when space runs out. Free-layout sides retain the native shrinking policy.
  */
 export function sideMinimumWidth(dockWidth: number, fixedLayout = false): number {
-  if (fixedLayout) return COMPACT_SIDE_WIDTH;
+  if (fixedLayout) return MIN_MVP_SIDE_WIDTH;
   const fair = Math.floor((dockWidth - MIN_PREVIEW_W) / 2);
   return Math.min(MIN_SIDE_W, Math.max(MIN_SIDE_W_FLOOR, fair));
 }
@@ -52,7 +53,7 @@ function holdsPreview(group: DockviewApi["groups"][number]) {
 }
 
 /** The zone of a group whose every tab is a side panel, else null. */
-function sideZone(group: DockviewApi["groups"][number]): "left" | "right" | null {
+export function sideZone(group: DockviewApi["groups"][number]): "left" | "right" | null {
   const zones = group.panels.map((panel) =>
     isPanelId(panel.id) ? PANEL_DEFINITIONS[panel.id].zone : "center",
   );
@@ -63,7 +64,6 @@ function sideZone(group: DockviewApi["groups"][number]): "left" | "right" | null
 
 /** Idempotent; rewrites every group's minimum, since dockview keeps a constraint once set. */
 export function applySideMinimums(api: DockviewApi, dockWidth = window.innerWidth, fixedLayout = false) {
-  const minimumWidth = sideMinimumWidth(dockWidth, fixedLayout);
   const compact = fixedLayout && dockWidth < COMPACT_DOCK_WIDTH;
   const cap = defaultSideWidths(dockWidth);
   const railWidth = collapsedSideWidth(dockWidth, fixedLayout);
@@ -79,8 +79,9 @@ export function applySideMinimums(api: DockviewApi, dockWidth = window.innerWidt
       group.api.setConstraints({ minimumWidth: previewMinimumWidth(dockWidth, fixedLayout) });
       continue;
     }
-    group.api.setConstraints({ minimumWidth, maximumWidth: Number.POSITIVE_INFINITY });
     const zone = sideZone(group);
+    const minimumWidth = sideMinimumWidth(dockWidth, fixedLayout);
+    group.api.setConstraints({ minimumWidth, maximumWidth: Number.POSITIVE_INFINITY });
     const limit = zone === "right" ? cap.right : cap.left;
     if (zone && !compact && minimumWidth < MIN_SIDE_W && group.width > limit) {
       group.api.setSize({ width: limit });

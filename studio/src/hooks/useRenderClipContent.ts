@@ -25,6 +25,7 @@ import {
 import { usePlayerStore } from "../player/store/playerStore";
 import { thumbnailRevisionOf } from "../player/store/thumbnailSlice";
 import { effectiveThumbnailMode } from "../player/lib/thumbnailPolicy";
+import { useMvpEditor } from "../motion/StudioHost";
 
 export function normalizeCompositionSrc(
   compSrc: string,
@@ -130,6 +131,7 @@ export function useRenderClipContent({
   activePreviewUrl,
   effectiveTimelineDuration,
 }: UseRenderClipContentOptions) {
+  const mvp = useMvpEditor();
   // Self-sourced so the adaptive policy gates thumbnail generation without App plumbing.
   const thumbnailMode = usePlayerStore((s) => s.thumbnailMode);
   const effectiveMode = effectiveThumbnailMode(thumbnailMode);
@@ -151,7 +153,7 @@ export function useRenderClipContent({
       const waveform = (labelInset?: number) =>
         renderAudioClip(el, pid, sessionEpoch, style.label, context, labelInset);
       if (effectiveMode === "hidden") {
-        return rendersWaveform(el) ? waveform() : withSoundStrip(el, null, waveform);
+        return rendersWaveform(el) ? waveform() : mvp ? null : withSoundStrip(el, null, waveform);
       }
 
       let compSrc = el.compositionSrc;
@@ -219,11 +221,22 @@ export function useRenderClipContent({
       const htmlPreviewEligible = el.duration > 0 && effectiveTimelineDuration > 0;
 
       if ((el.tag === "video" || el.tag === "img") && el.src) {
-        const mediaSrc = resolveMediaPreviewUrl(
+        let mediaSrc = resolveMediaPreviewUrl(
           authoredSrcPath(el.src),
           pid,
           window.location.origin,
         );
+        const revision = thumbnailRevisionOf(thumbnailRevisions, "index.html");
+        const previewPrefix = buildProjectApiPath(pid, "/preview/");
+        if (
+          revision > 0 &&
+          (mediaSrc.startsWith(previewPrefix) ||
+            mediaSrc.startsWith(window.location.origin + previewPrefix))
+        ) {
+          const mediaUrl = new URL(mediaSrc, window.location.origin);
+          mediaUrl.searchParams.set("revision", String(revision));
+          mediaSrc = mediaUrl.href;
+        }
         // Still images can't be decoded by VideoThumbnail's <video> extractor
         // (the error event fires and the shimmer never resolves) — render the
         // image itself as the strip.
@@ -249,7 +262,7 @@ export function useRenderClipContent({
           sessionEpoch,
           priority: context.priority,
         });
-        return withSoundStrip(el, thumbnail, waveform);
+        return mvp ? thumbnail : withSoundStrip(el, thumbnail, waveform);
       }
 
       if (htmlPreviewEligible) {
@@ -280,6 +293,7 @@ export function useRenderClipContent({
       effectiveMode,
       sessionEpoch,
       thumbnailRevisions,
+      mvp,
     ],
   );
 }

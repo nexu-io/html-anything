@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "motion": {
+    "openmotion": {
       "type": "stdio",
       "command": "node",
       "args": [
@@ -17,6 +17,7 @@
         "HYPERFRAMES_FFPROBE_PATH",
         "HYPERFRAMES_BROWSER_PATH",
         "MOTION_TEMPLATE_ENV",
+        "MOTION_TEMPLATE_SOURCE",
         "MOTION_TEMPLATE_RESOURCE_ID",
         "MOTION_TEMPLATE_LOCALE"
       ]

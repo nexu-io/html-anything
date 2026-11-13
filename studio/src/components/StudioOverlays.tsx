@@ -1,3 +1,4 @@
+import { FeedbackLayer } from "./FeedbackLayer";
 import { useI18n } from "../i18n/I18n";
 import { memo, type ComponentProps } from "react";
 import { LintModal } from "./LintModal";
@@ -83,7 +84,7 @@ export const StudioOverlays = memo(function StudioOverlays({
         />
       )}
       {/* Center notices above the editor; gaps remain transparent to pointer input. */}
-      <div className="pointer-events-none absolute top-16 left-1/2 z-91 flex w-[min(420px,calc(100%-48px))] -translate-x-1/2 flex-col items-center gap-2">
+      {toasts.length > 0 && <FeedbackLayer><div className="pointer-events-none absolute top-16 left-1/2 z-91 flex w-[min(420px,calc(100%-48px))] -translate-x-1/2 flex-col items-center gap-2">
         {toasts.map((toast) => (
           <StudioToast
             key={toast.id}
@@ -94,7 +95,7 @@ export const StudioOverlays = memo(function StudioOverlays({
             onDismiss={() => dismissToast(toast.id)}
           />
         ))}
-      </div>
+      </div></FeedbackLayer>}
       {host?.feedback !== false && (
         <div className="absolute bottom-6 right-6 z-91">
           <StudioFeedbackCard />

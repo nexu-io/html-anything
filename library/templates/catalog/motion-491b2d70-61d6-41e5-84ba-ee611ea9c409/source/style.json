@@ -1,0 +1,97 @@
+{
+  "background": {
+    "color": "#020608",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "玻璃面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "绿色光带",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "产品名称",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "日期",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#020608",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f2fff4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#53e278",
+      "status": "inferred"
+    },
+    {
+      "hex": "#14352d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#3a5360",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "轻至中等无衬线白字；名称独立居中，结尾短句两行以内",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "黑蓝底上放两三片错位透明板，边缘只留细亮线。横向绿光穿过中心时揭开文字，光离开后文字保持稳定。",
+      "status": "inferred"
+    },
+    {
+      "rule": "玻璃面沿深度轻移，极光缓慢流动。不要让背景和文字同时大幅旋转；产品名称占中心，日期放上方并缩小。",
+      "status": "inferred"
+    },
+    {
+      "rule": "名称后接方向与能力主张，最后才出现品牌。更换产品时准备一个短名称、一个时间节点与两句承诺，保持白字和绿光的主次。",
+      "status": "inferred"
+    }
+  ]
+}

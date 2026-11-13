@@ -252,6 +252,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
           <div aria-hidden="true" className="mx-1 h-4 w-px bg-neutral-800" />
           {!mvp && <LinkedSelectionToggle />}
           <Tooltip
+            side="bottom"
             label={
               timelineSnapEnabled
                 ? t("Snapping on ({value0})", { value0: keyHint("timelineSnap", keys) })

@@ -37,6 +37,7 @@ interface RenderedDomEditCommits {
 
 interface RenderDomEditCommitsOptions {
   importedFontAssets?: ImportedFontAsset[];
+  fontAssets?: ImportedFontAsset[];
   writeProjectFile?: (path: string, content: string, expectedContent?: string) => Promise<void>;
   onTrySdkPersist?: () => Promise<CutoverResult>;
   queueDomEditSave?: <T>(save: () => Promise<T>) => Promise<T>;
@@ -220,6 +221,7 @@ function renderDomEditCommits(
       writeProjectFile: options.writeProjectFile ?? (async () => {}),
       editHistory: { recordEdit },
       fileTree: [],
+      fontAssets: options.fontAssets,
       importedFontAssetsRef: { current: options.importedFontAssets ?? [] },
       projectId: "p1",
       projectIdRef,
@@ -1820,4 +1822,22 @@ describe("useDomEditCommits attribute batch commit", () => {
       rendered.cleanup();
     }
   });
+});
+
+it.each([false, true])("preserves real font metadata and an existing authored face (declared: %s)", async declared => {
+  const source = '<!doctype html><html><head></head><body><div data-hf-id="hf-card">Card</div></body></html>';
+  const fetchMock = stubPatchFetch({ ok: true, changed: true, matched: true, content: source }, source);
+  const { iframe, element } = createPreviewElement();
+  if (declared) Object.defineProperty(iframe.contentDocument, "fonts", { configurable: true, value: [{ family: "Arial Black" }] });
+  const rendered = renderDomEditCommits(createSelection(element), iframe, {
+    fontAssets: [{ family: "Arial Black", path: "fonts/misleading.ttf", url: "/api/projects/p1/preview/fonts/misleading.ttf", weight: "900", style: "normal" }],
+  });
+  try {
+    await act(async () => { await rendered.hook.handleDomStyleCommit("font-family", '"Arial Black"'); });
+    const writes = fetchMock.mock.calls.filter(([, init]) => init?.method === "POST" || init?.method === "PUT");
+    expect(writes).toHaveLength(1);
+    const body = JSON.parse(String(writes[0][1]?.body));
+    if (declared) expect(body.fontFaceCss).toBeUndefined();
+    else expect(body.fontFaceCss).toContain('font-weight: 900; font-style: normal;');
+  } finally { rendered.cleanup(); }
 });

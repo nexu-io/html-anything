@@ -69,6 +69,9 @@ test('guide rendering pins the exact npm package, built source and hash while re
   const text = await readFile(path.join(directory, 'install.md'), 'utf8');
   assert(text.includes(`npx --yes --package "${pkg.name}@${pkg.version}"`));
   assert(text.includes(manifest.commit) && text.includes(record.tgzSHA256));
+  assert(text.includes(`https://github.com/nexu-io/openmotion/blob/${manifest.commit}/docs/npm-installation.md`),
+    'Generated guides must use the renamed repository and immutable source SHA');
+  assert(!text.includes('nexu-io/html-anything'), 'Do not republish retired repository links');
   assert(!text.includes('{{') && !text.includes('see `{{...}}`'));
   assert(text.includes('eleven public Tools') && text.includes('five Skills'));
   assert(text.includes('new test versions embed DEV defaults') && !text.includes('does not select DEV templates'),

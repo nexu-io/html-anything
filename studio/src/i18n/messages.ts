@@ -44,10 +44,11 @@ const singular: Record<string, string> = {
   ' and its {count} slides': ' and its {count} slide', '{count} lint findings': '{count} lint finding',
   '{description} ({count} effects)': '{description} ({count} effect)', '{count} files': '{count} file',
   '{count} tools': '{count} tool', '{count} elements selected': '{count} element selected',
+  '{count} active effects': '{count} active effect',
 };
 const pluralRules = Object.fromEntries(languages.map(({ locale }) => [locale, new Intl.PluralRules(locale)]));
 
-export const isKnownMessage = (message: string): boolean => Object.hasOwn(zhCN, message) || Object.hasOwn(mvpZhCN, message);
+export const isKnownMessage = (message: string): boolean => Object.hasOwn(effectiveDictionaries['zh-CN'], message);
 
 /** Accept legacy Chinese labels and already-localized built-in labels. */
 export function sourceMessage(message: string, locale: Locale = 'zh-CN'): string {

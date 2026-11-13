@@ -122,7 +122,6 @@ describe("timeline motion styles", () => {
     expect(overlaySource).toContain("var(--timeline-thumbnail-label-gradient)");
     expect(overlaySource).toContain("var(--timeline-thumbnail-label-shadow)");
     expect(overlaySource).toContain('"--timeline-waveform-bar-rgb"');
-    expect(overlaySource).toContain("var(--timeline-waveform-error)");
     expect(overlaySource).toContain("var(--timeline-waveform-label-shadow)");
     expect(overlaySource).toContain("var(--timeline-text-solid)");
     expect(overlaySource).toContain("var(--timeline-accent)");

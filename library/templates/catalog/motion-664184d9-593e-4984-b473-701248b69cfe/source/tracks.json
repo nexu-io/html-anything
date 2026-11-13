@@ -1,0 +1,184 @@
+{
+  "tracks": [
+    {
+      "id": "text-0.center",
+      "target": "text-0",
+      "property": "center",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          24.5,
+          24.5
+        ],
+        [
+          41,
+          42.5
+        ]
+      ],
+      "samples": [
+        [
+          24.5,
+          [
+            618.9999985400002,
+            347.00000022
+          ]
+        ],
+        [
+          41,
+          [
+            631.9999988078382,
+            336.99999958274987
+          ]
+        ],
+        [
+          41.5,
+          [
+            636.9999990925958,
+            339.00000041042904
+          ]
+        ],
+        [
+          42.5,
+          [
+            638.9999990214286,
+            340.9999996357143
+          ]
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0.9999999501307002,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.height",
+      "target": "text-0",
+      "property": "height",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          24.5,
+          24.5
+        ],
+        [
+          41,
+          42.5
+        ]
+      ],
+      "samples": [
+        [
+          24.5,
+          22.0
+        ],
+        [
+          41,
+          113.04847717285156
+        ],
+        [
+          42,
+          100.0
+        ],
+        [
+          42.5,
+          102.00000000000006
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 1.8573226928711506,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.text",
+      "target": "text-0",
+      "property": "text",
+      "unit": "text",
+      "space": "canvas",
+      "status": "measured",
+      "source": "video",
+      "method": "text",
+      "interpolation": "step",
+      "valid": [
+        [
+          24.5,
+          24.5
+        ],
+        [
+          41,
+          42.5
+        ]
+      ],
+      "samples": [
+        [
+          24.5,
+          "https://github.com/anthropic/skills"
+        ],
+        [
+          41,
+          "/skills"
+        ],
+        [
+          42.5,
+          "/skills"
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.width",
+      "target": "text-0",
+      "property": "width",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          24.5,
+          24.5
+        ],
+        [
+          41,
+          42.5
+        ]
+      ],
+      "samples": [
+        [
+          24.5,
+          290.0000000000001
+        ],
+        [
+          41,
+          346.10614013671864
+        ],
+        [
+          41.5,
+          323.9642333984375
+        ],
+        [
+          42,
+          310.0
+        ],
+        [
+          42.5,
+          306.0
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    }
+  ]
+}

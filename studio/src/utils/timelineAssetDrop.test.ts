@@ -7,10 +7,26 @@ import {
   fitTimelineAssetGeometry,
   getTimelineAssetKind,
   insertTimelineAssetIntoSource,
+  parseTimelineAssetPayload,
   resolveTimelineAssetCompositionSize,
   resolveTimelineAssetSrc,
   setCompositionDurationToContent,
 } from "./timelineAssetDrop";
+
+describe("parseTimelineAssetPayload", () => {
+  it("keeps valid known durations and ignores invalid duration hints", () => {
+    expect(parseTimelineAssetPayload('{"path":"music.mp3","duration":12.5}')).toEqual({ path: "music.mp3", duration: 12.5 });
+    for (const duration of [0, -1, "12", null]) {
+      expect(parseTimelineAssetPayload(JSON.stringify({ path: "music.mp3", duration })))
+        .toEqual({ path: "music.mp3", duration: undefined });
+    }
+  });
+  it("rejects malformed payloads before accepting a drop", () => {
+    for (const raw of ["no json", "null", "{}", '{"path":12}', '{"path":""}']) {
+      expect(parseTimelineAssetPayload(raw)).toBeNull();
+    }
+  });
+});
 
 describe("setCompositionDurationToContent", () => {
   const src = (dur: number) =>

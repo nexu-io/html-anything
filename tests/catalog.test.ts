@@ -1,3 +1,5 @@
+// These fixtures exercise the published CMS contract independently of repository source.
+process.env.MOTION_TEMPLATE_SOURCE = 'cms';
 import test from 'node:test';
 import { closeFixtureEditor } from './fixtures.ts';
 import assert from 'node:assert/strict';
@@ -15,6 +17,13 @@ import { WorkspaceStore } from '../workspace.ts';
 import { transport } from './http.ts';
 import { mockPrism } from './prism-fixture.ts';
 
+function assertCatalogImage(bytes: Buffer, poster: string): void {
+  if (poster.endsWith('.webp')) {
+    assert.equal(bytes.toString('ascii', 0, 4), 'RIFF');
+    assert.equal(bytes.toString('ascii', 8, 12), 'WEBP');
+  } else assert.equal(bytes.readUInt16BE(), 0xffd8);
+}
+
 test('the complete source snapshot, every original ID and matched poster survive the import', async () => {
   const raw = await readFile(new URL('../web/catalog/hyperframes.json', import.meta.url));
   const snapshot = JSON.parse(raw.toString());
@@ -31,10 +40,12 @@ test('the complete source snapshot, every original ID and matched poster survive
   }
   const frames = JSON.parse(await readFile(new URL('../web/catalog/template-frames.json', import.meta.url), 'utf8')).frames;
   assert.equal(frames.length, 38);
+  const framedTemplates = catalogTemplates(snapshot.entries, frames);
   for (const frame of frames) {
     assert.equal(frame.video, snapshot.entries.find(entry => entry.id === frame.id).video);
+    assert.equal(framedTemplates.find(template => template.id === frame.id)?.posterUrl, frame.poster);
     const bytes = await readFile(new URL('..' + frame.poster, import.meta.url));
-    assert.equal(bytes.readUInt16BE(), 0xffd8);
+    assertCatalogImage(bytes, frame.poster);
   }
   const noMedia = getTemplate('hf-component-agent-cursor');
   assert.equal(noMedia.previewUrl, undefined); assert.equal(noMedia.posterUrl, undefined);
@@ -78,8 +89,9 @@ test('HTTP catalog, local posters and copied guides resolve the exact selected t
     assert.equal((await request('/motion-api/template-catalog?limit=999')).status, 400);
     for (const template of libraryTemplates.filter(item => item.posterUrl?.startsWith('/web/'))) {
       const response = await request(template.posterUrl!);
-      assert.equal(response.status, 200); assert.equal(response.headers.get('Content-Type'), 'image/jpeg');
-      assert.equal(Buffer.from(await response.arrayBuffer()).readUInt16BE(), 0xffd8);
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get('Content-Type'), template.posterUrl!.endsWith('.webp') ? 'image/webp' : 'image/jpeg');
+      assertCatalogImage(Buffer.from(await response.arrayBuffer()), template.posterUrl!);
     }
     const info = await (await request('/api/integration')).json();
     for (const id of ['nyt-graph', 'decision-tree', 'product-promo']) {
@@ -89,19 +101,19 @@ test('HTTP catalog, local posters and copied guides resolve the exact selected t
         assert.ok(prompt.includes(id)); assert.ok(prompt.includes(template.title));
         assert.match(prompt, /https:\/\/releases.open-design.ai\/open-motion\/install.md/);
         assert.match(prompt, /并交付 HTML 和 MP4/); assert.ok(prompt.endsWith('我的要求：\n'));
-        assert.doesNotMatch(prompt, /dataDirectory|motion_write_files|expectedRevision/);
+        assert.doesNotMatch(prompt, /dataDirectory|openmotion_write_files|expectedRevision/);
         assert.doesNotMatch(prompt, /localhost|127\.0\.0\.1|connect\/guide/);
         const response = await request(guideUrl(info, host, id)); assert.equal(response.status, 200);
         const guide = await response.text(); assert.ok(guide.includes(`模板 ID：${id}`));
         assert.ok(guide.includes(template.title));
         const expectedRoute = template.kind === 'reference' ? 'recreate' : 'template';
-        assert.ok(guide.includes(`motion://workflow/${expectedRoute}/start`));
+        assert.ok(guide.includes(`openmotion://workflow/${expectedRoute}/start`));
         assert.deepEqual(readTemplate(id).workflowGuide, { workflow: expectedRoute, section: 'start', status: 'ready' });
         assert.match(guide, /本次用户明确要求成片或导出/);
         if (template.kind !== 'builtin') {
-          assert.match(guide, /motion_edit_project/); assert.doesNotMatch(prompt, /motion_apply_template/);
+          assert.match(guide, /openmotion_edit_project/); assert.doesNotMatch(prompt, /openmotion_apply_template/);
           assert.ok(guide.includes(template.sourceUrl!));
-        } else assert.match(guide, /motion_create_project/);
+        } else assert.match(guide, /openmotion_create_project/);
       }
     }
     assert.equal((await request('/connect/guide?template=missing')).status, 400);
@@ -118,25 +130,25 @@ test('internal legacy compatibility reads the selected reference and uses the na
     const requests = [
       { id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25' } },
       { id: 2, method: 'tools/list' },
-      { id: 3, method: 'tools/call', params: { name: 'motion_list_templates', arguments: { query: templateId } } },
-      { id: 4, method: 'tools/call', params: { name: 'motion_get_template', arguments: { templateId } } },
-      { id: 5, method: 'tools/call', params: { name: 'motion_write_files', arguments: { expectedRevision: initial.revision, files: [{ path: 'index.html', content: html }] } } },
-      { id: 6, method: 'tools/call', params: { name: 'motion_write_files', arguments: { expectedRevision: initial.revision, files: [{ path: 'index.html', content: 'stale' }] } } },
+      { id: 3, method: 'tools/call', params: { name: 'openmotion_list_templates', arguments: { query: templateId } } },
+      { id: 4, method: 'tools/call', params: { name: 'openmotion_get_template', arguments: { templateId } } },
+      { id: 5, method: 'tools/call', params: { name: 'openmotion_write_files', arguments: { expectedRevision: initial.revision, files: [{ path: 'index.html', content: html }] } } },
+      { id: 6, method: 'tools/call', params: { name: 'openmotion_write_files', arguments: { expectedRevision: initial.revision, files: [{ path: 'index.html', content: 'stale' }] } } },
     ];
     const replies = [];
     for (const message of requests) replies.push(await rpc({ jsonrpc: '2.0', ...message }, store, mcpRegistry('legacy')));
     assert.equal(replies[1].result.tools.length, 28);
     assert.equal(replies[2].result.structuredContent.items[0].id, templateId);
     assert.equal(replies[3].result.structuredContent.sourceUrl, getTemplate(templateId).sourceUrl);
-    assert.match(replies[3].result.structuredContent.instructions, /motion_edit_project/);
+    assert.match(replies[3].result.structuredContent.instructions, /openmotion_edit_project/);
     assert.deepEqual(replies[3].result.structuredContent.workflowGuide, { workflow: 'recreate', section: 'start', status: 'ready' });
-    assert.doesNotMatch(replies[3].result.structuredContent.instructions, /motion_import_project|motion.json/);
+    assert.doesNotMatch(replies[3].result.structuredContent.instructions, /openmotion_import_project|motion.json/);
     assert.notEqual(replies[4].result.structuredContent.revision, initial.revision);
     assert.equal(replies[5].result.isError, true);
     assert.equal((await store.get()).project!.html, html);
-    assert.equal(readTemplate('product-promo').workflow, 'motion_apply_template');
-    assert.equal(readTemplate(templateId).workflow, 'motion_import_asset + motion_write_files');
-    await assert.rejects(callTool('motion_get_template', { templateId: 'missing' }, store), /模板不存在/);
+    assert.equal(readTemplate('product-promo').workflow, 'openmotion_apply_template');
+    assert.equal(readTemplate(templateId).workflow, 'openmotion_import_asset + openmotion_write_files');
+    await assert.rejects(callTool('openmotion_get_template', { templateId: 'missing' }, store), /模板不存在/);
   } finally { await closeFixtureEditor(directory); await rm(directory, { recursive: true, force: true }); }
 });
 
@@ -146,7 +158,8 @@ test('the visual gallery only includes verified local covers and keeps coverless
   for (const cover of covers.entries) {
     assert.equal(getTemplate(cover.id).posterUrl, cover.poster);
     const bytes = await readFile(new URL('..' + cover.poster, import.meta.url));
-    assert.equal(bytes.readUInt16BE(), 0xffd8); assert.ok(bytes.length > 500);
+    assertCatalogImage(bytes, cover.poster);
+    assert.ok(bytes.length > 500);
   }
   const page = listTemplates({ covered: true, limit: 60 });
   assert.equal(page.catalogTotal, 894); assert.equal(page.galleryTotal, covers.entries.length + 3);

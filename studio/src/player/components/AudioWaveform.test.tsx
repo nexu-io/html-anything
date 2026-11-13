@@ -63,6 +63,8 @@ const setStrip = (size: typeof EMPTY_STRIP) =>
   });
 
 import { AudioWaveform, drawWaveformCanvas } from "./AudioWaveform";
+import { I18nProvider } from "../../i18n/I18n";
+import type { ThumbnailRequest } from "../lib/thumbnailScheduler";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -123,6 +125,53 @@ function recordingCanvas() {
 }
 
 describe("AudioWaveform", () => {
+  it.each([
+    [404, true, "素材已失效"],
+    [410, true, "素材已失效"],
+    [404, false, "素材已失效"],
+    [410, false, "素材已失效"],
+    [500, true, "波形不可用"],
+    [503, false, "波形不可用"],
+  ])("distinguishes missing media from waveform failures (%s, peaks endpoint: %s)", async (status, waveform, message) => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(null, { status }));
+    const host = document.createElement("div");
+    host.className = "timeline-clip";
+    document.body.append(host);
+    const root = createRoot(host);
+    mounted.push(root);
+    let sessionEpoch = 0;
+    const render = () => act(() => root.render(
+      <I18nProvider initialLocale="zh-CN">
+        <AudioWaveform
+          audioUrl="/media/voice.wav"
+          waveformUrl={waveform ? "/waveform/voice.wav" : undefined}
+          label=""
+          labelColor="#fff"
+          projectId="project-a"
+          sessionEpoch={++sessionEpoch}
+          priority="visible"
+        />
+      </I18nProvider>,
+    ));
+    render();
+    expect(host.querySelector('[role="img"]')).toBeNull();
+    const request = leaseSpy.mock.calls.at(-1)?.[0] as ThumbnailRequest;
+    const error = await request.load(new AbortController().signal).catch((error: Error) => error);
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain(String(status));
+    leaseSpy.mockImplementation(() => ({ status: "error", error }) as never);
+    render();
+    const notice = host.querySelector('[role="img"]');
+    expect(notice?.textContent).toBe(message);
+    expect(notice?.getAttribute("aria-label")).toBe(message);
+    expect(notice?.querySelector(".truncate")).not.toBeNull();
+    expect(host.querySelector("canvas")).not.toBeNull();
+    expect(host.isConnected).toBe(true);
+    leaseSpy.mockImplementation(() => ({ status: "loading" as const }));
+    render();
+    expect(host.querySelector('[role="img"]')).toBeNull();
+  });
+
   it("paints a baseline and peak bar for every mapped waveform bin", () => {
     const { canvas, fills } = recordingCanvas();
     drawWaveformCanvas(canvas, [0.25, 1], false, 0, 1);

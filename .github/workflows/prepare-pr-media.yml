@@ -1,0 +1,52 @@
+name: Prepare PR media
+
+# Manual, final-review preparation only. Never execute pull_request code with credentials.
+on:
+  workflow_dispatch:
+    inputs:
+      pull_number:
+        description: 'Reviewed PR number; prepare its final media before Squash merge'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: prepare-media-${{ inputs.pull_number }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: github.ref == 'refs/heads/main' && github.repository == 'nexu-io/openmotion'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout trusted control code only
+        uses: actions/checkout@v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - name: Verify required credentials are configured
+        env:
+          OPENMOTION_MEDIA_MAINTAINER_TOKEN: ${{ secrets.OPENMOTION_MEDIA_MAINTAINER_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_RELEASES_AK }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_RELEASES_SK }}
+        run: |
+          test -n "$OPENMOTION_MEDIA_MAINTAINER_TOKEN" || { echo 'Configure the maintainer token for original-PR branch edits.'; exit 1; }
+          test -n "$AWS_ACCESS_KEY_ID" && test -n "$AWS_SECRET_ACCESS_KEY"
+          aws --version
+      - name: Transfer, verify and update the original PR
+        env:
+          MEDIA_PR: ${{ inputs.pull_number }}
+          OPENMOTION_MEDIA_MAINTAINER_TOKEN: ${{ secrets.OPENMOTION_MEDIA_MAINTAINER_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.CLOUDFLARE_R2_RELEASES_AK }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.CLOUDFLARE_R2_RELEASES_SK }}
+          AWS_EC2_METADATA_DISABLED: 'true'
+          AWS_PAGER: ''
+          MOTION_R2_ENDPOINT: ${{ vars.CLOUDFLARE_R2_RELEASES_URL }}
+          MOTION_R2_BUCKET: ${{ vars.CLOUDFLARE_R2_RELEASES_BUCKET }}
+        run: node scripts/prepare-pr-media.ts "$MEDIA_PR" --apply

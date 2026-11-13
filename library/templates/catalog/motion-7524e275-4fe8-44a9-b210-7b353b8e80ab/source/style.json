@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#dbdbd9",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：AUTONOMOUS DRONE RACING",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：ANDURIL INDUSTRIES",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "工程图底纹",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "切割字标",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "橙色控制框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "像素遮挡块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "三维徽标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#dbdbd9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#101010",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c44829",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a4a4a2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f2f2f0",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "浅灰工程线稿、黑色切割字与少量橙红边线。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "黑色笔画从分散段落组合成 AI–GP，橙红控制框、交叉线和定位点随笔画一起出现。副标题和主办方上下对齐。",
+      "status": "inferred"
+    },
+    {
+      "rule": "灰色技术图始终低对比；大灰块遮住画面后切到橙红立体图标。图标轮换时保持中心锚点，背景可旋转但不抢主体。",
+      "status": "inferred"
+    },
+    {
+      "rule": "先留读赛事名称，再用数个旋转符号加快节奏，最后停在品牌徽标。换活动时保留工程排版、橙色点缀与硬切的工业感。",
+      "status": "inferred"
+    }
+  ]
+}

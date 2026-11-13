@@ -1,0 +1,298 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Introducing Prime Agent: A self-improving RLM harness for coding and long-running … · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#080807;--brand-ink:#eee9df;--board-label-ink:#ffffff;--accent:#438bc3;--sample-font:ui-monospace, monospace">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Prime Intellect <span>/</span> V203</div><div class="intro-line"><h1>Introducing Prime Agent: A self-improving RLM harness for coding and long-running …</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>让产品机制先通过代码与状态出现，再用任务结果和汇总数字收束。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 44.44, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 16, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;PRIME-AGENT&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#438bc3&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;PRIME-AGENT&quot;, &quot;accent&quot;: &quot;#438bc3&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="44.44" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 44.44 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Introducing Prime Agent: A self-improving RLM harness for coding and long-running … · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080807}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Prime Intellect</div><div class="type-sample">PRIME-AGENT</div><p>等宽大写标题、命令与代码；数字结果明显放大</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#080807" style="--swatch:#080807" aria-label="复制色值 #080807"><span></span><code>#080807</code></button><button class="swatch" data-color="#eee9df" style="--swatch:#eee9df" aria-label="复制色值 #eee9df"><span></span><code>#EEE9DF</code></button><button class="swatch" data-color="#438bc3" style="--swatch:#438bc3" aria-label="复制色值 #438bc3"><span></span><code>#438BC3</code></button><button class="swatch" data-color="#b09d7d" style="--swatch:#b09d7d" aria-label="复制色值 #b09d7d"><span></span><code>#B09D7D</code></button><button class="swatch" data-color="#d98442" style="--swatch:#d98442" aria-label="复制色值 #d98442"><span></span><code>#D98442</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>颗粒地形</span><span>终端面板</span><span>子任务状态</span><span>网格游戏</span><span>结果分数</span><span>曲线图</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>颗粒背景在后，终端始终可读</h2></div><div class="rule-copy">
+<p>深色粒子地形提供空间感，终端使用近黑不透明底。标题、代码与日志使用等宽字，蓝橙语法色限于代码，背景亮度低于正文。</p>
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>机制段一页只解释一种关系</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;机制段一页只解释一种关系&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 10, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;10–20 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>机制段一页只解释一种关系</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="机制段一页只解释一种关系" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="10" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 10.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>10–20 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Introducing Prime Agent: A self-improving RLM harness for coding and long-running … · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080807}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;10&quot; data-end=&quot;20&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>工具调用、记忆改进和代理通信按顺序切换。上方代码与下方状态结构对应，同一子任务名称跨位置保持一致。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>从单个任务扩大到整体结果</h2></div><div class="rule-copy">
+<p>先展示网格任务如何变化，再把多个结果汇成拼图并放大分数，最后转到汇总曲线。数字、任务数量与轴标签需要清楚停留。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>替换任务时连代码与结果一起换</h2></div><div class="rule-copy">
+<p>可以迁移到编程、推理或自动化演示。替换请求、代码片段、任务画面和成绩数字，让它们解释同一能力；安装命令留在结束前独立一屏。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>黑场</b></button><button class="beat" data-time="1.8"><span>1.80<small>s</small></span><b>产品标题</b></button><button class="beat" data-time="5.0"><span>5.00<small>s</small></span><b>终端标志</b></button><button class="beat" data-time="10.0"><span>10.00<small>s</small></span><b>并行工具调用</b></button><button class="beat" data-time="16.0"><span>16.00<small>s</small></span><b>持续改进</b></button><button class="beat" data-time="20.0"><span>20.00<small>s</small></span><b>代理通信</b></button><button class="beat" data-time="23.0"><span>23.00<small>s</small></span><b>求解请求</b></button><button class="beat" data-time="25.0"><span>25.00<small>s</small></span><b>网格任务</b></button><button class="beat" data-time="28.0"><span>28.00<small>s</small></span><b>成果拼图与分数</b></button><button class="beat" data-time="35.0"><span>35.00<small>s</small></span><b>曲线对照</b></button><button class="beat" data-time="38.0"><span>38.00<small>s</small></span><b>安装命令</b></button><button class="beat" data-time="43.0"><span>43.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="5.00 秒的构图参考" loading="lazy"><figcaption>5.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/658c20608945ba63da3ce41991bb3f5560b82d32793a300243e72f46c45a05c5" alt="16.00 秒的构图参考" loading="lazy"><figcaption>16.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/a7e37e6f9cc45590fa7b64ba38f1520873dc4497e7d71b01177cce477048f800" alt="25.00 秒的构图参考" loading="lazy"><figcaption>25.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="35.00 秒的构图参考" loading="lazy"><figcaption>35.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="43.00 秒的构图参考" loading="lazy"><figcaption>43.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可以迁移到编程、推理或自动化演示。替换请求、代码片段、任务画面和成绩数字，让它们解释同一能力；安装命令留在结束前独立一屏。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>颗粒地形 / 终端面板 / 子任务状态 / 网格游戏 / 结果分数 / 曲线图</p>
+<ul><li>让产品机制先通过代码与状态出现，再用任务结果和汇总数字收束。</li><li>深色粒子地形提供空间感，终端使用近黑不透明底。标题、代码与日志使用等宽字，蓝橙语法色限于代码，背景亮度低于正文。</li><li>工具调用、记忆改进和代理通信按顺序切换。上方代码与下方状态结构对应，同一子任务名称跨位置保持一致。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Prime Intellect / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Introducing Prime Agent: A self-improving RLM harness for coding and long-running …
+
+让产品机制先通过代码与状态出现，再用任务结果和汇总数字收束。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 44.44,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 16,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;PRIME-AGENT&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#438bc3&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;PRIME-AGENT&quot;,
+        &quot;accent&quot;: &quot;#438bc3&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 颗粒背景在后，终端始终可读
+
+深色粒子地形提供空间感，终端使用近黑不透明底。标题、代码与日志使用等宽字，蓝橙语法色限于代码，背景亮度低于正文。
+
+## 机制段一页只解释一种关系
+
+工具调用、记忆改进和代理通信按顺序切换。上方代码与下方状态结构对应，同一子任务名称跨位置保持一致。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;机制段一页只解释一种关系&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 10,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;10–20 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 从单个任务扩大到整体结果
+
+先展示网格任务如何变化，再把多个结果汇成拼图并放大分数，最后转到汇总曲线。数字、任务数量与轴标签需要清楚停留。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–1.80s | 黑场 |
+| 1.80–5.00s | 产品标题 |
+| 5.00–10.00s | 终端标志 |
+| 10.00–16.00s | 并行工具调用 |
+| 16.00–20.00s | 持续改进 |
+| 20.00–23.00s | 代理通信 |
+| 23.00–25.00s | 求解请求 |
+| 25.00–28.00s | 网格任务 |
+| 28.00–35.00s | 成果拼图与分数 |
+| 35.00–38.00s | 曲线对照 |
+| 38.00–43.00s | 安装命令 |
+| 43.00–44.44s | 品牌 |
+
+## 替换任务时连代码与结果一起换
+
+可以迁移到编程、推理或自动化演示。替换请求、代码片段、任务画面和成绩数字，让它们解释同一能力；安装命令留在结束前独立一屏。
+
+## 配色与字形
+
+等宽大写标题、命令与代码；数字结果明显放大。
+
+#080807 · #eee9df · #438bc3 · #b09d7d · #d98442
+
+## 元素与制作规则
+
+颗粒地形 / 终端面板 / 子任务状态 / 网格游戏 / 结果分数 / 曲线图
+
+- 让产品机制先通过代码与状态出现，再用任务结果和汇总数字收束。
+- 深色粒子地形提供空间感，终端使用近黑不透明底。标题、代码与日志使用等宽字，蓝橙语法色限于代码，背景亮度低于正文。
+- 工具调用、记忆改进和代理通信按顺序切换。上方代码与下方状态结构对应，同一子任务名称跨位置保持一致。
+
+## 内容替换
+
+- 可以迁移到编程、推理或自动化演示。替换请求、代码片段、任务画面和成绩数字，让它们解释同一能力；安装命令留在结束前独立一屏。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Prime Intellect&quot;,
+  &quot;id&quot;: &quot;V203&quot;,
+  &quot;palette&quot;: [
+    &quot;#080807&quot;,
+    &quot;#eee9df&quot;,
+    &quot;#438bc3&quot;,
+    &quot;#b09d7d&quot;,
+    &quot;#d98442&quot;
+  ],
+  &quot;typography&quot;: &quot;等宽大写标题、命令与代码；数字结果明显放大&quot;,
+  &quot;sample&quot;: &quot;PRIME-AGENT&quot;,
+  &quot;objects&quot;: [
+    &quot;颗粒地形&quot;,
+    &quot;终端面板&quot;,
+    &quot;子任务状态&quot;,
+    &quot;网格游戏&quot;,
+    &quot;结果分数&quot;,
+    &quot;曲线图&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 5.0,
+      &quot;frameId&quot;: &quot;K0010&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/658c20608945ba63da3ce41991bb3f5560b82d32793a300243e72f46c45a05c5&quot;,
+      &quot;timeSeconds&quot;: 16.0,
+      &quot;frameId&quot;: &quot;K0026&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/a7e37e6f9cc45590fa7b64ba38f1520873dc4497e7d71b01177cce477048f800&quot;,
+      &quot;timeSeconds&quot;: 25.0,
+      &quot;frameId&quot;: &quot;K0040&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 35.0,
+      &quot;frameId&quot;: &quot;K0070&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 43.0,
+      &quot;frameId&quot;: &quot;K0082&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;黑场&quot;,
+      &quot;end&quot;: 1.8,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 1.8,
+      &quot;label&quot;: &quot;产品标题&quot;,
+      &quot;end&quot;: 5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 5,
+      &quot;label&quot;: &quot;终端标志&quot;,
+      &quot;end&quot;: 10,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 10,
+      &quot;label&quot;: &quot;并行工具调用&quot;,
+      &quot;end&quot;: 16,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 16,
+      &quot;label&quot;: &quot;持续改进&quot;,
+      &quot;end&quot;: 20,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 20,
+      &quot;label&quot;: &quot;代理通信&quot;,
+      &quot;end&quot;: 23,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 23,
+      &quot;label&quot;: &quot;求解请求&quot;,
+      &quot;end&quot;: 25,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 25,
+      &quot;label&quot;: &quot;网格任务&quot;,
+      &quot;end&quot;: 28,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 28,
+      &quot;label&quot;: &quot;成果拼图与分数&quot;,
+      &quot;end&quot;: 35,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 35,
+      &quot;label&quot;: &quot;曲线对照&quot;,
+      &quot;end&quot;: 38,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 38,
+      &quot;label&quot;: &quot;安装命令&quot;,
+      &quot;end&quot;: 43,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 43,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 44.44,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 44.44,
+  &quot;fontFamily&quot;: &quot;ui-monospace, monospace&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

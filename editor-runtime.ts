@@ -1,3 +1,4 @@
+import { publicToolName, legacyToolName } from './shared/public-names.mjs';
 import { spawn } from 'node:child_process';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { fstatSync, readFileSync, readdirSync, statSync } from 'node:fs';
@@ -8,7 +9,6 @@ import { WorkspaceStore, Conflict } from './workspace.ts';
 import { isMain } from './shared/entry.ts';
 import { templateConfig } from './shared/template-config.ts';
 import { phase1McpCapabilities, supportsPhase1Tool } from './shared/phase1-tools.ts';
-import { trackingReleaseEnabled } from './tracking/node.ts';
 
 export const sharedEditorEnabled = process.platform === 'darwin';
 const root = fileURLToPath(new URL('./', import.meta.url));
@@ -17,7 +17,7 @@ const runtimeFiles = ['package-lock.json', 'scripts/npm-runtime.mjs', 'scripts/r
   ...['shared', 'gateway'].flatMap(folder => readdirSync(path.join(root, folder)).filter(file => /\.(ts|mjs|pl|json)$/.test(file)).map(file => folder + '/' + file))].sort();
 export const editorBuild = createHash('sha256').update(runtimeFiles.map(file => file + '\n' + readFileSync(path.join(root, file))).join('\n')).update(JSON.stringify(templateConfig())).digest('hex');
 const service = 'opendesign-editor', protocol = 1;
-export type EditorRegistry = { service: string; protocol: number; version: string; build: string; instanceId: string; pid: number; dataDirectory: string; endpoint: string; token: string };
+export type EditorRegistry = { service: string; protocol: number; version: string; build: string; instanceId: string; pid: number; dataDirectory: string; endpoint: string; token: string; mcp?: { protocol: number; tools: string[] } };
 export type Selection = { projectId?: string | null; sessionId?: string };
 const pause = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -55,17 +55,15 @@ export async function ensureEditor(directory: string, mcpTool?: string): Promise
       try {
         const health = await editorRequest(registry, '/editor-api/health', undefined, 1200);
         if (health.service !== service || health.dataDirectory !== data || health.instanceId !== registry.instanceId) throw Object.assign(new Error('编辑器实例身份不匹配'), { terminal: true });
-        // Test clients must not execute through a stable authority that can report their actions.
-        const sameReleasePolicy = trackingReleaseEnabled(health.version) === trackingReleaseEnabled(version);
-        const compatible = sameReleasePolicy && (mcpTool ? supportsPhase1Tool(health, mcpTool) : health.version === version && health.build === editorBuild);
+        const compatible = mcpTool ? supportsPhase1Tool(health, mcpTool) : health.version === version && health.build === editorBuild;
         if (health.protocol !== protocol || !compatible) throw Object.assign(
-          new Error('Editor runtime incompatible. Reconnect the Motion MCP connection to the installed runtime and compare the expected and actual versions/builds. Stop an older editor only after confirming it is idle; do not bypass MCP or switch workspaces to continue.'),
+          new Error('Editor runtime incompatible. Reconnect the OpenMotion MCP connection to the installed runtime and compare the expected and actual versions/builds. Stop an older editor only after confirming it is idle; do not bypass MCP or switch workspaces to continue.'),
           { terminal: true, code: 'EDITOR_RUNTIME_INCOMPATIBLE', details: {
             dataDirectory: data, expected: { protocol, version, build: editorBuild },
             actual: { protocol: health.protocol, version: health.version, build: health.build },
           } },
         );
-        return { ...registry, version: health.version, build: health.build };
+        return { ...registry, version: health.version, build: health.build, mcp: health.mcp };
       } catch (error) { if ((error as any).terminal || (error as any).status) throw error; }
     }
     if (!launcher || launcher.exitCode !== null || launcher.signalCode !== null) {
@@ -115,7 +113,15 @@ export async function serveEditor(directory: string) {
   const { stopCommands } = await import('./hyperframes.ts');
   const identity = () => ({ service, protocol, version, build: editorBuild, instanceId, pid: process.pid, dataDirectory: data, mcp: phase1McpCapabilities });
   let active = 0, stopping = false, queue = Promise.resolve();
-  const running = await startServer(store, 0, { editor: false, editorToken: token, privateHandler: async (req, res) => {
+  const portFile = path.join(runtime, 'editor-port');
+  let preferredPort = 0;
+  try {
+    const saved = Number((await readFile(portFile, 'utf8')).trim());
+    if (Number.isInteger(saved) && saved >= 1024 && saved <= 65535) preferredPort = saved;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+  }
+  const running = await startServer(store, preferredPort, { fallbackIfPortBusy: true, editor: false, editorToken: token, privateHandler: async (req, res) => {
     if (!req.url?.startsWith('/editor-api/')) return false;
     const json = (status: number, value: unknown) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }); res.end(JSON.stringify(value)); };
     try {
@@ -145,7 +151,8 @@ export async function serveEditor(directory: string) {
       }
       active++;
       const work = queue.catch(() => {}).then(async () => {
-        const tool = tools.find(item => item.name === body.name);
+        body.name = legacyToolName(body.name);
+        const tool = tools.find(item => item.name === publicToolName(body.name));
         if (!tool || !body.arguments || typeof body.arguments !== 'object' || Array.isArray(body.arguments) || Object.keys(body.arguments).some(key => !Object.hasOwn(tool.inputSchema.properties, key))) throw new Error('工具或参数无效');
         if (body.arguments.projectId !== undefined && typeof body.arguments.projectId !== 'string') throw new Error('工程编号无效');
         if (body.selection !== undefined && (!body.selection || typeof body.selection !== 'object' || Array.isArray(body.selection) || Object.keys(body.selection).some(key => !['projectId', 'sessionId'].includes(key)))) throw new Error('连接上下文无效');
@@ -173,7 +180,10 @@ export async function serveEditor(directory: string) {
     } catch (error) { json(error instanceof Conflict ? 409 : 400, { error: (error as Error).message, code: error instanceof Conflict ? 'REVISION_CONFLICT' : 'EDITOR_ERROR' }); }
     return true;
   } });
-  const endpoint = `http://127.0.0.1:${(running.server.address() as any).port}/`;
+  const port = (running.server.address() as { port: number }).port;
+  await writeFile(portFile + '.tmp', String(port), { mode: 0o600 });
+  await rename(portFile + '.tmp', portFile);
+  const endpoint = `http://127.0.0.1:${port}/`;
   const registry = { ...identity(), endpoint, token }, temporary = path.join(runtime, `runtime.${randomUUID()}.tmp`);
   await writeFile(temporary, JSON.stringify(registry), { mode: 0o600 }); await rename(temporary, path.join(runtime, 'runtime.json'));
   await appendFile(path.join(runtime, 'starts.jsonl'), JSON.stringify(identity()) + '\n', { mode: 0o600 });

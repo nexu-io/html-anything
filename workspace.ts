@@ -1,4 +1,6 @@
+import { renderFilenameStem } from './shared/render-name.ts';
 import { createHash } from 'node:crypto';
+import { isAssetFileWithinLimit } from './shared/asset-limits.ts';
 import { createReadStream, existsSync, readFileSync } from 'node:fs';
 import os from 'node:os';
 import { copyFile, cp, lstat, mkdir, open, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises';
@@ -27,7 +29,7 @@ export type FileEdit = { path: string; content: string };
 export type SavedProject = { id: string; title: string; templateId?: string; createdAt?: number; openedAt?: number };
 export type ProjectCatalog = { activeId: string; projects: SavedProject[]; sessions?: CreativeSession[]; activeSessionId?: string };
 export type ExportJob = { id: string; projectId?: string; versionId?: string; requestId?: string; phase1?: boolean; stage?: string; verification?: unknown; revision: string; state: 'pending' | 'running' | 'cancelling' | 'cancelled' | 'completed' | 'failed';
-  createdAt: number; expiresAt: number; token?: string; workerPid?: number; file?: string; error?: string; expected?: ExportExpectation };
+  createdAt: number; expiresAt: number; token?: string; workerPid?: number; file?: string; outputName?: string; error?: string; expected?: ExportExpectation };
 export class Conflict extends Error { constructor() { super('工程已经被 Studio 或 Agent 更新，请重新读取 revision 后再修改。'); } }
 
 export function projectPath(name: string): string {
@@ -315,7 +317,7 @@ export class WorkspaceStore {
     projectPath(targetPath);
     if (!targetPath.startsWith('assets/')) throw new Error('素材目标必须位于 assets/');
     const source = await stat(sourcePath);
-    if (!source.isFile() || source.size > 2 * 1024 ** 3) throw new Error('素材必须是小于 2 GB 的文件');
+    if (!isAssetFileWithinLimit(source)) throw new Error('素材必须是不超过 500 MB（500000000 字节）的文件');
     return this.lock(async () => {
       if ((await this.get()).revision !== expectedRevision) throw new Conflict();
       const target = await this.safePath(targetPath);
@@ -323,6 +325,7 @@ export class WorkspaceStore {
       const temporary = path.join(path.dirname(target), '.motion-import-' + crypto.randomUUID());
       try {
         await copyFile(sourcePath, temporary);
+        if (!isAssetFileWithinLimit(await stat(temporary))) throw new Error('素材必须是不超过 500 MB（500000000 字节）的文件');
         if ((await this.get()).revision !== expectedRevision) throw new Conflict();
         await rename(temporary, target);
       } finally { await rm(temporary, { force: true }); }
@@ -331,28 +334,34 @@ export class WorkspaceStore {
   }
 
   async initialize(runtimeRoot: string) {
-    return this.lock(async () => {
-      if ((await this.get()).project) return;
-      if ((await this.files()).length) throw new Error('工程目录已有文件但缺少 index.html，请先修复入口');
-      const staging = path.join(this.directory, 'initialize-' + crypto.randomUUID());
-      await mkdir(path.join(staging, 'assets'), { recursive: true });
-      try {
-        let legacy: LegacyProject | null = null;
-        try {
-          const old = JSON.parse(await readFile(path.join(this.directory, 'workspace.json'), 'utf8'));
-          if (old.project) legacy = validateProject(old.project);
-        } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
-        if (legacy) await migrateLegacy(legacy, staging);
-        else await cp(path.join(pluginRoot, 'templates'), staging, { recursive: true });
-        await copyFile(path.join(runtimeRoot, 'node_modules/gsap/dist/gsap.min.js'), path.join(staging, 'assets/gsap.min.js'));
-        await writeFile(path.join(staging, 'hyperframes.json'), JSON.stringify(nativeProjectConfig, null, 2));
-        // The legacy workspace.json remains untouched. Never replace an existing native entry.
-        try { await rename(staging, this.projectDirectory); }
-        catch (error) { throw new Error('无法创建 Hyperframes 工程，已有目录保持不变', { cause: error }); }
-      } finally { await rm(staging, { recursive: true, force: true }); }
-    });
+    return this.lock(() => this.initializeLocked(runtimeRoot));
   }
 
+  // The caller must hold the workspace lock, as project switching already does.
+  async initializeLocked(runtimeRoot: string) {
+    if ((await this.get()).project) return;
+    if ((await this.files()).length) throw new Error('工程目录已有文件但缺少 index.html，请先修复入口');
+    const staging = path.join(this.directory, 'initialize-' + crypto.randomUUID());
+    await mkdir(path.join(staging, 'assets'), { recursive: true });
+    try {
+      let legacy: LegacyProject | null = null;
+      try {
+        const old = JSON.parse(await readFile(path.join(this.directory, 'workspace.json'), 'utf8'));
+        if (old.project) legacy = validateProject(old.project);
+      } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error; }
+      if (legacy) await migrateLegacy(legacy, staging);
+      else await cp(path.join(pluginRoot, 'templates'), staging, { recursive: true });
+      await copyFile(path.join(runtimeRoot, 'node_modules/gsap/dist/gsap.min.js'), path.join(staging, 'assets/gsap.min.js'));
+      await writeFile(path.join(staging, 'hyperframes.json'), JSON.stringify(nativeProjectConfig, null, 2));
+      // The legacy workspace.json remains untouched. Never replace an existing native entry.
+      try { await rename(staging, this.projectDirectory); }
+      catch (error) { throw new Error('无法创建 Hyperframes 工程，已有目录保持不变', { cause: error }); }
+    } finally { await rm(staging, { recursive: true, force: true }); }
+  }
+
+  exportPath(job: ExportJob) {
+    return job.outputName ? path.join(this.directory, 'exports', job.id, job.outputName) : path.join(this.directory, 'exports', job.id + '.mp4');
+  }
   async job(id?: string): Promise<ExportJob | null> {
     if (id && !/^[a-f0-9-]{36}$/.test(id)) throw new Error('无效的导出任务编号');
     try {
@@ -376,7 +385,7 @@ export class WorkspaceStore {
       await this.saveJob(job);
     }
     if (job?.state === 'completed') {
-      try { if (!(await stat(path.join(this.directory, 'exports', job.id + '.mp4'))).size) throw new Error('empty'); }
+      try { if (!(await stat(this.exportPath(job))).size) throw new Error('empty'); }
       catch { job.state = 'failed'; job.error = '导出文件已不存在，请重新导出'; delete job.file; await this.saveJob(job); }
     }
     if (job) { delete job.token; delete job.workerPid; }
@@ -395,6 +404,7 @@ export class WorkspaceStore {
       if (previous && ['pending', 'running', 'cancelling'].includes(previous.state) && previous.expiresAt > Date.now() && (previous.state === 'pending' || alive(previous.workerPid))) throw new Error('EXPORT_BUSY: 已有导出任务正在等待或运行');
       const { audio, ...identity } = options;
       const job: ExportJob = { ...identity, id: crypto.randomUUID(), projectId: this.projectId, revision: expectedRevision, state: 'pending', stage: 'queued', createdAt: Date.now(), expiresAt: Date.now() + 30 * 60_000 };
+      job.outputName = renderFilenameStem(this.projectCatalog().projects.find(project => project.id === this.projectId)?.title) + '.mp4';
       const snapshot = this.snapshotDirectory(job.id);
       try {
         for (const file of current.project.files) {
@@ -427,9 +437,9 @@ export class WorkspaceStore {
         job.state = 'cancelled'; job.stage = 'cancelled'; delete job.token; delete job.workerPid;
         await this.saveJob(job); return job;
       }
-      if (!error && !(await stat(path.join(this.directory, 'exports', id + '.mp4'))).size) throw new Error('Hyperframes 未生成视频');
+      if (!error && !(await stat(this.exportPath(job))).size) throw new Error('Hyperframes 未生成视频');
       job.state = error ? 'failed' : 'completed'; job.stage = job.state;
-      if (error) job.error = error.slice(-2000); else job.file = 'exports/' + id + '.mp4';
+      if (error) job.error = error.slice(-2000); else job.file = path.relative(this.directory, this.exportPath(job)).split(path.sep).join('/');
       delete job.token; delete job.workerPid;
       await this.saveJob(job); return job;
     });

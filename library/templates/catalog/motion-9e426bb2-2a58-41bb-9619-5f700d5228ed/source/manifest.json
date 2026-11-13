@@ -1,0 +1,216 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 720,
+    "height": 720
+  },
+  "fps": 30.201342281879196,
+  "durationSeconds": 14.9,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "4776b76b1addcc9880d3a7a63411396f58d4b1a984c0916d0bbfe3cb83d022ca"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "timeSeconds": 0.7946666666666666,
+      "frameId": "K0004",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "timeSeconds": 7.483111111111111,
+      "frameId": "K0031",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "timeSeconds": 13.906666666666666,
+      "frameId": "K0057",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 6.377304665998963,
+    "measurementSeconds": 0.5220402079976338,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "演示为重新编写的机制示例，时间与构图为制作参考，不是完整原样复刻。",
+    "具体字体文件、原始缓动及音画同步点未从源工程取得。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V349",
+      "sha256": "4776b76b1addcc9880d3a7a63411396f58d4b1a984c0916d0bbfe3cb83d022ca",
+      "sourceUrl": "https://buck.co/work/github-universe-2023"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.webp",
+      "bytes": 984,
+      "sha256": "02f290859e9e769c288ea3a078a30d6f8b69902669a8a9c7a23bcc892d814e7e"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "bytes": 11594,
+      "sha256": "16cb6d6ab13b87b4375780dbd66302568ce6a80ef8a1c64e0ccba22b183d0654"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "bytes": 13008,
+      "sha256": "085e257e13a3a4e6f61f0131fa09e72ec085403602b1ff37416966899be97e2b"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "bytes": 12290,
+      "sha256": "27837f0fe6500227039d735dfad331cf27e7fe25bc302d579d6e6ba9ebc3cdab"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/clip-1.html",
+      "bytes": 575,
+      "sha256": "cc04b7944aaac0b3f943791bfdecaaf370a73050d289e35aec9a473a75102a6b"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 4335,
+      "sha256": "e5b9e64574282afaba55691d15abe20fc6e7877464423f35aa4297e67ba45777"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 2391,
+      "sha256": "33acfa437f5e015070f09def0ddc79570379bf308b416bb58121460188342cf9"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 547,
+      "sha256": "c9f543b7c4ad9aa057950e1eaaab7c70a0f1b96041e09a2e29c17ed1e982ec41"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 4727,
+      "sha256": "c93ea3987957bad787e559a228142cf61507f1e19e0370ef5d39b2295ea69a21"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 17750,
+      "sha256": "7e7b0aaf7f85278c762fd10a3b3cc25c7d841713523a2df422db2a5b4a134ab1"
+    },
+    {
+      "path": "style.json",
+      "bytes": 2105,
+      "sha256": "f53bd04adea850620cd538867aa62fb893d7fb91540acfe49b0600abda6063d1"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 1201,
+      "sha256": "6ffec90acb3c37c20335cbb92410eb23e5bdf9a304c54e8e9bfa1ee1eb9bbae7"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 1952,
+      "sha256": "60a0fbe266ddda306ed13ed0c9b97d37da386804f4a5aaede8a3a8ec33ab940b"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12581,
+      "sha256": "9c6ebea34a3b5f4803cb6dcbb619530e44acffabb201361fdb35a833c137a182"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4904,
+      "sha256": "0614c48b41d6aa4b565565018d8816d8a3da0ce24070bdf937c23c604a748e8a"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Orbit study"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#21e88a"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/clip-1.html",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 2
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 14.9,
+      "status": "authored"
+    },
+    {
+      "id": "clip-1",
+      "src": "demos/clip-1.html",
+      "duration": 6.8,
+      "status": "authored"
+    }
+  ]
+}

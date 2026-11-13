@@ -96,26 +96,26 @@ test('MCP verification binds job ID/revision and preserves snapshot specificatio
   const saved = await store.writeFiles((await store.get()).revision, [{ path: 'index.html', content: source() }]);
   const requested = await store.requestExport(saved.revision);
   assert.deepEqual(requested.expected, { ...spec, audio: 'optional' });
-  await assert.rejects(callTool('motion_verify_export', { jobId: requested.id, expectedRevision: saved.revision }, store), /已完成/);
+  await assert.rejects(callTool('openmotion_verify_export', { jobId: requested.id, expectedRevision: saved.revision }, store), /已完成/);
   const claimed = (await store.claimExport())!;
   // Later active-project edits cannot change the captured snapshot specification.
   await store.writeFiles(saved.revision, [{ path: 'index.html', content: source('24', 2).replace('data-width="320"', 'data-width="640"') }]);
   const expected = await snapshotExportExpectation(pluginRoot, store.snapshotDirectory(requested.id));
   assert.deepEqual(expected, { ...spec, audio: 'optional' });
   assert.deepEqual((await store.job())!.expected, expected);
-  await mkdir(path.join(directory, 'exports'));
-  clip(path.join(directory, 'exports', requested.id + '.mp4'));
+  await mkdir(path.dirname(store.exportPath(requested)), { recursive: true });
+  clip(store.exportPath(requested));
   await store.finishExport(requested.id, claimed.token!);
   await rm(store.snapshotDirectory(requested.id), { recursive: true });
-  const report = await callTool('motion_verify_export', { jobId: requested.id, expectedRevision: saved.revision, audio: 'silent' }, store) as any;
+  const report = await callTool('openmotion_verify_export', { jobId: requested.id, expectedRevision: saved.revision, audio: 'silent' }, store) as any;
   assert.equal(report.status, 'passed', JSON.stringify(report));
   assert.deepEqual(report.expected, spec); assert.equal(report.revision, saved.revision);
-  await assert.rejects(callTool('motion_verify_export', { jobId: 'other-job', expectedRevision: saved.revision }, store), /已完成/);
-  await assert.rejects(callTool('motion_verify_export', { jobId: requested.id, expectedRevision: 'f'.repeat(64) }, store), /已完成/);
-  await assert.rejects(callTool('motion_verify_export', { jobId: requested.id, expectedRevision: saved.revision, audio: 'invented' }, store), /Expected export specification/);
+  await assert.rejects(callTool('openmotion_verify_export', { jobId: 'other-job', expectedRevision: saved.revision }, store), /已完成/);
+  await assert.rejects(callTool('openmotion_verify_export', { jobId: requested.id, expectedRevision: 'f'.repeat(64) }, store), /已完成/);
+  await assert.rejects(callTool('openmotion_verify_export', { jobId: requested.id, expectedRevision: saved.revision, audio: 'invented' }, store), /Expected export specification/);
   const old = (await store.job())!; delete old.expected;
   await store.saveJob(old);
-  await assert.rejects(callTool('motion_verify_export', { jobId: requested.id, expectedRevision: saved.revision }, store), /快照规格/);
+  await assert.rejects(callTool('openmotion_verify_export', { jobId: requested.id, expectedRevision: saved.revision }, store), /快照规格/);
 }));
 
 test('legacy numeric verification remains compatible while native exports use explicit specifications', { skip: !available }, () => fixture(async directory => {

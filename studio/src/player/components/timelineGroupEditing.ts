@@ -3,6 +3,7 @@ import { roundToCenti } from "../../utils/rounding";
 import type { TimelineElement } from "../store/playerStore";
 import { clampToHostStart } from "../store/timelineElement";
 import { getTimelineEditCapabilities } from "./timelineEditCapabilities";
+import { isStillImageTimelineElement } from "../../utils/timelineInspector";
 
 const DEFAULT_TIMELINE_MIN_DURATION = 0.1;
 const ABSOLUTE_TIMELINE_MIN_DURATION = 0.05;
@@ -243,9 +244,11 @@ export function buildTimelineGroupResizeMembers(
     start: element.start,
     duration: element.duration,
     playbackStart:
-      edge === "start" && hasSourcePlaybackOffset(element)
-        ? (element.playbackStart ?? 0)
-        : element.playbackStart,
+      isStillImageTimelineElement(element)
+        ? undefined
+        : edge === "start" && hasSourcePlaybackOffset(element)
+          ? (element.playbackStart ?? 0)
+          : element.playbackStart,
     playbackRate: element.playbackRate,
     minStart: clampToHostStart(element, 0),
   }));

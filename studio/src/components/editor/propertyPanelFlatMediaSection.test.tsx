@@ -3,6 +3,7 @@
 import React, { act } from "react";
 import { createRoot } from "react-dom/client";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { StudioHostContext } from "../../motion/StudioHost";
 import { FlatMediaSection } from "./propertyPanelFlatMediaSection";
 import { MediaSection } from "./propertyPanelMediaSection";
 import type { DomEditSelection } from "./domEditing";
@@ -50,14 +51,14 @@ function makeVideoElement(overrides: Partial<DomEditSelection> = {}): DomEditSel
   } as DomEditSelection;
 }
 
-function renderSection(overrides: Partial<DomEditSelection> = {}) {
+function renderSection(overrides: Partial<DomEditSelection> = {}, mvp = false) {
   const host = document.createElement("div");
   document.body.append(host);
   const root = createRoot(host);
   const element = makeVideoElement(overrides);
   act(() => {
     root.render(
-      <FlatMediaSection
+      <StudioHostContext.Provider value={{ mvpEditor: mvp }}><FlatMediaSection
         projectDir={null}
         element={element}
         styles={{}}
@@ -65,11 +66,32 @@ function renderSection(overrides: Partial<DomEditSelection> = {}) {
         onSetAttribute={vi.fn()}
         onSetHtmlAttribute={vi.fn()}
         onSetAttributeBatch={vi.fn()}
-      />,
+      /></StudioHostContext.Provider>,
     );
   });
   return { host, root };
 }
+
+describe("FlatMediaSection — MVP scope", () => {
+  it.each(["video", "audio", "img"])("keeps basic %s controls without advanced or duplicate actions", (tagName) => {
+    const { host, root } = renderSection({ tagName }, true);
+    expect(host.textContent).not.toContain("assets/intro-loop.mp4");
+    expect(host.querySelector("[data-flat-media-copy]")).toBeNull();
+    expect(host.querySelector("[data-flat-media-remove-bg]")).toBeNull();
+    expect(host.querySelector(".hf-volume-row")).toBeNull();
+    for (const label of ["Position", "Cutout", "Gain", "Quality", "BG plate", "Muted", "Has audio track", "Speed preset", "Fade in", "Fade out"]) {
+      expect(host.textContent).not.toContain(label);
+    }
+    expect(host.querySelector('[aria-label="Automate Speed"]')).toBeNull();
+    if (tagName !== "img") {
+      for (const label of ["Speed", "Media start", "Loop"]) expect(host.textContent).toContain(label);
+    }
+    if (tagName !== "audio") {
+      expect(host.textContent).toContain("Fit");
+    }
+    act(() => root.unmount());
+  });
+});
 
 describe("FlatMediaSection — source row", () => {
   it("renders the source path and copies it to clipboard on click", () => {

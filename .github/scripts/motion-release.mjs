@@ -12,7 +12,7 @@ import { generateInstallGuide } from '../../scripts/install-guide.mjs';
 import { publishGuide, storagePlan } from './publish-install-guide.mjs';
 import { scanPackage, scanSource } from './motion-scan.mjs';
 
-export const repository = 'nexu-io/html-anything';
+export const repository = 'nexu-io/openmotion';
 export const candidateWorkflow = '.github/workflows/motion-candidate.yml';
 export const publicationWorkflow = '.github/workflows/motion-publish-test.yml';
 export const recoveryWorkflow = '.github/workflows/motion-publication-recovery.yml';
@@ -25,8 +25,8 @@ const integrity = bytes => 'sha512-' + createHash('sha512').update(bytes).digest
 function manualEntry(env, workflows) {
   assert.equal(env.GITHUB_REPOSITORY, repository, 'Wrong repository');
   assert.equal(env.GITHUB_EVENT_NAME, 'workflow_dispatch', 'Manual invocation required');
-  assert.equal(env.GITHUB_REF, 'refs/heads/feature/motion', 'Select feature/motion in Run workflow for Motion operations');
-  assert(workflows.some(p => env.GITHUB_WORKFLOW_REF === `${repository}/${p}@refs/heads/feature/motion`), 'Require a trusted manual entry');
+  assert.equal(env.GITHUB_REF, 'refs/heads/main', 'Select main in Run workflow for Motion operations');
+  assert(workflows.some(p => env.GITHUB_WORKFLOW_REF === `${repository}/${p}@refs/heads/main`), 'Require a trusted manual entry');
 }
 
 export function releaseChannel(version) {
@@ -72,7 +72,7 @@ export async function resolveCandidate(control, requested, version, env = proces
 export async function validateSource(control, commit, version, run = runFile, channel = releaseChannel(version)) {
   assert.match(commit || '', /^[a-f0-9]{40}$/, 'Use a full immutable source SHA');
   channelVersion(version, channel);
-  await run('git', ['merge-base', '--is-ancestor', commit, 'refs/remotes/origin/feature/motion'], { cwd: control });
+  await run('git', ['merge-base', '--is-ancestor', commit, 'refs/remotes/origin/main'], { cwd: control });
 }
 
 export async function sealCandidate(build, output, source, env = process.env) {
@@ -82,8 +82,8 @@ export async function sealCandidate(build, output, source, env = process.env) {
   channelVersion(manifest.version, env.MOTION_RELEASE_CHANNEL || 'test');
   assert.equal(manifest.templateEnvironment, releaseTemplateEnvironment(manifest.version), 'Template defaults must match the release channel');
   assert.match(env.GITHUB_SHA || '', /^[a-f0-9]{40}$/);
-  const workflowRef = candidateRefs.find(ref => env.GITHUB_WORKFLOW_REF === `${repository}/${candidateWorkflow}@${ref}`);
-  assert(workflowRef, 'Build candidates only from main or feature/motion');
+  const workflowRef = env.GITHUB_WORKFLOW_REF === `${repository}/${candidateWorkflow}@refs/heads/main` ? 'refs/heads/main' : undefined;
+  assert(workflowRef, 'Build candidates only from main');
   assert(/^[1-9]\d*$/.test(env.GITHUB_RUN_ID || '') && /^[1-9]\d*$/.test(env.GITHUB_RUN_ATTEMPT || ''));
   const filename = manifest.installer.url.replace(/^\.\//, '');
   assert.equal(filename, `openmotion-app-${manifest.version}.tgz`);
@@ -148,7 +148,7 @@ export async function recordAuthorization(directory, inputs, fetcher = fetch, en
   assert.equal(authorized.action, inputs.action); assert.equal(authorized.version, inputs.version);
   const candidate = await verifyDownloaded(directory, inputs.expectedSHA256, inputs.version);
   const run = await github(`/actions/runs/${env.GITHUB_RUN_ID}`, fetcher);
-  assert.equal(String(run.id), env.GITHUB_RUN_ID); assert.equal(run.head_branch, 'feature/motion'); assert.equal(run.event, 'workflow_dispatch');
+  assert.equal(String(run.id), env.GITHUB_RUN_ID); assert.equal(run.head_branch, 'main'); assert.equal(run.event, 'workflow_dispatch');
   assert.equal(run.head_repository?.full_name, repository); assert.equal(run.head_sha, env.GITHUB_SHA);
   assert.equal(run.path.split('@')[0], env.GITHUB_WORKFLOW_REF.slice(repository.length + 1).split('@')[0]);
   await writeJSON(path.join(directory, 'authorization.json'), authorizationReceipt(candidate, run, inputs.action));
@@ -173,7 +173,11 @@ export async function verifyCandidate(directory, expectedSHA256, run) {
   assert.match(expectedSHA256, hashPattern); assert.match(candidate.sourceCommit, /^[a-f0-9]{40}$/);
   const ref = `refs/heads/${run.head_branch || 'main'}`; // Older main-only receipts omitted the branch.
   assert(candidateRefs.includes(ref), 'Untrusted candidate branch');
-  assert.deepEqual(candidate.workflow, { repository, path: candidateWorkflow, ref, sha: run.head_sha, runId: run.id, attempt: run.run_attempt });
+  // Immutable receipts predating the rename keep their original name. Artifact lookup
+  // and live run validation still use only the current repository; never follow an alias.
+  const receiptRepository = candidate.workflow?.repository;
+  assert([repository, 'nexu-io/html-anything'].includes(receiptRepository), 'Untrusted candidate repository');
+  assert.deepEqual(candidate.workflow, { repository: receiptRepository, path: candidateWorkflow, ref, sha: run.head_sha, runId: run.id, attempt: run.run_attempt });
   const names = [candidate.tgz, 'release-npm.json', 'source-scan.json', 'package-scan.json', 'install.md', 'install-record.json', 'acceptance.md', 'candidate-install.md'];
   assert.deepEqual(Object.keys(candidate.files).sort(), names.sort());
   for (const name of names) assert.equal(await sha256(path.join(directory, name)), candidate.files[name], 'Candidate file changed: ' + name);
@@ -300,6 +304,7 @@ export async function promoteTest(directory, inputs, { fetcher = fetch, run = ru
 
 export async function stableReports(directory, candidate) {
   channelVersion(candidate.version, 'stable');
+  const manifest = await json(path.join(directory, 'release-npm.json'));
   const reports = [];
   for (const platform of ['darwin-arm64', 'win32-x64']) {
     const file = path.join(directory, `registry-${platform}.json`), report = await json(file);
@@ -307,7 +312,8 @@ export async function stableReports(directory, candidate) {
     for (const key of ['version', 'sourceCommit', 'tgzSHA256']) assert.equal(report[key], candidate[key], 'Native report mismatch: ' + key);
     assert.equal(report.templateEnvironment, 'prod');
     for (const key of ['registryColdInstall', 'nativePreparation', 'repeatSetup', 'resources']) assert.equal(report[key], 'passed', 'Native check failed: ' + key);
-    assert.equal(report.mcpTools, 11); assert.equal(report.skills, 5);
+    assert.equal(report.mcpTools, manifest.mcp.tools.length, 'Native report mismatch: mcpTools');
+    assert.equal(report.skills, manifest.skills.length, 'Native report mismatch: skills');
     reports.push({ platform, reportSHA256: await sha256(file), report });
   }
   return reports;

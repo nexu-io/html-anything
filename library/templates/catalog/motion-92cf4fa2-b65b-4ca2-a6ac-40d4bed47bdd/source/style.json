@@ -1,0 +1,123 @@
+{
+  "background": {
+    "color": "#161616",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：TETRI",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Size:",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：X Wide",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "图案模块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "活动字形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "奖金数字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "作品画面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#161616",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f6f6ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#96d93c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8d56d7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f56c3d",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线中粗主标题；细边框界面与小号功能文字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "开头图案与字形建立活动识别，中段作品快速证明参与产物，末尾说明已上线。",
+      "status": "inferred"
+    },
+    {
+      "rule": "奖金是独立阅读停顿，不能被快切覆盖。",
+      "status": "inferred"
+    }
+  ]
+}

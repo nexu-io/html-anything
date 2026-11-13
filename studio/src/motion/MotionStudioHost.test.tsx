@@ -3,10 +3,13 @@ import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { MotionEditorFrame, MotionStudioHost } from './MotionStudioHost';
+import { COMMUNITY_URL } from './CommunityLink';
+import discordLogo from './community-discord.svg';
 import { StudioHeader } from '../components/StudioHeader';
 import { useMotionHistoryOperation } from './MotionHistoryState';
 
 const state = vi.hoisted(() => ({
+  connectionError: '',
   renderQueue: { isRendering: false, ffmpegMissing: false },
   writeBlockedReason: null as string | null,
   open: vi.fn(), export: vi.fn(), setTab: vi.fn(), setCollapsed: vi.fn(),
@@ -24,11 +27,12 @@ vi.mock('../contexts/PanelLayoutContext', () => ({ usePanelLayoutContext: () => 
 }) }));
 vi.mock('../components/renders/RenderQueuePanel', () => ({ RenderQueuePanel: () => <div>Export settings and jobs</div> }));
 vi.mock('../components/dock/Dock', () => ({ Dock: { WindowMenu: () => <button>Window</button>, Panel: () => null } }));
+vi.mock('./diagnostics', () => ({ recordBrowserDiagnostic: vi.fn(), browserDiagnostics: () => [], nextDiagnosticRequest: () => 'fixture-request', diagnosticsActive: () => false }));
 vi.mock('../utils/studioTelemetry', () => ({ trackStudioEvent: vi.fn() }));
 vi.mock('./MotionHistoryPanel', () => ({ MotionHistoryPanel: () => <div>History versions</div> }));
 vi.mock('./useWorkspace', () => ({ useWorkspace: () => ({
   status: state.status, projects: [{ id: 'demo', title: 'Demo' }, { id: 'second', title: 'Second' }],
-  busy: false, error: '', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
+  busy: false, error: state.connectionError, errorSource: 'connection', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
 }) }));
 vi.mock('./ConnectionDialog', () => ({ ConnectionDialog: ({ open, section, busy, onOpen }: { open: boolean; section: string; busy: boolean; onOpen: (id: string) => void }) =>
   open ? <div role="dialog" aria-label="MCP connections" data-section={section}>
@@ -41,6 +45,7 @@ let container: HTMLDivElement;
 beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
+  state.connectionError = '';
   state.renderQueue.isRendering = false;
   state.writeBlockedReason = null;
   state.status = { projectId: 'demo', historyRestoreError: null };
@@ -173,7 +178,7 @@ it('starts with a closed drawer in embeds regardless of the former collapse pref
   history.replaceState(null, '', '/');
 });
 
-it('saves a project name on blur and keeps empty or cancelled edits from replacing it', async () => {
+it('saves empty project names as Untitled while Escape cancels edits', async () => {
   state.rename.mockResolvedValue(true);
   render();
   const edit = () => {
@@ -195,18 +200,25 @@ it('saves a project name on blur and keeps empty or cancelled edits from replaci
   input = edit();
   change(input, '   ');
   await act(async () => input.blur());
-  expect(state.rename).toHaveBeenCalledTimes(1);
+  expect(state.rename).toHaveBeenLastCalledWith('demo', '未命名');
+  expect(state.rename).toHaveBeenCalledTimes(2);
   input = edit();
   change(input, 'Discard this');
   act(() => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true })));
-  expect(state.rename).toHaveBeenCalledTimes(1);
+  expect(state.rename).toHaveBeenCalledTimes(2);
   expect(container.querySelector('[aria-label="项目名称"]')).toBe(input);
   expect(input.value).toBe('Demo');
   input = edit();
   change(input, 'Enter saves');
   await act(async () => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
   expect(state.rename).toHaveBeenLastCalledWith('demo', 'Enter saves');
-  expect(state.rename).toHaveBeenCalledTimes(2);
+  expect(state.rename).toHaveBeenCalledTimes(3);
+  input = edit();
+  change(input, '');
+  expect(input.placeholder).toBe('未命名');
+  await act(async () => input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })));
+  expect(state.rename).toHaveBeenLastCalledWith('demo', '未命名');
+  expect(state.rename).toHaveBeenCalledTimes(4);
   expect(document.activeElement).not.toBe(input);
   expect(container.querySelector('[aria-label="项目名称"]')).toBe(input);
 });
@@ -220,4 +232,38 @@ it('dismissing a write-blocking notice does not enable project creation', () => 
   expect(container.querySelector('.motion-error-notice')).toBeNull();
   openSidebar();
   expect(document.querySelector<HTMLButtonElement>('.motion-session-heading button')?.disabled).toBe(true);
+});
+
+
+it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr'])('opens the community beside Export with a localized label (%s)', locale => {
+  localStorage.setItem('motion.studio.locale', locale);
+  render();
+  const link = container.querySelector<HTMLAnchorElement>('.motion-community-link')!;
+  expect(link.href).toBe(COMMUNITY_URL);
+  expect(link.target).toBe('_blank');
+  expect(link.rel).toContain('noopener');
+  expect(link.querySelector('img')?.getAttribute('src')).toBe(discordLogo);
+  expect(link.getAttribute('aria-label')).toBeTruthy();
+  const exportButton = container.querySelector('[data-testid="header-export"]')!;
+  expect(link.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+});
+
+
+it('shows connection failure as a one-line reconnecting toast and removes it on recovery', () => {
+  state.connectionError = 'Failed to fetch /private/project';
+  render();
+  const toast = document.querySelector('[data-testid="motion-connection-toast"]')!;
+  expect(toast.textContent).toContain('连接已断开');
+  expect(toast.querySelector('.sr-only')?.textContent).toBe('重连中…');
+  expect(toast.querySelector('[aria-hidden="true"]')?.textContent).toBe('重连中...');
+  expect(toast.querySelectorAll('.hf-toast-progress-dots > span')).toHaveLength(3);
+  expect(toast.querySelector('.truncate')).not.toBeNull();
+  expect(container.querySelector('.motion-error-notice')).toBeNull();
+  expect(toast.textContent).not.toMatch(/private|details|详情/);
+  expect(toast.querySelector('button')).toBeNull();
+  render();
+  expect(document.querySelectorAll('[data-testid="motion-connection-toast"]')).toHaveLength(1);
+  state.connectionError = '';
+  render();
+  expect(document.querySelector('[data-testid="motion-connection-toast"]')).toBeNull();
 });

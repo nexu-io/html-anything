@@ -30,7 +30,7 @@ flowchart LR
 
 | 模式 | Skill | 产物 kind | 资源 | Viewer |
 | --- | --- | --- | --- | --- |
-| `motion` | `motion-production` | `motion-project` | 本地原生工程 `projectId` | 完整 Hyperframes Studio App |
+| `motion` | `openmotion-production` | `motion-project` | 本地原生工程 `projectId` | 完整 Hyperframes Studio App |
 
 `ArtifactIdentity` 保存共用的 `id/title/templateId?`，`MotionArtifact` 扩展 Motion 资源字段。`SessionArtifact` 是可扩展的判别联合，不把网页地址当成 Motion 工程。`creationModes` 与 `artifactViewers` 的公开描述保存在 `shared/session.ts`；实际生成工厂在服务端，Viewer 组件注册在前端，各自独立。
 
@@ -70,11 +70,11 @@ flowchart LR
 4. 客户端按产物 kind 打开 Viewer。空会话中外部 Agent 创建产物后，网页轮询会打开同一所属产物；待提交草稿留在会话下。
 5. 后续需求和真实 Agent 回复写入同一个消息流；产物继续通过其模式工具编辑。网页不伪造模型回复或执行完成状态，也不包含聊天 Agent 运行器。
 
-旧 `/motion-api/projects` 与模板创建入口转接到这条“先会话、后产物”流程。已有工程/旧书签仍映射到兼容会话；`motion_apply_template` 在当前或指定会话新增产物。启动旧工作区时，原先默认工程映射为一个兼容会话，不因重复打开预览重复创建会话。
+旧 `/motion-api/projects` 与模板创建入口转接到这条“先会话、后产物”流程。已有工程/旧书签仍映射到兼容会话；`openmotion_apply_template` 在当前或指定会话新增产物。启动旧工作区时，原先默认工程映射为一个兼容会话，不因重复打开预览重复创建会话。
 
 ## HTTP 与 MCP 契约
 
-一期公开 MCP 以 [11 Tool 契约](mcp-phase1-tools.md) 为准；下表 design_* 及旧模板相关名称是内部兼容接口，不应由一期 Skill 调用。一期 motion_get_project 需要明确 projectId 才读详情，无 ID 时列项目；motion_open_preview 不创建工程。
+一期公开 MCP 以 [11 Tool 契约](mcp-phase1-tools.md) 为准；下表 design_* 及旧模板相关名称是内部兼容接口，不应由一期 Skill 调用。一期 openmotion_get_project 需要明确 projectId 才读详情，无 ID 时列项目；openmotion_open_preview 不创建工程。
 
 macOS 的 `mcp.ts` 只负责 stdio 和连接选择，业务位于 `mcp-tools.ts` 并在共享后台执行。每条连接绑定返回的工程/会话，网页或其他连接切换全局选择不会改变它；工程工具也接受显式 `projectId`。空会话不能沿用上一个会话的工程写入。旧 27 个工具和会话/产物 ID 保留，initialize 与纯流程/目录读取不启动后台。目录、停止与故障语义以 [共享编辑器](shared-editor.md) 为准。
 
@@ -82,13 +82,13 @@ macOS 的 `mcp.ts` 只负责 stdio 和连接选择，业务位于 `mcp-tools.ts`
 
 | MCP | 对应职责 |
 | --- | --- |
-| `design_create_session` | 先创建会话；默认继续生成首个产物，`createArtifact=false` 可先讨论。生成失败返回 `artifactError` 和已保存会话链接 |
-| `design_get_session` | 读取会话、模式配置、skill、消息和所属产物 |
-| `design_append_message` | 用稳定消息 UUID 记录真实 `user` / `assistant` 内容；无模型执行副作用 |
-| `design_create_artifact` | 向已有会话生成产物，返回完整/嵌入链接 |
-| `design_open_artifact` | 校验 session/artifact 归属并打开对应资源 |
-| `motion_get_project` | 读取当前原生工程与 revision，同时返回其所属会话和兼容 conversation 字段 |
-| `motion_open_preview` | 兼容启动入口；默认返回纯编辑器 `previewUrl`，显式 `embedded=false` 可返回完整会话链接 |
+| `openmotion_create_session` | 先创建会话；默认继续生成首个产物，`createArtifact=false` 可先讨论。生成失败返回 `artifactError` 和已保存会话链接 |
+| `openmotion_get_session` | 读取会话、模式配置、skill、消息和所属产物 |
+| `openmotion_append_message` | 用稳定消息 UUID 记录真实 `user` / `assistant` 内容；无模型执行副作用 |
+| `openmotion_create_artifact` | 向已有会话生成产物，返回完整/嵌入链接 |
+| `openmotion_open_artifact` | 校验 session/artifact 归属并打开对应资源 |
+| `openmotion_get_project` | 读取当前原生工程与 revision，同时返回其所属会话和兼容 conversation 字段 |
+| `openmotion_open_preview` | 兼容启动入口；默认返回纯编辑器 `previewUrl`，显式 `embedded=false` 可返回完整会话链接 |
 
 消息 API 接受 `{id, role?, content}`，HTTP 默认 `user`、MCP 追加默认 `assistant`。仅保存调用方实际提供的内容；不会从外部客户端自动抓取私有对话。网页定期读取共享消息流。MCP 与 HTTP 都是本机工作区接口；HTTP 修改需要同源 Origin，现有宿主与回环地址校验仍有效。
 

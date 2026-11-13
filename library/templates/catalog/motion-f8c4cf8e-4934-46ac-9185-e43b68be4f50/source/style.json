@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#0b2131",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：9:41",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Al Agent #007",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：bot",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机边框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "创建按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "命名表单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "聊天气泡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "资料页",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#0b2131",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f5f8ff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#13b7ed",
+      "status": "inferred"
+    },
+    {
+      "hex": "#706cf6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#18394b",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线移动端界面；按钮、输入字段和消息气泡分层",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用一台固定手机走完机器人创建、测试与查看资料，点击反馈连接每个状态。",
+      "status": "inferred"
+    },
+    {
+      "rule": "入口按钮点击后弹出表单，填写名称和用户名，再确认创建。触点只在点击瞬间放大，不能一直遮住按钮；成功页沿用刚填的名称。",
+      "status": "inferred"
+    },
+    {
+      "rule": "Start 进入聊天，用户消息先出现，机器人回复后出现；打开资料页时保留同一头像与名称。深蓝界面配亮青按钮和紫色身份区，无衬线小字保持足够行距。",
+      "status": "inferred"
+    }
+  ]
+}

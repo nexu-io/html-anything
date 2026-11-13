@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#1c2027",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Interface",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Best fit",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "请求框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "三维对象与批注",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "流程节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地图点位",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "预约弹窗",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "座位图",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#1c2027",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f4f6f7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#3e8bd7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#16a68b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#efa62a",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线小号界面字；深浅工作区随应用类型变化",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "通过多个能操作的界面说明自定义能力，每个例子用一次明确反馈收尾。",
+      "status": "inferred"
+    },
+    {
+      "rule": "请求之后展示可旋转对象，批注点贴在对象的对应位置，侧栏列出相同编号或内容。旋转改变视角，批注归属不变。",
+      "status": "inferred"
+    },
+    {
+      "rule": "流程节点有连线，地图点位能展开信息，预约按钮进入确认弹窗再出现成功状态。每个案例只突出一种交互，让界面类型带来变化。",
+      "status": "inferred"
+    }
+  ]
+}

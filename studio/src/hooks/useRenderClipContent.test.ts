@@ -20,11 +20,12 @@ import { buildCompositionThumbnailUrl } from "../player/components/CompositionTh
 import { compositionCardThumbnailUrl } from "../components/sidebar/CompositionsTab";
 import { normalizeCompositionSrc } from "./useRenderClipContent";
 import { useRenderClipContent } from "./useRenderClipContent";
+import { StudioHostContext } from "../motion/StudioHost";
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 afterEach(() => {
-  usePlayerStore.setState({ thumbnailMode: "hidden", elements: [] });
+  usePlayerStore.setState({ thumbnailMode: "hidden", elements: [], thumbnailRevisions: {} });
   document.body.innerHTML = "";
 });
 
@@ -81,6 +82,7 @@ describe("useRenderClipContent", () => {
     el: TimelineElement,
     activePreviewUrl: string | null = "/api/projects/my-project/preview",
     context?: TimelineClipRenderContext,
+    mvpEditor = false,
   ): ReactNode {
     const host = document.createElement("div");
     document.body.append(host);
@@ -99,7 +101,13 @@ describe("useRenderClipContent", () => {
     }
 
     act(() => {
-      root.render(React.createElement(Harness));
+      root.render(
+        React.createElement(
+          StudioHostContext.Provider,
+          { value: { mvpEditor } },
+          React.createElement(Harness),
+        ),
+      );
     });
     act(() => root.unmount());
     return unwrapPeakMarks(content);
@@ -283,6 +291,32 @@ describe("useRenderClipContent", () => {
     expect(isValidElement<{ labelInset?: number }>(waveform) && waveform.props.labelInset).toBe(0);
   });
 
+  it("shows only video frames in MVP while retaining independent audio waveforms", () => {
+    const video: TimelineElement = {
+      id: "talk",
+      tag: "video",
+      start: 0,
+      duration: 4,
+      track: 0,
+      src: "talk.mp4",
+      hasAudio: true,
+    };
+    usePlayerStore.setState({ thumbnailMode: "adaptive" });
+    const content = renderClipContent(video, null, undefined, true);
+    expect(isValidElement(content) && content.type).toBe(VideoThumbnail);
+    for (const thumbnailMode of ["adaptive", "hidden"] as const) {
+      usePlayerStore.setState({ thumbnailMode });
+      const audio = renderClipContent(
+        { ...video, id: "audio", tag: "audio", track: 1 },
+        null,
+        undefined,
+        true,
+      );
+      expect(isValidElement(audio) && audio.type).toBe(AudioWaveform);
+    }
+    expect(renderClipContent(video, null, undefined, true)).toBeNull();
+  });
+
   it("keeps a muted or silent video to thumbnails only", () => {
     usePlayerStore.setState({ thumbnailMode: "adaptive" });
     for (const extra of [{ hasAudio: true, muted: true }, { hasAudio: false }]) {
@@ -423,6 +457,43 @@ describe("useRenderClipContent", () => {
       expect(content.props).not.toHaveProperty("rich");
     }
   });
+
+  it.each(["img", "video"])("refreshes a mounted %s thumbnail after a same-path asset change", (tag) => {
+    usePlayerStore.setState({ thumbnailMode: "adaptive", thumbnailRevisions: {} });
+    const host = document.createElement("div");
+    const root = createRoot(host);
+    const source = `${window.location.origin}/api/projects/my-project/preview/assets/clip.${tag === "img" ? "svg" : "mp4"}?v=original#frame`;
+    let content: ReactNode = null;
+    function Harness() {
+      const render = useRenderClipContent({
+        projectIdRef: { current: "my-project" }, compIdToSrc: new Map(),
+        activePreviewUrl: null, effectiveTimelineDuration: 7,
+      });
+      content = render({ id: "clip", tag, src: source, start: 0, duration: 7, track: 0 }, { clip: "#222", label: "#fff" });
+      return null;
+    }
+    const src = () => isValidElement<{ imageSrc?: string; videoSrc?: string }>(content)
+      ? content.props.imageSrc ?? content.props.videoSrc : undefined;
+    try {
+      act(() => root.render(React.createElement(Harness)));
+      expect(src()).toBe(source);
+      act(() => usePlayerStore.getState().bumpThumbnailRevisions(null));
+      const updated = new URL(src()!);
+      expect(updated.searchParams.get("revision")).toBe("1");
+      expect(updated.searchParams.get("v")).toBe("original");
+      expect(updated.hash).toBe("#frame");
+      act(() => usePlayerStore.getState().bumpThumbnailRevisions(null));
+      expect(new URL(src()!).searchParams.get("revision")).toBe("2");
+    } finally { act(() => root.unmount()); }
+  });
+
+  it.each(["https://cdn.example.com/clip.png?signature=keep", "data:image/png;base64,eA==", "blob:http://localhost/asset"])(
+    "preserves non-project thumbnail source %s after a local edit", (src) => {
+      usePlayerStore.setState({ thumbnailMode: "adaptive", thumbnailRevisions: { "*": 3 } });
+      const content = renderClipContent({ id: "clip", tag: "img", src, start: 0, duration: 7, track: 0 }, null);
+      expect(isValidElement(content) && content.props).toMatchObject({ imageSrc: src });
+    },
+  );
 
   it("finds the revision of a composition mounted with a ./ path", () => {
     usePlayerStore.setState({

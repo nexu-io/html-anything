@@ -817,6 +817,9 @@
   font-size: var(--motion-text-sm);
 }
 .connect-copy-feedback {
+  margin: 0;
+  top: auto;
+  right: auto;
   position: fixed;
   z-index: 200;
   left: 50%;

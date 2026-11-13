@@ -1,0 +1,83 @@
+{
+  "background": {
+    "color": "#6c1dff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "倒计时数字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "色彩底板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "九宫格数字",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#6c1dff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d9ff00",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ff0061",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "粗重自定义数字，圆角与折线结合；黑白强对比",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "3、2、1 分别使用紫、荧光黄、玫红底，黑色大数字占据中央。字符变化短促，停顿清晰，字形转折可以轻微折叠但不削弱数字辨认。",
+      "status": "inferred"
+    },
+    {
+      "rule": "倒计时结束切黑底，白色数字按从左到右、从上到下补齐。格子中心不移动，内部轮廓逐步转成最终数字；最后放大 3 回到开头形成循环。",
+      "status": "inferred"
+    },
+    {
+      "rule": "替换为章节编号或计数时，保持统一笔画宽、圆角和斜切角。网格最多九项，新字不挤占相邻格。",
+      "status": "inferred"
+    }
+  ]
+}

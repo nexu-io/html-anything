@@ -19,10 +19,10 @@ Editorial framing: lead with **“Reverse engineering for any video.”** Descri
 | All-in-One Studio | Product scope spanning discovery, assets, storytelling, editing, collaboration, delivery and learning; implementation and roadmap are identified separately. | [Product blueprint](product/studio-vision.md). |
 | Super Motion Video Agent | OpenMotion’s proposed creative-agent concept, not a shipped persistent runtime or a substantiated industry-first claim. | [Concept and status](product/studio-vision.md#super-motion-video-agent). |
 | Mission | Help everyone become an AI video editor and creator, express their own ideas and build a publishing practice. | [README: mission](../README.md#everyone-can-be-a-creator); product direction, not a reach guarantee. |
-| AI editing | The external agent applies editing requests to the project; the user previews and refines clips, timing, text and media in Studio. | [AI editing workflow](../README.md#ai-video-editing), [editing contract](../skills/motion-production/references/edit.md). |
+| AI editing | The external agent applies editing requests to the project; the user previews and refines clips, timing, text and media in Studio. | [AI editing workflow](../README.md#ai-video-editing), [editing contract](../skills/openmotion-production/references/edit.md). |
 | App | A standalone local application with a Studio editor, timeline and editable projects. | [Product architecture](product/architecture.md), [workspace](project-workspace.md). |
 | Agent entry directions | Connect your agent from OpenMotion, or use OpenMotion from your agent. Both work on the same local project; the agent executes in its external client. | [App-first](../README.md#connect-your-agent), [agent-first](../README.md#use-from-your-agent), [adapters](agent-adapters.md). |
-| Agent access | Five current Skills; eleven public stdio MCP tools; the pinned native CLI for shell-capable hosts. | [Skills](skills.md), [MCP contract](mcp-phase1-tools.md), [native authoring](../skills/motion-production/references/native.md). |
+| Agent access | Five current Skills; eleven public stdio MCP tools; the pinned native CLI for shell-capable hosts. | [Skills](skills.md), [MCP contract](mcp-phase1-tools.md), [native authoring](../skills/openmotion-production/references/native.md). |
 | Clients | Codex, Claude Code and DeepSeek Harness adapters; WorkBuddy configuration with desktop validation pending; manual local stdio configuration. | [Adapters](agent-adapters.md). |
 | Resources | 894 catalog entries: 3 bundled editable templates and 891 external references / registry items. | [Catalog](template-catalog.md), [source snapshot](../web/catalog/hyperframes.json). This is not a count of verified templates. |
 | Creative convention | Motion MD v0.1; `MOTION_DESIGN.md` is the filename convention, with the file supplied explicitly to an agent. | [Motion MD](motion-md.md); no automatic importer, parser or validator. |
@@ -54,7 +54,7 @@ Within the All-in-One Studio, the core experience is an AI-native CapCut: the ti
 
 ## Collaboration roadmap — is coming
 
-The planned AI-native video creation and editing space brings people and agents into the same project for editing and motion creation, timeline comments tied to moments or ranges, and collaborative review and revision. The [concept artwork](readme/collaboration-coming.png) is labeled **is coming**; it is generated roadmap artwork, not a screenshot of a shipped interface. Current local project handoffs and revision protection do not constitute shipped timeline comments, collaborative review or simultaneous multiuser editing. No release date is announced.
+The planned AI-native video creation and editing space brings people and agents into the same project for editing and motion creation, timeline comments tied to moments or ranges, and collaborative review and revision. The [concept artwork](https://releases.open-design.ai/open-motion/media/sha256/d0d44450f450157390471f775bb8f893284892aca5a553ec7354ae044cf5690a.png) is labeled **is coming**; it is generated roadmap artwork, not a screenshot of a shipped interface. Current local project handoffs and revision protection do not constitute shipped timeline comments, collaborative review or simultaneous multiuser editing. No release date is announced.
 
 ## Input → Process → Output: reporting boundaries
 
@@ -72,7 +72,7 @@ A future comparison should publish the reference set and versions, permissions, 
 
 ## Reusable creative resources
 
-The [OpenMotion Library](../library/README.md) contains five collections: optional creative Skills, template starting points, motion component recipes, `MOTION_DESIGN.md` design systems and Brandkits. Entries include a six-profile [Motion Design Remix Skill](../library/skills/motion-design-remix/SKILL.md) with [actual paired previews](motion-design-examples.md), a three-recipe [Presenter Story Skill](../library/skills/presenter-story/SKILL.md), a Brandkit preparation Skill, the three existing template links, a title-reveal recipe, Ink & Water direction and the OpenMotion Brandkit. The presenter section uses three attributed upstream reference/remix pairs, nine catalog clips and the [Presenter Tech](../library/templates/presenter-tech/README.md) demo and locally packaged template. They illustrate real presenter-led editing; the new presenter recipes have not yet produced validated OpenMotion outputs. The six source comparisons are source-backed content adaptations, not an arbitrary-video reconstruction benchmark. These are Library resources, not an automatic marketplace or additional Studio-native template inventory. Presenter Tech has a separate included runner; source, licensing and verification are linked from its local entry. The five core production Skills and eleven MCP tools are unchanged by these Library resources.
+The [OpenMotion Library](../library/README.md) contains five collections: optional creative Skills, template starting points, motion component recipes, `MOTION_DESIGN.md` design systems and Brandkits. Entries include a six-profile [Motion Design Remix Skill](../library/skills/openmotion-design-remix/SKILL.md) with [actual paired previews](motion-design-examples.md), a three-recipe [Presenter Story Skill](../library/skills/openmotion-presenter-story/SKILL.md), a Brandkit preparation Skill, the three existing template links, a title-reveal recipe, Ink & Water direction and the OpenMotion Brandkit. The presenter section uses three attributed upstream reference/remix pairs, nine catalog clips and the [Presenter Tech](../library/templates/presenter-tech/README.md) demo and locally packaged template. They illustrate real presenter-led editing; the new presenter recipes have not yet produced validated OpenMotion outputs. The six source comparisons are source-backed content adaptations, not an arbitrary-video reconstruction benchmark. These are Library resources, not an automatic marketplace or additional Studio-native template inventory. Presenter Tech has a separate included runner; source, licensing and verification are linked from its local entry. The five core production Skills and eleven MCP tools are unchanged by these Library resources.
 
 ## Build a real demo
 
@@ -85,7 +85,7 @@ The [OpenMotion Library](../library/README.md) contains five collections: option
 ### Prompt: a viral-reference recreation
 
 ```text
-Use motion-recreate to analyze this accessible reference and rebuild its
+Use openmotion-recreate to analyze this accessible reference and rebuild its
 hook, pacing and visual structure with my own material. Keep source credits
 and asset permissions. Deliver an editable project, an MP4 and a comparison
 that identifies both similarities and remaining differences.
@@ -124,16 +124,16 @@ Do not invent performance, coverage, adoption or audience-growth figures.
 
 | Asset | Intended use |
 | --- | --- |
-| [Cover PNG](readme/cover.png) | Full-resolution generated brand artwork. |
-| [Animated cover GIF](readme/cover-motion.gif) | Short looping brand motion for a README; not a recording of product behavior. |
-| [1280 × 640 social preview](readme/social-preview.jpg) | Static GitHub/social sharing cover. |
+| [Cover PNG](https://releases.open-design.ai/open-motion/media/sha256/cfeb12861412bd36d34000ee1fe6d7f4e7b124ac9cad680d595c3cb44708eead.png) | Full-resolution generated brand artwork. |
+| [Animated cover GIF](https://releases.open-design.ai/open-motion/media/sha256/6f6379825bac5cc67ee2d8fdc328ec25a16eea64fdac420f358092ddae95ad47.gif) | Short looping brand motion for a README; not a recording of product behavior. |
+| [1280 × 640 social preview](https://releases.open-design.ai/open-motion/media/sha256/9683e195639f5f6a54524f33fe4c7c3f4ec47efebb97fc93e4ec38895dd08412.jpg) | Static GitHub/social sharing cover. |
 | [Three-mode product tour](product-tour.md) | Six captures: Codex's embedded Viewer, standalone Studio, Claude Code Skill discovery, native CLI checks, Connect Agent and a single-template handoff. Codex host chrome and model-completed adaptation are not captured. Terminal images replay actual recorded output. |
-| [Workspace](readme/workspace.jpg) / [editor](readme/editor.jpg) | Historical Studio snapshots at commit `7aee372`; retained for provenance. The README now uses the three-mode tour. |
+| [Workspace](https://releases.open-design.ai/open-motion/media/sha256/98f02a127ec68acb7cde4d5278acc66ef53c0e91625aebccd1274fe1d74da0d7.jpg) / [editor](https://releases.open-design.ai/open-motion/media/sha256/c98d8eeff73abaa8af85d01028f3953c95cfd5b0e4821148e887b008276469e5.jpg) | Historical Studio snapshots at commit `7aee372`; retained for provenance. The README now uses the three-mode tour. |
 | [Seven creative examples](examples.md) / [中文简报](examples.zh-CN.md) | Seven curated external reference excerpts, each with an animated and static preview, attribution and an actionable creative brief. These are creative inputs, not OpenMotion-generated demos or new bundled templates. |
 | [18 animated catalog picks](../README.md#motion-gallery) | Six groups of actual reference/registry video excerpts: product, launch, type, light/material, spatial and generative motion. Default previews are GIFs with source credit; these do not represent additional bundled templates. [Manifest](readme/gallery/manifest.json). |
-| [Library banner](readme/library.png) / [community banner](readme/community.png) | Generated artwork in the same painterly family as the cover. |
-| [Collaboration concept](readme/collaboration-coming.png) | Planned human–agent editing and timeline review, labeled **is coming**; use only as a concept preview. |
-| [Stay tuned GIF](readme/stay-tuned.gif) | Generated Star invitation, linked to the GitHub repository; release updates require Watch configuration. |
+| [Library banner](https://releases.open-design.ai/open-motion/media/sha256/e84a6ce63123aac0c1e48e78a2faf261638f9cfa75bf3e92b9c35192802f85bd.png) / [community banner](https://releases.open-design.ai/open-motion/media/sha256/41d8a0cc3d4bf6796fb215c4d0c764f074aa847d9fb010fa5184d4dc1a67fceb.png) | Generated artwork in the same painterly family as the cover. |
+| [Collaboration concept](https://releases.open-design.ai/open-motion/media/sha256/d0d44450f450157390471f775bb8f893284892aca5a553ec7354ae044cf5690a.png) | Planned human–agent editing and timeline review, labeled **is coming**; use only as a concept preview. |
+| [Stay tuned GIF](https://releases.open-design.ai/open-motion/media/sha256/eb6fb4149cee41e46bab25c9df3bc2d3975ebd6924e0549335a96e43ab486bda.gif) | Generated Star invitation, linked to the GitHub repository; release updates require Watch configuration. |
 | [Brandkit](../library/brandkits/openmotion/BRANDKIT.md) / [motion design system](../library/design-systems/ink-water/MOTION_DESIGN.md) | Reusable identity and creative direction; supply explicitly to your agent. |
 
 See [ASSETS.md](readme/ASSETS.md) for the image prompt, animation recipe, catalog-image provenance and third-party notices. Referenced films and example brands belong to their respective creators; the application license does not relicense them.

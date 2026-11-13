@@ -1,0 +1,245 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Grok Bot — it can send you voice notes · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#fff5eb;--brand-ink:#262321;--accent:#ec9a60;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">xAI / Grok <span>/</span> V028</div><div class="intro-line"><h1>Grok Bot — it can send you voice notes</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>先约定内容和发送时间，再补充“用语音发给我”。新增的输出形式通过一张可播放的语音卡体现。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 19.233333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 4.3, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Morning voice note&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#ec9a60&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Morning voice note&quot;, &quot;accent&quot;: &quot;#ec9a60&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="19.233333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 19.23 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Grok Bot — it can send you voice notes · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff5eb}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">xAI / Grok</div><div class="type-sample">Morning voice note</div><p>橙色光晕手机、文字聊天与可播放波形卡</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#fff5eb" style="--swatch:#fff5eb" aria-label="复制色值 #fff5eb"><span></span><code>#FFF5EB</code></button><button class="swatch" data-color="#262321" style="--swatch:#262321" aria-label="复制色值 #262321"><span></span><code>#262321</code></button><button class="swatch" data-color="#ec9a60" style="--swatch:#ec9a60" aria-label="复制色值 #ec9a60"><span></span><code>#EC9A60</code></button><button class="swatch" data-color="#955aa0" style="--swatch:#955aa0" aria-label="复制色值 #955aa0"><span></span><code>#955AA0</code></button><button class="swatch" data-color="#d9dddd" style="--swatch:#d9dddd" aria-label="复制色值 #d9dddd"><span></span><code>#D9DDDD</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>输入栏</span><span>定时请求</span><span>格式补充</span><span>语音卡</span><span>播放钮</span><span>波形进度</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>把两次请求分开显示</h2></div><div class="rule-copy">
+<p>橙色光晕衬托白手机，第一条气泡说明日常内容与时间，第二条补充语音形式。无衬线文字保持同一字号，聊天气泡按说话顺序排列。</p>
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>从文字回答长出播放器</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;从文字回答长出播放器&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 10, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;4–14 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>从文字回答长出播放器</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="从文字回答长出播放器" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="10" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 10.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>4–14 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Grok Bot — it can send you voice notes · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#fff5eb}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;4&quot; data-end=&quot;14&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>确认信息后出现波形卡。播放前保留播放图标和总时长，点击后图标变暂停，颜色从左向右经过波形。</p>
+<p>语音总时长与宣传片时长分别设置，进度与播放状态保持一致。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>改成其他多模态交付</h2></div><div class="rule-copy">
+<p>可换成课程摘要、团队简报或每日提醒。保留内容请求、格式补充和播放体验三个层次；替换语音时同步更新时长和波形。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>结果预告</b></button><button class="beat" data-time="1.0"><span>1.00<small>s</small></span><b>输入定时请求</b></button><button class="beat" data-time="4.0"><span>4.00<small>s</small></span><b>补充语音格式</b></button><button class="beat" data-time="6.0"><span>6.00<small>s</small></span><b>生成语音卡</b></button><button class="beat" data-time="9.0"><span>9.00<small>s</small></span><b>点击播放</b></button><button class="beat" data-time="11.0"><span>11.00<small>s</small></span><b>进度推进</b></button><button class="beat" data-time="14.0"><span>14.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="1.00 秒的构图参考" loading="lazy"><figcaption>1.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="4.00 秒的构图参考" loading="lazy"><figcaption>4.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="9.00 秒的构图参考" loading="lazy"><figcaption>9.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="11.00 秒的构图参考" loading="lazy"><figcaption>11.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="14.00 秒的构图参考" loading="lazy"><figcaption>14.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可迁移为其他内容的多模态交付，保留格式变更→产物→播放证据。</li><li>时间和音频长度独立设置。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>输入栏 / 定时请求 / 格式补充 / 语音卡 / 播放钮 / 波形进度</p>
+<ul><li>先规定内容和时间，再补充输出形式，结果变成语音卡。</li><li>点击后播放钮转暂停，进度颜色沿波形推进。</li><li>示例语音长度不是本视频长度，不把 1:37 当动画时长。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>xAI / Grok / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Grok Bot — it can send you voice notes
+
+先约定内容和发送时间，再补充“用语音发给我”。新增的输出形式通过一张可播放的语音卡体现。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 19.233333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 4.3,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Morning voice note&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#ec9a60&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Morning voice note&quot;,
+        &quot;accent&quot;: &quot;#ec9a60&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 把两次请求分开显示
+
+橙色光晕衬托白手机，第一条气泡说明日常内容与时间，第二条补充语音形式。无衬线文字保持同一字号，聊天气泡按说话顺序排列。
+
+## 从文字回答长出播放器
+
+确认信息后出现波形卡。播放前保留播放图标和总时长，点击后图标变暂停，颜色从左向右经过波形。
+
+语音总时长与宣传片时长分别设置，进度与播放状态保持一致。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;从文字回答长出播放器&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 10,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;4–14 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 改成其他多模态交付
+
+可换成课程摘要、团队简报或每日提醒。保留内容请求、格式补充和播放体验三个层次；替换语音时同步更新时长和波形。
+
+## 配色与字形
+
+橙色光晕手机、文字聊天与可播放波形卡。
+
+#fff5eb · #262321 · #ec9a60 · #955aa0 · #d9dddd
+
+## 元素与制作规则
+
+输入栏 / 定时请求 / 格式补充 / 语音卡 / 播放钮 / 波形进度
+
+- 先规定内容和时间，再补充输出形式，结果变成语音卡。
+- 点击后播放钮转暂停，进度颜色沿波形推进。
+- 示例语音长度不是本视频长度，不把 1:37 当动画时长。
+
+## 内容替换
+
+- 可迁移为其他内容的多模态交付，保留格式变更→产物→播放证据。
+- 时间和音频长度独立设置。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;xAI / Grok&quot;,
+  &quot;id&quot;: &quot;V028&quot;,
+  &quot;palette&quot;: [
+    &quot;#fff5eb&quot;,
+    &quot;#262321&quot;,
+    &quot;#ec9a60&quot;,
+    &quot;#955aa0&quot;,
+    &quot;#d9dddd&quot;
+  ],
+  &quot;typography&quot;: &quot;橙色光晕手机、文字聊天与可播放波形卡&quot;,
+  &quot;sample&quot;: &quot;Morning voice note&quot;,
+  &quot;objects&quot;: [
+    &quot;输入栏&quot;,
+    &quot;定时请求&quot;,
+    &quot;格式补充&quot;,
+    &quot;语音卡&quot;,
+    &quot;播放钮&quot;,
+    &quot;波形进度&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 1.0,
+      &quot;frameId&quot;: &quot;K0005&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 4.0,
+      &quot;frameId&quot;: &quot;K0012&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 9.0,
+      &quot;frameId&quot;: &quot;K0030&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 11.0,
+      &quot;frameId&quot;: &quot;K0036&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 14.0,
+      &quot;frameId&quot;: &quot;K0046&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;结果预告&quot;,
+      &quot;end&quot;: 1,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 1,
+      &quot;label&quot;: &quot;输入定时请求&quot;,
+      &quot;end&quot;: 4,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 4,
+      &quot;label&quot;: &quot;补充语音格式&quot;,
+      &quot;end&quot;: 6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 6,
+      &quot;label&quot;: &quot;生成语音卡&quot;,
+      &quot;end&quot;: 9,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 9,
+      &quot;label&quot;: &quot;点击播放&quot;,
+      &quot;end&quot;: 11,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 11,
+      &quot;label&quot;: &quot;进度推进&quot;,
+      &quot;end&quot;: 14,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 14,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 19.233333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 19.233333,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

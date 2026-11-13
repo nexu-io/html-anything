@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#242424",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：$550M",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：wonderful",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：wonderful raises",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "超大金额",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模糊风景带",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "投资方名单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "国家数字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地图照片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌字标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#242424",
+      "status": "inferred"
+    },
+    {
+      "hex": "#fafaf6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#92b8a5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bd8f6c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8caaca",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线超大细数字，融资轮次与品牌小字置于上下；窄字距干净排布",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "先把融资金额做成视觉事件，再用投资方和全球覆盖解释这次增长，最后回到产品定位。",
+      "status": "inferred"
+    },
+    {
+      "rule": "开头数字超出边缘，竖向叠影和快速缩放把它收进中心。背景是低细节的风景色带，品牌与轮次分别落在金额上下；金额停住后背景才切成彩色竖幅。",
+      "status": "inferred"
+    },
+    {
+      "rule": "投资方以两列文字和细色线连接，不用堆 Logo。全球段先出现少量地点照片，再让数字递增，最后展开地图与更多照片。照片和地点数量要对应叙事。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#f8f7f1",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Rain is a given.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Opus 5 High Auto",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：STORM HOOD",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "对话输入",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "原始资料",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "幻灯片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "评论锚点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "多画幅海报",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "文档",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f8f7f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#202421",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c57d63",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1d545a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e2e2d8",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "暖白工具界面、深青设计稿、衬线旁白",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "同一夹克主题从幻灯片派生多尺寸设计，再转为文档，内容身份跨格式保留。",
+      "status": "inferred"
+    },
+    {
+      "rule": "先点击选中文字再出现工具条，评论绑定局部目标。",
+      "status": "inferred"
+    },
+    {
+      "rule": "各格式展示由全局到局部再返回成果集。",
+      "status": "inferred"
+    }
+  ]
+}
