@@ -117,7 +117,7 @@ export interface AssetCardProps {
   copyFeedback: CopyFeedback;
   onDelete?: (path: string) => void;
   onRename?: (oldPath: string, newPath: string) => void;
-  onAddAssetToTimeline?: (path: string) => void;
+  onAddAssetToTimeline?: (path: string) => unknown;
 }
 
 /**
@@ -189,7 +189,7 @@ export function AssetCard({
       }
     }
     // Not added (or no matching clip found) → preview overlay
-    setPreviewAsset(asset, projectId);
+    setPreviewAsset(asset, projectId, onAddAssetToTimeline ? () => onAddAssetToTimeline(asset) : undefined);
   }, [
     mvp,
     used,
@@ -199,6 +199,7 @@ export function AssetCard({
     setSelectedElementId,
     requestTimelineFocus,
     setPreviewAsset,
+    onAddAssetToTimeline,
     clearPreviewAsset,
   ]);
 
@@ -317,7 +318,7 @@ export interface FontRowProps {
   copyFeedback: CopyFeedback;
   onDelete?: (path: string) => void;
   onRename?: (oldPath: string, newPath: string) => void;
-  onAddAssetToTimeline?: (path: string) => void;
+  onAddAssetToTimeline?: (path: string) => unknown;
 }
 
 /**

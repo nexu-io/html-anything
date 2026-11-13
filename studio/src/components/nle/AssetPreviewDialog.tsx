@@ -2,18 +2,36 @@ import { Dialog } from "@base-ui/react/dialog";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useI18n } from "../../i18n/I18n";
 import { RemixIcon } from "../../icons/RemixIcons";
-import { IconButton, Tooltip } from "../ui";
+import { Button, IconButton, Tooltip } from "../ui";
 import { VolumeControl } from "../../player/components/VolumeControl";
 import { SpeedMenu } from "../../player/components/SpeedMenu";
 import { formatTime } from "../../player/lib/time";
 import { usePlayerStore } from "../../player/store/playerStore";
 
 /** Independent media playback: never writes the composition's playhead or settings. */
-export function AssetPreviewDialog({ url, kind, name, onClose }: {
-  url: string; kind: "video" | "audio" | "image"; name: string; onClose: () => void;
+export function AssetPreviewDialog({ url, kind, name, onClose, onAdd }: {
+  url: string; kind: "video" | "audio" | "image"; name: string; onClose: () => void; onAdd?: () => unknown;
 }) {
   const { t } = useI18n();
   const [open, setOpen] = useState(true);
+  const [adding, setAdding] = useState(false);
+  const [addFailed, setAddFailed] = useState(false);
+  const busy = useRef(false);
+  const add = async () => {
+    if (!onAdd || busy.current) return;
+    busy.current = true;
+    setAdding(true);
+    setAddFailed(false);
+    try {
+      if (await onAdd() === false) throw new Error("Add failed");
+      onClose();
+    } catch {
+      setAddFailed(true);
+    } finally {
+      busy.current = false;
+      setAdding(false);
+    }
+  };
   return <Dialog.Root open={open} onOpenChange={setOpen} onOpenChangeComplete={next => { if (!next) onClose(); }}>
     <Dialog.Portal>
       <Dialog.Backdrop forceRender className="hf-overlay-backdrop fixed inset-0 z-140 bg-media-preview-scrim" />
@@ -25,6 +43,12 @@ export function AssetPreviewDialog({ url, kind, name, onClose }: {
           <Dialog.Close render={<IconButton className="shrink-0" aria-label={t("Close preview")} icon={<RemixIcon name="close-line" size={16} />} />} />
         </div>
         <DialogMedia key={url} url={url} kind={kind} name={name} />
+        {onAdd && <div className="flex shrink-0 items-center justify-end gap-3 border-t border-border px-3 py-2">
+          {addFailed && <span role="alert" className="text-step-12 text-danger-ink">{t("Failed to add media")}</span>}
+          <Button type="button" variant="primary" loading={adding} onClick={add} icon={<RemixIcon name="add-line" size={16} />}>
+            {t(adding ? "Adding…" : "Add to timeline")}
+          </Button>
+        </div>}
       </Dialog.Popup>
     </Dialog.Portal>
   </Dialog.Root>;

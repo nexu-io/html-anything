@@ -36,3 +36,30 @@ it("keeps hover playback in the card and persists a clicked preview after pointe
     vi.useRealTimers();
   }
 });
+
+it("offers caption insertion on the card and in its preview without conflating the actions", async () => {
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = createRoot(host);
+  let finish!: (value: boolean) => void;
+  const add = vi.fn(() => new Promise<boolean>(resolve => { finish = resolve; }));
+  try {
+    act(() => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}><BlocksTab onAddBlock={add} /></StudioHostContext.Provider>));
+    const card = host.querySelector<HTMLElement>('[role="button"]')!;
+    act(() => card.click());
+    expect(add).not.toHaveBeenCalled();
+    expect(useAssetPreviewStore.getState().catalogPreview?.onAdd).toBeTypeOf("function");
+    useAssetPreviewStore.getState().clearPreviewAsset();
+    const button = [...host.querySelectorAll("button")].find(b => b.textContent?.includes("Add to timeline"))!;
+    act(() => { button.click(); button.click(); });
+    expect(add).toHaveBeenCalledExactlyOnceWith("caption");
+    expect(button.disabled).toBe(true);
+    expect(useAssetPreviewStore.getState().catalogPreview).toBeNull();
+    await act(async () => finish(false));
+    expect(button.textContent).toContain("Failed");
+  } finally {
+    act(() => root.unmount());
+    host.remove();
+    useAssetPreviewStore.getState().clearPreviewAsset();
+  }
+});

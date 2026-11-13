@@ -29,7 +29,7 @@ interface AssetsTabProps {
   onImport?: (files: FileList) => void | Promise<void>;
   onDelete?: (path: string) => void;
   onRename?: (oldPath: string, newPath: string) => void;
-  onAddAssetToTimeline?: (path: string) => void;
+  onAddAssetToTimeline?: (path: string) => unknown;
 }
 
 export type UsageFilter = "all" | "used" | "unused";

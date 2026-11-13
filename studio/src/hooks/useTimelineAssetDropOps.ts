@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, type MutableRefObject, type RefObject }
 import { compositionInsertionFailureMessage } from "../i18n/editorErrors";
 import type { TimelineElement } from "../player";
 import type { TimelineDropPlacement } from "../player/components/timelineCallbacks";
-import { resolveDropTrack } from "../utils/timelineDropTrackInsert";
+import { resolveDropTrack, topTrackZIndex } from "../utils/timelineDropTrackInsert";
 import {
   buildTimelineAssetId,
   buildTimelineAssetInsertHtml,
@@ -160,6 +160,7 @@ export function useTimelineAssetDropOps({
         const tag = kind === "image" ? "img" : kind;
 
         let newId = "";
+        let newElementZIndex = 1;
         let track = 0;
         let start = normalizedStart;
         const insertAsset = (originalContent: string) => {
@@ -167,7 +168,7 @@ export function useTimelineAssetDropOps({
           const fileElements = elementsRef.current
             .filter((te) => (te.sourceFile || activeCompPath || "index.html") === targetPath)
             .map((te) => ({ ...te, sourceFile: targetPath }));
-          const newElementZIndex = Math.max(1, fileElements.length + gesture.placed.length + 1);
+          newElementZIndex = Math.max(1, fileElements.length + gesture.placed.length + 1);
           const ids = collectHtmlIds(originalContent);
           newId = buildTimelineAssetId(assetPath, ids);
           // Include drops saved while this preview was still reloading.
@@ -175,6 +176,7 @@ export function useTimelineAssetDropOps({
             drop.element && ids.includes(drop.element.domId ?? "")
               ? [drop.element] : [],
           );
+          if (placement.newTrack) newElementZIndex = topTrackZIndex(originalContent, [...fileElements, ...gesture.placed, ...awaitingPreview]);
           const resolved = resolveDropTrack({
             source: originalContent,
             // Rows and insertRow count the rows the timeline shows; a track this drop opened has no others.
@@ -226,10 +228,10 @@ export function useTimelineAssetDropOps({
         });
 
         const key = deriveTimelineStoreKeyForDomId(newId, targetPath);
-        const lane = placement.insertRow == null ? placement.track : track;
+        const lane = placement.insertRow == null && !placement.newTrack ? placement.track : track;
         const element = {
           id: newId, key, domId: newId, sourceFile: targetPath,
-          tag, start, duration: normalizedDuration, track: lane, authoredTrack: track,
+          tag, start, duration: normalizedDuration, track: lane, authoredTrack: track, zIndex: newElementZIndex,
         };
         finishPendingAssetDrop(pendingId, element);
         if (!stillActive()) return element;

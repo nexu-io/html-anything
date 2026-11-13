@@ -298,7 +298,8 @@
     "Composition selected": "コンポジションを選択中",
     "No editable properties": "編集可能なプロパティはありません",
     "Select a layer inside this composition to edit its properties.": "このコンポジション内のレイヤーを選択してプロパティを編集してください。",
-    "Select another layer or ask the agent to edit this element.": "別のレイヤーを選択するか、エージェントにこの要素の編集を依頼してください。"
+    "Select another layer or ask the agent to edit this element.": "別のレイヤーを選択するか、エージェントにこの要素の編集を依頼してください。",
+    "Add to timeline": "タイムラインに追加"
   },
   "ko": {
     "Join the OpenDesign community": "OpenDesign 커뮤니티에 참여하세요",
@@ -599,7 +600,8 @@
     "Composition selected": "컴포지션 선택됨",
     "No editable properties": "편집 가능한 속성 없음",
     "Select a layer inside this composition to edit its properties.": "이 컴포지션 안의 레이어를 선택하여 속성을 편집하세요.",
-    "Select another layer or ask the agent to edit this element.": "다른 레이어를 선택하거나 에이전트에게 이 요소의 편집을 요청하세요."
+    "Select another layer or ask the agent to edit this element.": "다른 레이어를 선택하거나 에이전트에게 이 요소의 편집을 요청하세요.",
+    "Add to timeline": "타임라인에 추가"
   },
   "de": {
     "Join the OpenDesign community": "Tritt der OpenDesign-Community bei",
@@ -900,7 +902,8 @@
     "Composition selected": "Komposition ausgewählt",
     "No editable properties": "Keine bearbeitbaren Eigenschaften",
     "Select a layer inside this composition to edit its properties.": "Wähle eine Ebene innerhalb dieser Komposition aus, um ihre Eigenschaften zu bearbeiten.",
-    "Select another layer or ask the agent to edit this element.": "Wähle eine andere Ebene aus oder bitte den Agenten, dieses Element zu bearbeiten."
+    "Select another layer or ask the agent to edit this element.": "Wähle eine andere Ebene aus oder bitte den Agenten, dieses Element zu bearbeiten.",
+    "Add to timeline": "Zur Zeitleiste hinzufügen"
   },
   "fr": {
     "Join the OpenDesign community": "Rejoignez la communauté OpenDesign",
@@ -1201,7 +1204,8 @@
     "Composition selected": "Composition sélectionnée",
     "No editable properties": "Aucune propriété modifiable",
     "Select a layer inside this composition to edit its properties.": "Sélectionnez un calque dans cette composition pour modifier ses propriétés.",
-    "Select another layer or ask the agent to edit this element.": "Sélectionnez un autre calque ou demandez à l’agent de modifier cet élément."
+    "Select another layer or ask the agent to edit this element.": "Sélectionnez un autre calque ou demandez à l’agent de modifier cet élément.",
+    "Add to timeline": "Ajouter à la timeline"
   },
   "ru": {
     "Join the OpenDesign community": "Присоединяйтесь к сообществу OpenDesign",
@@ -1502,7 +1506,8 @@
     "Composition selected": "Выбрана композиция",
     "No editable properties": "Нет редактируемых свойств",
     "Select a layer inside this composition to edit its properties.": "Выберите слой внутри этой композиции, чтобы изменить его свойства.",
-    "Select another layer or ask the agent to edit this element.": "Выберите другой слой или попросите агента изменить этот элемент."
+    "Select another layer or ask the agent to edit this element.": "Выберите другой слой или попросите агента изменить этот элемент.",
+    "Add to timeline": "Добавить на таймлайн"
   },
   "es": {
     "Join the OpenDesign community": "Únete a la comunidad de OpenDesign",
@@ -1803,7 +1808,8 @@
     "Composition selected": "Composición seleccionada",
     "No editable properties": "No hay propiedades editables",
     "Select a layer inside this composition to edit its properties.": "Selecciona una capa dentro de esta composición para editar sus propiedades.",
-    "Select another layer or ask the agent to edit this element.": "Selecciona otra capa o pide al agente que edite este elemento."
+    "Select another layer or ask the agent to edit this element.": "Selecciona otra capa o pide al agente que edite este elemento.",
+    "Add to timeline": "Añadir a la línea de tiempo"
   },
   "pt-BR": {
     "Join the OpenDesign community": "Junte-se à comunidade OpenDesign",
@@ -2104,7 +2110,8 @@
     "Composition selected": "Composição selecionada",
     "No editable properties": "Nenhuma propriedade editável",
     "Select a layer inside this composition to edit its properties.": "Selecione uma camada dentro desta composição para editar suas propriedades.",
-    "Select another layer or ask the agent to edit this element.": "Selecione outra camada ou peça ao agente para editar este elemento."
+    "Select another layer or ask the agent to edit this element.": "Selecione outra camada ou peça ao agente para editar este elemento.",
+    "Add to timeline": "Adicionar à linha do tempo"
   },
   "it": {
     "Join the OpenDesign community": "Unisciti alla community OpenDesign",
@@ -2405,7 +2412,8 @@
     "Composition selected": "Composizione selezionata",
     "No editable properties": "Nessuna proprietà modificabile",
     "Select a layer inside this composition to edit its properties.": "Seleziona un livello all’interno di questa composizione per modificarne le proprietà.",
-    "Select another layer or ask the agent to edit this element.": "Seleziona un altro livello o chiedi all’agente di modificare questo elemento."
+    "Select another layer or ask the agent to edit this element.": "Seleziona un altro livello o chiedi all’agente di modificare questo elemento.",
+    "Add to timeline": "Aggiungi alla timeline"
   },
   "tr": {
     "Join the OpenDesign community": "OpenDesign topluluğuna katılın",
@@ -2706,6 +2714,7 @@
     "Composition selected": "Kompozisyon seçildi",
     "No editable properties": "Düzenlenebilir özellik yok",
     "Select a layer inside this composition to edit its properties.": "Özelliklerini düzenlemek için bu kompozisyonun içindeki bir katmanı seçin.",
-    "Select another layer or ask the agent to edit this element.": "Başka bir katman seçin veya ajandan bu öğeyi düzenlemesini isteyin."
+    "Select another layer or ask the agent to edit this element.": "Başka bir katman seçin veya ajandan bu öğeyi düzenlemesini isteyin.",
+    "Add to timeline": "Zaman çizelgesine ekle"
   }
 }

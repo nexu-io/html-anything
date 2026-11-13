@@ -1179,5 +1179,6 @@
   "Composition selected": "已选中合成图层",
   "No editable properties": "暂无可编辑属性",
   "Select a layer inside this composition to edit its properties.": "请选择此合成内的图层，以编辑其属性。",
-  "Select another layer or ask the agent to edit this element.": "请选择其他图层，或让智能体修改此元素。"
+  "Select another layer or ask the agent to edit this element.": "请选择其他图层，或让智能体修改此元素。",
+  "Add to timeline": "添加到时间轴"
 }

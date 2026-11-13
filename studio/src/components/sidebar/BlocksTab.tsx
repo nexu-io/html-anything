@@ -1,3 +1,4 @@
+import { Button } from "../ui/Button";
 import { MediaDurationBadge } from "./MediaDurationBadge";
 import { useMvpEditor } from "../../motion/StudioHost";
 import { RemixIcon } from "../../icons/RemixIcons";
@@ -30,7 +31,7 @@ export interface BlockPreviewInfo {
 }
 
 interface BlocksTabProps {
-  onAddBlock?: (blockName: string) => void | Promise<void>;
+  onAddBlock?: (blockName: string) => unknown;
   onPreviewBlock?: (preview: BlockPreviewInfo | null) => void;
 }
 
@@ -113,9 +114,9 @@ export const BlocksTab = memo(function BlocksTab({ onAddBlock, onPreviewBlock }:
                   onPreview={onPreviewBlock}
                   onShowPrompt={mvp ? undefined : setPromptModal}
                   onAdd={
-                    block.category === "vfx" ||
+                    onAddBlock && (mvp || block.category === "vfx" ||
                     block.category === "social" ||
-                    block.category === "scenes"
+                    block.category === "scenes")
                       ? () => onAddBlock?.(block.name)
                       : undefined
                   }
@@ -276,7 +277,7 @@ function BlockCard({
   tags?: string[];
   posterUrl?: string;
   videoUrl?: string;
-  onAdd?: () => void | Promise<void>;
+  onAdd?: () => unknown;
   onShowPrompt?: (info: { title: string; prompt: string }) => void;
   onPreview?: (preview: BlockPreviewInfo | null) => void;
 }) {
@@ -284,10 +285,11 @@ function BlockCard({
   const [hovered, setHovered] = useState(false);
   const mvp = useMvpEditor();
   const preview = () => {
-    if (mvp && (videoUrl || posterUrl)) useAssetPreviewStore.getState().setCatalogPreview({ videoUrl, posterUrl, title });
+    if (mvp && (videoUrl || posterUrl)) useAssetPreviewStore.getState().setCatalogPreview({ videoUrl, posterUrl, title, onAdd });
   };
   const [failedPoster, setFailedPoster] = useState<string>();
   const [failedVideo, setFailedVideo] = useState<string>();
+  const addBusy = useRef(false);
   const [addState, setAddState] = useState<"idle" | "adding" | "added" | "failed">("idle");
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const colors = getCategoryColors(category);
@@ -328,16 +330,19 @@ function BlockCard({
   const handleAdd = useCallback(
     async (e: React.MouseEvent) => {
       e.stopPropagation();
-      if (addState !== "idle" || !onAdd) return;
+      if (addBusy.current || addState === "added" || !onAdd) return;
+      addBusy.current = true;
       setAddState("adding");
       try {
         // Confirm only what actually happened — no optimistic "Added!".
-        await onAdd();
+        if (await onAdd() === false) throw new Error("Add failed");
         setAddState("added");
+        setTimeout(() => setAddState("idle"), 1500);
       } catch {
         setAddState("failed");
       }
-      setTimeout(() => setAddState("idle"), 1500);
+      addBusy.current = false;
+
     },
     [onAdd, addState],
   );
@@ -420,7 +425,7 @@ function BlockCard({
         )}
 
         {/* Action overlay — also revealed when a button inside receives focus */}
-        {(onAdd || onShowPrompt) && <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/60 opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100 transition-opacity">
+        {!mvp && (onAdd || onShowPrompt) && <div className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 bg-black/60 opacity-0 group-hover/card:opacity-100 group-focus-within/card:opacity-100 transition-opacity">
           {onAdd && (
             <Tooltip label={t("Add")} description={t("Add to composition at current time")}>
               <button
@@ -469,6 +474,12 @@ function BlockCard({
         </div>
       </div>
 
+      {mvp && onAdd && <div className="px-1.5 pt-1.5">
+        <Button type="button" size="sm" className="w-full" onClick={handleAdd} loading={addState === "adding"} disabled={addState === "added"}
+          icon={<RemixIcon name="add-line" size={14} />}>
+          {t(addState === "adding" ? "Adding…" : addState === "added" ? "Added!" : addState === "failed" ? "Failed" : "Add to timeline")}
+        </Button>
+      </div>}
       {/* Info */}
       <div className="px-1.5 py-1.5">
         <div className="text-[10px] font-medium text-neutral-200 truncate leading-tight">
