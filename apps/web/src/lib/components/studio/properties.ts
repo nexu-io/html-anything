@@ -29,7 +29,7 @@ interface Options {
 export class Properties {
   readonly element: HTMLElement;
   private select: HTMLSelectElement;
-  private text: HTMLInputElement;
+  private text: HTMLTextAreaElement;
   private start: ReturnType<typeof numberField>;
   private duration: ReturnType<typeof numberField>;
   private font: ReturnType<typeof numberField>;
@@ -60,7 +60,9 @@ export class Properties {
     this.element = slot(document, "properties");
     this.select = document.createElement("select");
     this.select.setAttribute("aria-label", "图层选择");
-    this.text = document.createElement("input");
+    this.text = document.createElement("textarea");
+    this.text.rows = 3;
+    this.text.maxLength = 8000;
     this.text.setAttribute("aria-label", "文本内容");
     const changed = (key: keyof NativeValues) => {
       const o = this.current,
@@ -195,6 +197,7 @@ export class Properties {
       field(document, "文本内容", this.text),
       field(document, "字号", this.font.element),
       field(document, "字体", this.family),
+      this.appearance.textElement,
       timing,
       this.audio,
       this.links,
@@ -245,7 +248,10 @@ export class Properties {
     this.duration.readonly(audioReadonly || value || (!!clip?.composition && !clip.host) || !!clip?.host?.reason);
     this.font.readonly(value || !!clip?.link?.reason || !!clip?.host || !!clip?.media);
     this.family.disabled = value || !!clip?.link?.reason || !!clip?.host || !!clip?.media;
-    this.appearance.block(value || !!clip?.link?.reason || !!clip?.host || clip?.media?.kind === "audio");
+    this.appearance.block(
+      value || !!clip?.link?.reason || !!clip?.host || clip?.media?.kind === "audio",
+      !!clip && clip.text !== null && !clip.composition && !clip.host && !clip.media,
+    );
     this.apply.disabled = value || !clip || !!clip.link?.reason;
     this.remove.disabled = value || !clip || !!clip.composition || !!clip.link?.reason;
   }

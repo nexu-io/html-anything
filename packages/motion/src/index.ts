@@ -2,7 +2,7 @@ import { type Composition, type EditOp, openComposition } from "@hyperframes/sdk
 import type { z } from "zod";
 import { type AnimationInput, type Clip, editInput, type NativeValues, patchInput } from "./contract.js";
 import { animate, animations, describeAnimation } from "./editing/animation.js";
-import { appearance, appearanceStyles } from "./editing/appearance.js";
+import { appearance, appearanceStyles, textLayer } from "./editing/appearance.js";
 import { audioState, numeric } from "./editing/audio.js";
 import { describeLinks, editLinks, linkedPatches } from "./editing/links.js";
 
@@ -79,7 +79,7 @@ export class Motion {
             },
           }
         : {}),
-      text: e.children.length || ["img", "audio"].includes(e.tag) ? null : e.text,
+      text: textLayer(e) ? e.text : null,
       start: number(e.attributes["data-start"]),
       duration: number(e.attributes["data-duration"]),
       composition: e.attributes["data-composition-id"] !== undefined,
@@ -130,6 +130,8 @@ export class Motion {
     )
       throw new Error("媒体不是文本图层");
     if (target.tag === "audio" && input.appearance !== undefined) throw new Error("音频不具备视觉外观");
+    if ((input.appearance?.align !== undefined || input.appearance?.decoration !== undefined) && !textLayer(target))
+      throw Error("文本对齐与装饰需要普通文本图层");
     const related = animations(this.composition),
       audio =
         target.tag === "audio"

@@ -75,9 +75,9 @@ async function fixture(fail: boolean) {
     select.dispatchEvent(new Event("change"));
     await vi.waitFor(() => {
       expect(document.querySelector("[aria-live]")?.textContent).toBe("就绪");
-      expect(document.querySelector<HTMLInputElement>('[aria-label="文本内容"]')?.readOnly).toBe(false);
+      expect(document.querySelector<HTMLTextAreaElement>('[aria-label="文本内容"]')?.readOnly).toBe(false);
     });
-    const field = required(document.querySelector<HTMLInputElement>('[aria-label="文本内容"]'));
+    const field = required(document.querySelector<HTMLTextAreaElement>('[aria-label="文本内容"]'));
     field.value = "Pending native field";
     field.dispatchEvent(new Event("input"));
     expect(editor.drafts?.dirty()).toBe(true);

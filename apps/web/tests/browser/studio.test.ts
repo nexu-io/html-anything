@@ -47,7 +47,7 @@ async function scene(name: string) {
   await click("应用更改");
   await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
   await page.waitForFunction(() => {
-    const text = document.querySelector<HTMLInputElement>('[aria-label="文本内容"]');
+    const text = document.querySelector<HTMLTextAreaElement>('[aria-label="文本内容"]');
     return text?.value === "Motion baseline" && !text.readOnly && !text.disabled;
   });
 }
@@ -429,14 +429,14 @@ describe.sequential("persistent Studio view and native browser controls", () => 
     await page.keyboard.press("ControlOrMeta+s");
     await ready();
     await click("预览");
-    await page.waitForFunction(() => !document.querySelector<HTMLInputElement>('[aria-label="文本内容"]')?.readOnly);
+    await page.waitForFunction(() => !document.querySelector<HTMLTextAreaElement>('[aria-label="文本内容"]')?.readOnly);
     await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
     await page.getByLabel("文本内容", { exact: true }).fill("Relative typography");
     await click("应用更改");
     await page.waitForFunction(
       () =>
-        document.querySelector<HTMLInputElement>('[aria-label="文本内容"]')?.value === "Relative typography" &&
-        !document.querySelector<HTMLInputElement>('[aria-label="文本内容"]')?.readOnly,
+        document.querySelector<HTMLTextAreaElement>('[aria-label="文本内容"]')?.value === "Relative typography" &&
+        !document.querySelector<HTMLTextAreaElement>('[aria-label="文本内容"]')?.readOnly,
     );
     expect(await page.getByLabel("字号", { exact: true }).inputValue()).toBe("");
     await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();

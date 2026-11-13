@@ -5,6 +5,8 @@ export const appearanceInput = z.strictObject({
   y: z.number().finite().min(-65536).max(65536).optional(),
   rotation: z.number().finite().min(-36000).max(36000).optional(),
   opacity: z.number().finite().min(0).max(1).optional(),
+  align: z.enum(["start", "end", "left", "center", "right"]).nullable().optional(),
+  decoration: z.enum(["none", "underline"]).nullable().optional(),
   color: z
     .string()
     .regex(/^#[0-9a-fA-F]{6}$/)
