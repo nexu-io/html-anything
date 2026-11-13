@@ -35,7 +35,19 @@ it("packs only explicit files and executes the actual local tgz without dependen
   );
   const run = await execute(
     process.execPath,
-    [cli, "exec", "--yes", "--ignore-scripts", "--package", output, "--", "fixture", "literal value", "a&b"],
+    [
+      cli,
+      "exec",
+      "--offline",
+      "--yes",
+      "--ignore-scripts",
+      "--package",
+      output,
+      "--",
+      "fixture",
+      "literal value",
+      "a&b",
+    ],
     {
       cwd: root,
       env: { ...process.env, npm_config_cache: join(root, "cache"), npm_config_update_notifier: "false" },
@@ -52,7 +64,8 @@ it("packs only explicit files and executes the actual local tgz without dependen
       output,
     }),
   ).rejects.toThrow();
-});
+  // Own the bounded npm pack (120s) and execution (30s) until actual exit before afterEach removes their roots.
+}, 180000);
 it("rejects undeclared bins, unsafe/reserved paths and special filesystem inputs", async () => {
   const root = await mkdtemp(join(tmpdir(), "npm-invalid-"));
   roots.push(root);
