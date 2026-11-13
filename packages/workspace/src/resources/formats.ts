@@ -6,12 +6,6 @@ import { identifyFont } from "./fonts.js";
 export function checksum(bytes: Uint8Array) {
   return `sha256:${createHash("sha256").update(bytes).digest("hex")}`;
 }
-export function decode(data: string) {
-  const bytes = Buffer.from(data, "base64");
-  if (!bytes.length || bytes.length > resourceLimit || bytes.toString("base64") !== data)
-    throw new Fault("invalid", "invalid or oversized canonical resource data");
-  return bytes;
-}
 function wave(bytes: Buffer) {
   if (
     bytes.length < 44 ||

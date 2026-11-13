@@ -17,8 +17,8 @@ import {
 import { host as gatewayHost } from "@open-motion/gateway/host";
 import { initialFiles } from "@open-motion/workspace";
 import { afterEach, describe, expect, it } from "vitest";
-import { Client as APIClient } from "@/client.js";
 import { serve as serveDaemon } from "@/service.js";
+import { Client as APIClient } from "@/transport/client.js";
 
 const roots: string[] = [];
 const services: Service[] = [];

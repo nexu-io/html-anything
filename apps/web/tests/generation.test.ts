@@ -192,7 +192,7 @@ it("confirms an integrity-unknown adoption with the original request before load
       if (operation !== "generation_adopt") return;
       const input = raw as GenerationInput<"generation_adopt">;
       if (!adopted.has(input.requestId)) {
-        const project = db.execute("resource_import", {
+        const project = ingest(db, {
           requestId: input.requestId,
           sessionId: input.sessionId,
           artifactId: input.artifactId,
@@ -258,7 +258,7 @@ it("retries only authoritative reads after a confirmed adoption and protects dra
     intercept(async (operation, raw) => {
       if (operation === "generation_adopt")
         return reply(
-          db.execute("resource_import", {
+          ingest(db, {
             sessionId: String(raw.sessionId),
             artifactId: String(raw.artifactId),
             requestId: String(raw.requestId),
@@ -425,7 +425,7 @@ it("allows an existing candidate to be explicitly adopted with configuration abs
       if (operation === "generation_adopt") {
         const input = raw as GenerationInput<"generation_adopt">;
         return reply(
-          db.execute("resource_import", {
+          ingest(db, {
             sessionId: input.sessionId,
             artifactId: input.artifactId,
             requestId: input.requestId,
@@ -463,3 +463,16 @@ it("allows an existing candidate to be explicitly adopted with configuration abs
       await panel.dispose();
     }
   }));
+
+/** Test fixture construction; production transports accept raw bytes and digest metadata. */
+function ingest(
+  db: Workspace,
+  input: Omit<Parameters<Workspace["importResource"]>[0], "digest" | "bytes"> & { data: string },
+) {
+  const { data, ...intent } = input,
+    bytes = Buffer.from(data, "base64");
+  return db.importResource(
+    { ...intent, digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.length },
+    bytes,
+  );
+}

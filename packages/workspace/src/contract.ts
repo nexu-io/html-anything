@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type Resource, resourceData, resourcePath } from "./resources/contract.js";
+import { type Resource, resourceLimit, resourcePath } from "./resources/contract.js";
 
 export {
   type FontResource,
@@ -78,7 +78,8 @@ export const schemas = {
     expectedRevision: revision,
     path: resourcePath,
     name: title,
-    data: resourceData,
+    digest: revision,
+    bytes: z.number().int().positive().max(resourceLimit),
   }),
   resource_remove: z.strictObject({ ...request, ...owner, expectedRevision: revision, path: resourcePath }),
   resource_read: z.strictObject({ ...owner, revision, path: resourcePath }),
@@ -186,7 +187,7 @@ export interface Outputs {
   project_entry: ProjectEntry;
   artifact_enter: Selection;
   project_snapshot: ProjectSnapshot;
-  resource_import: Project;
+  resource_import: { project: Project | null };
   resource_remove: Project;
   resource_read: { resource: Resource; data: string };
   project_undo: Project;
@@ -226,7 +227,7 @@ export const descriptions: Record<Operation, string> = {
   project_read: "Read native source, resource manifest, content revision and authoritative history state.",
   project_snapshot: "Reopen an explicitly owned immutable source revision without changing current content or history.",
   resource_import:
-    "Import bounded verified PNG, PCM16 WAV or a single-face TTF/OTF/WOFF/WOFF2 font into the owned revision idempotently; font metadata comes from bytes, not caller claims.",
+    "Confirm the original resource import receipt from immutable metadata; returns project:null before a verified byte commit. Format facts are derived from bytes by the workspace owner.",
   resource_remove:
     "Remove one resource from the current revision while preserving historical bytes for undo and existing views.",
   resource_read: "Read bytes only through the resource manifest of an explicitly owned immutable project revision.",

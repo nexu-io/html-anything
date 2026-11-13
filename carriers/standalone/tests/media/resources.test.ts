@@ -119,6 +119,10 @@ it("imports persistent media through retry, inserts once into shared source, dec
     await shown();
     await page.getByRole("tab", { name: "媒体", exact: true }).click();
     await page.route("**/api/resource_import", async (route) => {
+      if (!route.request().postDataJSON().uploadId) {
+        await route.continue();
+        return;
+      }
       await route.fetch();
       await route.abort("failed");
     });
@@ -242,9 +246,9 @@ it("imports persistent media through retry, inserts once into shared source, dec
     expect(saved.resources).toHaveLength(2);
     const imageAsset = saved.resources.find((asset) => asset.type === "image/png");
     if (!imageAsset) throw Error("missing image manifest");
-    expect(
-      (await runtime.execute("resource_read", { ...owner, revision: saved.revision, path: imageAsset.path })).data,
-    ).toBe(png.toString("base64"));
+    expect((await readResource(runtime, { ...owner, revision: saved.revision, path: imageAsset.path })).data).toBe(
+      png.toString("base64"),
+    );
     await page.reload();
     await ready();
     await shown();
@@ -312,3 +316,17 @@ it("imports persistent media through retry, inserts once into shared source, dec
     await writeFile(join(evidence, "report.json"), JSON.stringify(report, null, 2));
   }
 }, 60000);
+
+async function readResource(
+  runtime: Pick<Awaited<ReturnType<typeof open>>, "execute">,
+  input: { sessionId: string; artifactId: string; revision: string; path: string },
+) {
+  const ticket = await runtime.execute("resource_read", input);
+  try {
+    const response = await fetch(ticket.url);
+    expect(response.status).toBe(200);
+    return { resource: ticket.resource, data: Buffer.from(await response.arrayBuffer()).toString("base64") };
+  } finally {
+    await runtime.execute("resource_release", { id: ticket.id });
+  }
+}

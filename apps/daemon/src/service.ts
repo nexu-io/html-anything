@@ -18,6 +18,8 @@ import { PrismTemplates } from "./content/prism.js";
 import { Templates } from "./content/templates.js";
 import { schemas } from "./contract.js";
 import { type Binding, Exports } from "./exports/index.js";
+import { type ResourceOperation, resourceSchemas } from "./transport/resource.js";
+import { ResourceTransfers } from "./transport/resources.js";
 export interface Options {
   data: string;
   origin: string;
@@ -75,6 +77,7 @@ export async function serve(options: Options): Promise<Service> {
   const exports = new Exports(workspace, options.renderer, options.endpoint);
   const generations = new Generations(workspace, options.gateway);
   const archives = new Archives(workspace, options.endpoint);
+  const resources = new ResourceTransfers(workspace, options.endpoint);
   const requests = new Set<Promise<unknown>>();
   let draining: Promise<void> | undefined, closing: Promise<void> | undefined;
   const server = createServer((request, response) => {
@@ -88,6 +91,10 @@ export async function serve(options: Options): Promise<Service> {
       response.once("close", done);
     });
     const handle = async () => {
+      if (request.method !== "OPTIONS" && request.url?.startsWith("/resources/")) {
+        await resources.transfer(request, response, origin);
+        return;
+      }
       if (request.method !== "OPTIONS" && request.url?.startsWith("/archives/")) {
         await archives.transfer(request, response, origin);
         return;
@@ -184,15 +191,17 @@ export async function serve(options: Options): Promise<Service> {
       if (request.method !== "POST" || !Object.hasOwn(schemas, operation))
         return reply(response, 404, { error: { code: "invalid", message: "unknown operation" } }, origin);
       const input = await body(request);
-      const result = Object.hasOwn(archiveSchemas, operation)
-        ? archives.execute(operation as ArchiveOperation, input)
-        : Object.hasOwn(generationSchemas, operation)
-          ? await generations.execute(operation as GenerationOperation, input)
-          : Object.hasOwn(templateSchemas, operation)
-            ? await templates.execute(operation as TemplateOperation, input)
-            : Object.hasOwn(exportSchemas, operation)
-              ? await exports.execute(operation as ExportOperation, input)
-              : workspace.execute(operation as Operation, input as Input<Operation>);
+      const result = Object.hasOwn(resourceSchemas, operation)
+        ? resources.execute(operation as ResourceOperation, input)
+        : Object.hasOwn(archiveSchemas, operation)
+          ? archives.execute(operation as ArchiveOperation, input)
+          : Object.hasOwn(generationSchemas, operation)
+            ? await generations.execute(operation as GenerationOperation, input)
+            : Object.hasOwn(templateSchemas, operation)
+              ? await templates.execute(operation as TemplateOperation, input)
+              : Object.hasOwn(exportSchemas, operation)
+                ? await exports.execute(operation as ExportOperation, input)
+                : workspace.execute(operation as Operation, input as Input<Operation>);
       reply(response, 200, result, origin);
     };
     const handled = handle().catch((error) => {
@@ -229,6 +238,7 @@ export async function serve(options: Options): Promise<Service> {
       });
       // Reversible archive byte streams abort; project commits remain workspace-owned.
       archives.quiesce();
+      resources.quiesce();
       // Accepted work and buffered/streamed responses must finish before unused connections retire.
       await Promise.allSettled([...requests]);
       server.closeAllConnections();
@@ -241,6 +251,7 @@ export async function serve(options: Options): Promise<Service> {
       (closing ??= (async () => {
         await quiesce();
         archives.close();
+        resources.close();
         exports.close();
         previews.close();
         workspace.close();

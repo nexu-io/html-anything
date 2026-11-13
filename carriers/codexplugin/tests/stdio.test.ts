@@ -8,12 +8,12 @@ import { fileURLToPath } from "node:url";
 import { Client } from "@modelcontextprotocol/client";
 import { StdioClientTransport } from "@modelcontextprotocol/client/stdio";
 import { observeProcesses, readDirectory } from "@odsuite/sidecar";
+import type { Output } from "@open-motion/daemon/contract";
 import { schemas } from "@open-motion/daemon/contract";
 import type { Status } from "@open-motion/standalone";
 import {
   type Artifact,
   initialFiles,
-  type Output,
   type Project,
   resourceLimit,
   type SessionDetail,
@@ -203,29 +203,53 @@ it("runs a relocated closed plugin through actual SDK stdio, real health and cle
         expectedRevision: saved.revision,
         path: "assets/maximum.wav",
         name: "Maximum PCM",
-        data: encoded,
+        digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`,
+        bytes: bytes.length,
       },
-      importedResult = await client.callTool({ name: "resource_import", arguments: resourceCommand });
+      empty = await client.callTool({ name: "resource_import", arguments: resourceCommand });
+    expect(empty.structuredContent).toEqual({ project: null });
+    const uploaded = await client.callTool({
+        name: "resource_upload",
+        arguments: { requestId: randomUUID(), digest: resourceCommand.digest, bytes: bytes.length },
+      }),
+      ticket = uploaded.structuredContent as unknown as { id: string; url: string };
+    expect(
+      (
+        await fetch(ticket.url, {
+          method: "POST",
+          headers: { "content-type": "application/octet-stream" },
+          body: bytes,
+        })
+      ).status,
+    ).toBe(200);
+    const importedResult = await client.callTool({
+      name: "resource_import",
+      arguments: { ...resourceCommand, uploadId: ticket.id },
+    });
     expect(importedResult.isError).not.toBe(true);
-    const imported = importedResult.structuredContent as unknown as Project;
+    const imported = (importedResult.structuredContent as unknown as { project: Project }).project;
     expect(imported.resources[0]).toMatchObject({ bytes: resourceLimit, type: "audio/wav" });
-    expect((await client.callTool({ name: "resource_import", arguments: resourceCommand })).structuredContent).toEqual(
-      imported,
-    );
+    expect((await client.callTool({ name: "resource_import", arguments: resourceCommand })).structuredContent).toEqual({
+      project: imported,
+    });
     const readResult = await client.callTool({
       name: "resource_read",
       arguments: { ...owner, revision: imported.revision, path: "assets/maximum.wav" },
     });
     expect(readResult.isError).not.toBe(true);
     const resourceRead = readResult.structuredContent as unknown as Output<"resource_read">;
-    expect(resourceRead.data === encoded).toBe(true);
+    expect(Buffer.from(await (await fetch(resourceRead.url)).arrayBuffer()).toString("base64") === encoded).toBe(true);
     expect(JSON.stringify(readResult.content).length).toBeLessThan(1024);
     const httpBytes = await fetch(`${bootstrap.daemon}/api/resource_read`, {
       method: "POST",
       headers: { authorization: `Bearer ${bootstrap.token}`, "content-type": "application/json" },
       body: JSON.stringify({ ...owner, revision: imported.revision, path: "assets/maximum.wav" }),
     });
-    expect((await httpBytes.json()).data === encoded).toBe(true);
+    const httpTicket = await httpBytes.json();
+    expect(Buffer.from(await (await fetch(httpTicket.url)).arrayBuffer()).toString("base64") === encoded).toBe(true);
+    expect(resourceRead.resource).toEqual(httpTicket.resource);
+    await client.callTool({ name: "resource_release", arguments: { id: resourceRead.id } });
+    await client.callTool({ name: "resource_release", arguments: { id: httpTicket.id } });
     await client.close();
     const directory = await readDirectory(data);
     expect(directory.manager.phase).toBe("closed");

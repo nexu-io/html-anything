@@ -1,3 +1,12 @@
+import {
+  type ResourceInput,
+  type ResourceOperation,
+  type ResourceOutput,
+  resourceSchemas,
+} from "./transport/resource.js";
+
+export { type ResourceDownload, type ResourceUpload, resourceTransferLimits } from "./transport/resource.js";
+
 import { type ArchiveInput, type ArchiveOperation, type ArchiveOutput, archiveSchemas } from "./content/archive.js";
 
 export {
@@ -21,26 +30,52 @@ import {
 } from "@open-motion/templates/contract";
 import {
   projectEntry,
-  type Operation as W,
   type Input as WI,
   type Output as WO,
+  type Operation as WorkspaceOperation,
   schemas as workspace,
   descriptions as workspaceDescriptions,
 } from "@open-motion/workspace/contract";
 
 export { Fault } from "@open-motion/workspace/contract";
-export const schemas = { ...workspace, ...exportSchemas, ...templateSchemas, ...generationSchemas, ...archiveSchemas };
-export type Operation = W | ExportOperation | TemplateOperation | GenerationOperation | ArchiveOperation;
+
+type W = Exclude<WorkspaceOperation, "resource_import" | "resource_read">;
+export const schemas = {
+  ...workspace,
+  ...exportSchemas,
+  ...templateSchemas,
+  ...generationSchemas,
+  ...archiveSchemas,
+  ...resourceSchemas,
+};
+export type Operation =
+  | W
+  | ExportOperation
+  | TemplateOperation
+  | GenerationOperation
+  | ArchiveOperation
+  | ResourceOperation;
 type Inputs = { [K in W]: WI<K> } & { [K in ExportOperation]: ExportInput<K> } & {
   [K in TemplateOperation]: TemplateInput<K>;
-} & { [K in GenerationOperation]: GenerationInput<K> } & { [K in ArchiveOperation]: ArchiveInput<K> };
+} & { [K in GenerationOperation]: GenerationInput<K> } & { [K in ArchiveOperation]: ArchiveInput<K> } & {
+  [K in ResourceOperation]: ResourceInput<K>;
+};
 export type Input<K extends Operation> = Inputs[K];
 type Outputs = { [K in W]: WO<K> } & { [K in ExportOperation]: ExportOutput<K> } & {
   [K in TemplateOperation]: TemplateOutput<K>;
-} & { [K in GenerationOperation]: GenerationOutput<K> } & { [K in ArchiveOperation]: ArchiveOutput<K> };
+} & { [K in GenerationOperation]: GenerationOutput<K> } & { [K in ArchiveOperation]: ArchiveOutput<K> } & {
+  [K in ResourceOperation]: ResourceOutput<K>;
+};
 export type Output<K extends Operation> = Outputs[K];
 export const descriptions: Record<Operation, string> = {
   ...workspaceDescriptions,
+  resource_import:
+    "Confirm the original resource receipt first. With no receipt/uploadId returns project:null; a verified raw upload commits one workspace resource/history transaction. Keep requestId/intent for explicit retry, including after restart.",
+  resource_read:
+    "Issue a temporary read-only binary resource link for an owned immutable revision. Download outside MCP/JSON and release the ticket; never embeds base64 or exposes a host path.",
+  resource_upload:
+    "Reserve temporary bounded capacity for fixed raw bytes/digest. POST application/octet-stream to the business URL outside JSON/MCP; no host path or arbitrary URL input.",
+  resource_release: "Revoke future resource-ticket access; active transfers retain capacity until actual drain.",
   archive_export:
     "Freeze an explicitly owned revision as a bounded source/media ZIP and issue a temporary read-only resource link. Release its ticket after download.",
   archive_upload:

@@ -43,12 +43,17 @@ export class Editor {
   private current() {
     return this.project ? { artifactId: this.project.artifactId, revision: this.project.revision } : null;
   }
-  private async mutate<K extends Operation>(operation: K, input: Omit<Input<K>, "requestId">): Promise<Output<K>> {
+  private async mutate<K extends Operation>(
+    operation: K,
+    input: Omit<Input<K>, "requestId">,
+    transfer?: (input: Input<K>) => Promise<Output<K>>,
+  ): Promise<Output<K>> {
     const signature = JSON.stringify([operation, input]);
     if (this.pending && this.pending.signature !== signature) throw new Error("先重试尚未确认的操作");
     this.pending ??= { signature, requestId: crypto.randomUUID() };
     try {
-      const result = await this.client.execute(operation, { ...input, requestId: this.pending.requestId } as Input<K>);
+      const command = { ...input, requestId: this.pending.requestId } as Input<K>;
+      const result = await (transfer ? transfer(command) : this.client.execute(operation, command));
       this.pending = undefined;
       return result;
     } catch (error) {
@@ -326,8 +331,12 @@ export class Editor {
     };
     await this.retryRefresh();
   }
-  async importResource(input: Omit<Input<"resource_import">, "requestId">) {
-    this.project = await this.resourceChange("resource_import", input);
+  async importResource(input: Omit<Input<"resource_import">, "requestId" | "uploadId">, file: Blob) {
+    const result = await this.resourceChange("resource_import", input, (command) =>
+      this.client.importResource(command, file),
+    );
+    if (!result.project) throw new Error("资源写入收据缺失");
+    this.project = result.project;
   }
   async removeResource(input: Omit<Input<"resource_remove">, "requestId">) {
     this.project = await this.resourceChange("resource_remove", input);
@@ -335,7 +344,8 @@ export class Editor {
   private async resourceChange<K extends "resource_import" | "resource_remove">(
     operation: K,
     input: Omit<Input<K>, "requestId">,
-  ): Promise<Project> {
+    transfer?: (input: Input<K>) => Promise<Output<K>>,
+  ): Promise<Output<K>> {
     this.writable();
     const before = this.project;
     if (
@@ -347,7 +357,7 @@ export class Editor {
       before.revision !== input.expectedRevision
     )
       throw new Error("资源操作的工程版本已过期或尚未保存");
-    const result = await this.mutate(operation, input);
+    const result = await this.mutate(operation, input, transfer);
     if (this.project !== before) throw new Error("资源写入已确认，但本地工程上下文已改变");
     return result;
   }

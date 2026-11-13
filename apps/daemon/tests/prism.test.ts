@@ -9,8 +9,8 @@ import { host } from "@open-motion/templates/host";
 import type { PrismConfig, Publication } from "@open-motion/templates/prism";
 import { initialFiles } from "@open-motion/workspace";
 import { expect, it } from "vitest";
-import { Client } from "@/client.js";
 import { serve } from "@/service.js";
+import { Client } from "@/transport/client.js";
 
 it("uses actual HTTP, sidecar and blob for verified templates, offline/corrupt updates, receipt replay and cold restoration", async () => {
   const root = join(fileURLToPath(new URL("../../../.artifacts/", import.meta.url)), "prism", randomUUID());

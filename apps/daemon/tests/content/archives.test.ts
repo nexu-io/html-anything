@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { request as httpRequest } from "node:http";
 import { join } from "node:path";
@@ -7,9 +7,9 @@ import { channel, digest, namespace } from "@odsuite/protocol";
 import { managerEndpoint, observeProcesses, readDirectory, serve } from "@odsuite/sidecar";
 import { initialFiles } from "@open-motion/workspace";
 import { expect, it } from "vitest";
-import { Client } from "@/client.js";
 import type { ArchiveUpload } from "@/contract.js";
 import { serve as daemonServe } from "@/service.js";
+import { Client } from "@/transport/client.js";
 
 function wave() {
   const b = Buffer.alloc(6 * 1024 ** 2);
@@ -83,7 +83,7 @@ it("transfers a ZIP beyond JSON limits, retires the source and confirms the orig
     const wav = wave(),
       data = wav.toString("base64");
     for (let index = 0; index < 6; index++)
-      project = await sender.api.execute("resource_import", {
+      project = await ingest(sender.api, {
         ...owner,
         requestId: randomUUID(),
         expectedRevision: project.revision,
@@ -168,12 +168,12 @@ it("transfers a ZIP beyond JSON limits, retires the source and confirms the orig
     expect(await cold.api.execute("archive_import", { ...intent, uploadId: upload.id })).toEqual(created);
     expect(await cold.api.execute("project_read", importedOwner)).toEqual(later);
     expect((await cold.api.execute("session_get", { sessionId: destination.id })).artifacts).toHaveLength(1);
-    const historical = await cold.api.execute("resource_read", {
+    const historical = await cold.api.readResource({
       ...importedOwner,
       revision: frozen.revision,
       path: "assets/sound0.wav",
     });
-    expect(Buffer.from(historical.data, "base64").equals(wav)).toBe(true);
+    expect(Buffer.from(await historical.data.arrayBuffer()).equals(wav)).toBe(true);
     report.acceptance = {
       archive: { digest: ticket.digest, bytes: ticket.bytes },
       resources: imported.resources.length,
@@ -318,3 +318,17 @@ it("bounds tickets, verifies uploads and releases business grants without creati
     );
   }
 }, 15000);
+
+async function ingest(
+  client: Client,
+  input: Omit<Parameters<Client["importResource"]>[0], "digest" | "bytes"> & { data: string },
+) {
+  const { data, ...intent } = input,
+    bytes = Buffer.from(data, "base64");
+  const result = await client.importResource(
+    { ...intent, digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.length },
+    new Blob([Uint8Array.from(bytes)]),
+  );
+  if (!result.project) throw Error("resource fixture import was not confirmed");
+  return result.project;
+}

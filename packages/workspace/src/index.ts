@@ -18,6 +18,7 @@ import { Database } from "./database.js";
 import { sources } from "./native.js";
 import { Projects } from "./projects.js";
 import { resourceBytesLimit, resourceCountLimit, resourceLimit } from "./resources/contract.js";
+import { checksum } from "./resources/formats.js";
 import { Resources } from "./resources/store.js";
 import { Selections } from "./selection.js";
 import { Sessions } from "./sessions.js";
@@ -47,10 +48,22 @@ export class Workspace {
     const data = parsed.data as Record<string, unknown>;
     if ("files" in data) data.files = sources(data.files as SourceFile[]);
     const perform = () => this.dispatch(operation, data);
-    if (typeof data.requestId === "string")
+    if (operation !== "resource_import" && typeof data.requestId === "string")
       return this.db.request(operation, { ...data, requestId: data.requestId }, perform) as Output<K>;
     // Reads also pin one SQLite snapshot across ownership/revision queries.
     return this.db.transaction(perform, false) as Output<K>;
+  }
+  /** Caller resolves bounded bytes outside SQLite; receipt replay precedes byte resolution. */
+  importResource(input: Input<"resource_import">, bytes: Uint8Array): Project {
+    if (this.closed) throw new Fault("integrity", "workspace is closed");
+    const parsed = schemas.resource_import.safeParse(input);
+    if (!parsed.success) throw new Fault("invalid", "invalid resource import intent");
+    const data = parsed.data;
+    return this.db.request("resource_import", data, () => {
+      if (bytes.byteLength !== data.bytes || checksum(bytes) !== data.digest)
+        throw new Fault("integrity", "resource bytes differ from fixed import intent");
+      return this.resources.importBytes(data, Buffer.from(bytes));
+    });
   }
   /** Confirm a committed immutable source intent before any external source resolution. */
   sourceReceipt(input: SourceIntent): Artifact | undefined {
@@ -136,8 +149,12 @@ export class Workspace {
         return this.sessions.message(input as Input<"message_append">);
       case "artifact_create":
         return this.projects.create(input as Input<"artifact_create">, []);
-      case "resource_import":
-        return this.resources.import(input as Input<"resource_import">);
+      case "resource_import": {
+        const data = input as Input<"resource_import">,
+          project = this.db.receipt<Project>("resource_import", data);
+        if (!project) this.resources.prepare(data);
+        return { project: project ?? null };
+      }
       case "resource_remove":
         return this.resources.remove(input as Input<"resource_remove">);
       case "resource_read":

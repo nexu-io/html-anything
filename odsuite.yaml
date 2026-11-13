@@ -28,6 +28,7 @@ guard:
       - packages/templates/src/prism
       - packages/render/src/jobs
       - apps/daemon/src/content
+      - apps/daemon/src/transport
       - apps/daemon/tests/content
       - apps/daemon/src/content/guidance
       - apps/daemon/src/exports

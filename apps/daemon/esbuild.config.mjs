@@ -6,8 +6,8 @@ await build({
   entryPoints: {
     index: "src/index.ts",
     main: "src/main.ts",
-    client: "src/client.ts",
-    mcp: "src/mcp.ts",
+    client: "src/transport/client.ts",
+    mcp: "src/transport/mcp.ts",
     contract: "src/contract.ts",
   },
   outdir: "dist",

@@ -35,10 +35,17 @@ export async function readCandidate(root: string, candidate: Candidate) {
     await handle.close();
   }
 }
-export async function persistCandidate(root: string, job: Job, bytes: Uint8Array) {
-  const data = Buffer.from(bytes),
-    resource = identifyResource("assets/candidate.png", "Candidate", data);
+/** Provider policy is independent of the larger user-import contract; check before decoding or caching. */
+export function identifyCandidate(bytes: Uint8Array) {
+  if (!schema.shape.bytes.safeParse(bytes.byteLength).success)
+    throw new Fault("invalid", "candidate bytes outside supported bounds");
+  const resource = identifyResource("assets/candidate.png", "Candidate", Buffer.from(bytes));
   if (resource.type !== "image/png") throw new Fault("invalid", "only PNG generation is supported");
+  return resource;
+}
+export async function persistCandidate(root: string, job: Job, bytes: Uint8Array) {
+  const resource = identifyCandidate(bytes),
+    data = Buffer.from(bytes);
   const candidate: Candidate = {
     jobId: job.id,
     contentHash: resource.digest,

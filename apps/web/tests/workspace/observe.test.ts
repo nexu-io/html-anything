@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -284,7 +284,7 @@ it("adopts remote media membership while preserving a local text draft", () =>
       "iVBORw0KGgoAAAANSUhEUgAAACAAAAAYCAYAAACbU/80AAAAPklEQVR4AcXBMQEAIAzAsK5CuPEvChtMRpN5535CEpOYxCQmMYlJTGISk5jEJCYxiUlMYhKTmMQkJjGJSWwBYl8CWwMRvGQAAAAASUVORK5CYII=";
     editor.edit(editor.draft + "local text");
     const original = db.execute("project_read", owner);
-    const imported = db.execute("resource_import", {
+    const imported = ingest(db, {
       ...owner,
       requestId: randomUUID(),
       expectedRevision: original.revision,
@@ -390,3 +390,16 @@ it("rejects a transient session title between equal metadata fences", () =>
     expect(await reader.observe()).toBe(true);
     expect(reader.session?.title).toBe("Shared");
   }));
+
+/** Test fixture construction; production transports accept raw bytes and digest metadata. */
+function ingest(
+  db: Workspace,
+  input: Omit<Parameters<Workspace["importResource"]>[0], "digest" | "bytes"> & { data: string },
+) {
+  const { data, ...intent } = input,
+    bytes = Buffer.from(data, "base64");
+  return db.importResource(
+    { ...intent, digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.length },
+    bytes,
+  );
+}

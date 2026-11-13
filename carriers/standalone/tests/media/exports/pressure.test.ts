@@ -104,7 +104,7 @@ async function exercise(native: boolean) {
     let current = await client.execute("project_read", owner);
     const lengths = [...Array.from({ length: 10 }, () => 6 * mib), Math.floor((4 * mib - png.length) / 4) * 4];
     for (const [index, length] of lengths.entries()) {
-      current = await client.execute("resource_import", {
+      current = await ingest(client, {
         requestId: randomUUID(),
         ...owner,
         expectedRevision: current.revision,
@@ -113,7 +113,7 @@ async function exercise(native: boolean) {
         data: wave(length, index).toString("base64"),
       });
     }
-    current = await client.execute("resource_import", {
+    current = await ingest(client, {
       requestId: randomUUID(),
       ...owner,
       expectedRevision: current.revision,
@@ -129,7 +129,7 @@ async function exercise(native: boolean) {
     expect(current.resources).toHaveLength(12);
     expect(new Set(current.resources.map((r) => r.digest)).size).toBe(12);
     await expect(
-      client.execute("resource_import", {
+      ingest(client, {
         requestId: randomUUID(),
         ...owner,
         expectedRevision: current.revision,
@@ -139,7 +139,7 @@ async function exercise(native: boolean) {
       }),
     ).rejects.toThrow();
     expect(await client.execute("project_read", owner)).toEqual(current);
-    const read = await client.execute("resource_read", {
+    const read = await readResource(client, {
       ...owner,
       revision: original.revision,
       path: "assets/tone0.wav",
@@ -241,7 +241,7 @@ async function exercise(native: boolean) {
     });
     expect(hash(Buffer.from(await (await fetch(imageUrl)).arrayBuffer()))).toBe(hash(png));
     await expect(
-      client.execute("resource_read", { ...owner, revision: current.revision, path: "assets/poster.png" }),
+      readResource(client, { ...owner, revision: current.revision, path: "assets/poster.png" }),
     ).rejects.toThrow();
     await client.closePreview(preview.id);
     await page.close();
@@ -296,9 +296,9 @@ async function exercise(native: boolean) {
     }
     await held.closePreview(survivor.id);
     expect((await fetch(imageUrl)).status).toBe(404);
-    expect(
-      (await client.execute("resource_read", { ...owner, revision: original.revision, path: "assets/tone0.wav" })).data,
-    ).toBe(read.data);
+    expect((await readResource(client, { ...owner, revision: original.revision, path: "assets/tone0.wav" })).data).toBe(
+      read.data,
+    );
     report.totalResourceBytes = total;
     report.resourceCount = original.resources.length;
     report.owner = owner;
@@ -318,8 +318,7 @@ async function exercise(native: boolean) {
     runtime = await open({ root, scope, version: "0.6.1-dev.1", ...(native ? { tools: await tools() } : {}) });
     expect(await runtime.execute("project_read", owner)).toEqual(current);
     expect(
-      (await runtime.execute("resource_read", { ...owner, revision: original.revision, path: "assets/tone0.wav" }))
-        .data,
+      (await readResource(runtime, { ...owner, revision: original.revision, path: "assets/tone0.wav" })).data,
     ).toBe(read.data);
     if (first)
       expect((await runtime.execute("export_read", { ...owner, id: first.id })).result?.verification.digest).toBe(
@@ -351,3 +350,31 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
   () => exercise(true),
   240000,
 );
+
+async function ingest(
+  client: Client,
+  input: Omit<Parameters<Client["importResource"]>[0], "digest" | "bytes"> & { data: string },
+) {
+  const { data, ...intent } = input,
+    bytes = Buffer.from(data, "base64");
+  const result = await client.importResource(
+    { ...intent, digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.length },
+    new Blob([Uint8Array.from(bytes)]),
+  );
+  if (!result.project) throw Error("resource fixture import was not confirmed");
+  return result.project;
+}
+
+async function readResource(
+  runtime: Pick<Awaited<ReturnType<typeof open>>, "execute">,
+  input: { sessionId: string; artifactId: string; revision: string; path: string },
+) {
+  const ticket = await runtime.execute("resource_read", input);
+  try {
+    const response = await fetch(ticket.url);
+    expect(response.status).toBe(200);
+    return { resource: ticket.resource, data: Buffer.from(await response.arrayBuffer()).toString("base64") };
+  } finally {
+    await runtime.execute("resource_release", { id: ticket.id });
+  }
+}

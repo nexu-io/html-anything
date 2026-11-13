@@ -1,4 +1,4 @@
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { createReadStream } from "node:fs";
 import { mkdtemp, readFile, realpath, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -86,7 +86,7 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
       expect(workspace.execute("project_snapshot", { ...owner, revision: silent.revision })).toEqual(snapshot.project);
       expect(workspace.execute("project_read", owner).revision).toBe(current.revision);
       results.push({ kind: "silent", ...silent });
-      current = workspace.execute("resource_import", {
+      current = ingest(workspace, {
         ...owner,
         requestId: randomUUID(),
         expectedRevision: current.revision,
@@ -193,3 +193,15 @@ it.runIf(Boolean(process.env.OPEN_MOTION_NATIVE_MANIFEST))(
   },
   180000,
 );
+
+function ingest(
+  db: Workspace,
+  input: Omit<Parameters<Workspace["importResource"]>[0], "digest" | "bytes"> & { data: string },
+) {
+  const { data, ...intent } = input,
+    bytes = Buffer.from(data, "base64");
+  return db.importResource(
+    { ...intent, digest: `sha256:${createHash("sha256").update(bytes).digest("hex")}`, bytes: bytes.length },
+    bytes,
+  );
+}

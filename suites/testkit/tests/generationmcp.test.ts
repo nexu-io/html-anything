@@ -184,9 +184,9 @@ it("keeps a verified generated PNG durable across stock SDK adoption, receipt re
     expect(await call("generation_adopt", adopt)).toEqual(adopted);
     expect(adopted.files).toEqual(original.files);
     expect(adopted.resources).toHaveLength(1);
-    expect((await call("resource_read", { ...owner, revision: adopted.revision, path: adopt.path })).data).toBe(
-      result.data,
-    );
+    const mediaRead = await call("resource_read", { ...owner, revision: adopted.revision, path: adopt.path });
+    expect(Buffer.from(await (await fetch(mediaRead.url)).arrayBuffer()).toString("base64")).toBe(result.data);
+    await call("resource_release", { id: mediaRead.id });
     const edited = await call("project_save", {
       ...owner,
       requestId: randomUUID(),

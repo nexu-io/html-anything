@@ -2,9 +2,8 @@ import { readFile } from "node:fs/promises";
 import type { Library } from "@odsuite/blob";
 import type { Digest } from "@odsuite/protocol";
 import type { Context } from "@odsuite/sidecar";
-import { identifyResource } from "@open-motion/workspace";
 import { Fault } from "@open-motion/workspace/contract";
-import { persistCandidate } from "./candidates.js";
+import { identifyCandidate, persistCandidate } from "./candidates.js";
 import type { Job } from "./contract.js";
 import { providerDescriptor } from "./contract.js";
 import type { Provider } from "./provider.js";
@@ -226,10 +225,10 @@ export class Controller {
     throw Error("generation owner stopped");
   }
   private async complete(value: Job, data: Uint8Array) {
-    const bytes = Buffer.from(data);
-    let facts: ReturnType<typeof identifyResource>;
+    const bytes = data;
+    let facts: ReturnType<typeof identifyCandidate>;
     try {
-      facts = identifyResource("assets/candidate.png", "Candidate", bytes);
+      facts = identifyCandidate(bytes);
     } catch {
       throw new InvalidPNG("Provider result failed PNG verification");
     }

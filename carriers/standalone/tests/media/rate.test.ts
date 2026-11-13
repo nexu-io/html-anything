@@ -208,7 +208,7 @@ it("edits authored fixed audio rate independently of transport through retries, 
     expect(saved.files.find((f) => f.path === "index.html")).toEqual(files()[0]);
     expect(saved.files.find((f) => f.path === "scenes/card.html")?.content.match(/<audio\b/g)).toHaveLength(1);
     expect(
-      (await runtime.execute("resource_read", { ...owner, revision: saved.revision, path: resource.path })).data ===
+      (await readResource(runtime, { ...owner, revision: saved.revision, path: resource.path })).data ===
         wave().toString("base64"),
     ).toBe(true);
     await page.reload();
@@ -260,3 +260,17 @@ it("edits authored fixed audio rate independently of transport through retries, 
     await writeFile(join(evidence, "report.json"), JSON.stringify(report, null, 2));
   }
 }, 60000);
+
+async function readResource(
+  runtime: Pick<Awaited<ReturnType<typeof open>>, "execute">,
+  input: { sessionId: string; artifactId: string; revision: string; path: string },
+) {
+  const ticket = await runtime.execute("resource_read", input);
+  try {
+    const response = await fetch(ticket.url);
+    expect(response.status).toBe(200);
+    return { resource: ticket.resource, data: Buffer.from(await response.arrayBuffer()).toString("base64") };
+  } finally {
+    await runtime.execute("resource_release", { id: ticket.id });
+  }
+}
