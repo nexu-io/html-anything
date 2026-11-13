@@ -94,49 +94,22 @@ test('Git selection covers all push commits, renames, missing history and manual
   assert.equal((await select(beforeInstructions)).full, true, 'README command changes keep the full gate');
 });
 
-test('parallel CI preserves common gates and reuses the runtime job build', async () => {
+test('CI preserves common gates and reuses only the build from the same job', async () => {
   const ci = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
-  const runtime = ci.split('  runtime:\n')[1].split('\n  standalone:')[0];
-  const studio = ci.split('  studio:\n')[1].split('\n  runtime:')[0];
+  const standalone = ci.split('  standalone:\n')[1];
   for (const name of ['Scan tracked source and test release controls without publication credentials', 'Validate manual package selection']) {
-    const step = runtime.split(`      - name: ${name}\n`)[1].split('      - name:')[0];
+    const step = standalone.split(`      - name: ${name}\n`)[1].split('      - name:')[0];
     assert(!step.includes('        if:'), `${name} must run for presentation docs too`);
   }
   for (const name of ['Download full-bundle media explicitly', 'Install rendering test tools',
-    'Install locked Motion dependencies', 'Check and build Studio',
+    'Install locked Motion dependencies', 'Check and build Studio', 'Studio regression',
     'Validate standalone installation and packaging', 'Build phase-one ZIP and exercise all public tools',
     'Build immutable standalone artifacts', 'Generate candidate installation guide', 'Retain candidate installation guide for review']) {
-    const step = runtime.split(`      - name: ${name}\n`)[1].split('      - name:')[0];
+    const step = standalone.split(`      - name: ${name}\n`)[1].split('      - name:')[0];
     assert(step.includes("steps.scope.outputs.full == 'true'"), name);
   }
-  assert(runtime.indexOf('npm run build:studio') < runtime.indexOf('scripts/package.ts --mcp-profile=phase1'));
-  assert(!runtime.includes('npm run package:phase1'));
-  assert(!runtime.includes('name: Studio regression'), 'DOM regression must not also run serially in runtime');
-  assert(!studio.includes('needs:'), 'Studio can start independently of the runtime job');
-  for (const name of ['Install locked Motion dependencies', 'Studio regression']) {
-    const step = studio.split(`      - name: ${name}\n`)[1].split('      - name:')[0];
-    assert(step.includes("steps.scope.outputs.full == 'true'"), name);
-  }
-  assert(!studio.includes('npm run build:studio'), 'DOM suites do not require a production build');
+  assert(standalone.indexOf('npm run build:studio') < standalone.indexOf('scripts/package.ts --mcp-profile=phase1'));
+  assert(!standalone.includes('npm run package:phase1'));
   const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
   assert(pkg.scripts['package:phase1'].startsWith('npm run build:studio &&'), 'The public packaging command still builds its input');
-});
-
-
-test('the existing required standalone check rejects either parallel job failing, cancelling or skipping', async () => {
-  const ci = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
-  const gate = ci.split('  standalone:\n')[1];
-  assert(gate.includes('needs: [runtime, studio]') && gate.includes('if: always()'));
-  assert(gate.includes('RUNTIME_RESULT: ${{ needs.runtime.result }}'));
-  assert(gate.includes('STUDIO_RESULT: ${{ needs.studio.result }}'));
-  const script = gate.split('        run: |\n')[1].replace(/^ {10}/gm, '');
-  for (const runtime of ['success', 'failure', 'cancelled', 'skipped']) {
-    for (const studio of ['success', 'failure', 'cancelled', 'skipped']) {
-      const run = () => execFileSync('bash', ['-e', '-o', 'pipefail', '-c', script], {
-        env: { ...process.env, RUNTIME_RESULT: runtime, STUDIO_RESULT: studio }, stdio: 'pipe',
-      });
-      if (runtime === 'success' && studio === 'success') run();
-      else assert.throws(run, `${runtime}/${studio} must not pass the required check`);
-    }
-  }
 });
