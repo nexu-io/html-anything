@@ -14,7 +14,7 @@ The [OpenMotion logo](openmotion-logo.svg) uses the symbol and Albert Sans wordm
 
 ## Community badges
 
-The [Discord badge](badges/discord.svg) matches the existing 20-pixel README badge row and links to the dedicated OpenMotion server. The tracked-source release scan rejects company Feishu links and their invite tokens, so the community badge row keeps the public Discord server as the only chat entry.
+The [Discord badge](badges/discord.svg), text-only [Feishu badge](badges/feishu.svg) and [Chinese Feishu badge](badges/feishu.zh-CN.svg) match the existing 20-pixel README badge row. They link to the dedicated public OpenMotion communities supplied by the project owner.
 
 ## Agent logos
 
