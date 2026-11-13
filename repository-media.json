@@ -404,6 +404,12 @@
       "url": "https://releases.open-design.ai/open-motion/media/sha256/3181f1208ab8c39e8eaeb1abe638f20be6400ff4a6fb98fdce62154d332e93ae.gif"
     },
     {
+      "path": "docs/readme/motion-design/wireframe-portal-title.github.gif",
+      "bytes": 836877,
+      "sha256": "d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4",
+      "url": "https://releases.open-design.ai/open-motion/media/sha256/d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4.gif"
+    },
+    {
       "path": "docs/readme/people/aiwithsachi.gif",
       "bytes": 1561717,
       "sha256": "e04f9c2fdfb1bce2a2f83bbf28bde8765af58c589bb52b904694ff8113d61a7e",
@@ -582,12 +588,6 @@
       "bytes": 7014953,
       "sha256": "0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a",
       "url": "https://releases.open-design.ai/open-motion/media/sha256/0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a.gif"
-    },
-    {
-      "path": "library/skills/openmotion-design-remix/previews/wireframe-portal-title.github.gif",
-      "bytes": 836877,
-      "sha256": "d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4",
-      "url": "https://releases.open-design.ai/open-motion/media/sha256/d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4.gif"
     }
   ]
 }
