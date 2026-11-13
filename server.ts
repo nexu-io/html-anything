@@ -300,7 +300,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const directory = (store.workspaceStore ?? store).directory;
       if (req.method === 'PUT') {
         const reason = trackingLockReason();
-        if (reason) return json(res, 403, { error: reason === 'test_build' ? 'TRACKING_DISABLED_IN_TEST_BUILD' : 'TRACKING_DISABLED_BY_ENVIRONMENT' });
+        if (reason) return json(res, 403, { error: 'TRACKING_DISABLED_BY_ENVIRONMENT' });
         const data = await input(req, 1024);
         if (!data || Object.keys(data).length !== 1 || typeof data.enabled !== 'boolean') return json(res, 400, { error: 'INVALID_TRACKING_PREFERENCE' });
         await saveTrackingPreference(directory, data.enabled);

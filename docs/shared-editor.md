@@ -37,14 +37,14 @@ flowchart LR
 | 显式打开预览 | 按需启动或复用原生 Studio；返回已有完整/嵌入链接契约 |
 | 全部 MCP 会话退出 | 后台继续服务网页与导出；不会因某个 Agent 退出取消其他人的工作 |
 | 用户停止后台 | 私有停止接口拒绝正在执行的 MCP、视频导出或素材任务；空闲时关闭子服务并退出 |
-| Compatible plugin/backend version or build change | Existing phase-one connections continue through the same workspace authority when it advertises the same MCP API protocol, requested Tool and stable/test tracking policy; keep running exports and request IDs intact. |
-| Incompatible authority/API protocol, missing Tool, stable/test policy mismatch or legacy version/build mismatch | Refuse before dispatch with expected/actual identity. Never automatically kill or launch a competing backend. |
+| Compatible plugin/backend version or build change | Existing phase-one connections continue through the same workspace authority when it advertises the same MCP API protocol and requested Tool; keep running exports and request IDs intact. |
+| Incompatible authority/API protocol, missing Tool or legacy version/build mismatch | Refuse before dispatch with expected/actual identity. Never automatically kill or launch a competing backend. |
 | A live MCP client's plugin directory was replaced or removed | Phase-one calls keep their stdio connection and reuse a compatible live backend. Internal legacy connections return `MCP_RUNTIME_RELOAD_REQUIRED`. A transport already closed by the host cannot be revived by the plugin. |
 | 同目录已有旧版预览服务 | 拒绝另外启动共享后台；退出旧服务后重试 |
 
 macOS 使用系统 `/usr/bin/perl` 取得 `flock` 后直接 exec Node；Perl 不常驻。锁描述符同时由后台和 Studio 守卫持有。后台死亡后，守卫先清理旧 Studio，再释放锁，新后台才能启动。锁文件保留不等于锁仍被占用；不通过删除锁文件来恢复。
 
-Phase-one compatibility is independent of the editor's implementation build within the same stable/test tracking policy. Authenticated private health and public preview health advertise `mcp.protocol` and `mcp.tools`; forwarding retains service, workspace, instance and authority-protocol validation. Compatible updates reuse the current authority without restarting it or replaying mutations. If an idle authority is separately replaced, the next call discovers or starts the same workspace's compatible replacement using the existing stdio connection. This does not hot-reload the UI, refresh host Tool metadata or automatically install updates. See the [API compatibility contract](mcp-phase1-tools.md#phase-one-api-compatibility).
+Phase-one compatibility is independent of the editor's implementation build and release channel. Authenticated private health and public preview health advertise `mcp.protocol` and `mcp.tools`; forwarding retains service, workspace, instance and authority-protocol validation. Compatible updates reuse the current authority without restarting it or replaying mutations. If an idle authority is separately replaced, the next call discovers or starts the same workspace's compatible replacement using the existing stdio connection. This does not hot-reload the UI, refresh host Tool metadata or automatically install updates. See the [API compatibility contract](mcp-phase1-tools.md#phase-one-api-compatibility).
 
 显式停止（必须指定同一个数据目录）：
 

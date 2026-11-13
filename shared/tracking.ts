@@ -3,13 +3,12 @@ import { readFileSync, watch } from 'node:fs';
 import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { createTracker, uuid } from '../tracking/core.ts';
 import type { Entry } from '../tracking/core.ts';
-import { createNodeTracking, loadIdentity, trackingReleaseEnabled } from '../tracking/node.ts';
+import { createNodeTracking, loadIdentity } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
 import { VERSION } from '../preview.ts';
 
 export type OmTracking = ReturnType<typeof createTracker<typeof omEvents>>;
 export function trackingLockReason() {
-  if (!trackingReleaseEnabled(VERSION)) return 'test_build' as const;
   return ['0', 'false', 'off'].includes(process.env.OPENMOTION_TELEMETRY?.toLowerCase() ?? '') || process.env.DO_NOT_TRACK === '1'
     ? 'environment' as const : null;
 }

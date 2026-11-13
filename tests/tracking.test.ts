@@ -102,20 +102,29 @@ test('PostHog adapter uses public ingest only, privacy fields and real receipt s
   assert.equal(Object.hasOwn(enriched[0].batch[0].properties, '$ip'), false);
 });
 
-test('test and local versions cannot report even when enabled or given a test-run override', async () => {
-  let sends = 0;
+test('all application versions report in development, test and production environments', async t => {
   const identity = { installation_id: crypto.randomUUID(), utm_source: null, created_at: new Date().toISOString() };
-  for (const appVersion of ['0.6.4-test.8', '0.6.4-test.42.2', '0.6.4-local.1', '0.6.4-beta.1', 'invalid']) {
-    const options = { registry: omEvents, identity, appVersion, entrypoint: 'mcp' as const, enabled: true,
-      env: 'test' as const, testRunId: crypto.randomUUID(), host: 'https://us.i.posthog.com', token: 'phc_test' };
-    const tracking = createNodeTracking(options);
-    tracking.setEnabled(true);
-    assert.equal(tracking.enabled(), false); assert.equal(tracking.ingest(packet()), 'disabled');
-    assert.equal(await tracking.flush(), 'disabled'); tracking.close();
-    const sender = createPosthogSender({ ...options, fetch: async () => { sends++; return Response.json({ status: 'Ok' }); } });
-    assert.equal(await sender([packet()], new AbortController().signal), 'drop');
+  for (const appVersion of ['0.6.4', '0.6.4-test.8', '0.6.4-test.42.2', '0.6.4-local.1', '0.6.4-beta.1']) {
+    for (const env of ['development', 'test', 'production'] as const) {
+      const bodies: any[] = [];
+      const options = { registry: omEvents, identity, appVersion, env, entrypoint: 'mcp' as const, enabled: true,
+        flushIntervalMs: 0, host: 'https://us.i.posthog.com', token: 'phc_test' };
+      t.mock.method(globalThis, 'fetch', async (_url: any, init?: RequestInit) => {
+        bodies.push(JSON.parse(String(init?.body))); return Response.json({ status: 'Ok' });
+      });
+      const tracking = createNodeTracking(options);
+      try {
+        assert.equal(tracking.enabled(), true); assert.equal(tracking.ingest(packet()), 'queued');
+        assert.equal(await tracking.flush(), 'accepted');
+        assert.equal(await createPosthogSender(options)([packet()], new AbortController().signal), 'accepted');
+        assert.equal(bodies.length, 2);
+        for (const body of bodies) {
+          assert.equal(body.batch[0].properties.app_version, appVersion);
+          assert.equal(body.batch[0].properties.env, env);
+        }
+      } finally { tracking.close(); }
+    }
   }
-  assert.equal(sends, 0);
 });
 
 test('browser ingress rejects forged identity, worker events and oversized batches', () => fixture(async store => {

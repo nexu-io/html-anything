@@ -9,14 +9,11 @@ For new events, start with the [integration guide and agent task template](INTEG
 
 ## Reporting and user control
 
-Reporting is **on by default in stable releases** into the existing OpenDesign project (420348).
-Test and other prerelease/local application versions never report. This is enforced
-from the packaged application version, independently of CI environment variables,
-the saved preference, a custom collector or test-run overrides. The test-build
-Privacy switch is locked off and does not overwrite a saved stable-release choice.
-Stable and test clients cannot reuse each other's same-workspace backend authority;
-use the separate installation/data directories already provided by DEV packages.
-Compatible updates within the same release policy retain normal backend reuse.
+Reporting is **on by default in every application environment and version**, including
+stable releases, test/prerelease packages and local builds, into the existing
+OpenDesign project (420348). Application version and environment remain event
+properties; they do not disable collection. DEV packages retain their separate
+installation/data directories and template routing.
 OM events carry `product=openmotion`; OM reports must filter by that property,
 and shared-project reports must distinguish OM from other products. The project's
 public, write-only token and ingestion host are distributed in
@@ -29,7 +26,7 @@ to both MCP and Studio, including already-running processes and future restarts.
 Disabling clears pending queues and aborts in-flight delivery; accepted events
 cannot be recalled. A filesystem watcher propagates preference changes, and each
 enqueue/flush also checks the saved preference. Corrupt preference files fail closed.
-On stable releases, re-enabling resumes collection of new events in MCP and Studio
+Re-enabling resumes collection of new events in MCP and Studio
 without restarting. Events discarded while disabled are not buffered or replayed.
 
 `OPENMOTION_TELEMETRY=0` (also `false`/`off`) or `DO_NOT_TRACK=1` forces all collection
@@ -51,9 +48,9 @@ Use `OPENMOTION_TRACKING_ENV=test` and a UUID in
 out of product dashboards. Normal environments are `production` and `development`.
 Node/Vitest tests suppress collection unless explicitly given a test run ID; CI
 also forces collection off. No test should silently report into production funnels.
-Marked live-ingestion checks require a stable-version application running with
-`env=test`; a `-test.N` package cannot be opted into reporting. Deterministic checks
-use fake senders and extracted stable/test packages without external requests.
+Marked live-ingestion checks use `env=test` with any application version.
+Deterministic checks use fake senders and extracted stable/test/local packages
+without external requests.
 
 Studio retrieves only an enabled flag and submits semantic events to the same-origin
 `/motion-api/tracking` endpoint. The server validates the complete batch, rejects

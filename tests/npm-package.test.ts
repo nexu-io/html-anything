@@ -12,7 +12,7 @@ import { mcpRegistry } from '../mcp.ts';
 import { stableReports } from '../.github/scripts/motion-release.mjs';
 
 const json = async (file: string) => JSON.parse(await readFile(file, 'utf8'));
-async function verifyTrackingPolicy(application: string, mode: 'test' | 'stable') {
+async function verifyTrackingPolicy(application: string, mode: 'test' | 'stable' | 'local') {
   await symlink(path.resolve('node_modules'), path.join(application, 'node_modules'), process.platform === 'win32' ? 'junction' : 'dir');
   const result = JSON.parse(await runFile(process.execPath, ['--experimental-strip-types', path.resolve('tests/tracking-package.ts'), application, mode]));
   assert.equal(result.passed, true); assert.equal(result.external_requests, 0);
@@ -222,6 +222,8 @@ test('stable artifacts stage publication instead of replacing latest and retain 
     const localPkg = await json(path.join(directory, 'local-npm/package/package.json'));
     assert.equal(localPkg.private, true); assert.match(localPkg.version, /-local\.1$/);
     assert.equal((await json(local.manifest)).version, localPkg.version);
+    const localApplication = path.join(directory, 'local-app'); await extractArchive(local.application, localApplication);
+    await verifyTrackingPolicy(localApplication, 'local');
   } finally { await rm(directory, { recursive: true, force: true }); }
 });
 
