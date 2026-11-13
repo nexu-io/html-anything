@@ -2,7 +2,7 @@
 import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { I18nProvider } from '../i18n/I18n';
+import { I18nProvider, useI18n, translate } from '../i18n/I18n';
 import { DiagnosticExport } from './DiagnosticExport';
 import { recordBrowserDiagnostic } from './diagnostics';
 
@@ -49,4 +49,19 @@ it('shows a localized rate-limit error and never starts a failed download', asyn
   expect(document.querySelector('[role=alert]')?.textContent).toContain('30 秒'); expect(create).not.toHaveBeenCalled();
   expect(recordBrowserDiagnostic).toHaveBeenCalledWith('diagnostic_export_failed', expect.stringContaining('status=429'));
   expect(recordBrowserDiagnostic).not.toHaveBeenCalledWith('activity_diagnostic_export', expect.stringContaining('outcome=download_triggered'));
+});
+
+it('updates a visible download failure when the language changes without retrying', async () => {
+  const fetcher = vi.fn(async () => new Response('', { status: 429 }));
+  vi.stubGlobal('fetch', fetcher);
+  function App() {
+    const { setLocale } = useI18n();
+    return <><button onClick={() => setLocale('de')}>German</button><DiagnosticExport /></>;
+  }
+  const container = document.createElement('div'); document.body.append(container); root = createRoot(container);
+  await act(async () => root!.render(<I18nProvider initialLocale="en"><App /></I18nProvider>));
+  await act(async () => container.querySelectorAll('button')[1].click());
+  await act(async () => container.querySelector('button')!.click());
+  expect(container.querySelector('[role=alert]')?.textContent).toBe(translate('de', 'Please wait 30 seconds before exporting diagnostics again.'));
+  expect(fetcher).toHaveBeenCalledTimes(1);
 });

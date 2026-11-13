@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#ecece7",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Decisions API",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "问题栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "点状地图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "事实卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "来源标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "表格",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "优先级标",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ecece7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#171818",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ee6c30",
+      "status": "inferred"
+    },
+    {
+      "hex": "#5d7f86",
+      "status": "inferred"
+    },
+    {
+      "hex": "#75977d",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "短问题居中无衬线；结果表格和来源标签采用紧凑小字",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "浅灰网格与点状地图做背景，白色问题栏居中。问题被拆成公司规模、产品变化与关联信息，事实卡逐一出现并带来源区域。",
+      "status": "inferred"
+    },
+    {
+      "rule": "先给账户和负责人，再增加人数、近期事件与相关性列。每列从左向右补入，行的身份不变，最后通过优先级标记选出行动对象。",
+      "status": "inferred"
+    },
+    {
+      "rule": "完整表格回到问题栏下方，说明查询如何支持选择。迁移时重写决策、维度与输出动作，不只替换公司名；来源与状态应与示例数据对应。",
+      "status": "inferred"
+    }
+  ]
+}

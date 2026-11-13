@@ -17,6 +17,8 @@ Designers, creators, prompt authors and engineers are all welcome. The [OpenMoti
 
 Use the [entry checklist](library/ENTRY_TEMPLATE.md), link the new entry from its collection, and preserve sources and licenses. Label references, recipes and editable examples accurately. Adding a folder does not register it in Studio, the MCP workflow registry or the default five-Skill installation. Packaging uses an explicit file list.
 
+For published motion guidance source and locale metadata, use the [catalog contribution loop](https://github.com/nexu-io/openmotion/tree/main/library/templates/catalog#change-a-template). Stage changes before running the storage-policy check. New media needs no CMS account; maintainers prepare final media on the original PR before Squash merge.
+
 ## PR workflow
 
 Work from the repository root; read [AGENTS.md](AGENTS.md) and the [architecture](docs/product/architecture.md). Use the pinned CI Node version. Keep `package-lock.json` and `scripts/runtime-lock.json` in sync with any intentional dependency change.
@@ -32,3 +34,7 @@ Use the PR Actions summary to review new duplicate fragments and unused code or 
 Only deliberately public documentation belongs here. Do not commit credentials, internal links, private plans, workstation paths or user projects. Distribution uses the positive list in `scripts/distribution.ts`; newly shipped files require an explicit decision. Preserve all upstream attribution and license notices. Do not add telemetry or publish a package without a separate decision.
 
 Contributions are licensed under the repository's [Apache-2.0 license](LICENSE); vendored components retain their own terms. This migration branch is for review only and must not be merged or published automatically.
+
+## Repository media and size
+
+Keep embedded README previews directly readable. Full videos and optional template archives use Git LFS with downloads excluded by default. Follow [storage, scoped downloads and contribution checks](docs/repository-storage.md); run `npm run storage:check` after staging. For contributed media, use the documented **Prepare PR media** Action after final review; contributors do not need upload credentials.

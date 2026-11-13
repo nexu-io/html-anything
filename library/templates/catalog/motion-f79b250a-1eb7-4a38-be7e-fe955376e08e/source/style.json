@@ -1,0 +1,86 @@
+{
+  "background": {
+    "color": "#24203a",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "主品牌",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "分隔线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "合作品牌",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "流体背景",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#24203a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6f65a8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#393d57",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7a6786",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "紫黑柔软流体、居中双品牌与细分隔线",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "两枚品牌固定对齐，背景持续流动，避免抢文字。",
+      "status": "inferred"
+    },
+    {
+      "rule": "只用品牌与背景表达合作，保持信息简洁。",
+      "status": "inferred"
+    }
+  ]
+}

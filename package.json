@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "npm run build:studio && node --env-file=.env.development --experimental-strip-types server.ts",
     "mcp": "node --experimental-strip-types mcp.ts",
-    "start": "node --experimental-strip-types server.ts",
+    "start": "node --experimental-strip-types preview.ts",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
     "check": "node --experimental-strip-types scripts/check.ts",
     "package:plugin": "node --experimental-strip-types scripts/package.ts",
@@ -28,7 +28,13 @@
     "catalog:import": "node --experimental-strip-types scripts/import-hyperframes.ts",
     "catalog:covers": "node --experimental-strip-types scripts/cache-template-covers.ts",
     "catalog:metadata": "node --experimental-strip-types scripts/sync-template-metadata.ts",
-    "export:adapters": "node --experimental-strip-types scripts/export-adapters.ts"
+    "export:adapters": "node --experimental-strip-types scripts/export-adapters.ts",
+    "storage:check": "node --experimental-strip-types scripts/check-repository-storage.ts",
+    "templates:check": "node --experimental-strip-types scripts/check-template-library.ts",
+    "templates:export": "node --experimental-strip-types scripts/template-library.ts export",
+    "templates:manifest": "node --experimental-strip-types scripts/template-library.ts manifest",
+    "media:prepare": "node --experimental-strip-types scripts/prepare-pr-media.ts",
+    "media:pull": "node --experimental-strip-types scripts/repository-media.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

@@ -13,6 +13,13 @@ import kimiLogo from './template-brands/kimi.png';
 import pondLogo from './template-brands/pond.svg';
 const brandLogos: Record<string, string> = {Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
 
+function BrandIcon({ name, url }: { name: string; url?: string }) {
+  const [failedUrl, setFailedUrl] = useState<string>();
+  return <span className={styles.brandIcon} aria-hidden="true">{url && url !== failedUrl
+    ? <img src={url} alt="" loading="lazy" onError={() => setFailedUrl(url)} />
+    : name.slice(0, 1)}</span>;
+}
+
 type Props = { returnFocus?: HTMLElement | null; open: boolean; busy: boolean; openingDisabled?: boolean; error: string; onClose: () => void; onOpen: (id: string) => void };
 type Facet = 'brand' | 'uses' | 'styles' | 'industries' | 'creationModels' | 'colors' | 'ratio' | 'duration';
 const facets: [Facet, string][] = [
@@ -122,6 +129,7 @@ export function TemplateLibraryDialog(props: Props) {
     return () => { controller.abort(); clearInterval(timer); };
   }, [props.open, attempt, locale]);
   const available = useMemo(() => facets.map(([key, label]) => ({ key, label, values: [...new Set(catalog.flatMap(item => values(item, key)))] })).filter(facet => facet.values.length), [catalog]);
+  const logos = useMemo(() => new Map(catalog.flatMap(item => item.brand && item.brandLogoUrl ? [[item.brand, item.brandLogoUrl]] : [])), [catalog]);
   const hasFilters = Boolean(query || Object.values(selected).some(items => items?.length));
   const visible = useMemo(() => catalog.filter(item => {
     const text = [item.id, item.title, item.description, item.author, ...item.tags, ...facets.flatMap(([key]) => values(item, key))].join(' ').toLocaleLowerCase();
@@ -140,8 +148,8 @@ export function TemplateLibraryDialog(props: Props) {
     } catch (err) { setFeedback((err as Error).message); }
   }
   async function copy() {
-    try { await navigator.clipboard.writeText(prompt); setFeedback(t('Copied')); }
-    catch { setFeedback(t('Copy the instruction below and send it to your Agent.')); }
+    try { await navigator.clipboard.writeText(prompt); setFeedback('Copied'); }
+    catch { setFeedback('Copy the instruction below and send it to your Agent.'); }
   }
   async function downloadMotion() {
     if (!preview?.motionDocumentUrl) return;
@@ -152,7 +160,7 @@ export function TemplateLibraryDialog(props: Props) {
       const url = URL.createObjectURL(await response.blob());
       const link = document.createElement('a'); link.href = url; link.download = 'motion.md'; link.click();
       setTimeout(() => URL.revokeObjectURL(url), 60_000);
-    } catch { setDownloadError(t('Download failed. Please try again.')); }
+    } catch { setDownloadError('Download failed. Please try again.'); }
     finally { setDownloading(false); }
   }
   const show = (item: GalleryTemplate) => { setPreview(item); setPrompt(''); setFeedback(''); setDownloadError(''); detail.current?.showModal(); };
@@ -167,7 +175,7 @@ export function TemplateLibraryDialog(props: Props) {
         <button className={styles.all} aria-current={!hasFilters ? 'page' : undefined} onClick={reset}>{t('All templates')}<span>{catalog.length}</span></button>
         {available.filter(facet => ['brand', 'uses', 'styles', 'industries', 'creationModels'].includes(facet.key)).map(facet => <details key={facet.key} open={facet.key === 'brand'}><summary>{t(facet.label)}</summary>
           {facet.values.slice(0, facet.key === 'brand' && !moreBrands ? 5 : undefined).map(value => <button key={value} aria-pressed={selected[facet.key]?.includes(value) ?? false} onClick={() => toggle(facet.key, value)}>
-            {facet.key === 'brand' && <span className={styles.brandIcon} aria-hidden="true">{brandLogos[value] ? <img src={brandLogos[value]} alt="" /> : value.slice(0, 1)}</span>}<span>{value}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
+            {facet.key === 'brand' && <BrandIcon name={value} url={logos.get(value) ?? brandLogos[value]} />}<span>{facet.key === 'brand' ? value : t(value)}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
           </button>)}
           {facet.key === 'brand' && facet.values.length > 5 && <button onClick={() => setMoreBrands(!moreBrands)}>{t(moreBrands ? 'Show less' : 'Show more')}</button>}
         </details>)}
@@ -180,13 +188,13 @@ export function TemplateLibraryDialog(props: Props) {
           <select aria-label={t('Sort')} value={sort} onChange={event => setSort(event.target.value)}><option value="recommended">{t('Recommended order')}</option><option value="name">{t('Name A–Z')}</option><option value="reverse">{t('Name Z–A')}</option></select>
         </div></div>
         {searchOpen && <input className={styles.search} autoFocus type="search" maxLength={200} value={query} onChange={event => setQuery(event.target.value)} placeholder={t('Search templates, creators, styles…')} aria-label={t('Search templates')} />}
-        {hasFilters && <div className={styles.chips}>{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)}>{t(value)} ×</button>))}<button onClick={reset}>{t('Clear filters')}</button></div>}
+        {hasFilters && <div className={styles.chips}>{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)}>{key === 'brand' ? value : t(value)} ×</button>))}<button onClick={reset}>{t('Clear filters')}</button></div>}
         {loading && !catalog.length ? <p role="status">{t('Loading templates…')}</p> : cards(visible)}
         {!loading && !visible.length && !error && <p className={styles.empty}>{t('No matching templates. Try another name, creator or style.')}</p>}
       </main>
     </div>
     <dialog ref={filter} className={styles.filters} aria-label={t('Filters')}><header><h2>{t('Filters')}</h2><button onClick={() => filter.current?.close()} aria-label={t('Close')}><MotionIcon name="close" /></button></header>
-      {available.map(facet => <fieldset key={facet.key}><legend>{t(facet.label)}</legend>{facet.values.map(value => <label key={value}><input type="checkbox" checked={selected[facet.key]?.includes(value) ?? false} onChange={() => toggle(facet.key, value)} />{t(value)}</label>)}</fieldset>)}
+      {available.map(facet => <fieldset key={facet.key}><legend>{t(facet.label)}</legend>{facet.values.map(value => <label key={value}><input type="checkbox" checked={selected[facet.key]?.includes(value) ?? false} onChange={() => toggle(facet.key, value)} />{facet.key === 'brand' ? value : t(value)}</label>)}</fieldset>)}
       <footer><button onClick={reset}>{t('Clear filters')}</button><button onClick={() => filter.current?.close()}>{t('Done')}</button></footer>
     </dialog>
     <dialog ref={detail} className={styles.detail} aria-label={t('Template preview')} onClose={() => { setPreview(null); setPrompt(''); }}>
@@ -196,7 +204,7 @@ export function TemplateLibraryDialog(props: Props) {
           {preview.sourceUrl ? <a href={preview.sourceUrl} target="_blank" rel="noreferrer">{preview.authorName || preview.author} ↗</a> : <p>{preview.authorName || preview.author}</p>}
           <div className={styles.actions}><button disabled={!preview.motionDocumentUrl || downloading} onClick={() => void downloadMotion()}>{t(downloading ? 'Downloading…' : 'Download motion.md')}</button><button onClick={() => void showPrompt()}>{t('Recreate template')}</button></div>
           <div className={styles.projectActions}>{isEditableTemplate(preview) && <button disabled={props.busy || props.openingDisabled} onClick={() => { detail.current?.close(); props.onOpen(preview.id); }}>{t('Open and edit')} ↗</button>}{preview.projectFileUrl && <a href={preview.projectFileUrl} target="_blank" rel="noreferrer">{t('Download OpenMotion project')} ↗</a>}</div>
-          {downloadError && <p role="status">{downloadError}</p>}
+          {downloadError && <p role="status">{t(downloadError)}</p>}
           <dl><dt>{t('Video types')}</dt><dd>{preview.styles?.join(' · ') || '—'}</dd><dt>{t('Creation models')}</dt><dd>{preview.creationModels?.join(' · ') || '—'}</dd><dt>{t('Duration')}</dt><dd>{preview.duration ? t('{value}s', { value: preview.duration }) : '—'}</dd></dl>
         </div></div>
         {(preview.styleDescription || preview.reviewFocus || preview.motionGuideUrl) && <section className={styles.guide} aria-label={t('Motion guide')}>
@@ -209,7 +217,7 @@ export function TemplateLibraryDialog(props: Props) {
       {preview && <div className={styles.handoff}>{preview.posterUrl && <img src={preview.posterUrl} alt="" />}<div><strong>{preview.title}</strong><p>{preview.id}</p></div></div>}
       <p className={styles.promptLabel}>{t('Copy the instruction below and send it to your Agent.')}</p>
       <div className={styles.promptRow}><textarea className={styles.prompt} rows={8} readOnly value={prompt} aria-label={t('Content to copy')} />
-      <button className={styles.copyPrompt} disabled={!prompt} onClick={() => void copy()} aria-label={t('Copy')}><MotionIcon name="copy" size={22} /></button></div><p className={styles.copyStatus} role="status">{feedback}</p>
+      <button className={styles.copyPrompt} disabled={!prompt} onClick={() => void copy()} aria-label={t('Copy')}><MotionIcon name="copy" size={22} /></button></div><p className={styles.copyStatus} role="status">{t(feedback)}</p>
     </dialog>
   </dialog>;
 }

@@ -3,7 +3,7 @@ import { findUnsafeDomPatchValues } from "@hyperframes/core/studio-api/finite-mu
 import { trackStudioEvent } from "../utils/studioTelemetry";
 import { buildDomEditPatchTarget, type DomEditSelection } from "../components/editor/domEditing";
 import type { PersistDomEditOperations } from "./domEditCommitTypes";
-import type { PatchOperation } from "../utils/sourcePatcher";
+import { applyPatchByTarget, findTagByTarget, type PatchOperation } from "../utils/sourcePatcher";
 import {
   DomEditPersistUnsafeValueError,
   DomEditPersistPreparedWriteError,
@@ -14,6 +14,7 @@ import {
   formatUnsafeFieldList,
   postPatchElement,
   writePreparedContent,
+  type PatchElementResponse,
 } from "./useDomEditCommitsHelpers";
 import { importedFontFaceCssFor } from "../utils/studioFontHelpers";
 import { countStudioManualEditSave } from "../components/editor/manualEditsDom";
@@ -142,7 +143,25 @@ export function useDomEditPersist({
         const originalContent = await readTarget();
         if (originalContent === null) return null;
         options?.validateContent?.(originalContent);
-        const patchData = await postPatchElement(pid, targetPath, patchBody, showToast);
+        let patchData: PatchElementResponse;
+        if (
+          selection.element?.namespaceURI === "http://www.w3.org/2000/svg" &&
+          selection.hfId && !font &&
+          operations.length > 0 &&
+          operations.every(op => op.type === "inline-style" && op.childSelector === undefined)
+        ) {
+          // shortcut: 0.9.7's server rejects SVG; retain the normal file queue and history until upstream supports it.
+          const target = { hfId: selection.hfId };
+          const matched = findTagByTarget(originalContent, target) !== null;
+          const content = matched
+            ? operations.reduce((html, op) => applyPatchByTarget(html, target, op), originalContent)
+            : originalContent;
+          const changed = content !== originalContent;
+          if (changed) await writeProjectFile(targetPath, content, originalContent);
+          patchData = { matched, changed, content, path: targetPath };
+        } else {
+          patchData = await postPatchElement(pid, targetPath, patchBody, showToast);
+        }
         if (!patchData.changed) return { patchData, patchedContent: null, finalContent: null };
 
         const patchedContent =

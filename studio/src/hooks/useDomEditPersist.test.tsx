@@ -14,6 +14,7 @@ import {
 import type { PersistDomEditOperations } from "./domEditCommitTypes";
 import { jsonResponse, requestUrl } from "./fetchStubTestUtils";
 import { useDomEditPersist, type UseDomEditPersistParams } from "./useDomEditPersist";
+import { createDomEditSaveQueue } from "../utils/domEditSaveQueue";
 
 const trackStudioEvent = vi.fn();
 const reseekPreviewRuntime = vi.fn();
@@ -36,10 +37,10 @@ const selection = {
   sourceFile: "index.html",
 } as DomEditSelection;
 
-function stubServer(patchResponse: Record<string, unknown>) {
+function stubServer(patchResponse: Record<string, unknown>, source = SOURCE) {
   const fetchMock = vi.fn(async (input: Parameters<typeof fetch>[0], _init?: RequestInit) => {
     const url = requestUrl(input);
-    if (url.includes("/api/projects/p1/files/")) return jsonResponse({ content: SOURCE });
+    if (url.includes("/api/projects/p1/files/")) return jsonResponse({ content: source });
     if (url.includes("/api/projects/p1/file-mutations/patch-element/")) {
       return jsonResponse(patchResponse);
     }
@@ -184,6 +185,49 @@ describe("useDomEditPersist", () => {
       "save_skipped_unresolvable",
       expect.objectContaining({ target_selector: '[data-hf-id="hf-card"]' }),
     );
+  });
+
+  it("saves an SVG connector style through the guarded writer and history, leaving navigation unblocked", async () => {
+    const source = '<template><svg><path data-hf-id="hf-card" id="connector" d="M0 0L10 10" /></svg></template>';
+    const element = document.createElementNS("http://www.w3.org/2000/svg", "path") as unknown as HTMLElement;
+    const fetchMock = stubServer({ changed: false, matched: false }, source);
+    const queue = createDomEditSaveQueue();
+    const { persist, params } = renderPersist({ queueDomEditSave: save => queue.enqueue(save) });
+    await persist({ ...selection, element, id: "connector" }, OPERATIONS, { label: "Recolor connector" });
+    const expected = source.replace('d="M0 0L10 10" />', 'd="M0 0L10 10" style="color: blue" />');
+    expect(params.writeProjectFile).toHaveBeenCalledExactlyOnceWith("index.html", expected, source);
+    expect(params.editHistory.recordEdit).toHaveBeenCalledWith(expect.objectContaining({
+      label: "Recolor connector", files: { "index.html": { before: source, after: expected } },
+    }));
+    expect(patchPosts(fetchMock)).toHaveLength(0);
+    expect(params.reloadPreview).toHaveBeenCalledOnce();
+    await expect(queue.waitForIdle()).resolves.toEqual({ status: "clean" });
+  });
+
+  it("does not retarget a missing SVG identity to an element reusing its id", async () => {
+    const source = '<svg><path data-hf-id="hf-replacement" id="connector" /></svg>';
+    const element = document.createElementNS("http://www.w3.org/2000/svg", "path") as unknown as HTMLElement;
+    stubServer({ changed: false, matched: false }, source);
+    const { persist, params } = renderPersist();
+    await expect(persist({ ...selection, element, id: "connector" }, OPERATIONS)).rejects.toBeInstanceOf(DomEditPersistUnresolvableError);
+    expect(params.writeProjectFile).not.toHaveBeenCalled();
+    expect(params.editHistory.recordEdit).not.toHaveBeenCalled();
+  });
+
+  it("retains the write conflict and blocks navigation when an SVG source changes concurrently", async () => {
+    const source = '<svg><path data-hf-id="hf-card" /></svg>';
+    const element = document.createElementNS("http://www.w3.org/2000/svg", "path") as unknown as HTMLElement;
+    stubServer({ changed: false, matched: false }, source);
+    const queue = createDomEditSaveQueue();
+    const failure = new Error("Source changed");
+    const { persist, params } = renderPersist({
+      queueDomEditSave: save => queue.enqueue(save),
+      writeProjectFile: vi.fn(async () => { throw failure; }),
+    });
+    await expect(persist({ ...selection, element }, OPERATIONS)).rejects.toBe(failure);
+    expect(params.editHistory.recordEdit).not.toHaveBeenCalled();
+    expect(params.reloadPreview).not.toHaveBeenCalled();
+    await expect(queue.waitForIdle()).resolves.toEqual({ status: "failed", error: failure });
   });
 
   it("refuses a non-finite layout value before any request, with a toast", async () => {

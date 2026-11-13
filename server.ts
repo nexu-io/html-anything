@@ -12,7 +12,7 @@ import { templates } from './template-library.ts';
 import { templateRecipe } from './template-catalog.ts';
 import { templateCatalogFor } from './prism-templates.ts';
 import { isEditableTemplate } from './shared/catalog.ts';
-import { proxyStudio, serveEditorFile } from './editor-server.ts';
+import { proxyStudio, renderDownloadDisposition, serveEditorFile } from './editor-server.ts';
 import { publicTools as mcpTools } from './mcp.ts';
 import { startOwnedStudio } from './shared/owned-studio.mjs';
 import { sharedEditorEnabled, ensureEditor, editorRequest } from './editor-runtime.ts';
@@ -150,6 +150,7 @@ async function openProject(store: WorkspaceStore, context: Service, origin: stri
       const entry = creating ? { id, title: template?.title ?? (target as { title: string }).title, templateId: template?.id, createdAt: Date.now() } : undefined;
       if (!entry && !store.projectCatalog().projects.some(item => item.id === id)) throw new Error('工程不存在');
       if (sessionTarget?.sessionId && !store.projectCatalog().sessions!.some(item => item.id === sessionTarget.sessionId)) throw new Error('会话不存在');
+      if (!entry && id === 'project') await store.forProject(id).initializeLocked(runtimeRoot);
       if (!entry && store.projectCatalog().activeId === id) {
         if (!context.studio?.alive()) context.studio = context.launchStudio ? await context.launchStudio(store.projectDirectoryFor(id), context.studioPort || 4174) : await startStudio(runtimeRoot, store.projectDirectoryFor(id), path.join(store.directory, 'studio.log'), context.studioPort || 4174);
         await context.studio.openProject?.(id);
@@ -341,10 +342,11 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
     if (req.method === 'GET' && ['/api/integration', '/connect/guide', '/connect/config'].includes(url.pathname)) {
       const address = new URL(editorUrl);
       const info: IntegrationInfo = {
+        templateSource: templateCatalogFor(store.directory).source,
         templateEnvironment: templateCatalogFor(store.directory).environment as 'dev' | 'prod',
         name: 'OpenMotion', version: VERSION, previewUrl: address.origin, dataDirectory: store.directory,
         transport: { type: 'stdio', command: process.execPath, args: ['--experimental-strip-types', path.join(pluginRoot, 'mcp.ts')], cwd: pluginRoot,
-          env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', ...Object.fromEntries(['MOTION_TEMPLATE_ENV', 'MOTION_TEMPLATE_RESOURCE_ID', 'MOTION_TEMPLATE_LOCALE', 'MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
+          env: { MOTION_DATA_DIR: store.directory, PORT: address.port || '80', MOTION_TEMPLATE_SOURCE: templateCatalogFor(store.directory).source, ...Object.fromEntries(['MOTION_TEMPLATE_ENV', 'MOTION_TEMPLATE_RESOURCE_ID', 'MOTION_TEMPLATE_LOCALE', 'MOTION_BROWSER_PATH', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH', 'FFMPEG_PATH', 'FFPROBE_PATH'].filter(key => process.env[key]).map(key => [key, process.env[key]!])) } },
         tools: mcpTools.map(({ name, description }) => ({ name, description })),
       };
       if (url.pathname === '/api/integration') return json(res, 200, info);
@@ -402,6 +404,21 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       return json(res, 404, { error: 'Unknown model gateway operation' });
     }
     if (url.pathname === '/api/templates' && req.method === 'GET') return json(res, 200, { templates });
+    const templateSource = url.pathname.match(/^\/api\/template-source\/([a-z][a-z0-9-]+)\/(.+)$/);
+    if (templateSource && req.method === 'GET') {
+      const name = decodeURIComponent(templateSource[2]);
+      const mime: Record<string, string> = { '.html': 'text/html', '.md': 'text/plain', '.js': 'text/javascript', '.css': 'text/css', '.json': 'application/json', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.avif': 'image/avif', '.gif': 'image/gif', '.svg': 'image/svg+xml', '.ico': 'image/x-icon', '.woff2': 'font/woff2', '.woff': 'font/woff', '.ttf': 'font/ttf', '.otf': 'font/otf', '.mp4': 'video/mp4', '.mov': 'video/quicktime', '.webm': 'video/webm', '.m4v': 'video/mp4', '.mp3': 'audio/mpeg', '.wav': 'audio/wav', '.ogg': 'audio/ogg', '.m4a': 'audio/mp4', '.aac': 'audio/aac', '.flac': 'audio/flac' };
+      const type = mime[path.extname(name).toLowerCase()];
+      if (!type) return json(res, 404, { error: 'Unknown template source file' });
+      try {
+        const bytes = await templateCatalogFor(store.directory).sourceFile(templateSource[1], name);
+        res.writeHead(200, { 'Content-Type': type, 'Content-Length': bytes.length }); res.end(bytes); return;
+      } catch (error) {
+        if ((error as { code?: string }).code === 'TEMPLATE_LFS_NOT_FETCHED')
+          return json(res, 409, { code: 'TEMPLATE_LFS_NOT_FETCHED', error: (error as Error).message });
+        return json(res, 404, { error: 'Template source file not found' });
+      }
+    }
     if (url.pathname === '/api/template-catalog' && req.method === 'GET') return json(res, 200, await templateCatalogFor(store.directory).page({
       locale: url.searchParams.get('locale') || undefined,
       category: url.searchParams.get('category') || 'featured', query: url.searchParams.get('query') || '',
@@ -503,7 +520,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       const job = await store.job(download[1]);
       if (!job || job.id !== download[1] || job.state !== 'completed') return json(res, 404, { error: '视频尚未完成或任务不存在' });
       const filename = path.join(store.directory, 'exports', job.id + '.mp4');
-      res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': (await stat(filename)).size, 'Content-Disposition': 'attachment; filename="motion.mp4"' });
+      res.writeHead(200, { 'Content-Type': 'video/mp4', 'Content-Length': (await stat(filename)).size, 'Content-Disposition': renderDownloadDisposition(store.projectCatalog().projects.find(p => p.id === (job.projectId ?? store.projectId))?.title, '.mp4') });
       await new Promise<void>((resolve, reject) => {
         const stream = createReadStream(filename);
         stream.on('error', reject); res.on('finish', resolve); res.on('close', () => { stream.destroy(); resolve(); }); stream.pipe(res);
@@ -517,7 +534,12 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       if (!context.studio?.alive()) return json(res, 503, { error: '编辑服务尚未就绪' });
       const capability = nativeRouteCapability(req.method!, url.pathname);
       if (capability) await requireNativeRuntime(context.nativeRoot ?? pluginRoot, capability);
-      return await proxyStudio(req, res, url, context.studio.url);
+      const renderFile = url.searchParams.get('download') === '1'
+        && url.pathname.match(/^\/api\/projects\/([^/]+)\/renders\/file\/[^/]+(\.(?:mp4|mov|webm|gif))$/i);
+      const disposition = renderFile ? renderDownloadDisposition(
+        store.projectCatalog().projects.find(p => p.id === decodeURIComponent(renderFile[1]))?.title, renderFile[2],
+      ) : undefined;
+      return await proxyStudio(req, res, url, context.studio.url, disposition);
     }
     if (req.method !== 'GET') return json(res, 405, { error: '不支持此操作' });
     if (await serveEditorFile(url, res)) return;
@@ -547,6 +569,7 @@ export async function startServer(store = sharedStore, port = Number(process.env
   let opening: Promise<Studio> | undefined;
   context.ensureStudio = async (projectId = store.projectId) => {
     const scoped = store.forProject(projectId);
+    if (projectId === 'project') await scoped.initialize(runtimeRoot);
     if (context.studio?.alive()) { await context.studio.openProject?.(projectId); return context.studio; }
     if (!opening && context.switching) throw new Error('正在打开工程，请稍候');
     if (!opening) opening = (async () => {

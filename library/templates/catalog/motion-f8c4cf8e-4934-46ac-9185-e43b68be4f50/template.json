@@ -1,0 +1,400 @@
+{
+  "templateId": "motion-f8c4cf8e-4934-46ac-9185-e43b68be4f50",
+  "entry": {
+    "templateId": "motion-f8c4cf8e-4934-46ac-9185-e43b68be4f50",
+    "sortOrder": 255,
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "previewUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+    "coverUrl": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+    "motionDocumentUrl": "https://r.open-design.ai/files/f1ac1f060a9f0ecca5fcdad90587f710c3b359a59e62d9797e9999cccd480066",
+    "motionGuideUrl": "https://r.open-design.ai/files/2c317f6daf268a23d5725906ab7e00d58dbdd604f41436ca7ca58c1bc4fe54b8",
+    "projectFileUrl": null,
+    "files": [],
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "not_run"
+    },
+    "featuredOrder": null,
+    "original": {
+      "templateName": "Telegram managed bots (AI bots) — On Telegram, anyone…",
+      "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+      "summary": "用一台固定手机走完机器人创建、测试与查看资料，点击反馈连接每个状态。",
+      "styleDescription": "无衬线移动端界面；按钮、输入字段和消息气泡分层",
+      "promotionalUseCases": "产品演示",
+      "visualPresentation": "界面动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+      "reviewFocus": "用一台固定手机走完机器人创建、测试与查看资料，点击反馈连接每个状态。；入口按钮点击后弹出表单，填写名称和用户名，再确认创建。触点只在点击瞬间放大，不能一直遮住按钮；成功页沿用刚填的名称。；Start 进入聊天，用户消息先出现，机器人回复后出现；打开资料页时保留同一头像与名称。深蓝界面配亮青按钮和紫色身份区，无衬线小字保持足够行距。",
+      "category": "",
+      "durationSeconds": "12",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+      "exampleVideo": "",
+      "templateId": "V215",
+      "sourceVideoTitle": "255_Telegram.mp4"
+    },
+    "brand": "Telegram",
+    "colors": [
+      "blue"
+    ],
+    "width": 1080,
+    "height": 1080,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。"
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Verwaltete Telegram-Bots (KI-Bots) — Auf Telegram kann jeder…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "Ein feststehendes Smartphone zeigt Bot-Erstellung, Test und Profilansicht; Klickreaktionen verbinden alle Zustände.",
+        "styleDescription": "Serifenlose mobile Oberfläche; Schaltflächen, Eingaben und Sprechblasen klar geschichtet",
+        "promotionalUseCases": "Produktdemo",
+        "visualPresentation": "Oberflächenanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "Ein feststehendes Smartphone zeigt Bot-Erstellung, Test und Profilansicht; Klickreaktionen verbinden alle Zustände. Nach Klick auf den Einstieg öffnet sich das Formular für Name und Nutzername, dann Erstellung bestätigen. Berührungspunkt nur kurz beim Klick vergrößern, nicht dauerhaft verdecken. Erfolgsseite übernimmt den eingegebenen Namen. Start öffnet den Chat; erst Nutzertext, dann Bot-Antwort. Profil mit demselben Avatar und Namen. Dunkelblau mit hellcyanfarbenen Buttons und violettem Identitätsbereich; kleine Schrift mit genügend Zeilenabstand.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "motionDocumentUrl": "https://r.open-design.ai/files/34be77b2b2fb5f77235e13ab59053fa79f0995ba409b34ca42be5707aaccdf59",
+      "motionGuideUrl": "https://r.open-design.ai/files/99c0334885126920ea1a441116b40ac91e9fb7868f5e6e02b253fb69b59abf34",
+      "original": {
+        "templateName": "Telegram — Create your agent",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "Use one fixed phone to complete bot creation, testing and profile viewing, connecting states through click feedback.",
+        "styleDescription": "Sans-serif mobile interface, with layered buttons, input fields and message bubbles",
+        "promotionalUseCases": "Product demo",
+        "visualPresentation": "Interface animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "Use one fixed phone to complete bot creation, testing and profile viewing, connecting states through click feedback. Click the entry button to open a form, fill name and username, then confirm creation. Enlarge touch markers only at the click instant rather than continuously covering buttons; reuse the entered name on success. Start opens chat, user messages appear first and bot replies follow; retain the same avatar and name on the profile page. Pair deep blue with bright cyan buttons and a purple identity region, giving small sans-serif text enough line spacing.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Bots administrados de Telegram (bots de IA) — en Telegram, cualquiera…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "Completar creación, prueba y consulta de datos de un bot en un teléfono fijo, enlazando estados mediante respuestas al clic.",
+        "styleDescription": "Interfaz móvil sin serifa; botones, campos y burbujas en niveles distintos",
+        "promotionalUseCases": "Demostración de producto",
+        "visualPresentation": "Animación de interfaz",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "Completar creación, prueba y consulta de datos de un bot en un teléfono fijo, enlazando estados mediante respuestas al clic.; Al pulsar la entrada, abrir el formulario, rellenar nombre y usuario y confirmar. Ampliar el indicador de toque solo durante el clic, sin ocultar siempre el botón; el éxito conserva el nombre introducido.; Start abre el chat; aparece primero el mensaje del usuario y después el del bot. Mantener avatar y nombre al abrir el perfil. Interfaz azul oscuro con botones cian vivos y zona de identidad violeta; dar interlineado suficiente al texto pequeño.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Bots gérés Telegram (bots IA) — Sur Telegram, chacun…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "Un téléphone fixe suit création du bot, test et profil ; les retours de clic relient chaque état.",
+        "styleDescription": "UI mobile sans empattements ; boutons, champs et bulles en niveaux distincts",
+        "promotionalUseCases": "Démonstration produit",
+        "visualPresentation": "Animation d’interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "Un téléphone fixe suit création du bot, test et profil ; les retours de clic relient chaque état. Le bouton ouvre un formulaire : nom, identifiant, puis confirmation. Le point de contact grossit seulement au clic, sans masquer durablement. Le succès reprend le nom saisi. Start ouvre le chat, message utilisateur avant réponse du bot. Profil avec mêmes avatar et nom. UI bleu foncé, boutons cyan vif, identité violette ; interligne suffisant.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Bot gestiti Telegram (bot IA) — Su Telegram, chiunque…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "Telefono fisso per creazione bot, test e profilo; feedback dei clic collega gli stati.",
+        "styleDescription": "UI mobile sans serif; pulsanti, campi e fumetti su livelli distinti",
+        "promotionalUseCases": "Demo di prodotto",
+        "visualPresentation": "Animazione dell’interfaccia",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "Telefono fisso per creazione bot, test e profilo; feedback dei clic collega gli stati. Il pulsante apre nome e username, poi conferma creazione. Il punto di contatto cresce solo al clic; il successo usa il nome appena inserito. Start apre la chat, messaggio utente prima della risposta. Profilo con stesso avatar e nome. Blu scuro, pulsanti ciano e area identità viola; interlinea sufficiente.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "Telegramの管理ボット（AIボット）— Telegramなら誰でも…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "固定した1台のスマートフォンでボットの作成、テスト、プロフィール確認を行い、クリックの反応で各状態をつなぐ。",
+        "styleDescription": "サンセリフのモバイルUI；ボタン、入力欄、吹き出しに階層を付ける",
+        "promotionalUseCases": "製品デモ",
+        "visualPresentation": "UIアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "固定した1台のスマートフォンでボットの作成、テスト、プロフィール確認を行い、クリックの反応で各状態をつなぐ。；入口のボタンを押してフォームを出し、名前とユーザー名を入力して作成を確認する。タッチ位置はクリックの瞬間だけ拡大し、ボタンを覆い続けない。成功画面には入力した名前を使う。；Startでチャットへ入り、ユーザーのメッセージを先に、ボットの返信を後に出す。プロフィールでは同じアバターと名前を保つ。深青のUIに明るいシアンのボタンと紫の識別領域を合わせ、小さなサンセリフに十分な行間を取る。",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "Telegram 관리형 봇(AI 봇) — Telegram에서는 누구나…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "고정된 휴대폰 하나로 봇 만들기, 테스트, 프로필 보기를 진행하며 클릭 피드백으로 각 상태를 연결한다.",
+        "styleDescription": "산세리프 모바일 인터페이스；버튼, 입력 필드, 메시지 말풍선의 계층을 구분한다",
+        "promotionalUseCases": "제품 시연",
+        "visualPresentation": "인터페이스 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "고정된 휴대폰 하나로 봇 만들기, 테스트, 프로필 보기를 진행하며 클릭 피드백으로 각 상태를 연결한다.；진입 버튼을 클릭하면 양식을 띄우고 이름과 사용자명을 입력한 뒤 생성을 확인한다. 터치점은 클릭 순간에만 확대하고 버튼을 계속 가리지 않게 한다；성공 페이지는 방금 입력한 이름을 그대로 쓴다.；Start로 채팅에 들어가 사용자 메시지를 먼저 표시하고 봇 응답은 그 뒤에 표시한다；프로필을 열 때 같은 아바타와 이름을 유지한다. 짙은 파랑 UI에 밝은 청록 버튼과 보라 신원 영역을 조합하고 작은 산세리프 글자의 줄 간격을 충분히 둔다.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Bots gerenciados do Telegram (bots de IA) — no Telegram, qualquer pessoa…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "Completar criação, teste e consulta de dados de um bot em um celular fixo, conectando estados por respostas ao clique.",
+        "styleDescription": "Interface móvel sem serifa; botões, campos e balões em níveis distintos",
+        "promotionalUseCases": "Demonstração de produto",
+        "visualPresentation": "Animação de interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "Completar criação, teste e consulta de dados de um bot em um celular fixo, conectando estados por respostas ao clique.; Ao clicar na entrada, abrir o formulário, preencher nome e usuário e confirmar. Ampliar o indicador de toque apenas durante o clique, sem esconder sempre o botão; o sucesso mantém o nome informado.; Start abre o chat; primeiro aparece a mensagem do usuário e depois a do bot. Manter avatar e nome ao abrir o perfil. Interface azul-escura com botões ciano vivos e área de identidade roxa; dar entrelinha suficiente ao texto pequeno.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Управляемые боты Telegram с ИИ — в Telegram любой может…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "На одном неподвижном телефоне покажите создание бота, проверку и просмотр профиля, связывая состояния откликом на нажатия.",
+        "styleDescription": "Мобильный интерфейс с гротеском; чёткие уровни кнопок, полей ввода и сообщений",
+        "promotionalUseCases": "Демонстрация продукта",
+        "visualPresentation": "Анимация интерфейса",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "На одном неподвижном телефоне покажите создание бота, проверку и просмотр профиля, связывая состояния откликом на нажатия. После нажатия на входную кнопку открывается форма, заполняются имя и имя пользователя, затем подтверждается создание. Маркер касания увеличивается только в момент нажатия и не закрывает кнопку постоянно; на странице успеха используется только что введённое имя. Кнопка Start открывает чат: сначала появляется сообщение пользователя, затем ответ бота. При переходе в профиль сохраняются те же аватар и имя. Тёмно-синий интерфейс дополнен ярко-голубыми кнопками и фиолетовой областью профиля; мелкий гротеск имеет достаточный межстрочный интервал.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Telegram yönetilen botlar (AI botları) — Telegram’da herkes…",
+        "videoPreview": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "summary": "Sabit telefonda bot oluşturma, test ve profil tamamlanır; tıklama tepkisi durumları bağlar.",
+        "styleDescription": "Sans serif mobil UI; düğme, alan ve mesaj katmanlı",
+        "promotionalUseCases": "Ürün demosu",
+        "visualPresentation": "Arayüz animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/e3351786d0014848211c55a3188149c0f7620d8f01a07acb21976d02c2b62da0",
+        "reviewFocus": "Sabit telefonda bot oluşturma, test ve profil tamamlanır; tıklama tepkisi durumları bağlar. Giriş tıklanınca ad ve kullanıcı adı formu, sonra oluşturma onayı. Dokunma noktası yalnız anlık büyür, düğmeyi örtmez. Başarı aynı adı kullanır. Start sohbet açar; kullanıcı önce, bot sonra. Profilde aynı avatar-ad. Lacivert, parlak camgöbeği düğme, mor kimlik; küçük yazıda yeterli satır aralığı.",
+        "category": "",
+        "durationSeconds": "12",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/ad8373824b0ec40bb54b60097ac22ab4865ba9d04e88af4e79e559320120a7c4",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/telegram/status/2048098691391852966",
+        "exampleVideo": "",
+        "templateId": "V215",
+        "sourceVideoTitle": "255_Telegram.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/f1ac1f060a9f0ecca5fcdad90587f710c3b359a59e62d9797e9999cccd480066",
+    "bytes": 753483,
+    "sha256": "f1ac1f060a9f0ecca5fcdad90587f710c3b359a59e62d9797e9999cccd480066"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 108751,
+        "sha256": "554903c3062afa832af221ac091e1c6674482078dc735b63cd9c33b6f62351c1"
+      },
+      "url": "https://r.open-design.ai/files/af31f0b5953cc4ced5cad784d4ae40559225d1a8b8ad0e7414062837658dc297",
+      "bytes": 30478,
+      "sha256": "af31f0b5953cc4ced5cad784d4ae40559225d1a8b8ad0e7414062837658dc297"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 114053,
+        "sha256": "dd1f3665310321c3d27c56bdc1f5540cc2a2a19565f766b962c7824246b66483"
+      },
+      "url": "https://r.open-design.ai/files/bbacb74f25b92b9b9b720fe65454d07ce7d11627780840fb812489b67e2668f2",
+      "bytes": 32156,
+      "sha256": "bbacb74f25b92b9b9b720fe65454d07ce7d11627780840fb812489b67e2668f2"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 118825,
+        "sha256": "cd69641045a9233eb8f018d0ccff75fe83e23a7880c9d517ea8eff6a33c6722d"
+      },
+      "url": "https://r.open-design.ai/files/e1b58d51e44e7ef2a37340f549707b1f6c06d8934ab1f0df6df4279584daea99",
+      "bytes": 36484,
+      "sha256": "e1b58d51e44e7ef2a37340f549707b1f6c06d8934ab1f0df6df4279584daea99"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 151866,
+        "sha256": "2a6930dfc03d4af523adef02c494eadcba02b8b0c2ff46dbe5f58d8601a7f0a7"
+      },
+      "url": "https://r.open-design.ai/files/8bf7cb34f1327b0ae431627c03e70c748f6584b8a1c9f675c8067577d775b1ec",
+      "bytes": 43852,
+      "sha256": "8bf7cb34f1327b0ae431627c03e70c748f6584b8a1c9f675c8067577d775b1ec"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 116611,
+        "sha256": "9446007e2e312e1469f1a20fb98b64b0f5f9d98c42638ef40452337efaa90617"
+      },
+      "url": "https://r.open-design.ai/files/1ce871d669cd53c7dc8570d10d256a7e5938e4107260a6d8e497aecb01196384",
+      "bytes": 30580,
+      "sha256": "1ce871d669cd53c7dc8570d10d256a7e5938e4107260a6d8e497aecb01196384"
+    },
+    {
+      "source": {
+        "path": "assets/reference-6.jpg",
+        "bytes": 139212,
+        "sha256": "681920b2d1620586d5560bcfc16c68d543a35a77ee71acfc0c89c4ecfaf45466"
+      },
+      "url": "https://r.open-design.ai/files/9dadcfa120bec03b0d2fe77a41701fa991040f4f266a38bf98a46cb304e64c96",
+      "bytes": 40990,
+      "sha256": "9dadcfa120bec03b0d2fe77a41701fa991040f4f266a38bf98a46cb304e64c96"
+    }
+  ]
+}

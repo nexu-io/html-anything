@@ -7,7 +7,7 @@ import { spawn } from 'node:child_process';
 import { once } from 'node:events';
 import { pathToFileURL, fileURLToPath } from 'node:url';
 import { ensureNativeRuntime, nativeConfiguration, nativeRuntimeStatus, requireNativeRuntime, startNativePreparation } from '../scripts/npm-runtime.mjs';
-import { runFile, sha256, writeJSON, withCacheLock } from '../scripts/runtime-assets.mjs';
+import { download, runFile, sha256, writeJSON, withCacheLock } from '../scripts/runtime-assets.mjs';
 import { nativeRouteCapability } from '../shared/native-runtime.ts';
 import { transport } from './http.ts';
 import { WorkspaceStore } from '../workspace.ts';
@@ -101,6 +101,101 @@ test('one failed component remains visible and retry reuses completed components
   await startNativePreparation(root, true); await ensureNativeRuntime(root);
   assert.equal((await nativeRuntimeStatus(root)).capabilities.export, true);
   assert.equal(await readFile(path.join(native.cache, 'ffmpeg-' + assets.ffmpeg.sha256, 'ready.json'), 'utf8'), ready);
+});
+
+test('native downloads automatically retry timeouts and report measured progress', async t => {
+  const { directory, assets } = await fixture(t);
+  const bytes = await readFile(new URL(assets.browser.url));
+  let attempts = 0;
+  t.mock.method(globalThis, 'fetch', async () => {
+    if (++attempts === 1) throw new DOMException('Fixture download timed out', 'TimeoutError');
+    return new Response(bytes, { headers: { 'content-length': String(bytes.length) } });
+  });
+  const updates: any[] = [], filename = path.join(directory, 'retried.tar.gz');
+  await download({ ...assets.browser, url: 'https://example.invalid/browser.tar.gz' }, filename, async state => { updates.push(state); });
+  assert.equal(attempts, 2);
+  assert.equal(await sha256(filename), assets.browser.sha256);
+  assert(updates.some(state => state.stage === 'waiting' && state.attempt === 2));
+  assert(updates.some(state => state.downloadStartedAt > 0 && state.receivedBytes === 0));
+  assert(updates.some(state => state.receivedBytes === bytes.length && state.totalBytes === bytes.length));
+});
+
+test('the download timeout measures inactivity instead of total transfer duration', async t => {
+  const { directory, assets } = await fixture(t);
+  const bytes = await readFile(new URL(assets.browser.url));
+  const schedule = globalThis.setTimeout;
+  t.mock.method(globalThis, 'setTimeout', (callback: any, delay: number, ...args: any[]) => schedule(callback, delay === 300_000 ? 500 : delay, ...args));
+  let attempts = 0;
+  t.mock.method(globalThis, 'fetch', async () => {
+    attempts++;
+    let offset = 0;
+    return new Response(new ReadableStream({
+      async pull(controller) {
+        await new Promise(resolve => schedule(resolve, 100));
+        const end = Math.min(bytes.length, offset + Math.ceil(bytes.length / 8));
+        controller.enqueue(bytes.subarray(offset, end));
+        offset = end;
+        if (offset === bytes.length) controller.close();
+      },
+    }));
+  });
+  const filename = path.join(directory, 'slow.tar.gz');
+  await download({ ...assets.browser, url: 'https://example.invalid/browser.tar.gz' }, filename);
+  assert.equal(attempts, 1);
+  assert.equal(await sha256(filename), assets.browser.sha256);
+});
+
+test('a stalled response body is aborted by the idle timer and retries stay bounded', async t => {
+  const { directory, assets } = await fixture(t);
+  const schedule = globalThis.setTimeout;
+  t.mock.method(globalThis, 'setTimeout', (callback: any, delay: number, ...args: any[]) =>
+    schedule(callback, delay === 300_000 ? 50 : 1, ...args));
+  let attempts = 0, aborts = 0;
+  t.mock.method(globalThis, 'fetch', async (_url: unknown, { signal }: { signal: AbortSignal }) => {
+    attempts++;
+    return new Response(new ReadableStream({
+      start(controller) {
+        controller.enqueue(new Uint8Array(50));
+        signal.addEventListener('abort', () => { aborts++; controller.error(signal.reason); }, { once: true });
+      },
+    }), { headers: { 'content-length': '100' } });
+  });
+  const filename = path.join(directory, 'stalled.tar.gz');
+  await assert.rejects(download({ ...assets.browser, url: 'https://example.invalid/browser.tar.gz' }, filename),
+    error => error.name === 'TimeoutError' && /no progress/.test(error.message));
+  assert.equal(attempts, 3);
+  assert.equal(aborts, 3);
+  await assert.rejects(readFile(filename + '.part'), { code: 'ENOENT' });
+});
+
+test('exhausted timeout retries remain actionable and successful components are reused', { skip: process.platform === 'win32' }, async t => {
+  const { root, assets, config, configFile } = await fixture(t);
+  const browserUrl = assets.browser.url;
+  await ensureNativeRuntime(root, ['ffmpeg', 'ffprobe']);
+  config.runtime.targets.fixture.browser.url = 'https://example.invalid/browser.tar.gz';
+  await writeJSON(configFile, config);
+  let attempts = 0;
+  t.mock.method(globalThis, 'fetch', async () => { attempts++; throw new DOMException('Fixture download timed out', 'TimeoutError'); });
+  await assert.rejects(ensureNativeRuntime(root), { name: 'TimeoutError' });
+  assert.equal(attempts, 3);
+  const status = await nativeRuntimeStatus(root);
+  assert.equal(status.components.find(component => component.id === 'browser')?.errorCode, 'timeout');
+  assert.equal(status.capabilities.media, true);
+  await rm(new URL(assets.ffmpeg.url)); await rm(new URL(assets.ffprobe.url));
+  config.runtime.targets.fixture.browser.url = browserUrl;
+  await writeJSON(configFile, config);
+  await ensureNativeRuntime(root);
+  assert.equal((await nativeRuntimeStatus(root)).capabilities.export, true);
+});
+
+test('permanent download failures do not retry or leave partial archives', async t => {
+  const { directory, assets } = await fixture(t);
+  let attempts = 0;
+  t.mock.method(globalThis, 'fetch', async () => { attempts++; return new Response('missing', { status: 404 }); });
+  const filename = path.join(directory, 'missing.tar.gz');
+  await assert.rejects(download({ ...assets.browser, url: 'https://example.invalid/browser.tar.gz' }, filename), /HTTP 404/);
+  assert.equal(attempts, 1);
+  await assert.rejects(readFile(filename + '.part'), { code: 'ENOENT' });
 });
 
 test('dead download ownership is recoverable while a live lock is never stolen', async t => {

@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#fbfbef",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Infinitely scalable.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Ideogram",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "插画画布",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "放大中心",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "倍率标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "清晰曲线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌标志",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fbfbef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#192d32",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f1c916",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d8485c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "奶油底衬线短句，插画用深青、黄色与红色，倍率标签固定。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "从完整海报推进到行星，再到黄色轮廓的一条曲线。倍率持续增加，但边缘始终平滑；放大中心保持在同一细节上。",
+      "status": "inferred"
+    },
+    {
+      "rule": "倍率小标签留在左上，不跟随插画一起放大。开场和结尾用奶油白底与细衬线字，插画阶段可充满画面。",
+      "status": "inferred"
+    },
+    {
+      "rule": "放大结束硬切回留白，让碎片在中心组合成品牌图案，再展开字标。更换插画时选择能支持数层细节的矢量主体。",
+      "status": "inferred"
+    }
+  ]
+}

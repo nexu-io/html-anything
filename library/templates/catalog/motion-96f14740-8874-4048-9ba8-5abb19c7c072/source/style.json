@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#fffdf8",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Just share your",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Share by",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Want to win a trip to",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "角色群",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "奖品标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "双人角色",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "火箭镜头",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模板实例",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "截止日期",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fffdf8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#161616",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f19b4f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#5e9b6b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e4564b",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白底彩色角色、黑大字与火箭实拍切换",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "以奖励吸引注意，马上用现场画面解释奖励，再给出参与动作和实例。",
+      "status": "inferred"
+    },
+    {
+      "rule": "角色由单个到成对再到群体，呼应参与人数。",
+      "status": "inferred"
+    },
+    {
+      "rule": "截止日期置于收尾，前段不堆报名细则。",
+      "status": "inferred"
+    }
+  ]
+}

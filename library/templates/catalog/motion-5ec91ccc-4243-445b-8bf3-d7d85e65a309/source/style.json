@@ -1,0 +1,90 @@
+{
+  "background": {
+    "color": "#241d2d",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "三组词块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "黑色字面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "虹彩厚度",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "深紫背景",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#241d2d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#090a0a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e8ff64",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d497f4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#88dcec",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "窄粗无衬线黑字；三个连通圆角词块作为一个整体",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "上排 BUILD WHAT、下排 DOESN’T EXIST 与 YET 共同形成紧密外形。词块用荧光黄，文字为黑色，块间只留很小的结构凹口。",
+      "status": "inferred"
+    },
+    {
+      "rule": "绕共同的纵轴略微翻转，前面变窄时显露粉蓝厚度。三个词块共享角度和回转节拍，禁止各自散开；正面停顿应比最侧面更久。",
+      "status": "inferred"
+    },
+    {
+      "rule": "准备三组长短相近的片段，第三块可以最短。保持窄体、厚笔画和连通关系，长文案另行改写，不通过缩成小字容纳。",
+      "status": "inferred"
+    }
+  ]
+}

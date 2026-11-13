@@ -1,0 +1,403 @@
+{
+  "tracks": [
+    {
+      "id": "text-0.center",
+      "target": "text-0",
+      "property": "center",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          10,
+          13.5
+        ]
+      ],
+      "samples": [
+        [
+          10,
+          [
+            630.0000024333335,
+            278.99999987083334
+          ]
+        ],
+        [
+          10.5,
+          [
+            632.9999974437501,
+            302.0000000375
+          ]
+        ],
+        [
+          11,
+          [
+            634.9999976214285,
+            312.99999960714285
+          ]
+        ],
+        [
+          11.5,
+          [
+            634.9999976692309,
+            316.99999963846153
+          ]
+        ],
+        [
+          12,
+          [
+            639.9999952888888,
+            317.5000005160103
+          ]
+        ],
+        [
+          12.5,
+          [
+            635.9999978123617,
+            325.00000157631223
+          ]
+        ],
+        [
+          13.5,
+          [
+            635.9999981999999,
+            326.99999971538466
+          ]
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 1.0000009458484556,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.height",
+      "target": "text-0",
+      "property": "height",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          10,
+          13.5
+        ]
+      ],
+      "samples": [
+        [
+          10,
+          150.00000000000003
+        ],
+        [
+          10.5,
+          116.0
+        ],
+        [
+          11,
+          110.0
+        ],
+        [
+          11.5,
+          94.0
+        ],
+        [
+          12,
+          91.0
+        ],
+        [
+          12.5,
+          92.88753890991211
+        ],
+        [
+          13,
+          77.99999999999994
+        ],
+        [
+          13.5,
+          73.99999999999994
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.text",
+      "target": "text-0",
+      "property": "text",
+      "unit": "text",
+      "space": "canvas",
+      "status": "measured",
+      "source": "video",
+      "method": "text",
+      "interpolation": "step",
+      "valid": [
+        [
+          10,
+          13.5
+        ]
+      ],
+      "samples": [
+        [
+          10,
+          "Framer is now"
+        ],
+        [
+          13.5,
+          "Framer is now"
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.width",
+      "target": "text-0",
+      "property": "width",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          10,
+          13.5
+        ]
+      ],
+      "samples": [
+        [
+          10,
+          1168.0
+        ],
+        [
+          10.5,
+          818.0000000000001
+        ],
+        [
+          11,
+          702.0
+        ],
+        [
+          11.5,
+          638.0
+        ],
+        [
+          12.5,
+          553.0310668945312
+        ],
+        [
+          13,
+          518.0
+        ],
+        [
+          13.5,
+          491.9999999999999
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 1.8177795410157387,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-1.center",
+      "target": "text-1",
+      "property": "center",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          10,
+          13.5
+        ]
+      ],
+      "samples": [
+        [
+          10,
+          [
+            634.0000011415643,
+            452.0000004949303
+          ]
+        ],
+        [
+          10.5,
+          [
+            644.0000017999497,
+            426.00000001836986
+          ]
+        ],
+        [
+          11,
+          [
+            634.9999987307747,
+            417.00000007723054
+          ]
+        ],
+        [
+          12,
+          [
+            635.0000007761641,
+            405.0000002866782
+          ]
+        ],
+        [
+          13,
+          [
+            627.9999988928562,
+            400.0000001051159
+          ]
+        ],
+        [
+          13.5,
+          [
+            628.0000012765363,
+            399.0000003624292
+          ]
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 1.5000020051214165,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-1.height",
+      "target": "text-1",
+      "property": "height",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          10,
+          13.5
+        ]
+      ],
+      "samples": [
+        [
+          10,
+          165.47413635253906
+        ],
+        [
+          10.5,
+          125.86071014404297
+        ],
+        [
+          11,
+          102.64628601074224
+        ],
+        [
+          11.5,
+          100.04933929443354
+        ],
+        [
+          12,
+          75.05702209472662
+        ],
+        [
+          12.5,
+          84.39252090454107
+        ],
+        [
+          13.5,
+          73.41925811767572
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 1.3472766876220703,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-1.text",
+      "target": "text-1",
+      "property": "text",
+      "unit": "text",
+      "space": "canvas",
+      "status": "measured",
+      "source": "video",
+      "method": "text",
+      "interpolation": "step",
+      "valid": [
+        [
+          10,
+          13.5
+        ]
+      ],
+      "samples": [
+        [
+          10,
+          "in Cursor"
+        ],
+        [
+          13.5,
+          "in Cursor"
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-1.width",
+      "target": "text-1",
+      "property": "width",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          10,
+          13.5
+        ]
+      ],
+      "samples": [
+        [
+          10,
+          778.5263671875
+        ],
+        [
+          10.5,
+          577.904541015625
+        ],
+        [
+          11,
+          482.92315673828125
+        ],
+        [
+          12,
+          398.1951904296875
+        ],
+        [
+          12.5,
+          390.8772888183594
+        ],
+        [
+          13,
+          376.8365478515625
+        ],
+        [
+          13.5,
+          352.6639709472656
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0.306549072265625,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    }
+  ]
+}

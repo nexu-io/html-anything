@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#edf2f5",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Auto-join scheduled meetings",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "版本标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "功能标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "桌面窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "日历",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "会议",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机键盘",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "浏览器侧栏",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#edf2f5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#17191c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a38ce8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bddbf2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d5d0e6",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "浅蓝紫柔光环境，黑色无衬线标题，产品窗口带柔和投影。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "工作流、团队聊天、会议、手机语音和浏览器助手分段出现。统一采用短标题接界面的节奏，切换能力时重新建立场景。",
+      "status": "inferred"
+    },
+    {
+      "rule": "桌面与手机以轻微透视旋转进入，重要按钮和输入区再推近。蓝紫环境光始终留在窗口外侧，说明文字保持平直易读。",
+      "status": "inferred"
+    },
+    {
+      "rule": "靠近键盘中的语音按钮，显示监听状态后再出现正文，最后拉回完整手机。替换功能时保留操作状态与结果的先后。",
+      "status": "inferred"
+    }
+  ]
+}

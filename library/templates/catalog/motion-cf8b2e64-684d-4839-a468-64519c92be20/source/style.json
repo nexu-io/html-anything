@@ -1,0 +1,138 @@
+{
+  "background": {
+    "color": "#f5f4ef",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Export",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Present",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Describe your deck",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "提示框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "幻灯片编辑器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "缩略图栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "讲稿区",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌色板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "导出菜单",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f5f4ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#222222",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f07818",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4b4fe3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d4f55d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b8e9d4",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "浅灰点阵外框，黑色中等无衬线；品牌示例为青绿与酸黄，说明段用蓝底。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "输入主题后生成封面、内容与讲稿，缩略图栏始终在左。逐页切换显示配色、字体和插画语言如何延续。",
+      "status": "inferred"
+    },
+    {
+      "rule": "蓝色说明段把字体色板放在一侧、演示稿放另一侧，接着直接选中文字修改。使用同一套酸黄、青绿和深褐内容资产。",
+      "status": "inferred"
+    },
+    {
+      "rule": "保留 Present 和 Export 的区别，导出菜单打开后给出文件反馈。替换主题时需要成套替换各页、讲稿和品牌系统。",
+      "status": "inferred"
+    }
+  ]
+}

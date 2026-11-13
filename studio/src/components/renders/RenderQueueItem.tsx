@@ -41,11 +41,11 @@ export const RenderQueueItem = memo(function RenderQueueItem({
     (e: React.MouseEvent) => {
       e.stopPropagation();
       const a = document.createElement("a");
-      a.href = fileSrc;
-      a.download = job.filename;
+      a.href = fileSrc + "?download=1";
+      a.download = "";
       a.click();
     },
-    [fileSrc, job.filename],
+    [fileSrc],
   );
 
   const viewSrc = fileSrc;

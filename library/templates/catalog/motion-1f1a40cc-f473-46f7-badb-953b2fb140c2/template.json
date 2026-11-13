@@ -1,0 +1,390 @@
+{
+  "templateId": "motion-1f1a40cc-f473-46f7-badb-953b2fb140c2",
+  "entry": {
+    "templateId": "motion-1f1a40cc-f473-46f7-badb-953b2fb140c2",
+    "sortOrder": 201,
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "previewUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+    "coverUrl": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+    "motionDocumentUrl": "https://r.open-design.ai/files/2e50168f1f7c9acfef713015c4b9b8072348c937e5c4b8b634886fbb5f3d10c0",
+    "motionGuideUrl": "https://r.open-design.ai/files/2e3324f3f8ae59426f40f62d189b5dfc75cf387ad9ab8fa10849a55b9e07b10c",
+    "projectFileUrl": null,
+    "files": [],
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "not_run"
+    },
+    "featuredOrder": null,
+    "original": {
+      "templateName": "Glass.",
+      "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+      "summary": "玻璃本身固定，手和容器从后方经过；细密方格把轮廓分成错位的小段。全景交代框架，近景让纹理与失真关系清楚可见。",
+      "styleDescription": "中性灰白摄影空间，细密压纹玻璃，棕肤色只作为玻璃后的移动参照。",
+      "promotionalUseCases": "品牌宣传",
+      "visualPresentation": "实拍剪辑",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+      "reviewFocus": "玻璃本身固定，手和容器从后方经过；细密方格把轮廓分成错位的小段。全景交代框架，近景让纹理与失真关系清楚可见。；灰白空间与侧向软光凸显凹凸玻璃，金属竖杆提供稳定边界。移动速度较慢，避免动作模糊掩盖压纹。；可以换成瓶、花、手部或彩色几何体；玻璃网格始终不动，失真随后方对象的位置变化。结尾停在安静的物体状态。",
+      "category": "",
+      "durationSeconds": "10.04",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+      "exampleVideo": "",
+      "templateId": "V160",
+      "sourceVideoTitle": "201_Nothing.mp4"
+    },
+    "brand": "Nothing",
+    "colors": [
+      "monochrome"
+    ],
+    "width": 720,
+    "height": 720,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。"
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Glass.",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "Das Glas bleibt fest; Hand und Gefäß bewegen sich dahinter. Das dichte Raster zerlegt Konturen in versetzte Stücke. Die Gesamtansicht erklärt den Rahmen, Nahaufnahmen machen Struktur und Verzerrung sichtbar.",
+        "styleDescription": "Neutraler grau-weißer Fotoraum, fein geprägtes Glas; braune Haut dient nur als bewegter Bezug hinter dem Glas.",
+        "promotionalUseCases": "Markenwerbung",
+        "visualPresentation": "Realfilm-Schnitt",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "Das Glas bleibt fest; Hand und Gefäß bewegen sich dahinter. Das dichte Raster zerlegt Konturen in versetzte Stücke. Die Gesamtansicht erklärt den Rahmen, Nahaufnahmen machen Struktur und Verzerrung sichtbar. Grau-weißer Raum und weiches Seitenlicht betonen die Glasstruktur; Metallstreben bieten feste Grenzen. Langsame Bewegung verhindert, dass Bewegungsunschärfe die Prägung verdeckt. Flasche, Blumen, Hand oder farbige Geometrie sind austauschbar. Das Glasraster bleibt immer fest; die Verzerrung folgt der Objektposition dahinter. Auf einem ruhigen Objektzustand enden.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "motionDocumentUrl": "https://r.open-design.ai/files/792bab067adcc6e2d562a4bf1ae5f5a26222b57cc285905d557951863aec4d4b",
+      "motionGuideUrl": "https://r.open-design.ai/files/b2dbbd51e37c8133005e2aa940d20798ee44c62e9c0c147ee20d99f8f6901f62",
+      "original": {
+        "templateName": "Movement reveals patterned glass",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "Keep the glass fixed as hands and containers pass behind it; the fine grid splits contours into offset segments. Wide shots establish the frame, while close-ups clarify the relationship between texture and distortion.",
+        "styleDescription": "Neutral gray-white photographic space and finely embossed glass; brown skin serves only as a moving reference behind the glass.",
+        "promotionalUseCases": "Brand promotion",
+        "visualPresentation": "Live-action editing",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "Keep the glass fixed as hands and containers pass behind it; the fine grid splits contours into offset segments. Wide shots establish the frame, while close-ups clarify the relationship between texture and distortion. Gray-white surroundings and soft side lighting reveal the glass relief, with metal vertical rods providing stable boundaries. Move slowly enough that motion blur does not conceal the embossing. Replace objects with bottles, flowers, hands or colored geometry; keep the glass grid stationary as distortion changes with objects behind it. End with a quiet object state.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Vidrio.",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "El cristal permanece fijo mientras una mano y un recipiente pasan detrás; la cuadrícula fina divide sus contornos en pequeños segmentos desplazados. El plano general sitúa el marco y los detalles muestran claramente la relación entre textura y distorsión.",
+        "styleDescription": "Espacio fotográfico neutro gris y blanco, cristal con relieve fino y piel marrón solo como referencia móvil detrás del cristal.",
+        "promotionalUseCases": "Promoción de marca",
+        "visualPresentation": "Montaje de imagen real",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "El cristal permanece fijo mientras una mano y un recipiente pasan detrás; la cuadrícula fina divide sus contornos en pequeños segmentos desplazados. El plano general sitúa el marco y los detalles muestran claramente la relación entre textura y distorsión.; El espacio gris blanco y la luz lateral suave destacan el relieve del cristal; las barras metálicas verticales ofrecen bordes estables. Mover lentamente para que el desenfoque no oculte la textura.; Se pueden sustituir los objetos por botellas, flores, manos o figuras de colores; la cuadrícula del cristal nunca se mueve y la distorsión sigue la posición del objeto posterior. Terminar con un objeto en reposo.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Glass.",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "Le verre reste fixe, main et récipient passent derrière. La fine grille fragmente les contours en segments décalés. Le plan large montre le cadre, le gros plan relie texture et déformation.",
+        "styleDescription": "Espace photographique gris-blanc neutre, verre finement texturé ; peau brune utilisée uniquement comme repère mobile derrière le verre.",
+        "promotionalUseCases": "Promotion de marque",
+        "visualPresentation": "Montage en prises de vues réelles",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "Le verre reste fixe, main et récipient passent derrière. La fine grille fragmente les contours en segments décalés. Le plan large montre le cadre, le gros plan relie texture et déformation. Gris-blanc et lumière latérale douce soulignent le relief ; les montants métalliques fixent les limites. Mouvement lent pour ne pas masquer la texture par le flou. Remplacer par bouteille, fleurs, main ou formes colorées ; la grille reste immobile, la distorsion suit les objets derrière. Finir sur un état calme.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Glass.",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "Il vetro resta fermo; mano e contenitore passano dietro. La griglia fitta divide i contorni in segmenti sfalsati. Il campo largo mostra la struttura, il dettaglio lega trama e distorsione.",
+        "styleDescription": "Spazio fotografico neutro grigio-bianco, vetro finemente goffrato; pelle bruna solo come riferimento mobile dietro il vetro.",
+        "promotionalUseCases": "Promozione del marchio",
+        "visualPresentation": "Montaggio di riprese dal vivo",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "Il vetro resta fermo; mano e contenitore passano dietro. La griglia fitta divide i contorni in segmenti sfalsati. Il campo largo mostra la struttura, il dettaglio lega trama e distorsione. Luce laterale morbida e ambiente grigio-bianco mostrano il rilievo; aste metalliche fissano i confini. Moto lento per non nascondere la texture nel mosso. Si possono usare bottiglia, fiori, mano o geometrie colorate. La griglia è sempre ferma; la distorsione segue l’oggetto dietro. Concludere in uno stato quieto.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "ガラス。",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "ガラスは固定し、手と容器を背後から通す。細かな格子で輪郭をずれた小片に分ける。全景で枠を示し、近景で模様と歪みの関係を明確に見せる。",
+        "styleDescription": "ニュートラルなグレーと白の撮影空間、細かな型板ガラス、背後の動きの目印としてだけ使う褐色の肌。",
+        "promotionalUseCases": "ブランドプロモーション",
+        "visualPresentation": "実写映像編集",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "ガラスは固定し、手と容器を背後から通す。細かな格子で輪郭をずれた小片に分ける。全景で枠を示し、近景で模様と歪みの関係を明確に見せる。；グレーと白の空間と横からの柔らかな光でガラスの凹凸を強調し、金属の縦棒を安定した境界にする。動きを遅くして、モーションブラーで模様が隠れないようにする。；瓶、花、手、色付きの幾何立体に差し替えられる。ガラスの格子は動かさず、背後の対象の位置に合わせて歪みを変える。最後は静かな物体の状態で止める。",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "유리",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "유리 자체는 고정하고 손과 용기가 뒤로 지나간다；촘촘한 사각 무늬가 윤곽을 어긋난 작은 조각으로 나눈다. 전체 숏으로 프레임을 설명하고 클로즈업으로 무늬와 왜곡의 관계를 명확히 보여 준다.",
+        "styleDescription": "중성 회백색 촬영 공간과 촘촘한 무늬 유리를 사용하며 갈색 피부는 유리 뒤 움직임의 기준으로만 쓴다.",
+        "promotionalUseCases": "브랜드 홍보",
+        "visualPresentation": "실사 영상 편집",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "유리 자체는 고정하고 손과 용기가 뒤로 지나간다；촘촘한 사각 무늬가 윤곽을 어긋난 작은 조각으로 나눈다. 전체 숏으로 프레임을 설명하고 클로즈업으로 무늬와 왜곡의 관계를 명확히 보여 준다.；회백색 공간과 측면의 부드러운 빛으로 요철 유리를 강조하고 금속 세로 기둥으로 안정된 경계를 만든다. 움직임은 느리게 해 모션 블러가 무늬를 가리지 않게 한다.；병, 꽃, 손, 컬러 기하 물체로 바꿀 수 있다；유리 그리드는 계속 고정하고 뒤쪽 객체의 위치에 따라 왜곡만 바꾼다. 마지막은 고요한 물체 상태로 멈춘다.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Vidro.",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "O vidro permanece fixo enquanto uma mão e um recipiente passam atrás; a grade fina divide os contornos em pequenos segmentos deslocados. O plano geral situa a moldura, e os detalhes mostram claramente a relação entre textura e distorção.",
+        "styleDescription": "Espaço fotográfico neutro cinza e branco, vidro com relevo fino e pele marrom apenas como referência móvel atrás do vidro.",
+        "promotionalUseCases": "Divulgação de marca",
+        "visualPresentation": "Edição de filmagens reais",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "O vidro permanece fixo enquanto uma mão e um recipiente passam atrás; a grade fina divide os contornos em pequenos segmentos deslocados. O plano geral situa a moldura, e os detalhes mostram claramente a relação entre textura e distorção.; O espaço cinza e branco e a luz lateral suave destacam o relevo do vidro; barras metálicas verticais oferecem bordas estáveis. Mover devagar para que o desfoque não esconda a textura.; É possível substituir os objetos por garrafas, flores, mãos ou formas coloridas; a grade do vidro nunca se move, e a distorção acompanha a posição do objeto atrás. Terminar com um objeto em repouso.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Стекло.",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "Стекло неподвижно, рука и ёмкость проходят позади; мелкая сетка разбивает контуры на смещённые фрагменты. Общий план показывает рамку, крупный — связь фактуры и искажения.",
+        "styleDescription": "Нейтральное серо-белое съёмочное пространство, мелкорельефное стекло; коричневый тон кожи служит лишь движущимся ориентиром за стеклом.",
+        "promotionalUseCases": "Продвижение бренда",
+        "visualPresentation": "Монтаж натурных съёмок",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "Стекло неподвижно, рука и ёмкость проходят позади; мелкая сетка разбивает контуры на смещённые фрагменты. Общий план показывает рамку, крупный — связь фактуры и искажения.；Серо-белое пространство и мягкий боковой свет выявляют рельеф стекла, металлическая стойка задаёт стабильную границу. Движение медленное, чтобы смаз не скрывал тиснение.；Можно использовать бутылку, цветы, руку или цветную геометрическую фигуру；Сетка стекла всегда неподвижна; искажение меняется с положением объекта позади. Финал останавливается на спокойном состоянии объекта.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Glass.",
+        "videoPreview": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "summary": "Cam sabittir; el ve kap arkasından geçer. Sık ızgara konturları kaymış parçalara ayırır. Genel plan çerçeveyi, yakın plan doku-bozulma ilişkisini gösterir.",
+        "styleDescription": "Nötr gri-beyaz fotoğraf alanı, ince kabartmalı cam; kahverengi ten yalnızca arkadaki hareket referansıdır.",
+        "promotionalUseCases": "Marka tanıtımı",
+        "visualPresentation": "Canlı çekim kurgusu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/21922e55482cb6ab64e56b6c7a34414cb2fbe5077bab8730e12cc7f85200c970",
+        "reviewFocus": "Cam sabittir; el ve kap arkasından geçer. Sık ızgara konturları kaymış parçalara ayırır. Genel plan çerçeveyi, yakın plan doku-bozulma ilişkisini gösterir. Gri-beyaz ortam ve yumuşak yan ışık kabartmayı vurgular; metal dikmeler sabit sınırdır. Hareket yavaştır, bulanıklık dokuyu örtmez. Şişe, çiçek, el veya renkli geometri kullanılabilir. Cam ızgarası sabit, bozulma arka nesnenin konumuna bağlıdır. Sonda sakin nesne durumu kalır.",
+        "category": "",
+        "durationSeconds": "10.04",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/9074a10cabd9c4ea641bfbc6da9b1abd2c2fbaf70cf606572bf08350f6f9facb",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/nothing/status/2104209448579301482",
+        "exampleVideo": "",
+        "templateId": "V160",
+        "sourceVideoTitle": "201_Nothing.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/2e50168f1f7c9acfef713015c4b9b8072348c937e5c4b8b634886fbb5f3d10c0",
+    "bytes": 595541,
+    "sha256": "2e50168f1f7c9acfef713015c4b9b8072348c937e5c4b8b634886fbb5f3d10c0"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 106760,
+        "sha256": "56d23127be31c5f0c4a59fa7d3b5135f8665af2653960df4b5a47db9a1ebf5d0"
+      },
+      "url": "https://r.open-design.ai/files/f89617af350085fb27ab0b898247246f3318bd119d40f7977cb7616ed84e15a3",
+      "bytes": 32224,
+      "sha256": "f89617af350085fb27ab0b898247246f3318bd119d40f7977cb7616ed84e15a3"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 127864,
+        "sha256": "49b2699432b4e10865d1ee6db9ea65cae24cabb8e1dcebdb45001362651c8ed5"
+      },
+      "url": "https://r.open-design.ai/files/9f3df64df469e58c50f1f482bc408f00be600a5d9336dabfedd1dda1e1e1d260",
+      "bytes": 44490,
+      "sha256": "9f3df64df469e58c50f1f482bc408f00be600a5d9336dabfedd1dda1e1e1d260"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 110252,
+        "sha256": "3a3fbc8778a4e96fca7622db5428ea5e4f422d409c4c986732c5e06300f60097"
+      },
+      "url": "https://r.open-design.ai/files/733c7fd5c19942fac396ace5896e3b0b18274fb61da2783877e81cee1f96a327",
+      "bytes": 34856,
+      "sha256": "733c7fd5c19942fac396ace5896e3b0b18274fb61da2783877e81cee1f96a327"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 123942,
+        "sha256": "2ad7775a7603e58b15ab84472aca8369b4b12c37f67794fade58acec8e7cd50e"
+      },
+      "url": "https://r.open-design.ai/files/9452009c6f42a38ba219e60f6fffc3303f8cd5861fd354639a4370f831e605e1",
+      "bytes": 44360,
+      "sha256": "9452009c6f42a38ba219e60f6fffc3303f8cd5861fd354639a4370f831e605e1"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 103538,
+        "sha256": "52c7b7f869227465c6dbc087e3c10d7cc4715baa63cc676dd0c3fba9ee8f8906"
+      },
+      "url": "https://r.open-design.ai/files/5d6635b2c4d644661a8b9dc46c3dad8fedec4c4255adc868350ae338a3c08edc",
+      "bytes": 32296,
+      "sha256": "5d6635b2c4d644661a8b9dc46c3dad8fedec4c4255adc868350ae338a3c08edc"
+    }
+  ]
+}

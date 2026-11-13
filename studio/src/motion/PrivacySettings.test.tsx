@@ -2,7 +2,7 @@
 import React, { act } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, expect, it, vi } from 'vitest';
-import { I18nProvider } from '../i18n/I18n';
+import { I18nProvider, useI18n, translate } from '../i18n/I18n';
 import { PrivacySettings } from './PrivacySettings';
 
 const hooks = vi.hoisted(() => ({ enabled: vi.fn() }));
@@ -56,4 +56,24 @@ it('reports save failure without falsely claiming the installation has opted out
   const toggle = await open(); await act(async () => toggle.click());
   expect(toggle.checked).toBe(true); expect(document.querySelector('[role=alert]')?.textContent).toContain('Could not save');
   expect(hooks.enabled).toHaveBeenCalledWith(false);
+});
+
+it('translates an existing failure without refetching or replacing the privacy form', async () => {
+  const fetcher = vi.fn(async (_url: string, init?: RequestInit) => init?.method === 'PUT'
+    ? Response.json({ error: 'failed' }, { status: 500 }) : Response.json({ enabled: true, preference: true, locked: false }));
+  vi.stubGlobal('fetch', fetcher);
+  function App() {
+    const { setLocale } = useI18n();
+    return <><button onClick={() => setLocale('ja')}>Japanese</button><PrivacySettings onClose={() => {}} /></>;
+  }
+  const container = document.createElement('div'); document.body.append(container); root = createRoot(container);
+  await act(async () => root!.render(<I18nProvider initialLocale="en"><App /></I18nProvider>));
+  const toggle = container.querySelector<HTMLInputElement>('input[type=checkbox]')!;
+  await act(async () => toggle.click());
+  expect(container.querySelector('[role=alert]')?.textContent).toBe('Could not save privacy settings.');
+  await act(async () => container.querySelector('button')!.click());
+  expect(container.querySelector('[role=alert]')?.textContent).toBe(translate('ja', 'Could not save privacy settings.'));
+  expect(container.querySelector('input')).toBe(toggle);
+  expect(toggle.checked).toBe(true);
+  expect(fetcher).toHaveBeenCalledTimes(2);
 });

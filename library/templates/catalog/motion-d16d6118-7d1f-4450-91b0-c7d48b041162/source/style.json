@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#bceae6",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：GOOD TIME",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：PLAN ON A",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：PLAN",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "重复行李箱",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "拉杆",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "中心短句",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "倾斜排列",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#bceae6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#233e5e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f14e32",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6d819b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#eff6ec",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线大写两行短句；固定中心，产品重复成倾斜图案",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "重复行李箱围绕固定短句滑动与翻转，让旅行主张在连续图案中保持可读。",
+      "status": "inferred"
+    },
+    {
+      "rule": "各箱保持相同透视，斜向平移时使用一致间距。拉杆先伸出，再整体翻转；画面边缘的箱体允许裁切，中心短句保留主要阅读区。",
+      "status": "inferred"
+    },
+    {
+      "rule": "浅青背景、深蓝箱体和橙红大写短句形成三层。标题用粗无衬线分两行，箱体可短暂遮挡局部字，但不能长时间盖住整句。",
+      "status": "inferred"
+    }
+  ]
+}

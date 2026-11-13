@@ -52,7 +52,7 @@ test('remote entry point builds a fresh checkout before registering and checking
     assert.match(result.stdout, /OpenMotion registration and independent MCP preflight succeeded/);
     const onboarding = JSON.parse(result.stdout.slice(result.stdout.indexOf('\n{') + 1));
     assert.equal(onboarding.hostSessionVerified, false);
-    assert.match(onboarding.instructions, /OpenMotion 开源免费/);
+    assert.match(onboarding.instructions, /OpenMotion 已安装完成。/);
     assert.equal(onboarding.catalog.source, 'bundled');
     assert.equal(onboarding.preview.status, 'ready');
     assert.ok(commands.indexOf('MCP check') < commands.indexOf('Template library prepared'));
@@ -135,7 +135,7 @@ test('the onboarding entry runs through a symlinked checkout path', async () => 
     assert.equal(result.status, 0, result.stderr);
     const onboarding = JSON.parse(result.stdout);
     assert.equal(onboarding.hostSessionVerified, false);
-    assert.match(onboarding.instructions, /OpenMotion 开源免费/);
+    assert.match(onboarding.instructions, /OpenMotion 已安装完成。/);
     assert.equal(onboarding.catalog.source, 'bundled');
   });
 });

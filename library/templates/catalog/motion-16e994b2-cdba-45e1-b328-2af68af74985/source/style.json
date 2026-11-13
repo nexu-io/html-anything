@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#f3d4c3",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Alright everybody, it's showtime!",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Okay! Quick roll call. Everybody ready?",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：I think we're one short.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "舞台台面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机对",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "彩色语音球",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "字幕",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "横移镜头",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f3d4c3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#28211f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8d8be7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c2decf",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7d2426",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "暖色舞台俯视、手机成对排列、底部对话字幕",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "通过重复横移寻找不同手机组，像演员点名一样介绍声音。",
+      "status": "inferred"
+    },
+    {
+      "rule": "各手机球体颜色对应不同声音组，字幕体现轮流回应。",
+      "status": "inferred"
+    },
+    {
+      "rule": "末段从成对到单台形成节奏反差，再切白底落版。",
+      "status": "inferred"
+    }
+  ]
+}

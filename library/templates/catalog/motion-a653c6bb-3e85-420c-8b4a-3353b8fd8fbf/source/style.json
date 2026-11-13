@@ -1,0 +1,110 @@
+{
+  "background": {
+    "color": "#f6fff0",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：CPU",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "衬线主词",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "彩色进程块",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "植物线描",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蝴蝶与蜜蜂",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "角落控制",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "Pond 四字母",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f6fff0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#32170d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d3fc55",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bf9cf0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f48aaa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#9de1d2",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "衬线斜体主词搭配等宽微型系统标签；矩形色块不使用圆角",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用花园与蜂群比喻计算系统：大字给主张，彩色微型进程块在周围持续活动。",
+      "status": "inferred"
+    },
+    {
+      "rule": "garden、blossoms、bees 分别占据主画面，周围短标签组成任务、模型和进程关系。主词用大号衬线斜体，微型文字用等宽，二者字号差距要足够明显。",
+      "status": "inferred"
+    },
+    {
+      "rule": "大部分画面用浅纸底，关键转折整屏切深棕或亮黄。荧光绿、紫、粉与薄荷色以硬边矩形进入，不做柔和玻璃卡；植物线描降低对比度，作为纹理而非正文。",
+      "status": "inferred"
+    }
+  ]
+}

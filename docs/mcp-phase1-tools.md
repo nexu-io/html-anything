@@ -11,8 +11,8 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 
 | 公开 Tool | 复用来源 | 本次实现到的边界 |
 | --- | --- | --- |
-| openmotion_list_templates | Prism 发布目录与本地缓存 | 无查询参数；返回本地 JSONL 索引路径、总数和目录版本，宿主自行检索 |
-| openmotion_get_template | 同一目录缓存与文件服务 | 按 ID 读取模板元数据、文件清单和 TEMPLATE.md |
+| openmotion_list_templates | Local repository or configured CMS catalog | No query arguments; returns source, a local JSONL index, count and catalog version for local search |
+| openmotion_get_template | Same local/CMS reader | Exact ID; repository entries return local instructions, motionDocument content and absolute localSource paths |
 | openmotion_create_project | 项目目录、空白工程、模板复制、会话归属 | 新建独立载体、保存需求/来源、返回初始内容版本；宿主 Agent 制作影片 |
 | openmotion_open_preview | 原预览、项目选择、原生 lint | 打开指定已有工程；仅明确绑定的 OpenMotion 会话可省 projectId；返回真实 URL |
 | openmotion_import_assets | 素材目录、FFprobe/FFmpeg | 实际本机媒体批量持久化、逐项结果、稳定素材 ID、去重；不自动排入时间线 |
@@ -38,7 +38,7 @@ Skill 是指导文档，与公开 Tool 数量分开。本次后续命名与分�
 
 ### openmotion_list_templates / openmotion_get_template
 
-list 无参数，返回 indexPath、total、catalogVersion 和可选 warning，不返回查询结果。Agent 在本机检索 JSONL 索引；每行是模板摘要。get 必填 templateId，返回单个模板、files 与 instructions（TEMPLATE.md）。已知 ID 无需先 list。目录和文件缓存配置、失败行为见 [模板目录](template-catalog.md)。
+List has no arguments and returns source, indexPath, total and catalogVersion. Search the local JSONL index; repository rows include localSource paths. Get requires templateId and reads the selected template's instructions. Repository mode also returns motionDocument={path,content} and localSource paths for metadata, guide, manifest and examples, without requiring an editor/backend or CMS request. Source checkouts default to repository; distributions without catalog files default to CMS. See [startup and source selection](template-repository.md#run-from-a-local-clone). Guidance-only examples require authoring a new project; direct projectType=template copying still requires actual editable project files.
 
 ### openmotion_create_project
 
@@ -54,9 +54,9 @@ Default action=open accepts an explicit projectId or bound sessionId, optional e
 
 Preview and export preflight use the same pinned native `host:"studio"` lint policy as the editor. Structural errors return `PROJECT_VALIDATION_FAILED` before preview opening, or a failed export before rendering, with native code/file/location/fix hints. Warnings do not fail the check. See the [shared lint command](hyperframes.md).
 
-The handoff preserves the current chat by default (presentation=foreground): reuse its native Tab and queue while inactive. On return, resolve the latest project version without replaying the queued version. Codex actions include a calling-chat-only visibilitySync and bounded observation instructions; queued alone is not confirmation. Only an explicit presentation=now request allows switching back for this turn; background skips presentation. See the shared [continuing-edit workflow](../skills/openmotion-production/references/native.md#continuing-edits).
+The handoff preserves the current chat by default (presentation=foreground): reuse its native Tab and queue while inactive. On return, resolve the latest project version without replaying the queued version. Codex actions include a calling-chat-only visibilitySync and bounded observation instructions; queued alone is neither confirmation nor proof that the calling chat is inactive. First delivery follows the same checks as continued edits. A separate hidden automation tab, markDeliverable or completed MP4 export does not satisfy editor delivery. Retry a missing native tab presentation once, then report the display gap. Only an explicit presentation=now request allows switching back for this turn; background skips presentation. See the shared [continuing-edit workflow](../skills/openmotion-production/references/native.md#continuing-edits).
 
-action=record_display requires projectId, requestId and display={revision,versionId,previewUrl,visibility,contentVerified,evidence}; optional hostStatus and hostTabId retain the acknowledgment and actual native providerTabId independently. Only visible plus inspected latest content returns confirmed. Hidden/queued/unavailable or unverified content remains pending. Reject foreign project/session/origin URLs and stale revision/version identities, including same-hash restores and retries. Records are host_reported; openmotion_get_project.previewDisplay exposes isCurrentVersion and liveVisibilityVerified=false, never a live visibility claim.
+action=record_display requires projectId, requestId and display={revision,versionId,previewUrl,visibility,contentVerified,evidence}; optional hostStatus and hostTabId retain the acknowledgment and actual native providerTabId independently. Only visible plus inspected latest content returns confirmed. Hidden/queued/unavailable or unverified content remains pending. visibility=queued explicitly reports host-confirmed inactive-chat deferral and returns wait_for_calling_chat; hostStatus=queued with visibility=hidden/unavailable retains present_preview recovery rather than assuming inactivity. Reject foreign project/session/origin URLs and stale revision/version identities, including same-hash restores and retries. Records are host_reported; openmotion_get_project.previewDisplay exposes isCurrentVersion and liveVisibilityVerified=false, never a live visibility claim.
 
 openmotion_edit_project and openmotion_restore_version accept the same optional presentation and return a fresh version-bound previewHandoff after each save or replay. The host owns persistent background preferences; show-now permission does not persist. Stored native Tab IDs are reuse hints that must be validated against the current host inventory. A host queue can open on return without another model turn; absent a new observation the service receipt stays pending.
 

@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#e7e3e2",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：watsonx",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：watsonx.data",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：watsonx.governance",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "细丝曲面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "球形构造",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "产品后缀",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "能力词列",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌字标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#e7e3e2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#161318",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ad99d2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d6cbe8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7374c9",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线小号产品名；后缀与能力词逐行增加，左侧对齐",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "同一细丝材质在近景与整体之间切换，产品后缀和能力词跟随不同形态分组展开。",
+      "status": "inferred"
+    },
+    {
+      "rule": "细丝近景逐渐露出球形结构，转到下一分支时重新进入局部，再回到新整体。保持细丝方向连续，近景变化成为产品分段的转场。",
+      "status": "inferred"
+    },
+    {
+      "rule": "产品名靠左，ai、data、governance 依次替换后缀，下方能力词逐行增加。浅灰背景、淡紫丝线与黑色无衬线形成轻重差；不要把名称放进最密的纹理里。",
+      "status": "inferred"
+    }
+  ]
+}

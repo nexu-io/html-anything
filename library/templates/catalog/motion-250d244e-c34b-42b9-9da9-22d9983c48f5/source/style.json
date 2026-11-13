@@ -1,0 +1,99 @@
+{
+  "background": {
+    "color": "#211928",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Comfy",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "虹彩表面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "C 形负空间",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "三面形体",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "单字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "最终字标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#211928",
+      "status": "inferred"
+    },
+    {
+      "hex": "#111111",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e7ff64",
+      "status": "inferred"
+    },
+    {
+      "hex": "#efadd9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8cccea",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "最终字标采用圆角粗字；开场只保留同形 C 的剪影",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "粉蓝黄高光填满画面，负空间逐步形成 C。拉远后显示几个相互转向的 C 面，背景回到深紫，物体总重心仍居中。",
+      "status": "inferred"
+    },
+    {
+      "rule": "立体形收成荧光黄 C，随后从左到右补齐名称。字标落定后停止空间旋转，保留约一秒的干净阅读。",
+      "status": "inferred"
+    },
+    {
+      "rule": "新名称先选一个足以独立识别的首字，再设计它的负空间与厚度。结尾不叠副标题，避免削弱由一字到全名的动作。",
+      "status": "inferred"
+    }
+  ]
+}

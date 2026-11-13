@@ -1,0 +1,304 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>design mode 新增 Annotate · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f5f5f1;--brand-ink:#202122;--accent:#9966cc;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Cursor <span>/</span> V072</div><div class="intro-line"><h1>design mode 新增 Annotate</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>围绕同一个网页完成选择、批注、样式调整、草图补充和多尺寸检查。每个修改都要有明确的目标位置与反馈。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 43.566667, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 9.8, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Annotate&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#9966cc&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Annotate&quot;, &quot;accent&quot;: &quot;#9966cc&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="43.566667" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 43.57 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;design mode 新增 Annotate · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f1}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Cursor</div><div class="type-sample">Annotate</div><p>无衬线界面文字与清晰大小层级</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f5f5f1" style="--swatch:#f5f5f1" aria-label="复制色值 #f5f5f1"><span></span><code>#F5F5F1</code></button><button class="swatch" data-color="#202122" style="--swatch:#202122" aria-label="复制色值 #202122"><span></span><code>#202122</code></button><button class="swatch" data-color="#9966cc" style="--swatch:#9966cc" aria-label="复制色值 #9966cc"><span></span><code>#9966CC</code></button><button class="swatch" data-color="#f1ba8a" style="--swatch:#f1ba8a" aria-label="复制色值 #f1ba8a"><span></span><code>#F1BA8A</code></button><button class="swatch" data-color="#9ab8ad" style="--swatch:#9ab8ad" aria-label="复制色值 #9ab8ad"><span></span><code>#9AB8AD</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>浏览器</span><span>原页面</span><span>选框</span><span>编号批注</span><span>属性面板</span><span>草图</span><span>生成区域</span><span>尺寸选择</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>网页保持稳定，修改点轮流成为焦点</h2></div><div class="rule-copy">
+<p>先打开完整页面，再点亮 Annotate 入口。批注附着在标题、按钮或具体区域上，编号与评论一一对应；页面结构不要在批注时整体漂移。</p>
+<p>浅色浏览器与米白网页提供安静背景，编号标记用单一强调色，草图用独立的红色。网页标题可有品牌字形，编辑工具仍用统一无衬线字体。</p>
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>即时样式与新增布局分开处理</h2></div><div class="rule-copy">
+<p>颜色、间距等即时修改用属性面板直接反馈，目标元素保持在原位。新增布局先画草图或写评论，再提交生成，最终用真实组件替换草图区域。</p>
+<div class="table-wrap"><table><thead><tr><th>操作</th><th>焦点</th><th>反馈</th></tr></thead><tbody>
+<tr><td>点选评论</td><td>具体元素或区域</td><td>编号与评论出现</td></tr>
+<tr><td>调整样式</td><td>选中的单个元素</td><td>颜色或尺寸即时变化</td></tr>
+<tr><td>绘制草图</td><td>新增内容位置</td><td>提交后生成布局</td></tr>
+<tr><td>切换尺寸</td><td>完整页面</td><td>内容按宽度重排</td></tr>
+</tbody></table></div>
+</div></section><section class="rule has-demo" id="section-3"><div class="rule-label"><span>03</span><h2>草图要留出足够的空间</h2></div><figure class="demo" id="demo-clip-3" data-demo="{&quot;id&quot;: &quot;clip-3&quot;, &quot;title&quot;: &quot;草图要留出足够的空间&quot;, &quot;src&quot;: &quot;demos/clip-3.html&quot;, &quot;duration&quot;: 10, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;24–34 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>草图要留出足够的空间</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="草图要留出足够的空间" data-src="demos/clip-3.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="10" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 10.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>24–34 秒 · 动作示意 <a href="demos/clip-3.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;design mode 新增 Annotate · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f1}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;24&quot; data-end=&quot;34&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>画框、线条和箭头只表达结构与方向，不追求精致插画。提交之后保留同一位置锚点，让读者看清草图怎样变成表单或内容区。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>完成修改后再检查窄屏</h2></div><div class="rule-copy">
+<p>桌面改稿稳定后切到手机和平板宽度。内容身份、按钮文案和新增区域保持一致，排版随空间变化。</p>
+<p>换主题时替换网页素材与修改要求，但每条批注都必须仍能对应一个明确目标。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>发布标题</b></button><button class="beat" data-time="5.0"><span>5.00<small>s</small></span><b>打开网页</b></button><button class="beat" data-time="9.0"><span>9.00<small>s</small></span><b>标注主张</b></button><button class="beat" data-time="11.0"><span>11.00<small>s</small></span><b>点选与批注</b></button><button class="beat" data-time="16.0"><span>16.00<small>s</small></span><b>实时样式</b></button><button class="beat" data-time="20.0"><span>20.00<small>s</small></span><b>修改按钮颜色</b></button><button class="beat" data-time="24.0"><span>24.00<small>s</small></span><b>草图需求</b></button><button class="beat" data-time="27.0"><span>27.00<small>s</small></span><b>画框与连线</b></button><button class="beat" data-time="31.0"><span>31.00<small>s</small></span><b>应用修改</b></button><button class="beat" data-time="35.0"><span>35.00<small>s</small></span><b>多屏检查</b></button><button class="beat" data-time="39.0"><span>39.00<small>s</small></span><b>平板版</b></button><button class="beat" data-time="41.0"><span>41.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.jpg" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.jpg" alt="9.00 秒的构图参考" loading="lazy"><figcaption>9.00s</figcaption></figure><figure><img src="assets/reference-3.jpg" alt="16.00 秒的构图参考" loading="lazy"><figcaption>16.00s</figcaption></figure><figure><img src="assets/reference-4.jpg" alt="27.00 秒的构图参考" loading="lazy"><figcaption>27.00s</figcaption></figure><figure><img src="assets/reference-5.jpg" alt="35.00 秒的构图参考" loading="lazy"><figcaption>35.00s</figcaption></figure><figure><img src="assets/reference-6.jpg" alt="41.00 秒的构图参考" loading="lazy"><figcaption>41.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可迁移到视觉编辑工具，保留选择→局部输入→反馈→多尺寸检查</li><li>替换页面主题时保持原位置锚点和修改作用域</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>浏览器 / 原页面 / 选框 / 编号批注 / 属性面板 / 草图 / 生成区域 / 尺寸选择</p>
+<ul><li>标注附着在目标元素上，编号和批注保持一一对应</li><li>样式修改可直接预览，草图新增需先提交再出现真实组件</li><li>响应式检查发生在修改完成后，保持同一页面内容</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Cursor / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># design mode 新增 Annotate
+
+围绕同一个网页完成选择、批注、样式调整、草图补充和多尺寸检查。每个修改都要有明确的目标位置与反馈。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 43.566667,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 9.8,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Annotate&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#9966cc&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Annotate&quot;,
+        &quot;accent&quot;: &quot;#9966cc&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 网页保持稳定，修改点轮流成为焦点
+
+先打开完整页面，再点亮 Annotate 入口。批注附着在标题、按钮或具体区域上，编号与评论一一对应；页面结构不要在批注时整体漂移。
+
+浅色浏览器与米白网页提供安静背景，编号标记用单一强调色，草图用独立的红色。网页标题可有品牌字形，编辑工具仍用统一无衬线字体。
+
+## 即时样式与新增布局分开处理
+
+颜色、间距等即时修改用属性面板直接反馈，目标元素保持在原位。新增布局先画草图或写评论，再提交生成，最终用真实组件替换草图区域。
+
+| 操作 | 焦点 | 反馈 |
+| --- | --- | --- |
+| 点选评论 | 具体元素或区域 | 编号与评论出现 |
+| 调整样式 | 选中的单个元素 | 颜色或尺寸即时变化 |
+| 绘制草图 | 新增内容位置 | 提交后生成布局 |
+| 切换尺寸 | 完整页面 | 内容按宽度重排 |
+
+## 草图要留出足够的空间
+
+画框、线条和箭头只表达结构与方向，不追求精致插画。提交之后保留同一位置锚点，让读者看清草图怎样变成表单或内容区。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-3&quot;,
+  &quot;title&quot;: &quot;草图要留出足够的空间&quot;,
+  &quot;src&quot;: &quot;demos/clip-3.html&quot;,
+  &quot;duration&quot;: 10,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;24–34 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 完成修改后再检查窄屏
+
+桌面改稿稳定后切到手机和平板宽度。内容身份、按钮文案和新增区域保持一致，排版随空间变化。
+
+换主题时替换网页素材与修改要求，但每条批注都必须仍能对应一个明确目标。
+
+## 配色与字形
+
+无衬线界面文字与清晰大小层级。
+
+#f5f5f1 · #202122 · #9966cc · #f1ba8a · #9ab8ad
+
+## 元素与制作规则
+
+浏览器 / 原页面 / 选框 / 编号批注 / 属性面板 / 草图 / 生成区域 / 尺寸选择
+
+- 标注附着在目标元素上，编号和批注保持一一对应
+- 样式修改可直接预览，草图新增需先提交再出现真实组件
+- 响应式检查发生在修改完成后，保持同一页面内容
+
+## 内容替换
+
+- 可迁移到视觉编辑工具，保留选择→局部输入→反馈→多尺寸检查
+- 替换页面主题时保持原位置锚点和修改作用域
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Cursor&quot;,
+  &quot;id&quot;: &quot;V072&quot;,
+  &quot;palette&quot;: [
+    &quot;#f5f5f1&quot;,
+    &quot;#202122&quot;,
+    &quot;#9966cc&quot;,
+    &quot;#f1ba8a&quot;,
+    &quot;#9ab8ad&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线界面文字与清晰大小层级&quot;,
+  &quot;sample&quot;: &quot;Annotate&quot;,
+  &quot;objects&quot;: [
+    &quot;浏览器&quot;,
+    &quot;原页面&quot;,
+    &quot;选框&quot;,
+    &quot;编号批注&quot;,
+    &quot;属性面板&quot;,
+    &quot;草图&quot;,
+    &quot;生成区域&quot;,
+    &quot;尺寸选择&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.jpg&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.jpg&quot;,
+      &quot;timeSeconds&quot;: 9.0,
+      &quot;frameId&quot;: &quot;K0018&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.jpg&quot;,
+      &quot;timeSeconds&quot;: 16.0,
+      &quot;frameId&quot;: &quot;K0037&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.jpg&quot;,
+      &quot;timeSeconds&quot;: 27.0,
+      &quot;frameId&quot;: &quot;K0055&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.jpg&quot;,
+      &quot;timeSeconds&quot;: 35.0,
+      &quot;frameId&quot;: &quot;K0070&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.jpg&quot;,
+      &quot;timeSeconds&quot;: 41.0,
+      &quot;frameId&quot;: &quot;K0086&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0.0,
+      &quot;label&quot;: &quot;发布标题&quot;,
+      &quot;end&quot;: 5.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 5.0,
+      &quot;label&quot;: &quot;打开网页&quot;,
+      &quot;end&quot;: 9.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 9.0,
+      &quot;label&quot;: &quot;标注主张&quot;,
+      &quot;end&quot;: 11.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 11.0,
+      &quot;label&quot;: &quot;点选与批注&quot;,
+      &quot;end&quot;: 16.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 16.0,
+      &quot;label&quot;: &quot;实时样式&quot;,
+      &quot;end&quot;: 20.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 20.0,
+      &quot;label&quot;: &quot;修改按钮颜色&quot;,
+      &quot;end&quot;: 24.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 24.0,
+      &quot;label&quot;: &quot;草图需求&quot;,
+      &quot;end&quot;: 27.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 27.0,
+      &quot;label&quot;: &quot;画框与连线&quot;,
+      &quot;end&quot;: 31.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 31.0,
+      &quot;label&quot;: &quot;应用修改&quot;,
+      &quot;end&quot;: 35.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 35.0,
+      &quot;label&quot;: &quot;多屏检查&quot;,
+      &quot;end&quot;: 39.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 39.0,
+      &quot;label&quot;: &quot;平板版&quot;,
+      &quot;end&quot;: 41.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 41.0,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 43.566667,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 43.566667,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

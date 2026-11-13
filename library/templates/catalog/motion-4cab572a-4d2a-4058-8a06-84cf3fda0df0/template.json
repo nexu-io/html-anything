@@ -1,0 +1,390 @@
+{
+  "templateId": "motion-4cab572a-4d2a-4058-8a06-84cf3fda0df0",
+  "entry": {
+    "templateId": "motion-4cab572a-4d2a-4058-8a06-84cf3fda0df0",
+    "sortOrder": 195,
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "previewUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+    "coverUrl": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+    "motionDocumentUrl": "https://r.open-design.ai/files/7ee3a8dd021349fa0610293f59f243257e79646a7921db68b8c8c1546abb286f",
+    "motionGuideUrl": "https://r.open-design.ai/files/a53eabdfa949b9504b8c63960c6a7b3656f9e3b098e63fe6ef481f2adaeea37a",
+    "projectFileUrl": null,
+    "files": [],
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "not_run"
+    },
+    "featuredOrder": null,
+    "original": {
+      "templateName": "Harvey II",
+      "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+      "summary": "以纸面拼贴建立材质，方块、圆和孔洞不断重组；产品卡片围绕中心对象出现，让抽象图形与项目、任务和资源关系接在一起。",
+      "styleDescription": "纸张底纹与炭笔几何，灰紫、灰绿低饱和色，法律界面以白面板出现。",
+      "promotionalUseCases": "产品发布",
+      "visualPresentation": "界面动效, 图形动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+      "reviewFocus": "以纸面拼贴建立材质，方块、圆和孔洞不断重组；产品卡片围绕中心对象出现，让抽象图形与项目、任务和资源关系接在一起。；几何段可快速移动、转向和缩放，进入产品界面时减速并保持平直。每次界面出现只强调当前任务，不把所有纹理叠在正文上。；圆形空间缩小为方孔，周边弧线和块面让出白区，再将文档卡带到中心。保留黑点位置能让大幅重构仍有连续性。",
+      "category": "",
+      "durationSeconds": "60.125",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+      "exampleVideo": "",
+      "templateId": "V149",
+      "sourceVideoTitle": "195_Harvey.mp4"
+    },
+    "brand": "Harvey",
+    "colors": [
+      "monochrome"
+    ],
+    "width": 1280,
+    "height": 720,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。"
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "Papiercollagen etablieren das Material; Quadrate, Kreise und Öffnungen ordnen sich ständig neu. Produktkarten erscheinen um das Zentrum und verbinden abstrakte Formen mit Projekten, Aufgaben und Ressourcen.",
+        "styleDescription": "Papierstruktur und Kohlegeometrie, entsättigtes Grauviolett und Graugrün; juristische Oberflächen auf weißen Panels.",
+        "promotionalUseCases": "Produkteinführung",
+        "visualPresentation": "Oberflächenanimation, Grafikanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "Papiercollagen etablieren das Material; Quadrate, Kreise und Öffnungen ordnen sich ständig neu. Produktkarten erscheinen um das Zentrum und verbinden abstrakte Formen mit Projekten, Aufgaben und Ressourcen. Geometrische Abschnitte dürfen sich schnell bewegen, drehen und skalieren; beim Wechsel zur Produktoberfläche abbremsen und gerade ausrichten. Jede Oberfläche betont nur die aktuelle Aufgabe, ohne Texturen über den ganzen Fließtext zu legen. Der runde Raum schrumpft zu einer quadratischen Öffnung. Bögen und Flächen weichen einem weißen Bereich, dann rückt eine Dokumentkarte ins Zentrum. Die Position des schwarzen Punkts bewahrt Kontinuität trotz großer Umgestaltung.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "motionDocumentUrl": "https://r.open-design.ai/files/5f8ad0505832a894de5729549796493cfe7dcb4257d2eadd3563d6aab33a51ea",
+      "motionGuideUrl": "https://r.open-design.ai/files/015e1f3e82254b2d0a0a910332525879f1e0ed481231790a1301d0b8b6d24013",
+      "original": {
+        "templateName": "A paper geometry system for knowledge work",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "Establish material through paper collage, continually recombining squares, circles and holes; introduce product cards around the central object to connect abstract graphics with projects, tasks and resources.",
+        "styleDescription": "Paper texture and charcoal geometry, muted gray-purple and gray-green, with white panels for the legal interface.",
+        "promotionalUseCases": "Product launch",
+        "visualPresentation": "Interface animation, Graphic animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "Establish material through paper collage, continually recombining squares, circles and holes; introduce product cards around the central object to connect abstract graphics with projects, tasks and resources. Geometry sections may move, turn and scale rapidly; slow down and straighten when entering the product interface. Emphasize only the current task in each interface appearance, without layering all textures over body text. Shrink circular space into a square opening, have surrounding arcs and planes yield a white region, and bring the document card to the center. Preserve the black dot's position to maintain continuity through major reconstruction.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "Establecer la textura mediante collage de papel, reorganizando bloques, círculos y huecos; las tarjetas del producto aparecen alrededor del objeto central para conectar la geometría abstracta con proyectos, tareas y recursos.",
+        "styleDescription": "Textura de papel y geometría de carboncillo en violeta grisáceo y verde grisáceo poco saturados; interfaz jurídica sobre paneles blancos.",
+        "promotionalUseCases": "Lanzamiento de producto",
+        "visualPresentation": "Animación de interfaz, Animación gráfica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "Establecer la textura mediante collage de papel, reorganizando bloques, círculos y huecos; las tarjetas del producto aparecen alrededor del objeto central para conectar la geometría abstracta con proyectos, tareas y recursos.; La geometría puede moverse, girar y escalar rápidamente; al entrar en la interfaz, reducir la velocidad y mantenerla recta. Destacar solo la tarea actual cada vez, sin superponer todas las texturas sobre el texto.; El espacio circular se reduce a un hueco cuadrado; arcos y planos circundantes dejan una zona blanca y la tarjeta del documento llega al centro. Conservar la posición del punto negro da continuidad incluso a una gran reorganización.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "Le collage papier établit la matière ; carrés, cercles et trous se recomposent. Des cartes produit apparaissent autour du centre et relient formes abstraites, projets, tâches et ressources.",
+        "styleDescription": "Texture papier et géométrie au fusain, gris-violet et gris-vert désaturés, interfaces juridiques en panneaux blancs.",
+        "promotionalUseCases": "Lancement produit",
+        "visualPresentation": "Animation d’interface, Animation graphique",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "Le collage papier établit la matière ; carrés, cercles et trous se recomposent. Des cartes produit apparaissent autour du centre et relient formes abstraites, projets, tâches et ressources. Les séquences géométriques peuvent bouger, tourner et changer d’échelle vite ; ralentir et redresser en entrant dans l’interface. Chaque apparition n’accentue que la tâche courante, sans superposer toutes les textures au texte. L’espace rond devient un trou carré ; arcs et aplats libèrent le blanc, puis une carte de document vient au centre. La position du point noir assure la continuité malgré la recomposition.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "Il collage cartaceo definisce la materia; quadrati, cerchi e fori si ricompongono. Schede prodotto circondano il centro, collegando forme astratte a progetti, attività e risorse.",
+        "styleDescription": "Trama di carta e geometria a carboncino, grigio-viola e grigio-verde desaturati, interfacce legali su pannelli bianchi.",
+        "promotionalUseCases": "Lancio di prodotto",
+        "visualPresentation": "Animazione dell’interfaccia, Animazione grafica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "Il collage cartaceo definisce la materia; quadrati, cerchi e fori si ricompongono. Schede prodotto circondano il centro, collegando forme astratte a progetti, attività e risorse. Le sezioni geometriche possono muoversi, ruotare e scalare rapidamente; entrando nell’interfaccia rallentare e raddrizzare. Ogni schermata evidenzia solo il compito corrente, senza sovrapporre tutte le texture al testo. Lo spazio circolare diventa foro quadrato; archi e campiture liberano il bianco, poi una scheda documento va al centro. Il punto nero mantiene continuità nonostante la ricomposizione.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "紙のコラージュで素材感を作り、四角、円、穴を組み替え続ける。中央の対象の周囲に製品カードを出し、抽象図形をプロジェクト、タスク、リソースの関係へつなぐ。",
+        "styleDescription": "紙のテクスチャと木炭風の幾何図形、低彩度のグレーパープルとグリーン、白いパネルの法律業務画面。",
+        "promotionalUseCases": "製品発表",
+        "visualPresentation": "UIアニメーション, グラフィックアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "紙のコラージュで素材感を作り、四角、円、穴を組み替え続ける。中央の対象の周囲に製品カードを出し、抽象図形をプロジェクト、タスク、リソースの関係へつなぐ。；幾何図形の場面では素早い移動、方向転換、拡大縮小を使い、製品画面に入ったら減速して正面を保つ。画面が出るたびに現在のタスクだけを強調し、本文にすべての質感を重ねない。；円形の空間を四角い穴へ縮め、周囲の弧や面を退かして白い領域を空け、文書カードを中央へ運ぶ。黒い点の位置を保つことで、大きく組み替えても連続性を維持する。",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "종이 콜라주로 재질을 만들고 사각형, 원, 구멍을 계속 재구성한다；제품 카드를 중앙 객체 주위에 표시해 추상 도형을 프로젝트, 작업, 리소스 관계와 연결한다.",
+        "styleDescription": "종이 텍스처와 목탄 기하 도형, 저채도 회보라·회녹색을 사용하며 법률 인터페이스는 흰 패널로 표시한다.",
+        "promotionalUseCases": "제품 출시",
+        "visualPresentation": "인터페이스 애니메이션, 그래픽 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "종이 콜라주로 재질을 만들고 사각형, 원, 구멍을 계속 재구성한다；제품 카드를 중앙 객체 주위에 표시해 추상 도형을 프로젝트, 작업, 리소스 관계와 연결한다.；기하 구간은 빠르게 이동·회전·확대할 수 있지만 제품 인터페이스에서는 속도를 낮추고 평평하게 유지한다. 화면마다 현재 작업만 강조하며 모든 텍스처를 본문에 겹치지 않는다.；원형 공간을 사각 구멍으로 줄이고 주변 곡선과 면을 비켜 흰 공간을 만든 뒤 문서 카드를 중앙으로 가져온다. 검은 점 위치를 유지하면 큰 재구성에서도 연속성을 확보할 수 있다.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "Estabelecer a textura com colagem de papel, reorganizando blocos, círculos e aberturas; cartões do produto aparecem em torno do objeto central para conectar a geometria abstrata a projetos, tarefas e recursos.",
+        "styleDescription": "Textura de papel e geometria de carvão em roxo acinzentado e verde acinzentado pouco saturados; interface jurídica em painéis brancos.",
+        "promotionalUseCases": "Lançamento de produto",
+        "visualPresentation": "Animação de interface, Animação gráfica",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "Estabelecer a textura com colagem de papel, reorganizando blocos, círculos e aberturas; cartões do produto aparecem em torno do objeto central para conectar a geometria abstrata a projetos, tarefas e recursos.; A geometria pode mover, girar e mudar de escala rapidamente; ao entrar na interface, reduzir a velocidade e mantê-la reta. Destacar apenas a tarefa atual a cada vez, sem sobrepor todas as texturas ao texto.; O espaço circular encolhe para uma abertura quadrada; arcos e planos ao redor liberam uma área branca, e o cartão do documento chega ao centro. Preservar a posição do ponto preto dá continuidade mesmo a uma grande reorganização.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "Бумажный коллаж задаёт фактуру; квадраты, круги и отверстия постоянно перестраиваются. Карточки продукта появляются вокруг центра, связывая абстрактную графику с проектами, задачами и ресурсами.",
+        "styleDescription": "Бумажная фактура и угольная геометрия в ненасыщенных серо-фиолетовых и серо-зелёных тонах; юридический интерфейс появляется белыми панелями.",
+        "promotionalUseCases": "Запуск продукта",
+        "visualPresentation": "Анимация интерфейса, Графическая анимация",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "Бумажный коллаж задаёт фактуру; квадраты, круги и отверстия постоянно перестраиваются. Карточки продукта появляются вокруг центра, связывая абстрактную графику с проектами, задачами и ресурсами.；Геометрические части могут быстро двигаться, вращаться и масштабироваться; при входе в интерфейс они замедляются и выпрямляются. Каждый экран выделяет только текущую задачу, без наложения всех фактур на текст.；Круглое пространство сжимается в квадратное отверстие; окружающие дуги и плоскости освобождают белую область, затем в центр приходит карточка документа. Неподвижная чёрная точка сохраняет непрерывность масштабной перестройки.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Harvey II",
+        "videoPreview": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "summary": "Kâğıt kolaj malzemeyi tanıtır; kare, daire ve delikler yeniden birleşir. Merkez nesnenin çevresindeki ürün kartları soyut şekilleri proje, görev ve kaynak ilişkilerine bağlar.",
+        "styleDescription": "Kâğıt dokusu ve kömür kalem geometrisi; düşük doygunluklu gri-mor, gri-yeşil; hukuk arayüzü beyaz panellerdedir.",
+        "promotionalUseCases": "Ürün lansmanı",
+        "visualPresentation": "Arayüz animasyonu, Grafik animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/45576b4354fd8dba80ddb104981486033fc63cc07fa7785400517e85394d6483",
+        "reviewFocus": "Kâğıt kolaj malzemeyi tanıtır; kare, daire ve delikler yeniden birleşir. Merkez nesnenin çevresindeki ürün kartları soyut şekilleri proje, görev ve kaynak ilişkilerine bağlar. Geometrik bölüm hızlı hareket, dönüş ve ölçekleme yapabilir; ürün arayüzüne geçince yavaşlayıp düzleşir. Her arayüz yalnızca güncel görevi vurgular, dokular gövde metnine yığılmaz. Yuvarlak alan kare deliğe küçülür; yay ve yüzeyler beyaz alan açar, belge kartı merkeze gelir. Siyah noktanın konumu büyük yeniden düzenlemede süreklilik sağlar.",
+        "category": "",
+        "durationSeconds": "60.125",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/23231f47e0177329b0152659525c9bcb3099ddefd11438156fa5f00847a15a4f",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/harvey/status/2089722668761432349",
+        "exampleVideo": "",
+        "templateId": "V149",
+        "sourceVideoTitle": "195_Harvey.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/7ee3a8dd021349fa0610293f59f243257e79646a7921db68b8c8c1546abb286f",
+    "bytes": 671731,
+    "sha256": "7ee3a8dd021349fa0610293f59f243257e79646a7921db68b8c8c1546abb286f"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 114404,
+        "sha256": "bb14606808fc5689368108803642cda1b766d145d94e8d9f992a3d46a50eebee"
+      },
+      "url": "https://r.open-design.ai/files/51eec03a431fbbf504dfe1a77472e353914eabee1916c1c0fbb523c3f3eec331",
+      "bytes": 44224,
+      "sha256": "51eec03a431fbbf504dfe1a77472e353914eabee1916c1c0fbb523c3f3eec331"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 106405,
+        "sha256": "5c919930d72c95f945ed0e7a8028ca892aa8e89cc5a142fcacad34c6643110ed"
+      },
+      "url": "https://r.open-design.ai/files/6349802bd6aa4177d0fccb744adfa9d546307643b87ff48d68157cc1edb9b853",
+      "bytes": 41394,
+      "sha256": "6349802bd6aa4177d0fccb744adfa9d546307643b87ff48d68157cc1edb9b853"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 127945,
+        "sha256": "596ed55fb6b5062dc4dd598d859e88e0484f8b96c475a96b74be382391ccbbac"
+      },
+      "url": "https://r.open-design.ai/files/a00c6e0bab5a5a2a81a9481424d431b6b10fd9da8d0cd2759475a011012cfd2b",
+      "bytes": 47632,
+      "sha256": "a00c6e0bab5a5a2a81a9481424d431b6b10fd9da8d0cd2759475a011012cfd2b"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 100939,
+        "sha256": "8bdc6da2328568b7ff4c806e0fdabb52dcf4487101d7356c1785e34df79af4e7"
+      },
+      "url": "https://r.open-design.ai/files/0f76859a79356e51c78b03b1d0b81cbda56b8c14c317b5e8caa8c734bead20b2",
+      "bytes": 34680,
+      "sha256": "0f76859a79356e51c78b03b1d0b81cbda56b8c14c317b5e8caa8c734bead20b2"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 111285,
+        "sha256": "505f907d43e79365e32d146a1944a5561e77c1cf2d0b632b9f384bfe8abfbfca"
+      },
+      "url": "https://r.open-design.ai/files/5db4dcb6e24d8033ae891d3dc851e396816828c52a8fed3bca8478b5d91c58f5",
+      "bytes": 39746,
+      "sha256": "5db4dcb6e24d8033ae891d3dc851e396816828c52a8fed3bca8478b5d91c58f5"
+    }
+  ]
+}

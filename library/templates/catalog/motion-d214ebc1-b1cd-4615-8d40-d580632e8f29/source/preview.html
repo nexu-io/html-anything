@@ -1,0 +1,271 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Figma AI Image Editing · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#afd0dd;--brand-ink:#253544;--accent:#36b3ce;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Figma <span>/</span> V285</div><div class="intro-line"><h1>Figma AI Image Editing</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>用三个短例子区分主体调整、删除物体和移除背景。每个例子都完整展示选区、操作和最终结果。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 24.333333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 6, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Image editing&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#36b3ce&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Image editing&quot;, &quot;accent&quot;: &quot;#36b3ce&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="24.333333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 24.33 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Figma AI Image Editing · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#afd0dd}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Figma</div><div class="type-sample">Image editing</div><p>无衬线中粗主标题；细边框界面与小号功能文字</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#afd0dd" style="--swatch:#afd0dd" aria-label="复制色值 #afd0dd"><span></span><code>#AFD0DD</code></button><button class="swatch" data-color="#253544" style="--swatch:#253544" aria-label="复制色值 #253544"><span></span><code>#253544</code></button><button class="swatch" data-color="#36b3ce" style="--swatch:#36b3ce" aria-label="复制色值 #36b3ce"><span></span><code>#36B3CE</code></button><button class="swatch" data-color="#90b8c5" style="--swatch:#90b8c5" aria-label="复制色值 #90b8c5"><span></span><code>#90B8C5</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>原图</span><span>主体遮罩</span><span>工具栏</span><span>待删对象</span><span>补全背景</span><span>透明抠图</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule has-demo" id="section-1"><div class="rule-label"><span>01</span><h2>主体高亮只是中间一步</h2></div><figure class="demo" id="demo-clip-1" data-demo="{&quot;id&quot;: &quot;clip-1&quot;, &quot;title&quot;: &quot;主体高亮只是中间一步&quot;, &quot;src&quot;: &quot;demos/clip-1.html&quot;, &quot;duration&quot;: 9, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;0–9 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>主体高亮只是中间一步</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="主体高亮只是中间一步" data-src="demos/clip-1.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="9" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 9.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>0–9 秒 · 动作示意 <a href="demos/clip-1.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Figma AI Image Editing · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#afd0dd}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;0&quot; data-end=&quot;9&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>第一张图先选择主体，再显示高亮，操作之后必须回到正常画面展示变化。高亮覆盖在对象上方，外部背景保持稳定，让选区范围一眼可见。</p>
+
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>删除物体与去背景分开演示</h2></div><div class="rule-copy">
+<p>第二个例子让待删物体消失并显示填补区域；第三个例子保留主体、移除背景并露出透明底。切换例子时重置选择状态，不把同一遮罩一直留到结尾。</p>
+<div class="table-wrap"><table><thead><tr><th>操作</th><th>最终画面应说明</th></tr></thead><tbody>
+<tr><td>调整主体</td><td>同一主体发生具体改变</td></tr>
+<tr><td>删除对象</td><td>目标消失，周围背景连续</td></tr>
+<tr><td>移除背景</td><td>主体保留，背景成为透明区域</td></tr>
+</tbody></table></div>
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>蓝色工具环境，让照片当主角</h2></div><div class="rule-copy">
+<p>浅蓝和青色用于界面与选择提示，深色无衬线文字保持清楚。照片占画面主体，工具栏只放必要操作；对比前后时保持照片尺度和位置，避免取景变化掩盖编辑效果。</p>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>用适合编辑的照片替换</h2></div><div class="rule-copy">
+<p>挑选主体与背景关系清楚的照片，分别准备调整、删物和抠图结果。三种操作的名称、选区和结果要匹配，透明结果可以用棋盘底帮助阅读。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>选择主体</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>主体高亮</b></button><button class="beat" data-time="6.0"><span>6.00<small>s</small></span><b>主体调整</b></button><button class="beat" data-time="9.0"><span>9.00<small>s</small></span><b>第二张图</b></button><button class="beat" data-time="12.0"><span>12.00<small>s</small></span><b>删除对象</b></button><button class="beat" data-time="15.0"><span>15.00<small>s</small></span><b>填补结果</b></button><button class="beat" data-time="18.0"><span>18.00<small>s</small></span><b>第三张图</b></button><button class="beat" data-time="21.0"><span>21.00<small>s</small></span><b>移除背景</b></button><button class="beat" data-time="23.0"><span>23.00<small>s</small></span><b>透明对象</b></button></div><div class="filmstrip"><figure><img src="https://r.open-design.ai/files/99e399c92941a7baa4553fd1329c90a33d839d7f3d08839d450147d0d6a9a77c" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/cff69452b9804697777c94fab343cf717aacad20d9ae00c49f82e56a0e4395a2" alt="6.00 秒的构图参考" loading="lazy"><figcaption>6.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/ba56f64bbece492abf3e09565ad2ca2659fbeaa0ed11e9eccae44be4b98f1c2f" alt="9.00 秒的构图参考" loading="lazy"><figcaption>9.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/ab33e04ffee763772d3de6aad3ee6485eb1b4914c557476d2d2428ad752eed01" alt="15.00 秒的构图参考" loading="lazy"><figcaption>15.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/83dc27e266a18d0355541a9a391e5170a8659b2be1abf39134d77c93fe9b4ece" alt="18.00 秒的构图参考" loading="lazy"><figcaption>18.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/60e10910a53f371d49d07cca398b09b0117aba071be726dc538950b15725c301" alt="23.00 秒的构图参考" loading="lazy"><figcaption>23.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可替换照片，但必须有适合分离的主体及清楚的结果对照。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>原图 / 主体遮罩 / 工具栏 / 待删对象 / 补全背景 / 透明抠图</p>
+<ul><li>每个例子都按选区→操作→结果展示；主体高亮仅是中间状态。</li><li>删物与去背景是不同操作，不能把一个遮罩当全流程。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Figma / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Figma AI Image Editing
+
+用三个短例子区分主体调整、删除物体和移除背景。每个例子都完整展示选区、操作和最终结果。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 24.333333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 6,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Image editing&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#36b3ce&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Image editing&quot;,
+        &quot;accent&quot;: &quot;#36b3ce&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 主体高亮只是中间一步
+
+第一张图先选择主体，再显示高亮，操作之后必须回到正常画面展示变化。高亮覆盖在对象上方，外部背景保持稳定，让选区范围一眼可见。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-1&quot;,
+  &quot;title&quot;: &quot;主体高亮只是中间一步&quot;,
+  &quot;src&quot;: &quot;demos/clip-1.html&quot;,
+  &quot;duration&quot;: 9,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;0–9 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 删除物体与去背景分开演示
+
+第二个例子让待删物体消失并显示填补区域；第三个例子保留主体、移除背景并露出透明底。切换例子时重置选择状态，不把同一遮罩一直留到结尾。
+
+| 操作 | 最终画面应说明 |
+| --- | --- |
+| 调整主体 | 同一主体发生具体改变 |
+| 删除对象 | 目标消失，周围背景连续 |
+| 移除背景 | 主体保留，背景成为透明区域 |
+
+## 蓝色工具环境，让照片当主角
+
+浅蓝和青色用于界面与选择提示，深色无衬线文字保持清楚。照片占画面主体，工具栏只放必要操作；对比前后时保持照片尺度和位置，避免取景变化掩盖编辑效果。
+
+## 用适合编辑的照片替换
+
+挑选主体与背景关系清楚的照片，分别准备调整、删物和抠图结果。三种操作的名称、选区和结果要匹配，透明结果可以用棋盘底帮助阅读。
+
+## 配色与字形
+
+无衬线中粗主标题；细边框界面与小号功能文字。
+
+#afd0dd · #253544 · #36b3ce · #90b8c5 · #ffffff
+
+## 元素与制作规则
+
+原图 / 主体遮罩 / 工具栏 / 待删对象 / 补全背景 / 透明抠图
+
+- 每个例子都按选区→操作→结果展示；主体高亮仅是中间状态。
+- 删物与去背景是不同操作，不能把一个遮罩当全流程。
+
+## 内容替换
+
+- 可替换照片，但必须有适合分离的主体及清楚的结果对照。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Figma&quot;,
+  &quot;id&quot;: &quot;V285&quot;,
+  &quot;palette&quot;: [
+    &quot;#afd0dd&quot;,
+    &quot;#253544&quot;,
+    &quot;#36b3ce&quot;,
+    &quot;#90b8c5&quot;,
+    &quot;#ffffff&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线中粗主标题；细边框界面与小号功能文字&quot;,
+  &quot;sample&quot;: &quot;Image editing&quot;,
+  &quot;objects&quot;: [
+    &quot;原图&quot;,
+    &quot;主体遮罩&quot;,
+    &quot;工具栏&quot;,
+    &quot;待删对象&quot;,
+    &quot;补全背景&quot;,
+    &quot;透明抠图&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/99e399c92941a7baa4553fd1329c90a33d839d7f3d08839d450147d0d6a9a77c&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/cff69452b9804697777c94fab343cf717aacad20d9ae00c49f82e56a0e4395a2&quot;,
+      &quot;timeSeconds&quot;: 6.0,
+      &quot;frameId&quot;: &quot;K0019&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/ba56f64bbece492abf3e09565ad2ca2659fbeaa0ed11e9eccae44be4b98f1c2f&quot;,
+      &quot;timeSeconds&quot;: 9.0,
+      &quot;frameId&quot;: &quot;K0028&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/ab33e04ffee763772d3de6aad3ee6485eb1b4914c557476d2d2428ad752eed01&quot;,
+      &quot;timeSeconds&quot;: 15.0,
+      &quot;frameId&quot;: &quot;K0041&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/83dc27e266a18d0355541a9a391e5170a8659b2be1abf39134d77c93fe9b4ece&quot;,
+      &quot;timeSeconds&quot;: 18.0,
+      &quot;frameId&quot;: &quot;K0050&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/60e10910a53f371d49d07cca398b09b0117aba071be726dc538950b15725c301&quot;,
+      &quot;timeSeconds&quot;: 23.0,
+      &quot;frameId&quot;: &quot;K0065&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;选择主体&quot;,
+      &quot;end&quot;: 3,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3,
+      &quot;label&quot;: &quot;主体高亮&quot;,
+      &quot;end&quot;: 6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 6,
+      &quot;label&quot;: &quot;主体调整&quot;,
+      &quot;end&quot;: 9,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 9,
+      &quot;label&quot;: &quot;第二张图&quot;,
+      &quot;end&quot;: 12,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 12,
+      &quot;label&quot;: &quot;删除对象&quot;,
+      &quot;end&quot;: 15,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15,
+      &quot;label&quot;: &quot;填补结果&quot;,
+      &quot;end&quot;: 18,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 18,
+      &quot;label&quot;: &quot;第三张图&quot;,
+      &quot;end&quot;: 21,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 21,
+      &quot;label&quot;: &quot;移除背景&quot;,
+      &quot;end&quot;: 23,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 23,
+      &quot;label&quot;: &quot;透明对象&quot;,
+      &quot;end&quot;: 24.333333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 24.333333,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

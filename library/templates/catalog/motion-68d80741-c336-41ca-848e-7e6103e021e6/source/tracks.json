@@ -1,0 +1,97 @@
+{
+  "tracks": [
+    {
+      "id": "composition.center",
+      "target": "composition",
+      "property": "center",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          10.233333
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          [
+            540.0,
+            675.5
+          ]
+        ],
+        [
+          10.233333,
+          [
+            540.0,
+            675.5
+          ]
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    },
+    {
+      "id": "composition.height",
+      "target": "composition",
+      "property": "height",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          10.233333
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          675
+        ],
+        [
+          10.233333,
+          675
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    },
+    {
+      "id": "composition.width",
+      "target": "composition",
+      "property": "width",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          10.233333
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          540
+        ],
+        [
+          10.233333,
+          540
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    }
+  ]
+}

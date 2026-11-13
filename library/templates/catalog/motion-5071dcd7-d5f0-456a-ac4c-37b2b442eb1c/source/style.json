@@ -1,0 +1,92 @@
+{
+  "background": {
+    "color": "#dfdfe0",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：think",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "立体字母部件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝紫侧面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "浅灰地面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "软阴影",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#dfdfe0",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f6f4ff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7658ed",
+      "status": "inferred"
+    },
+    {
+      "hex": "#344ded",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b8acf3",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线小写字标；字面浅色、侧面蓝紫，整体居中",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "立体字母从分散朝向归到同一阅读方向，短促完成后保留安静的字标。",
+      "status": "inferred"
+    },
+    {
+      "rule": "开始能看见字母部件的侧面与曲面，归位后形成完整 think。相邻字母使用轻微错峰，最终字距与基线统一；镜头拉远给完整字形留空间。",
+      "status": "inferred"
+    },
+    {
+      "rule": "浅灰舞台衬托浅色字面，蓝紫色侧面提供深度，阴影落向一致。使用小写无衬线字，字母圆弧与直线的厚度协调，停留段不要持续摇摆。",
+      "status": "inferred"
+    }
+  ]
+}

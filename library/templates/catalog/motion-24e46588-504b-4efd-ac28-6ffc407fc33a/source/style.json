@@ -1,0 +1,88 @@
+{
+  "background": {
+    "color": "#9419f6",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：DEEZER",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "紫色背景",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "九个声波椭圆",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "心形轮廓",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "底部字标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#9419f6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#09090b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#09090b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c092fc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "粗重无衬线全大写字标；紫色满版背景、黑色纵向椭圆声波",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "各椭圆保持独立，纵向尺寸错峰增长后共同形成心形；不要直接缩放一个完整心形。",
+      "status": "inferred"
+    },
+    {
+      "rule": "字标稳定在心形下方，主图形完成后留读；退场先拆开声波，再收回小点。",
+      "status": "inferred"
+    }
+  ]
+}

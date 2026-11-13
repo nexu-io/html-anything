@@ -4,7 +4,7 @@ import path from 'node:path';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { pluginRoot } from './hyperframes.ts';
 
-const mime: Record<string, string> = { '.jpg': 'image/jpeg', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json', '.map': 'application/json', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.txt': 'text/plain' };
+const mime: Record<string, string> = { '.jpg': 'image/jpeg', '.png': 'image/png', '.webp': 'image/webp', '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.json': 'application/json', '.map': 'application/json', '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.txt': 'text/plain' };
 
 /** Only application bundle and design-system files are exposed, never Studio source or project files. */
 export async function serveEditorFile(url: URL, res: ServerResponse): Promise<boolean> {
@@ -29,8 +29,24 @@ export async function serveEditorFile(url: URL, res: ServerResponse): Promise<bo
   return true;
 }
 
+/** Suggest a portable name without changing the immutable render's storage path. */
+export function renderDownloadDisposition(title: string | undefined, extension: string): string {
+  const cleaned = (title ?? '').toWellFormed().normalize('NFC')
+    .replace(/[<>:"/\\|?*\u0000-\u001f\u007f]/gu, '_').trim();
+  let stem = '';
+  for (const char of cleaned) {
+    if (Buffer.byteLength(stem + char, 'utf8') > 200) break;
+    stem += char;
+  }
+  stem = stem.replace(/[. ]+$/u, '') || 'OpenMotion';
+  if (/^(?:con|prn|aux|nul|com[1-9]|lpt[1-9])(?:\.|$)/i.test(stem)) stem = '_' + stem;
+  const encoded = encodeURIComponent(stem + extension).replace(/['()*]/g, char =>
+    '%' + char.charCodeAt(0).toString(16).toUpperCase());
+  return `attachment; filename="OpenMotion${extension}"; filename*=UTF-8''${encoded}`;
+}
+
 /** Preserve native HTTP semantics (SSE, byte ranges, multipart uploads and optimistic file writes). */
-export function proxyStudio(req: IncomingMessage, res: ServerResponse, url: URL, studioUrl: string): Promise<void> {
+export function proxyStudio(req: IncomingMessage, res: ServerResponse, url: URL, studioUrl: string, downloadDisposition?: string): Promise<void> {
   const target = new URL(studioUrl);
   target.pathname = url.pathname; target.search = url.search; target.hash = '';
   const headers = { ...req.headers, host: target.host };
@@ -41,6 +57,7 @@ export function proxyStudio(req: IncomingMessage, res: ServerResponse, url: URL,
     const upstream = request(target, { method: req.method, headers }, response => {
       const outgoing = { ...response.headers };
       delete outgoing.connection;
+      if (downloadDisposition && response.statusCode === 200) outgoing['content-disposition'] = downloadDisposition;
       res.writeHead(response.statusCode || 502, outgoing);
       response.on('error', () => { res.destroy(); resolve(); });
       response.pipe(res);

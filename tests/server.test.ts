@@ -5,10 +5,11 @@ import { transport } from './http.ts';
 import { handler } from '../server.ts';
 import { Readable, Writable } from 'node:stream';
 import type { IncomingMessage, ServerResponse } from 'node:http';
+import { readdir } from 'node:fs/promises';
 
 test('wrapper serves the locally built Motion editor and hides local source/runtime files', () => fixture(async store => {
   const request = transport(store);
-  const html = await (await request('/')).text(); assert.match(html, /OpenDesign/);
+  const html = await (await request('/')).text(); assert.match(html, /data-motion-studio/);
   assert.doesNotMatch(html, /<iframe/);
   const script = html.match(/src="(\/editor-assets\/[^\"]+\.js)"/)![1];
   const module = await request(script); assert.equal(module.status, 200);
@@ -16,6 +17,10 @@ test('wrapper serves the locally built Motion editor and hides local source/runt
   for (const url of ['/workspace.ts', '/.motion-data/project/index.html', '/node_modules/hyperframes/package.json', '/web/render.ts', '/studio/src/main.tsx', '/web/app.ts']) assert.equal((await request(url)).status, 404);
   assert.equal((await request('/web/design-system/fonts.css')).status, 200);
   assert.equal((await request('/design-system')).status, 200);
+  const png = (await readdir(new URL('../studio/build/editor-assets/', import.meta.url))).find(file => file.endsWith('.png'))!;
+  assert(png, 'The bundle contains the Kimi brand fallback');
+  const image = await request('/editor-assets/' + png);
+  assert.equal(image.status, 200); assert.equal(image.headers.get('content-type'), 'image/png');
   assert.equal((await request('/api/studio')).status, 503);
 }));
 test('HTTP source writes use the same revision contract and reject stale saves', () => fixture(async store => {

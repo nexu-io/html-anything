@@ -1,0 +1,108 @@
+{
+  "background": {
+    "color": "#09091c",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "暗色网页",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码平面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "旋转门户",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "球体",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "开放地形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "星系轨道",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#09091c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4836ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8de9e6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f0a6d5",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "收尾品牌字标简短；主体为球体、几何门与抽象界面",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "深蓝近黑背景，代码与网页平面包围中心；用重复框架和旋转多边形形成纵深，中心小球作为穿越方向的锚点。",
+      "status": "inferred"
+    },
+    {
+      "rule": "进入浅色空间后提高背景明度，增大物体间距；球体、平面和曲面不再密集包围视点。蓝紫仍贯穿，青、粉作为新空间的材质变化。",
+      "status": "inferred"
+    },
+    {
+      "rule": "从控件、页面走到场景再走到星系，规模逐段放大。最后切干净白底与小标志，给复杂运动一个明确结束。",
+      "status": "inferred"
+    },
+    {
+      "rule": "新主题可以换创作对象，但暗／亮、拥挤／开阔、局部／整体三组反差要对应同一个成长叙事。不要把全片变成随机三维素材串联。",
+      "status": "inferred"
+    }
+  ]
+}

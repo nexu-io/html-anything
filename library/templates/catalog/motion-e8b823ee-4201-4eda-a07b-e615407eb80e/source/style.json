@@ -1,0 +1,117 @@
+{
+  "background": {
+    "color": "#f7f2e7",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Glean Assistant",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "柔和曲面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "提示栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "结果文本",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "人物节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "项目节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "工具图标",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网络连线",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f7f2e7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#35223b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6c22c8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e8c4ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d4ef90",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "中等字重无衬线；紫色陈述句与白色结果卡分层",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "粉紫与米白渐变背景上保留细网格。提示栏输入后扩成白色结果卡，让策划方案或团队更新占据主要阅读时间，标题只在任务切换时出现。",
+      "status": "inferred"
+    },
+    {
+      "rule": "先以单个人物为圆心放置写作、思考等偏好，再拉远加入人员、项目、数据与任务节点。连线随节点入场生长，近景文字清楚后再缩小成整体。",
+      "status": "inferred"
+    },
+    {
+      "rule": "网络解释上下文，下一段仍要回到提示栏、流程和工具入口。将复杂图谱与简洁任务界面交替，不让所有镜头都变成漫游关系图。",
+      "status": "inferred"
+    },
+    {
+      "rule": "替换人物、项目和数据源时，按真实关联连线。个人写作习惯与组织资源分别保留一个示例，结果文本只需展示最关键段落。",
+      "status": "inferred"
+    }
+  ]
+}

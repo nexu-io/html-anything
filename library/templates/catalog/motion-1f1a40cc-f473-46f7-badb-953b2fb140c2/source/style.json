@@ -1,0 +1,97 @@
+{
+  "background": {
+    "color": "#e4e4df",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "压纹玻璃",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "金属支架",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "后方手部",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "透明容器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地面投影",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#e4e4df",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4d4f4b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a17561",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f6f6f1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a8aaa5",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "中性灰白摄影空间，细密压纹玻璃，棕肤色只作为玻璃后的移动参照。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "玻璃本身固定，手和容器从后方经过；细密方格把轮廓分成错位的小段。全景交代框架，近景让纹理与失真关系清楚可见。",
+      "status": "inferred"
+    },
+    {
+      "rule": "灰白空间与侧向软光凸显凹凸玻璃，金属竖杆提供稳定边界。移动速度较慢，避免动作模糊掩盖压纹。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可以换成瓶、花、手部或彩色几何体；玻璃网格始终不动，失真随后方对象的位置变化。结尾停在安静的物体状态。",
+      "status": "inferred"
+    }
+  ]
+}

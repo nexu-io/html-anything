@@ -1,4 +1,4 @@
-import { lstat, readdir } from 'node:fs/promises';
+import { lstat, open, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { packagedSkills } from '../shared/workflow.ts';
@@ -110,6 +110,47 @@ const presenterTechFiles = [
 ];
 
 const localReadmeResourceFiles = [
+  'docs/readme/live-product/catalog.en.jpg',
+  'docs/readme/live-product/catalog.ja.jpg',
+  'docs/readme/live-product/catalog.zh-CN.jpg',
+  'docs/readme/live-product/detail.en.jpg',
+  'docs/readme/live-product/detail.ja.jpg',
+  'docs/readme/live-product/detail.zh-CN.jpg',
+  'docs/readme/live-product/manifest.json',
+  'docs/readme/live-product/remix.en.jpg',
+  'docs/readme/live-product/remix.ja.jpg',
+  'docs/readme/live-product/remix.zh-CN.jpg',
+  'docs/readme/live-product/studio-in-use.png',
+  'docs/readme/live-templates/a-world-connected-by-computational-fragments.gif',
+  'docs/readme/live-templates/a-world-connected-by-computational-fragments.jpg',
+  'docs/readme/live-templates/an-agent-payment-with-human-approval.gif',
+  'docs/readme/live-templates/an-agent-payment-with-human-approval.jpg',
+  'docs/readme/live-templates/connected-tools-evidence-chain.gif',
+  'docs/readme/live-templates/connected-tools-evidence-chain.jpg',
+  'docs/readme/live-templates/controllable-song-composition.gif',
+  'docs/readme/live-templates/controllable-song-composition.jpg',
+  'docs/readme/live-templates/demand-becomes-a-desktop-release.gif',
+  'docs/readme/live-templates/demand-becomes-a-desktop-release.jpg',
+  'docs/readme/live-templates/descript-create-social-clips.gif',
+  'docs/readme/live-templates/descript-create-social-clips.jpg',
+  'docs/readme/live-templates/living-waveform-poster.gif',
+  'docs/readme/live-templates/living-waveform-poster.jpg',
+  'docs/readme/live-templates/making-of-window-collage.gif',
+  'docs/readme/live-templates/making-of-window-collage.jpg',
+  'docs/readme/live-templates/manifest.json',
+  'docs/readme/live-templates/many-possible-futures.gif',
+  'docs/readme/live-templates/many-possible-futures.jpg',
+  'docs/readme/live-templates/mathematics-as-evolving-geometry.gif',
+  'docs/readme/live-templates/mathematics-as-evolving-geometry.jpg',
+  'docs/readme/live-templates/notion-custom-agents.gif',
+  'docs/readme/live-templates/notion-custom-agents.jpg',
+  'docs/readme/live-templates/scan-to-suggested-fix.gif',
+  'docs/readme/live-templates/scan-to-suggested-fix.jpg',
+  'docs/readme/live-templates/slack-slack.gif',
+  'docs/readme/live-templates/slack-slack.jpg',
+  'docs/readme/live-templates/structured-transcription-features.gif',
+  'docs/readme/live-templates/structured-transcription-features.jpg',
+
   'examples/brand-studies/anthropic/comparison.mobile.mp4',
   'examples/brand-studies/deepseek/comparison.mobile.mp4',
   'examples/brand-studies/kimi/comparison.mobile.mp4',
@@ -433,7 +474,7 @@ export const distributionDocuments = [
   ...['brandkit', 'presenter-story', 'motion-design-remix'].flatMap(name => ['library/skills/' + name + '/SKILL.md', 'library/skills/' + name + '/agents/openai.yaml']),
   ...['openmotion-brandkit', 'openmotion-presenter-story', 'openmotion-design-remix'].map(name => 'library/skills/' + name + '/agents/openai.yaml'),
   ...localReadmeResourceFiles,
-  'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md',
+  'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md', 'repository-media.json',
   'docs/product/architecture.md', 'docs/product/changes.md', 'docs/product/media-generation-design.md', 'docs/product/studio-vision.md',
   'tracking/README.md', 'tracking/INTEGRATION.md', 'tracking/posthog-geoip.hog',
   'docs/agent-adapters.md', 'docs/browser-runtime.md', 'docs/design-system.md', 'docs/editor-fork.md',
@@ -484,7 +525,7 @@ export const distributionDocuments = [
   'library/components/README.md', 'library/components/title-reveal/README.md',
   'library/design-systems/ink-water/MOTION_DESIGN.md', 'library/brandkits/openmotion/BRANDKIT.md',
   'docs/motion-design-examples.md', 'docs/motion-design-examples.zh-CN.md', ...motionDesignRemixFiles, ...presenterStoryFiles, ...presenterTechFiles,
-  'docs/skills.md', 'docs/template-catalog.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
+  'docs/skills.md', 'docs/template-catalog.md', 'docs/template-repository.md', 'docs/repository-storage.md', 'docs/test-packages.md', 'docs/templates/requirement.md',
 ];
 
 export async function distributionFiles(profile: string): Promise<string[]> {
@@ -496,10 +537,11 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'phase1.ts', 'phase1-versions.ts', 'preview.ts', 'hyperframes.ts', 'template-library.ts',
     'template-catalog.ts', 'prism-templates.ts', 'editor-server.ts',
     'scripts/runtime-assets.mjs', 'scripts/npm-runtime.mjs', 'scripts/runtime-lock.json', 'scripts/lint-project.mjs',
-    'scripts/npm-installer.mjs', 'scripts/npm-hosts.mjs', 'scripts/check-installed-mcp.mjs',
+    'scripts/npm-installer.mjs', 'scripts/npm-hosts.mjs', 'scripts/check-installed-mcp.mjs', 'scripts/mcp-client.mjs',
     'scripts/install-onboarding.mjs', 'scripts/onboarding-catalog.ts', 'scripts/open-template-library.ts', 'scripts/install-library-skill.mjs',
     'scripts/diagnostics.mjs', 'scripts/diagnostic-redaction.mjs', 'scripts/zip.mjs',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
+    'scripts/repository-media.ts',
     'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
     'tracking/core.ts', 'tracking/node.ts', 'tracking/browser.ts', 'tracking/events.ts',
   ];
@@ -518,6 +560,26 @@ export async function distributionFiles(profile: string): Promise<string[]> {
   for (const skill of packagedSkills) await walk('skills/' + skill, /\.(?:md|mjs|ts|py|json|ya?ml)$/);
   await walk('studio/build', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
   await walk('studio/public', /\.(?:html|js|css|json|svg|png|jpg|webp|woff2?|ttf|txt)$/);
-  for (const file of files) if (!(await lstat(path.join(root, file))).isFile()) throw new Error('Distribution requires a regular file: ' + file);
+  for (const file of files) {
+    const info = await lstat(path.join(root, file)).catch(error => {
+      if (error.code === 'ENOENT' && /\.(?:mp4|motion)$/.test(file)) throw new Error(`Optional media is missing: ${file}. Run npm run media:pull for transferred files, or the scoped LFS pull in docs/repository-storage.md.`);
+      throw error;
+    });
+    if (!info.isFile()) throw new Error('Distribution requires a regular file: ' + file);
+  }
   return [...new Set(files)].sort();
+}
+
+// Complete bundles must never turn unresolved LFS pointers into installed media.
+export async function requireDownloadedMedia(files: string[], directory = root): Promise<void> {
+  for (const name of files) {
+    if (!/\.(?:mp4|mov|webm|m4v|avi|mp3|wav|ogg|m4a|aac|flac|motion)$/i.test(name)) continue;
+    const file = await open(path.join(directory, name), 'r');
+    try {
+      const header = Buffer.alloc(128);
+      await file.read(header, 0, header.length, 0);
+      if (header.toString().startsWith('version https://git-lfs.github.com/spec/v1'))
+        throw new Error(`Media not downloaded: ${name}. Run git lfs pull --include="${name}" --exclude="" from the source checkout before packaging or copying it.`);
+    } finally { await file.close(); }
+  }
 }

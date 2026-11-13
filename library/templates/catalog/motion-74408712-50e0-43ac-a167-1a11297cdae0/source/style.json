@@ -1,0 +1,141 @@
+{
+  "background": {
+    "color": "#4540d8",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：AppVO.mp4",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：BrandGuide.pdf",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Brand Assets",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "应用窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "桌面素材",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "预设菜单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "聊天输入",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "附件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "处理状态",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "横竖成片",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#4540d8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#18151d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7756f6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f1f0f7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#efc92c",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线桌面界面；消息正文和输入内容字号相近，按钮用紫色强调",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "把一次视频编辑请求讲成明确的材料交接：选预设、交视频、确认版式、交品牌指南，最后展示两种比例的结果。",
+      "status": "inferred"
+    },
+    {
+      "rule": "视频文件和品牌指南在右侧桌面列中保持位置。拖动时文件跟随指针，进入输入区后转为附件；同一个文件名贯穿桌面、输入和确认消息。",
+      "status": "inferred"
+    },
+    {
+      "rule": "比例与品牌色选择逐条出现，一次只回答一个问题。窗口局部放大到聊天区，消息正文保持清楚；蓝紫桌面留在四周，帮助观众保持空间方向。",
+      "status": "inferred"
+    }
+  ]
+}

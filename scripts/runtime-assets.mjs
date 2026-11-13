@@ -18,10 +18,30 @@ export async function download(asset, filename, progress = async () => {}) {
   assert(url.protocol === 'https:' && /^[a-f0-9]{64}$/.test(asset.sha256), 'Require HTTPS and a pinned SHA256');
   try { if (await sha256(filename) === asset.sha256) return; } catch (error) { if (error.code !== 'ENOENT') throw error; }
   await mkdir(path.dirname(filename), { recursive: true });
-  const temporary = filename + '.part';
+  const maxAttempts = 3;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      await downloadAttempt(asset, filename, progress, attempt, maxAttempts);
+      return;
+    } catch (error) {
+      const transient = error.name === 'TimeoutError' || error.name === 'TypeError'
+        || ['ECONNRESET', 'ETIMEDOUT', 'ENOTFOUND', 'EAI_AGAIN'].includes(error.cause?.code)
+        || error.retryable === true;
+      if (!transient || attempt === maxAttempts) throw error;
+      await progress({ stage: 'waiting', attempt: attempt + 1, maxAttempts, receivedBytes: 0, totalBytes: undefined, downloadStartedAt: undefined });
+      await new Promise(resolve => setTimeout(resolve, attempt * 1000));
+    }
+  }
+}
+
+async function downloadAttempt(asset, filename, progress, attempt, maxAttempts) {
+  const url = new URL(asset.url), temporary = filename + '.part';
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(new DOMException('Download made no progress for five minutes', 'TimeoutError')), 300_000);
   try {
     let current = url, response;
-    const signal = AbortSignal.timeout(300_000);
+    const signal = controller.signal;
+    await progress({ stage: 'downloading', attempt, maxAttempts, receivedBytes: 0, totalBytes: undefined, downloadStartedAt: Date.now() });
     for (let redirects = 0; redirects <= 5; redirects++) {
       assert.equal(current.protocol, 'https:', 'Runtime redirects must use HTTPS');
       response = await fetch(current, { redirect: 'manual', signal });
@@ -31,22 +51,29 @@ export async function download(asset, filename, progress = async () => {}) {
       assert(location && redirects < 5, 'Invalid or excessive runtime redirects');
       current = new URL(location, current);
     }
-    assert(response.ok && response.body, `Download ${url.hostname}${url.pathname}: HTTP ${response.status}`);
+    if (!response.ok || !response.body) {
+      await response.body?.cancel();
+      throw Object.assign(new Error(`Download ${url.hostname}${url.pathname}: HTTP ${response.status}`), { retryable: response.status === 408 || response.status === 429 || response.status >= 500 });
+    }
     let receivedBytes = 0;
     const encoding = response.headers.get('content-encoding');
     const totalBytes = !encoding || encoding === 'identity' ? Number(response.headers.get('content-length')) || undefined : undefined;
     async function* measured(source) {
       for await (const chunk of source) {
+        timeout.refresh();
         receivedBytes += chunk.length;
         await progress({ stage: 'downloading', receivedBytes, totalBytes });
         yield chunk;
       }
     }
     await pipeline(Readable.fromWeb(response.body), measured, createWriteStream(temporary));
+    clearTimeout(timeout);
     await progress({ stage: 'verifying' });
     assert.equal(await sha256(temporary), asset.sha256, `SHA256 mismatch: ${url.pathname}`);
     await rename(temporary, filename);
-  } finally { await rm(temporary, { force: true }); }
+  } catch (error) {
+    throw controller.signal.aborted ? controller.signal.reason : error;
+  } finally { clearTimeout(timeout); await rm(temporary, { force: true }); }
 }
 
 export async function runFile(command, args, options = {}) {

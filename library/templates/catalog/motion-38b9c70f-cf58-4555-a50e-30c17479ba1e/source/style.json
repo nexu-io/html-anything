@@ -1,0 +1,106 @@
+{
+  "background": {
+    "color": "#02072c",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Qwen3.8-Max",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "三瓣标志",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "自然纹理",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "金属边缘",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色光场",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "产品名",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "参数标签",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#02072c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1a2eff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#80d9e4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c9e0ff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白色无衬线粗标题；参数标签紧凑并列",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "三瓣围绕中心旋转，森林、水面与金属反光依次替换。中间留白与瓣间距离一致，让多种材质仍被读成同一标志。",
+      "status": "inferred"
+    },
+    {
+      "rule": "末段把标志推向右下并放大，左上出现产品名，参数标签放在名称下方。深蓝背景、白色大字和少量银蓝高光形成最终公告。",
+      "status": "inferred"
+    },
+    {
+      "rule": "一个产品名配两枚简短参数标签即可；新标志需能承受内部贴图和放大裁切。",
+      "status": "inferred"
+    }
+  ]
+}

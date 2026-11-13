@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#fcfcfc",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：10K",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：twilio",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "四个品牌圆点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "弧线连接",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "通信气泡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "人物",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "生活物件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "设备与消息",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fcfcfc",
+      "status": "inferred"
+    },
+    {
+      "hex": "#122e64",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e4174d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f6c9d3",
+      "status": "inferred"
+    },
+    {
+      "hex": "#36a5de",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "少量无衬线品牌字；白底、红粉信号图形、蓝色人物与柔和体积阴影",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "红色圆点先形成品牌，再变成连接人物和物件的信号；同一套几何词汇贯穿整段。",
+      "status": "inferred"
+    },
+    {
+      "rule": "每段以人物为中心，手机、消息或物件围绕其展开；用位置接力把下一场景引入。",
+      "status": "inferred"
+    },
+    {
+      "rule": "平面人物和立体信号物件共存，红粉承担连接与强调，蓝色承担人物轮廓。",
+      "status": "inferred"
+    }
+  ]
+}

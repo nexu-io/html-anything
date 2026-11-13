@@ -1,0 +1,138 @@
+{
+  "background": {
+    "color": "#160622",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：cyera",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：New Release",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Ocyera",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "环形点标志",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "紫绿字样",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "圆角应用框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地貌风景",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "漂浮球",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "放射构造线",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#160622",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f3f0e9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a779e8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b8ff8e",
+      "status": "inferred"
+    },
+    {
+      "hex": "#441363",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6d2d93",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线 Haffer Medium 与衬线 Season Mix Regular 交替；高对比大字号与细网格",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "从标志、配色和字形的构造走向品牌应用，再用同一颗漂浮球把网页与主张连接起来。",
+      "status": "inferred"
+    },
+    {
+      "rule": "放射线引出环形点标志，网格标注名称比例；色彩与字形展示随后展开。进入品牌风景后降低辅助线存在感，让应用自己说明视觉语言。",
+      "status": "inferred"
+    },
+    {
+      "rule": "近黑紫提供底色，深紫与茄紫作中间层，浅绿用于关键词与标志的小范围强调。无衬线主句与较轻的衬线强调词分工明确；圆角应用框共享同一弧度。",
+      "status": "inferred"
+    }
+  ]
+}

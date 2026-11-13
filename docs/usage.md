@@ -75,7 +75,7 @@ openmotion 围绕已有 Agent 用户的产品演示、参考复刻、动态图�
 
 ### 安装完成后的引导（Codex / Agent）
 
-所有 Agent 安装入口共用[安装成功后的回复规则](install.md#installation-success-reply)。安装完成后，Agent 用 `openmotion_open_preview({target:"templates"})` 打开模板库；当前聊天尚未加载 MCP 时，直接打开安装结果中的 `onboarding.preview.previewUrl`。宿主没有浏览器时提供实际链接，不声称已自动打开。模板库启动失败时说明具体原因，不创建占位工程。
+All Agent installation entries share the [installation-success reply rules](install.md#installation-success-reply). Briefly confirm installation and open the template library with `openmotion_open_preview({target:"templates"})`, or setup's `onboarding.preview.previewUrl` before native discovery. Report the actual presentation result; do not create a placeholder project. Keep technical verification internal. Missing or stale native tools can use `onboarding.directAccess` under its installed transport and policy checks, without requesting a restart or a new chat by default.
 
 ### 首次体验默认规则
 
@@ -119,10 +119,11 @@ macOS 同一数据目录中的多个 MCP 会话现在共用一个后台，每个
 
 ```sh
 npm ci
-npm run dev
+npm run build:studio
+npm start
 ```
 
-默认访问 `http://localhost:4173` 首页；`/?project=<id>` 或 `/#project/<id>` 打开对应项目。插件启动会校验服务版本与工程目录，避开已占用端口。Hyperframes 原生服务使用另一个回环端口；我们的服务转发原生 API、文件事件和预览请求，直接提供自有编辑器页面。视频作品仍在独立 composition iframe 中预览，以隔离 UI 样式和作品样式。
+Open the printed `studioUrl` or `previewUrl`; do not assume port 4173. `npm start` and MCP share the existing startup logic and reuse a compatible service for the same workspace. macOS selects a port dynamically; other platforms try `PORT` (default 4173) and the next nine ports, skipping occupied ones. The service remains in the background after the launcher exits. Project links use `/?project=<id>` or `/#project/<id>` at the returned origin. Hyperframes uses a separate loopback port; OpenMotion proxies its APIs, file events and preview requests while serving its own editor. Compositions remain in isolated preview iframes. `npm run dev` retains the direct foreground server entry for development.
 
 ## Agent 工具
 

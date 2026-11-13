@@ -1,5 +1,7 @@
 // @vitest-environment happy-dom
 
+import { I18nProvider } from "../../i18n/I18n";
+import type { Locale } from "../../i18n/messages";
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -39,6 +41,7 @@ function renderItems(
   element: TimelineElement,
   currentTime = 2,
   withLive = true,
+  locale: Locale = "en",
 ) {
   const setLive = vi.fn((_el: TimelineElement, _attr: string, _value: string | null) => undefined);
   const revertLive = vi.fn((_el: TimelineElement, _attr: string) => undefined);
@@ -52,7 +55,7 @@ function renderItems(
   root = createRoot(host);
   act(() => {
     root?.render(
-      <TimelineEditProvider
+      <I18nProvider initialLocale={locale}><TimelineEditProvider
         value={{
           onSetElementAttributeQuiet: setQuiet,
           onFreezeFrame: freeze,
@@ -67,7 +70,7 @@ function renderItems(
           currentTime={currentTime}
           onClose={onClose}
         />
-      </TimelineEditProvider>,
+      </TimelineEditProvider></I18nProvider>,
     );
   });
   return { setQuiet, onClose, freeze, setLive, revertLive };
@@ -285,4 +288,14 @@ describe("ClipMenuToolItems", () => {
       expect(setQuiet).not.toHaveBeenCalled();
     });
   });
+});
+
+it("renders Chinese submenu choices while persisting the same preset ID", () => {
+  const { setQuiet } = renderItems("sound", video, 2, true, "zh-CN");
+  openSubmenu("人声");
+  expect(document.body.textContent).toContain("清晰");
+  expect(document.body.textContent).toContain("音色");
+  expect(document.body.textContent).not.toContain("Character");
+  pick("清晰");
+  expect(String(setQuiet.mock.calls[0]?.[2])).toContain('"fromPreset":"voice-clean"');
 });

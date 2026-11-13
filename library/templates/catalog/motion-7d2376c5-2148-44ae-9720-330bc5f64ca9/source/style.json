@@ -1,0 +1,108 @@
+{
+  "background": {
+    "color": "#061325",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "模板矩阵",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "透视带",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "选中网页",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "类别标签",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "修改输入",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "前后结果",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#061325",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1286e9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#75d6f9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#252b37",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "白色无衬线说明；模板各自保留标题与图片风格",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "蓝黑光场里排列多张完整网页缩略图，间距统一。选中模板从网格所在位置放大，其他页面退后；浏览期间保留网页内部的纵向移动。",
+      "status": "inferred"
+    },
+    {
+      "rule": "展示修改需求后，把同一网页的题材、色板和图片换掉。保留关键区域位置，使观众能看出改了什么；修改框用深色面板，与白色网页形成对照。",
+      "status": "inferred"
+    },
+    {
+      "rule": "开始和结尾可以展示多模板，中段只深入一个。品牌背景以深蓝、亮蓝与白色为主，模板内容可多彩但不改外部统一框架。",
+      "status": "inferred"
+    },
+    {
+      "rule": "至少提供三类模板及一个完整改造案例。新主题文案、图像与主色成套替换，结尾保留简短行动入口。",
+      "status": "inferred"
+    }
+  ]
+}

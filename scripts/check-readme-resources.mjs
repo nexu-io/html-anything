@@ -12,7 +12,7 @@ export const resourceDocuments = [
 ];
 const remote = /^(?:https?:)?\/\//i;
 
-export async function checkDocument(file) {
+export async function checkDocument(file, mediaURLs = new Set()) {
   const text = await readFile(file, 'utf8');
   const refs = [...text.matchAll(/(?:src|srcset)="([^"]+)"|!\[[^\]]*\]\(([^)]+)\)|\]\(([^)]+)\)|href="([^"]+)"/g)];
   let checked = 0;
@@ -20,7 +20,7 @@ export async function checkDocument(file) {
     const url = match.slice(1).find(Boolean);
     const embedded = Boolean(match[1] || match[2]);
     const media = /\.(?:mp4|webm|mov|gif|png|jpe?g|svg|woff2?|ttf|mp3|wav)(?:[?#]|$)/i.test(url);
-    assert(!(remote.test(url) && (embedded || media)), `${file}: external display/media dependency: ${url}`);
+    assert(!(remote.test(url) && (embedded || media) && !mediaURLs.has(url)), `${file}: external display/media dependency: ${url}`);
     if (/^(?:https?:|mailto:|#|data:)/i.test(url)) continue;
     const target = path.resolve(path.dirname(file), decodeURIComponent(url.split('#')[0].split('?')[0]));
     await stat(target).catch(() => { throw new Error(`${file}: missing local reference: ${url}`); });
@@ -31,8 +31,12 @@ export async function checkDocument(file) {
 
 export async function verifyResources(root = fileURLToPath(new URL('../', import.meta.url))) {
   let links = 0, hashes = 0;
-  for (const doc of resourceDocuments) links += await checkDocument(path.join(root, doc));
+  const { validateMediaManifest } = await import('../shared/repository-media.ts');
+  const optional = validateMediaManifest(JSON.parse(await readFile(path.join(root, 'repository-media.json'), 'utf8')));
+  for (const doc of resourceDocuments) links += await checkDocument(path.join(root, doc), new Set(optional.files.map(file => file.url)));
   const manifests = [
+    ['docs/readme/live-product/manifest.json', '', 'files'],
+    ['docs/readme/live-templates/manifest.json', '', 'files'],
     ['docs/readme/media/manifest.json', '', 'entries'],
     ['docs/readme/contributors/manifest.json', 'docs/readme/contributors', 'contributors'],
     ['library/skills/openmotion-design-remix/vendor/manifest.json', 'library/skills/openmotion-design-remix/vendor', 'files'],
@@ -45,6 +49,8 @@ export async function verifyResources(root = fileURLToPath(new URL('../', import
       const file = path.resolve(root, base, entry.file);
       assert(file.startsWith(path.resolve(root) + path.sep), 'Resource escapes checkout');
       const bytes = await readFile(file);
+      assert(!bytes.subarray(0, 128).toString().startsWith('version https://git-lfs.github.com/spec/v1'),
+        `${entry.file}: media is not downloaded. Run git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**" before verifying full resource hashes.`);
       assert.equal(createHash('sha256').update(bytes).digest('hex'), entry.sha256, `Changed resource: ${entry.file}`);
       if (entry.bytes !== undefined) assert.equal(bytes.length, entry.bytes, `Changed size: ${entry.file}`);
       hashes++;

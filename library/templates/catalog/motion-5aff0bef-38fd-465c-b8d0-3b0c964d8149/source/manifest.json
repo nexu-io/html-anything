@@ -1,0 +1,227 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "fps": 24.0,
+  "durationSeconds": 4.333333,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "6b333daa11dd220a95d588e68e9b28faa2f6c8dd96ace6f418b5babd0efc80b0"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.jpg",
+      "timeSeconds": 0.0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.jpg",
+      "timeSeconds": 1.4166666666666667,
+      "frameId": "K0007",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.jpg",
+      "timeSeconds": 1.5833333333333333,
+      "frameId": "K0009",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.jpg",
+      "timeSeconds": 2.5,
+      "frameId": "K0013",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-5.jpg",
+      "timeSeconds": 3.0,
+      "frameId": "K0014",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 1.832621667010244,
+    "measurementSeconds": 0.11013916699812398,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "原字体文件、音轨同步与原工程缓动未恢复。",
+    "HTML 是根据动作关系编写的示例，不是完整原片或 fresh agent 复刻成绩。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V337",
+      "sha256": "6b333daa11dd220a95d588e68e9b28faa2f6c8dd96ace6f418b5babd0efc80b0",
+      "sourceUrl": "https://x.com/harvey/status/2089722668761432349"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.jpg",
+      "bytes": 99480,
+      "sha256": "f5795f6363d5e8acdf881bcbede62a8a03ff62048a03e7ddbce7127d5b289eca"
+    },
+    {
+      "path": "assets/reference-2.jpg",
+      "bytes": 73873,
+      "sha256": "1683d9e8cac53d04a2ef4e22fdf6ba3dc80c376552500cc1ae575171d10e089c"
+    },
+    {
+      "path": "assets/reference-3.jpg",
+      "bytes": 71332,
+      "sha256": "c06b245faa85657d32dbcd16d018aec2b2fc91260340c86cf772eebed3354569"
+    },
+    {
+      "path": "assets/reference-4.jpg",
+      "bytes": 48119,
+      "sha256": "71097fac7e3b104a9ac8e834e5287f53bb779b81e0b59cd193b2ae0f7cca87a1"
+    },
+    {
+      "path": "assets/reference-5.jpg",
+      "bytes": 52820,
+      "sha256": "090d1216027abe6ee97baef83fbf2a0687c22f320c7882d5991e871fd0ffce52"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/clip-1.html",
+      "bytes": 571,
+      "sha256": "2d5eb1cd1519e605b9720f75e6b3411dba5bd55e6c0bc0231d0fcde47ab941df"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 5439,
+      "sha256": "0dd3f17e21194b448ca31c3fe243a0f9741bfac8e6a75d4f72abbc5521e55a09"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 4608,
+      "sha256": "ac75b3954700475aa935dfe8fd7a1f76f125b522e8302f9105fc3339a0b7c3e4"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 543,
+      "sha256": "2c33f39bbf5b15e1d0f6babf4ea417c0323858365c5fa054b5ae7d618443eb38"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 4987,
+      "sha256": "7b50abcc5fe8e0c9db5ceb261d8208146a5e9609fd4fb36cff8dbcd2bfb6a223"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 18197,
+      "sha256": "612e27b2051291a4a23f7e8dd733fd2903bf4c26792c1bb338fbe17be1bc9dc7"
+    },
+    {
+      "path": "style.json",
+      "bytes": 2167,
+      "sha256": "e2fb314933f1f52c8a461893bb9f7bd6b57c1bc45cca8d20f291429b21cb4bef"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 1385,
+      "sha256": "39e180d4efa5a0c680a0fa94d62682ff213370469e3e507321f5d82a14655649"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 3088,
+      "sha256": "2df84d2727560d66ac0135fc0736ba0ae547db23aba642f6ec469f25023c6fa2"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12581,
+      "sha256": "9c6ebea34a3b5f4803cb6dcbb619530e44acffabb201361fdb35a833c137a182"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4904,
+      "sha256": "0614c48b41d6aa4b565565018d8816d8a3da0ce24070bdf937c23c604a748e8a"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Intelligence."
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#655158"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/clip-1.html",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 2
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 4.333333,
+      "status": "authored"
+    },
+    {
+      "id": "clip-1",
+      "src": "demos/clip-1.html",
+      "duration": 1.5999999999999999,
+      "status": "authored"
+    }
+  ]
+}
