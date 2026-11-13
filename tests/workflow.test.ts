@@ -7,11 +7,11 @@ import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
 import { WorkspaceStore } from '../workspace.ts';
-import { getWorkflow, workflowReferences, workflowRegistry, workflowSections } from '../shared/workflow.ts';
+import { getWorkflow, workflowReferences, workflowRegistry, workflowSections, phase1WorkflowNames } from '../shared/workflow.ts';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const workflows = ['debug-media', 'production', 'director', 'template', 'recreate', 'video-to-template'];
-const productionSections = ['start', 'intake', 'templates', 'production', 'verification', 'context', 'native', 'edit', 'portable', 'materials'];
+const workflows = phase1WorkflowNames;
+const productionSections = Object.keys(workflowRegistry.production.sections);
 const entries = Object.entries(workflowRegistry).filter(([name]) => workflows.includes(name)).flatMap(([workflow, definition]) =>
   Object.entries(definition.sections).map(([section, documentId]) => ({ workflow, section, documentId, status: definition.status })));
 
@@ -102,7 +102,7 @@ test('every workflow document and linked reference is reachable over MCP with ca
     assert.equal(returned.get('skills/openmotion-recreate/SKILL.md').status, 'ready');
     assert.equal(returned.get('skills/openmotion-video-to-template/SKILL.md').status, 'ready');
     assert.equal(returned.get('skills/openmotion-video-to-template/SKILL.md').workflow, 'video-to-template');
-    for (const route of workflows.filter(route => route !== 'debug-media')) {
+    for (const route of workflows) {
       assert.ok(returned.get(workflowRegistry[route as keyof typeof workflowRegistry].sections.start).references.some((reference: { documentId: string }) =>
         reference.documentId === 'skills/openmotion-production/references/edit.md'), `${route} must expose the shared edit workflow`);
       assert.ok(returned.get(workflowRegistry[route as keyof typeof workflowRegistry].sections.start).references.some((reference: { documentId: string }) =>
@@ -161,7 +161,7 @@ test('MCP rejects unknown routes, invalid route-section pairs and arbitrary path
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-workflow-invalid-'));
   try {
     const invalid = [
-      { workflow: 'unknown' }, { workflow: '__proto__' }, { workflow: '../director' }, { workflow: null }, { workflow: [] },
+      { workflow: 'unknown' }, { workflow: 'debug-media' }, { workflow: '__proto__' }, { workflow: '../director' }, { workflow: null }, { workflow: [] },
       { section: '../.env' }, { section: 'constructor' }, { section: null }, { section: 1 }, { section: {} },
       { workflow: 'director', section: 'intake' }, { workflow: 'template', section: 'production' }, { workflow: 'recreate', section: 'native' },
       { workflow: 'production', section: 'sound' }, { path: 'skills/openmotion-director/SKILL.md' }, [], 'director',
@@ -200,6 +200,7 @@ test('phase1 resource discovery exposes all five routes and their supporting doc
     const expected = entries.map(({ workflow, section }) => `openmotion://workflow/${workflow}/${section}`);
     assert.deepEqual(uris, [...expected, 'openmotion://engine/SKILL.md']);
     assert.ok(uris.includes('openmotion://workflow/video-to-template/verification'));
+    assert.ok(!uris.some(uri => uri.includes('debug-media')));
     const reads = stdio(directory, expected.map((uri, i) => ({ id: i, method: 'resources/read', params: { uri } })));
     for (const [i, entry] of entries.entries()) assert.equal(reads.get(i).structuredContent.documentId, entry.documentId);
     assert.deepEqual(await readdir(directory), []);

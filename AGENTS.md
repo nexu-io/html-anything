@@ -20,6 +20,10 @@ Keep persistent user instructions for repository work in this file, and keep `CL
 2. All repository collaboration content you create or update must be in English: issue and pull request titles and descriptions, comments, review summaries, discussions, and release notes. This applies even when the user's request is in another language.
 3. Before committing or submitting repository content, verify that it follows these English-language requirements.
 
+## Repository contribution Skills
+
+Source-checkout contributor Skills live under `.agents/skills/`. When adding or maintaining a built-in BYOK media provider, read `.agents/skills/add-byok-provider/SKILL.md` in this checkout. It covers provider research, implementation, references and verification. These repository-local Skills are excluded from application/plugin distribution and host installation; root `skills/` continues to hold product workflows. Installed product copies may not contain `.agents/skills/`. Other Agents following `CLAUDE.md` use this same source-checkout guidance.
+
 ## README writing and acknowledgements
 
 When creating or updating any README, including alternative drafts and translations, describe OpenMotion's own capabilities, workflows and the meaning of each example. Do not introduce other products as comparisons, inspiration or source labels in the main narrative, headings, feature descriptions or showcase copy. Avoid wording such as "From MotionGit", "inspired by Hypit" or "the alternative to ...".
@@ -44,7 +48,7 @@ Choose the entry for the current intent directly. Original creation, narrative/m
 
 A directly selected specialist reads shared context and continues; do not bounce back to the production start. Small edits, audio-only changes, review-only and export-only requests resume their affected scope. Keep existing decisions and locked content. Repository development and documentation do not trigger video production.
 
-Phase one exposes twelve openmotion_ Tools (nine project tools, catalog fetch/template detail and media-use), defined in [the contract](docs/mcp-phase1-tools.md). MCP-only clients read the same guidance through resources/list and resources/read, beginning at openmotion://workflow/production/start or the already-selected specialist. The pinned engine guide is openmotion://engine/SKILL.md. The workflow-reading Tool is internal compatibility only. The temporary openmotion-debug-media Skill and debug-media resources describe the BYOK media-use tool; the five creative routes remain unchanged. Follow conditional references and reuse complete document bodies. Native authoring belongs to the shared production/native guide. Technical export verification, visual quality and actual playback remain separate. See [Skill routing](docs/skills.md).
+Phase one exposes twelve openmotion_ Tools (nine project tools, catalog fetch/template detail and media-use), defined in [the contract](docs/mcp-phase1-tools.md). MCP-only clients read the same guidance through resources/list and resources/read, beginning at openmotion://workflow/production/start or the already-selected specialist. The pinned engine guide is openmotion://engine/SKILL.md. The workflow-reading Tool is internal compatibility only. Provider references in the existing production workflow describe the BYOK media-use tool; the five creative routes remain unchanged. Follow conditional references and reuse complete document bodies. Native authoring belongs to the shared production/native guide. Technical export verification, visual quality and actual playback remain separate. See [Skill routing](docs/skills.md).
 
 
 ## Template production and reuse

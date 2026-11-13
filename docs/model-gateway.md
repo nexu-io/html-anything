@@ -16,13 +16,13 @@
 
 ## Current editor and public MCP entry
 
-The editor project drawer footer exposes **Media providers** for fal.ai and OpenDesign Cloud. Save a key to enable that provider; remove the saved key to stop using that source. An environment key can remain active, and is reported as such. No separate enable switch is needed. Keys are masked and never returned by HTTP/MCP. Cloud also requires the gateway origin shown on its workspace API key page; a trailing `/v1` is normalized away. The settings page links to key setup and the bundled provider usage reference, and can refresh each provider's model catalog.
+The editor project drawer footer exposes **Media providers** for fal.ai, Atlas Cloud and WaveSpeedAI. OpenDesign Cloud setup is temporarily hidden; existing Cloud credentials, references and backend calls remain supported. Save a key to enable that provider; remove the saved key to stop using that source. An environment key can remain active, and is reported as such. No separate enable switch is needed. Keys are masked and never returned by HTTP/MCP. The retained Cloud adapter requires the gateway origin shown on its workspace API key page; a trailing `/v1` is normalized away. The settings page links to key setup and the bundled provider usage reference; it does not display or fetch model catalogues. Agents follow the Skill references and use the models action to query supplier capabilities through the service.
 
-The public `openmotion_media_use` Tool has inspect, reference, models, generate, status and cancel actions. The temporary [debug media Skill](../skills/openmotion-debug-media/SKILL.md) documents these actions and official fal references. Generate requires explicit projectId and stable requestId. Provider-native model IDs may be used without permanently registering a custom model. The service reads credentials, constructs supported provider requests, persists the task, downloads and validates output and imports it under the initiating project's assets/generated. Poll the original job instead of submitting again. A completed task does not place media on the timeline; re-read current revision/version before editing project source.
+The public `openmotion_media_use` Tool has inspect, reference, models, generate, status and cancel actions. The existing [shared material guidance](../skills/openmotion-production/references/materials.md#byok-provider-references) links to the four provider references, available through action=reference and production workflow resources. Generate requires explicit projectId and stable requestId. Provider-native model IDs may be used without permanently registering a custom model. The service reads credentials, constructs supported provider requests, persists the task, downloads and validates output and imports it under the initiating project's assets/generated. Poll the original job instead of submitting again. A completed task does not place media on the timeline; re-read current revision/version before editing project source.
 
-fal supports image/video/audio model endpoints with model-specific parameters. For speech, mode=text-to-speech maps the prompt to text. Cloud supports text-to-image, text-to-video and speech; audio requires parameters.voice and a matching voice model. Cloud music, local reference uploads and image edits are not implemented by this extension. Parameters can include references already hosted according to the provider contract; local paths are not uploaded automatically.
+fal, Atlas Cloud and WaveSpeedAI support image/video/audio model endpoints with model-specific parameters. Atlas Cloud reuses its prediction adapter; WaveSpeed submits to /api/v3/{model} and polls /api/v3/predictions/{id}/result. WaveSpeed discovery uses the saved key, while Atlas/fal catalogues are public. Environment alternatives are ATLASCLOUD_API_KEY and WAVESPEED_API_KEY. For speech, mode=text-to-speech maps the prompt to text. Cloud supports text-to-image, text-to-video and speech; audio requires parameters.voice and a matching voice model. Cloud music, local reference uploads and image edits are not implemented by this extension. Parameters can include references already hosted according to the provider contract; local paths are not uploaded automatically.
 
-Existing local Codex/Atlas configuration, generation UI and legacy Gateway APIs remain internal compatible paths. Default-route settings and manual generation UI are not added to the MVP editor by this extension.
+Existing local Codex configuration, generation UI and legacy Gateway APIs remain internal compatible paths. Atlas Cloud is also exposed through the BYOK settings and public media-use tool. Default-route settings and manual generation UI are not added to the MVP editor by this extension.
 
 ## 能力状态与路由
 
@@ -69,7 +69,7 @@ flowchart LR
 | `shared/gateway.ts` | 无凭据的 Model、Provider、Capability、GenerationJob 合约 |
 | `gateway/agents.ts` | 本地检测与 Codex 内置生图调用 |
 | `gateway/catalog.ts` | 目录规范化、来源、模态识别与默认候选 |
-| `gateway/providers.ts` | Atlas / fal 提交、查询与可用的远端取消 |
+| `gateway/providers.ts` | Atlas / fal / WaveSpeed submission, polling and supported remote cancellation |
 | `gateway/network.ts` | HTTP 边界、响应脱敏、媒体下载与文件签名校验 |
 | `gateway/service.ts` | 配置、路由、幂等任务、并发与工程绑定 |
 | `studio/src/motion/gatewayClient.ts` | Studio 可复用的生成 API 客户端 |
@@ -115,7 +115,7 @@ Studio 与 MCP 复用 `ModelGateway` 业务层及工作区文件，但不要求�
 - 凭据不进入任务快照；开始执行时读取当前供应商配置并复查可用性。服务关闭时中断本地运行，保留任务记录；当前不提供远端任务的自动续接或断点恢复。
 - 图片替换还核对捕获的元素与原素材路径，并在源文件提交前再次检查。原图已被其他编辑替换、片段被删、合成切换或写入受阻时明确失败；不会覆盖新的选择。参考图副本在任务完成、失败或取消后清理。
 - 最多 20 个待处理/执行任务，同时执行 2 个。工作进程消失后将运行任务标为中断，不自动再次请求供应商。相同工程与幂等键的相同输入返回原任务，不同输入被拒绝。
-- 单任务总超时 15 分钟；Codex 子进程 10 分钟。取消停止本地执行和入库，fal 在支持时请求远端取消。Atlas 远端任务可能继续执行/计费。
+- 单任务总超时 15 分钟；Codex 子进程 10 分钟。取消停止本地执行和入库，fal 在支持时请求远端取消。Atlas and WaveSpeed remote tasks may continue running and billing.
 - 下载仅允许公共 HTTPS（或媒体 data URL）；逐跳校验 DNS，禁止内网/本机目标，不将 Key 发送到媒体 CDN。限制大小 256 MB，并检查图片、视频或音频文件签名；Codex 文件另外限制 80 MB。
 - 在工作区锁下将完整文件链接进目标工程并写完成状态；不修改合成，现有原生文件监听负责刷新素材库。源文件与素材的 revision 会随新增文件改变。
 - 任务保留初始素材路径。之后在素材库重命名/删除，任务查询会将原路径标记 `available:false`；从素材库使用新路径。生成成功记录不会被改写成失败。

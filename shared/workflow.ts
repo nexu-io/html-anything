@@ -6,7 +6,6 @@ import { fileURLToPath } from 'node:url';
 export { workflowEntryGuide } from './workflow-entry.js';
 
 export const workflowRegistry = {
-  'debug-media': { status: 'ready', sections: { start: 'skills/openmotion-debug-media/SKILL.md', fal: 'skills/openmotion-debug-media/references/fal.md', opendesign: 'skills/openmotion-debug-media/references/opendesign.md' } },
   production: {
     status: 'ready',
     sections: {
@@ -20,6 +19,10 @@ export const workflowRegistry = {
       edit: 'skills/openmotion-production/references/edit.md',
       portable: 'skills/openmotion-production/references/portable-project.md',
       materials: 'skills/openmotion-production/references/materials.md',
+      fal: 'skills/openmotion-production/references/media-providers/fal.md',
+      opendesign: 'skills/openmotion-production/references/media-providers/opendesign.md',
+      atlascloud: 'skills/openmotion-production/references/media-providers/atlascloud.md',
+      wavespeed: 'skills/openmotion-production/references/media-providers/wavespeed.md',
     },
   },
   director: {
@@ -61,10 +64,10 @@ export const workflowRegistry = {
 export const workflowFiles = workflowRegistry.production.sections;
 export const workflowNames = Object.keys(workflowRegistry);
 export const workflowSections = [...new Set(Object.values(workflowRegistry).flatMap(workflow => Object.keys(workflow.sections)))];
-export const phase1WorkflowNames = ['debug-media', 'production', 'director', 'template', 'recreate', 'video-to-template'];
+export const phase1WorkflowNames = ['production', 'director', 'template', 'recreate', 'video-to-template'];
 export const phase1Skills = ['openmotion-production', 'openmotion-director', 'openmotion-template-to-video', 'openmotion-recreate', 'openmotion-video-to-template'];
 export const compatibilitySkills = Object.keys(skillAliases).filter(name => phase1Skills.includes(skillAliases[name as keyof typeof skillAliases]));
-export const packagedSkills = ['openmotion-debug-media', ...phase1Skills, ...compatibilitySkills];
+export const packagedSkills = [...phase1Skills, ...compatibilitySkills];
 export function workflowResources() {
   return Object.entries(workflowRegistry).filter(([name]) => phase1WorkflowNames.includes(name)).flatMap(([workflow, definition]) => Object.keys(definition.sections).map(section => ({
     uri: `openmotion://workflow/${workflow}/${section}`, name: `${workflow}/${section}`, title: `OpenMotion · ${workflow}/${section}`, mimeType: 'application/json',

@@ -2,11 +2,11 @@ import { createHash, randomUUID } from 'node:crypto';
 import { chmod, link, lstat, mkdir, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { WorkspaceStore } from '../workspace.ts';
-import { modalities, type Agent, type GenerateInput, type GenerationJob, type GatewayStatus, type Model, type Modality, type ProviderId, type ProviderState } from '../shared/gateway.ts';
+import { mediaProviders, modalities, type Agent, type GenerateInput, type GenerationJob, type GatewayStatus, type Model, type Modality, type ProviderId, type ProviderState } from '../shared/gateway.ts';
 import { builtinModels, discoverModels, modelKey, providerIds, providerLabels, validModelId } from './catalog.ts';
 import { detectAgents, generateCodexImage } from './agents.ts';
 import { downloadMedia, mediaType, providerOrigin, publicProviderFetch, ProviderError, type Fetcher } from './network.ts';
-import { providerAdapters } from './providers.ts';
+import { providerAdapters, waveSpeedModels } from './providers.ts';
 import { cloudModels } from './opendesign.ts';
 
 type Config = { version: 1; providers: Partial<Record<ProviderId, { enabled?: boolean; baseUrl?: string; verification?: 'verified' | 'rejected'; keyHash?: string; checkedAt?: number }>>;
@@ -54,7 +54,7 @@ export class ModelGateway {
   private async credentials() { return readJson<Partial<Record<ProviderId, string>>>(path.join(this.root, 'secrets.json'), {}); }
   private async credential(id: ProviderId) {
     const saved = (await this.credentials())[id];
-    const env = id === 'atlascloud' ? process.env.ATLASCLOUD_API_KEY : id === 'fal' ? process.env.FAL_KEY : id === 'opendesign' ? process.env.OPENDESIGN_API_KEY : undefined;
+    const env = id === 'atlascloud' ? process.env.ATLASCLOUD_API_KEY : id === 'fal' ? process.env.FAL_KEY : id === 'opendesign' ? process.env.OPENDESIGN_API_KEY : id === 'wavespeed' ? process.env.WAVESPEED_API_KEY : undefined;
     return { key: saved || env || '', source: saved ? 'stored' as const : env ? 'environment' as const : 'none' as const };
   }
   async configureProvider(id: unknown, input: { apiKey?: unknown; enabled?: unknown; baseUrl?: unknown }) {
@@ -75,7 +75,7 @@ export class ModelGateway {
         await chmod(this.root, 0o700);
         delete state.verification; delete state.keyHash; delete state.checkedAt;
       }
-      if (input.apiKey && ['fal', 'opendesign'].includes(id)) state.enabled = true;
+      if (input.apiKey && mediaProviders.some(provider => provider === id)) state.enabled = true;
       if (input.enabled !== undefined) state.enabled = input.enabled as boolean;
       config.providers[id] = state;
       await atomic(path.join(this.root, 'config.json'), config);
@@ -102,13 +102,17 @@ export class ModelGateway {
     if (input.refresh !== undefined && typeof input.refresh !== 'boolean') throw new Error('refresh must be boolean');
     const warnings: string[] = [];
     if (input.refresh) {
-      const selected = (['atlascloud', 'fal', 'opendesign'] as const).filter(id => !input.provider || input.provider === id);
+      const selected = mediaProviders.filter(id => !input.provider || input.provider === id);
       const discovered = await Promise.all(selected.map(async id => {
         try {
           if (id === 'opendesign') {
             const key = (await this.credential(id)).key, baseUrl = await this.cloudOrigin();
             if (!key || !baseUrl) return [];
             return await cloudModels(baseUrl, key, this.options.fetcher ?? publicProviderFetch);
+          }
+          if (id === 'wavespeed') {
+            const key = (await this.credential(id)).key;
+            return key ? await waveSpeedModels(key, this.options.fetcher ?? fetch) : [];
           }
           return await discoverModels(id, String(input.query ?? ''), this.options.fetcher ?? fetch);
         }
@@ -156,7 +160,7 @@ export class ModelGateway {
       }
       const credentials = await this.credential(id);
       const baseUrl = id === 'opendesign' ? await this.cloudOrigin() : undefined;
-      const active = ['fal', 'opendesign'].includes(id) ? !!credentials.key : enabled;
+      const active = !!credentials.key;
       const verification = credentials.key && saved.keyHash === hash(credentials.key) ? saved.verification ?? 'unverified' : 'unverified';
       return { id, label: providerLabels[id], enabled: active, configured: !!credentials.key, available: active && !!credentials.key && (id !== 'opendesign' || !!baseUrl) && verification !== 'rejected',
         ...(id === 'opendesign' ? { baseUrl: baseUrl ?? '' } : {}),
@@ -199,8 +203,8 @@ export class ModelGateway {
     const selected = input.model ?? status.routes[input.modality] ?? status.capabilities.find(c => c.modality === input.modality)?.selectedModelId;
     let model = (await this.models()).find(m => m.id === selected && m.modality === input.modality);
     if (!model && typeof selected === 'string') {
-      const colon = selected.indexOf(':'), provider = selected.slice(0, colon), modelId = selected.slice(colon + 1);
-      if (provider === 'fal' || provider === 'opendesign') {
+      const colon = selected.indexOf(':'), provider = mediaProviders.find(id => id === selected.slice(0, colon)), modelId = selected.slice(colon + 1);
+      if (provider) {
         validModelId(modelId);
         model = { id: selected, provider, modelId, label: modelId, modality: input.modality, mode: input.mode ?? `text-to-${input.modality}`, source: 'custom' };
       }

@@ -1,7 +1,8 @@
 /** Public contract shared by the model gateway, MCP and Studio. Never contains credentials. */
 export const modalities = ['image', 'video', 'audio'] as const;
 export type Modality = typeof modalities[number];
-export type ProviderId = 'codex' | 'atlascloud' | 'fal' | 'opendesign';
+export const mediaProviders = ['fal', 'opendesign', 'atlascloud', 'wavespeed'] as const;
+export type ProviderId = 'codex' | typeof mediaProviders[number];
 export type Model = {
   id: string; provider: ProviderId; modelId: string; label: string; modality: Modality;
   source: 'builtin' | 'live' | 'custom'; mode: string;

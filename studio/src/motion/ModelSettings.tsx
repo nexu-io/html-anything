@@ -1,23 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
+import { mediaProviders } from '../../../shared/gateway';
 import { useI18n } from '../i18n/I18n';
-import { gatewayRequest, loadGateway, type GatewayStatus, type Model } from './gatewayClient';
+import { gatewayRequest, type GatewayStatus } from './gatewayClient';
 
 export function ModelSettings({ onClose }: { onClose: () => void }) {
   const { t } = useI18n(); const dialog = useRef<HTMLDialogElement>(null);
-  const [data, setData] = useState<{ status: GatewayStatus; models: Model[] } | null>(null);
+  const [data, setData] = useState<GatewayStatus | null>(null);
   const [keys, setKeys] = useState<Record<string, string>>({});
   const [origin, setOrigin] = useState('');
-  const [busy, setBusy] = useState(false), [error, setError] = useState(''), [notice, setNotice] = useState('');
+  const [busy, setBusy] = useState(false), [error, setError] = useState('');
   useEffect(() => { dialog.current?.showModal(); return () => dialog.current?.close(); }, []);
   useEffect(() => {
     let active = true;
-    void loadGateway().then(value => { if (active) { setData(value); setOrigin(value.status.providers.find(p => p.id === 'opendesign')?.baseUrl ?? ''); } })
+    void gatewayRequest<GatewayStatus>('models/capabilities').then(value => { if (active) { setData(value); setOrigin(value.providers.find(p => p.id === 'opendesign')?.baseUrl ?? ''); } })
       .catch(error => { if (active) setError(error.message); });
     return () => { active = false; };
   }, []);
   async function change(action: () => Promise<unknown>) {
-    setBusy(true); setError(''); setNotice('');
-    try { await action(); setData(await loadGateway()); window.dispatchEvent(new Event('motion:gateway-changed')); }
+    setBusy(true); setError('');
+    try { await action(); setData(await gatewayRequest<GatewayStatus>('models/capabilities')); window.dispatchEvent(new Event('motion:gateway-changed')); }
     catch (error) { setError(error instanceof Error ? error.message : String(error)); }
     finally { setBusy(false); }
   }
@@ -25,13 +26,13 @@ export function ModelSettings({ onClose }: { onClose: () => void }) {
     <header><h2 id="model-settings-title">{t('Media providers')}</h2><button className="motion-media-close" onClick={onClose} aria-label={t('Close model settings')}>×</button></header>
     <p className="motion-media-muted">{t('Save a key to enable a provider.')}</p>
     {error && <p role="alert" className="motion-media-error">{t(error)}</p>}
-    {notice && <p role="status">{notice}</p>}
     {!data && !error && <p role="status">{t('Loading providers…')}</p>}
     {data && <section className="motion-provider-grid">
-      {data.status.providers.filter(p => p.id === 'fal' || p.id === 'opendesign').map(provider => <article key={provider.id} className="motion-provider-card">
+      {/* Cloud setup is temporarily hidden; keep existing credentials and the service adapter available. */}
+      {data.providers.filter(p => p.id !== 'opendesign' && mediaProviders.some(id => id === p.id)).map(provider => <article key={provider.id} className="motion-provider-card">
         <div className="motion-media-row"><strong>{provider.label}</strong><span className="motion-capability-badge" data-available={provider.configured}>{t(provider.configured ? 'Configured' : 'Not configured')}</span></div>
         <p className="motion-media-muted">{t(provider.reason)}</p>
-        <div className="motion-byok-links"><a href={provider.id === 'fal' ? 'https://fal.ai/dashboard/keys' : 'https://open-design.ai/cloud/dashboard'} target="_blank" rel="noreferrer">{t('Get API key')}</a>
+        <div className="motion-byok-links"><a href={provider.id === 'fal' ? 'https://fal.ai/dashboard/keys' : provider.id === 'atlascloud' ? 'https://www.atlascloud.ai/console/api-keys' : provider.id === 'wavespeed' ? 'https://wavespeed.ai/accesskey' : 'https://open-design.ai/cloud/dashboard'} target="_blank" rel="noreferrer">{t('Get API key')}</a>
           <a href={`/motion-api/models/providers/${provider.id}/reference`} target="_blank" rel="noreferrer">{t('Usage guide')}</a></div>
         <form onSubmit={event => { event.preventDefault(); void change(async () => {
           await gatewayRequest(`models/providers/${provider.id}`, 'PUT', { ...(keys[provider.id]?.trim() ? { apiKey: keys[provider.id].trim() } : {}), ...(provider.id === 'opendesign' ? { baseUrl: origin.trim() } : {}) });
@@ -44,13 +45,6 @@ export function ModelSettings({ onClose }: { onClose: () => void }) {
           </div>
         </form>
         <small className="motion-media-muted">{t(provider.credentialSource === 'environment' ? 'Using environment key' : 'Keys stay on this computer and are never returned by the API.')}</small>
-        {provider.configured && <details><summary>{t('Model catalogue')}</summary>
-          <button disabled={busy || !provider.available} onClick={() => void change(async () => {
-            const result = await gatewayRequest<{ warnings: string[] }>(`models?provider=${provider.id}&refresh=true`);
-            setNotice(result.warnings.map(w => t(w)).join(' · ') || t('Model catalogue refreshed'));
-          })}>{t('Discover models')}</button>
-          <div className="motion-model-list">{data.models.filter(model => model.provider === provider.id).map(model => <div key={model.id}><span><strong>{model.label}</strong><small>{model.modelId}</small></span><span>{t(model.modality === 'image' ? 'Image' : model.modality === 'video' ? 'Video' : 'Audio')}<small>{t(model.source === 'live' ? 'Live catalogue' : 'Built-in catalogue')}</small></span></div>)}</div>
-        </details>}
       </article>)}
     </section>}
   </dialog>;

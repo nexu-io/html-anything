@@ -1,9 +1,8 @@
 import type { WorkspaceStore } from '../workspace.ts';
-import type { GenerateInput } from '../shared/gateway.ts';
+import { mediaProviders, type GenerateInput } from '../shared/gateway.ts';
 import { gatewayFor } from './service.ts';
 import { getWorkflow } from '../shared/workflow.ts';
 
-export const mediaProviders = ['fal', 'opendesign'] as const;
 export async function mediaUse(store: WorkspaceStore, args: any) {
   const gateway = gatewayFor(store);
   if (args.provider !== undefined && !mediaProviders.includes(args.provider)) throw new Error('INVALID_ARGUMENT: unsupported media provider');
@@ -11,12 +10,12 @@ export async function mediaUse(store: WorkspaceStore, args: any) {
     const status = await gateway.status();
     return { providers: status.providers.filter(p => mediaProviders.includes(p.id as any)),
       settings: 'Open Media providers in the editor project drawer. Saving a key enables the provider.',
-      references: mediaProviders.map(provider => ({ provider, uri: `openmotion://workflow/debug-media/${provider}` })),
+      references: mediaProviders.map(provider => ({ provider, uri: `openmotion://workflow/production/${provider}` })),
       credentials: 'Read by the local service; keys are never returned to the Agent.' };
   }
   if (args.action === 'reference') {
     if (!args.provider) throw new Error('INVALID_ARGUMENT: provider is required');
-    return getWorkflow(args.provider, 'debug-media');
+    return getWorkflow(args.provider, 'production');
   }
   if (args.action === 'models') {
     const providers = (await gateway.status()).providers.filter(p => mediaProviders.includes(p.id as any) && (!args.provider || p.id === args.provider) && p.enabled);

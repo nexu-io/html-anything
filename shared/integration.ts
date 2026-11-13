@@ -132,7 +132,7 @@ ${info.tools.map(tool => `- ${tool.name}: ${tool.description}`).join('\n')}
 \`\`\`sh
 ${apiDiscoveryCommand(info)}
 \`\`\`
-OpenMotion 一期只公开 tools/list 中的 11 个 openmotion_ Tool。按本轮意图选择已安装的专业/通用工程入口，已有任务直接续用。安装的 Skill 文档或 resources/list、resources/read 读取相同指引；专业短 ID 为 director/template/recreate/video-to-template，production/start 保留工程入口与兼容导航。固定引擎指南为 openmotion://engine/SKILL.md。
+Use the public OpenMotion Tools returned by tools/list; the current registry determines the available set. 按本轮意图选择已安装的专业/通用工程入口，已有任务直接续用。安装的 Skill 文档或 resources/list、resources/read 读取相同指引；专业短 ID 为 director/template/recreate/video-to-template，production/start 保留工程入口与兼容导航。固定引擎指南为 openmotion://engine/SKILL.md。
 
 ${workflowEntryGuide}
 

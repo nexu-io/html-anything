@@ -91,7 +91,7 @@ A prior local trial used only “做一个哈利波特宣传片” in a fresh gp
 | --- | --- | --- |
 | [SKILL.md](../skills/openmotion-recreate/SKILL.md) frontmatter description | 触发范围按动态图形复刻描述 | 支持新视频类型后同步触发范围，并重跑选路测试 |
 | SKILL.md Role and goal 第二段 | 只支持动态图形；实拍、口播、AI 视频说明不支持，不暗示给素材就能复刻，只提出动态图形版 | 放宽支持范围，缩小拒绝条件 |
-| SKILL.md §3 素材缺口（“Use the temporary debug-media guidance for the public media-use Tool”） | Within supported media scope, use shared materials guidance for missing assets; ask only for unresolved inputs or access/capability limits. The BYOK extension adds openmotion_media_use; creative workflow scope remains unchanged | 本包公开生成 Tool 时改写此句，补调用、采用结果和失败处理规则 |
+| SKILL.md §3 素材缺口（“Read the selected provider reference for the public media-use Tool”） | Within supported media scope, use shared materials guidance for missing assets; ask only for unresolved inputs or access/capability limits. The BYOK extension adds openmotion_media_use; creative workflow scope remains unchanged | 本包公开生成 Tool 时改写此句，补调用、采用结果和失败处理规则 |
 | [production.md](../skills/openmotion-production/references/production.md) 第 3 条 | 一期 MCP 包不提供生成 Tool，生成交给宿主或 Studio | 与上一行同步修改 |
 | SKILL.md §5 Sound | 默认沿用原片音轨并重新对齐；删去念出原品牌的旁白 | 有 TTS 后可改为重新配音，不只删除 |
 | SKILL.md §5 原片作底层（用户自有成片只改几处细节） | 仅此情况可把原片放在时间线上并打补丁 | 支持实拍局部修改或分镜混排时扩展适用条件 |
@@ -171,4 +171,4 @@ MT05 原先同批补读/执行的问题未重现，但读取完整性未全面�
 
 ## Temporary BYOK debug media guidance
 
-`openmotion-debug-media` is an integration/debugging Skill distributed alongside the five creative routes, not a new creative director. Its provider references are available locally and through `openmotion://workflow/debug-media/{start,fal,opendesign}`. `openmotion_media_use` reads configured fal.ai or OpenDesign Cloud credentials inside the service and returns task state and real imported assets; the Agent never needs to read the key file. Formal creative media guidance remains separate.
+BYOK provider references are part of the existing production guidance, available locally and through `openmotion://workflow/production/{fal,opendesign,atlascloud,wavespeed}`; no separate media debugging Skill is distributed. `openmotion_media_use` reads configured fal.ai, OpenDesign Cloud, Atlas Cloud or WaveSpeedAI credentials inside the service and returns task state and real imported assets; the Agent never needs to read the key file. Formal creative media guidance remains separate.

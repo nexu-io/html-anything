@@ -17,6 +17,7 @@ const store = new WorkspaceStore(data);
 let browser, running;
 try {
   await store.initialize(pluginRoot);
+  await gatewayFor(store).configureProvider('opendesign', { apiKey: 'browser-fixture-cloud-key', baseUrl: 'https://cloud.example' });
   gatewayFor(store).options.detect = async () => [];
   running = await startServer(store, Number(process.env.PLAYWRIGHT_WEB_PORT), { editor: true });
   const origin = (await running.info()).previewUrl;
@@ -32,21 +33,29 @@ try {
   assert.equal(await page.$$eval('dialog[open] input[type=checkbox]', nodes => nodes.length), 0);
   await page.type('[aria-label="fal.ai API key"]', 'browser-fixture-fal-key');
   const saved = page.waitForResponse(response => response.url().endsWith('/models/providers/fal') && response.request().method() === 'PUT');
-  await page.click('dialog[open] article:first-child button[type=submit], dialog[open] article:first-child form button:not([type])');
+  await page.click('dialog[open] article:has([aria-label="fal.ai API key"]) button[type=submit], dialog[open] article:has([aria-label="fal.ai API key"]) form button:not([type])');
   assert.equal((await saved).status(), 200);
-  await page.waitForFunction(() => document.querySelector('[aria-label="fal.ai API key"]').value === '' && document.querySelector('dialog[open] article:first-child').textContent.includes('Configured'));
-  await page.type('[aria-label="OpenDesign Cloud API origin"]', 'https://cloud.example');
-  await page.type('[aria-label="OpenDesign Cloud API key"]', 'browser-fixture-cloud-key');
-  const cloudSaved = page.waitForResponse(response => response.url().endsWith('/models/providers/opendesign') && response.request().method() === 'PUT');
-  await page.click('dialog[open] article:last-child form button:not([type])');
-  assert.equal((await cloudSaved).status(), 200);
-  await page.waitForFunction(() => document.querySelector('[aria-label="OpenDesign Cloud API key"]').value === '' && document.querySelector('dialog[open] article:last-child').textContent.includes('Configured'));
+  await page.waitForFunction(() => document.querySelector('[aria-label="fal.ai API key"]').value === '' && document.querySelector('dialog[open] article:has([aria-label="fal.ai API key"])').textContent.includes('Configured'));
+  assert.equal(await page.$$eval('dialog[open] .motion-provider-card', nodes => nodes.length), 3);
+  assert.equal((await page.$eval('dialog[open]', node => node.textContent)).includes('OpenDesign Cloud'), false);
+  for (const [id, label] of [['atlascloud', 'Atlas Cloud'], ['wavespeed', 'WaveSpeedAI']]) {
+    const input = `[aria-label="${label} API key"]`;
+    await page.type(input, `browser-fixture-${id}-key`);
+    const saved = page.waitForResponse(response => response.url().endsWith(`/models/providers/${id}`) && response.request().method() === 'PUT');
+    await page.click(`dialog[open] article:has(${input}) form button:not([type])`);
+    assert.equal((await saved).status(), 200);
+    await page.waitForFunction(selector => document.querySelector(selector).value === '', {}, input);
+    const guide = await page.evaluate(async provider => (await fetch(`/motion-api/models/providers/${provider}/reference`)).text(), id);
+    assert(guide.includes(id === 'atlascloud' ? 'atlascloud.ai/docs/' : 'wavespeed.ai/docs/'));
+  }
   const status = await page.evaluate(async () => (await fetch('/motion-api/models/capabilities')).json());
   assert(status.providers.find(p => p.id === 'fal').enabled); assert(status.providers.find(p => p.id === 'opendesign').enabled);
+  assert(status.providers.find(p => p.id === 'atlascloud').enabled); assert(status.providers.find(p => p.id === 'wavespeed').enabled);
   assert(!JSON.stringify(status).includes('browser-fixture-'));
   const guide = await page.evaluate(async () => (await fetch('/motion-api/models/providers/fal/reference')).text());
   assert(guide.includes('https://fal.ai/docs/'));
   assert.equal((await page.evaluate(() => document.body.innerText)).includes('browser-fixture-'), false);
+  assert.equal(await page.$$eval('dialog[open] details', nodes => nodes.length), 0);
   await page.screenshot({ path: path.join(output, 'providers-configured.png') });
   await page.setViewport({ width: 360, height: 800 });
   assert(await page.evaluate(() => { const el = document.querySelector('dialog[open]'); const box = el.getBoundingClientRect(); return box.left >= 0 && box.right <= innerWidth && el.scrollWidth <= el.clientWidth; }));
@@ -70,6 +79,6 @@ try {
   await page.keyboard.press('Escape'); await page.waitForSelector('dialog[open]', { hidden: true });
   const credentials = JSON.parse(await readFile(path.join(data, 'model-gateway/secrets.json'), 'utf8'));
   assert.equal(credentials.fal, 'browser-fixture-fal-key');
-  await writeFile(path.join(output, 'result.json'), JSON.stringify({ status: 'passed', lane: process.env.D4_LANE, checks: ['drawer settings entry', 'fal key save', 'Cloud key and origin save', 'auto-enable', 'masked and cleared inputs', 'no key in status', 'provider guide', 'narrow layout', 'dark theme', 'reopen persisted settings', 'Escape closes dialog'], paidCalls: false }, null, 2));
+  await writeFile(path.join(output, 'result.json'), JSON.stringify({ status: 'passed', lane: process.env.D4_LANE, checks: ['drawer settings entry', 'fal key save', 'Cloud settings hidden with saved credentials preserved', 'Atlas key save', 'WaveSpeed key save', 'no model catalogue', 'auto-enable', 'masked and cleared inputs', 'no key in status', 'provider guide', 'narrow layout', 'dark theme', 'reopen persisted settings', 'Escape closes dialog'], paidCalls: false }, null, 2));
   console.log('BYOK browser configuration checks passed; no provider requests were made.');
 } finally { await browser?.close(); await running?.close(); await gatewayFor(store).close(); await rm(data, { recursive: true, force: true }); }

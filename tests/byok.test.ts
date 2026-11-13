@@ -28,10 +28,13 @@ test('public media tool reads guides, generates fal media once and binds job que
   await gateway.configureProvider('fal', { apiKey: 'test-fal-private' });
   assert.equal((await stat(path.join(gateway.root, 'secrets.json'))).mode & 0o777, 0o600);
   const inspect = await api.call('openmotion_media_use', { action: 'inspect' });
-  assert.deepEqual(inspect.providers.map((p: any) => [p.id, p.enabled]), [['fal', true], ['opendesign', false]]);
+  assert.deepEqual(inspect.providers.map((p: any) => [p.id, p.enabled]), [['atlascloud', false], ['fal', true], ['opendesign', false], ['wavespeed', false]]);
   assert.doesNotMatch(JSON.stringify(inspect), /test-fal-private/);
   const reference = await api.call('openmotion_media_use', { action: 'reference', provider: 'fal' });
   assert.match(reference.content, /https:\/\/fal.ai\/docs\//);
+  assert.equal(reference.workflow, 'production');
+  assert.equal(reference.documentId, 'skills/openmotion-production/references/media-providers/fal.md');
+  assert(inspect.references.every((ref: any) => ref.uri.startsWith('openmotion://workflow/production/')));
   const args = { action: 'generate', provider: 'fal', model: 'fal-ai/flux/schnell', projectId: store.projectId, requestId: 'same-task', modality: 'image', prompt: 'cup', parameters: { image_size: 'square_hd' } };
   const queued = await api.call('openmotion_media_use', args);
   assert.equal(queued.job.state, 'queued');
@@ -100,3 +103,98 @@ test('custom Cloud origins reject credentials, private IPs, paths and non-HTTPS 
   assert.equal(providerOrigin('https://cloud.example/v1/'), 'https://cloud.example');
   for (const raw of ['http://cloud.example', 'https://localhost', 'https://127.0.0.1', 'https://[::1]', 'https://10.0.0.1', 'https://user:pass@cloud.example', 'https://cloud.example/path', 'https://cloud.example?key=secret']) assert.throws(() => providerOrigin(raw));
 });
+
+for (const provider of ['atlascloud', 'wavespeed'] as const) for (const kind of ['image', 'video', 'audio'] as const) {
+  test(`${provider} ${kind} uses the public tool, one authenticated submit and project-owned output`, () => fixture(async store => {
+    const api = service(store), gateway = gatewayFor(store); gateway.options.detect = async () => []; gateway.options.pollMs = 1;
+    const model = kind === 'audio' ? 'minimax/speech-test' : `vendor/test-${kind}`;
+    const expected = kind === 'image' ? png : kind === 'video' ? mp4 : audio;
+    let submits = 0, polls = 0;
+    gateway.options.download = async () => expected;
+    gateway.options.fetcher = (async (raw, init = {}) => {
+      const url = String(raw);
+      assert.equal(new Headers(init.headers).get('Authorization'), `Bearer private-${provider}`);
+      if (init.method === 'POST') {
+        submits++;
+        const body = JSON.parse(String(init.body));
+        assert.equal(body[kind === 'audio' ? 'text' : 'prompt'], 'test input');
+        assert.equal(body.voice_id, kind === 'audio' ? 'voice-test' : undefined);
+        if (provider === 'atlascloud') {
+          assert.equal(url, `https://api.atlascloud.ai/api/v1/model/generate${kind === 'image' ? 'Image' : kind === 'video' ? 'Video' : 'Audio'}`);
+          assert.equal(body.model, model);
+        } else {
+          assert.equal(url, `https://api.wavespeed.ai/api/v3/${model}`);
+          assert.equal(body.model, undefined);
+        }
+        return Response.json({ code: 200, data: { id: 'remote-test', status: 'created', urls: { get: 'https://untrusted.example/do-not-follow' } } });
+      }
+      assert.equal(url, provider === 'atlascloud' ? 'https://api.atlascloud.ai/api/v1/model/prediction/remote-test' : 'https://api.wavespeed.ai/api/v3/predictions/remote-test/result');
+      return Response.json({ code: 200, data: ++polls === 1 ? { status: 'processing' } : { status: 'completed', outputs: ['https://cdn.example/output'] } });
+    }) as Fetcher;
+    await gateway.configureProvider(provider, { apiKey: `private-${provider}` });
+    const inspected = await api.call('openmotion_media_use', { action: 'inspect' });
+    assert.equal(inspected.providers.find((p: any) => p.id === provider).enabled, true);
+    const guide = await api.call('openmotion_media_use', { action: 'reference', provider });
+    assert.match(guide.content, new RegExp(provider === 'wavespeed' ? 'wavespeed.ai/docs/' : 'atlascloud.ai/docs/'));
+    const request = { action: 'generate', provider, model, projectId: store.projectId, requestId: `${provider}-${kind}`, modality: kind,
+      mode: kind === 'audio' ? 'text-to-speech' : `text-to-${kind}`, prompt: 'test input', parameters: kind === 'audio' ? { voice_id: 'voice-test' } : {} };
+    const submitted = await api.call('openmotion_media_use', request);
+    assert.equal((await api.call('openmotion_media_use', request)).job.id, submitted.job.id);
+    const job = await finish(store, submitted.job.id);
+    assert.equal(job.state, 'completed', job.error); assert.equal(job.remoteId, 'remote-test');
+    assert.equal(submits, 1); assert.equal(polls, 2);
+    assert.deepEqual(await readFile(path.join(store.projectDirectory, job.assets[0].path)), expected);
+    assert.doesNotMatch(JSON.stringify(job), /private-/);
+    await gateway.configureProvider(provider, { apiKey: null });
+    assert.equal((await gateway.status()).providers.find(p => p.id === provider)!.enabled, false);
+    await gateway.close();
+  }));
+}
+
+test('WaveSpeed discovers authenticated media models and excludes text, training and 3D outputs', () => fixture(async store => {
+  const api = service(store), gateway = gatewayFor(store); gateway.options.detect = async () => [];
+  let calls = 0;
+  gateway.options.fetcher = (async (url, init = {}) => {
+    calls++; assert.equal(String(url), 'https://api.wavespeed.ai/api/v3/models');
+    assert.equal(new Headers(init.headers).get('Authorization'), 'Bearer wavespeed-discovery');
+    return Response.json({ code: 200, data: [
+      { model_id: 'vendor/image', name: 'Image test', type: 'text-to-image' },
+      { model_id: 'vendor/video', type: 'image-to-video' },
+      { model_id: 'vendor/voice', type: 'text-to-audio' },
+      { model_id: 'vendor/caption', type: 'image-to-text' },
+      { model_id: 'vendor/3d', type: 'image-to-3d' },
+      { model_id: 'vendor/train', type: 'training' },
+      { model_id: '../invalid', type: 'text-to-image' },
+    ] });
+  }) as Fetcher;
+  assert.equal((await api.call('openmotion_media_use', { action: 'models', provider: 'wavespeed', refresh: true })).setupRequired, true);
+  assert.equal(calls, 0);
+  await gateway.configureProvider('wavespeed', { apiKey: 'wavespeed-discovery' });
+  const result = await api.call('openmotion_media_use', { action: 'models', provider: 'wavespeed', refresh: true });
+  assert.deepEqual(result.catalogs[0].models.map((m: any) => m.modality), ['image', 'video', 'audio']);
+  assert.equal(calls, 1); assert.doesNotMatch(JSON.stringify(result), /wavespeed-discovery/);
+  await gateway.close();
+}));
+
+test('WaveSpeed stops deleted tasks, rejects unsafe remote IDs and records auth rejection without paid retries', () => fixture(async store => {
+  const gateway = gatewayFor(store); gateway.options.detect = async () => []; gateway.options.pollMs = 1;
+  for (const outcome of ['deleted', 'unsafe-id', 'unauthorized'] as const) {
+    let submits = 0;
+    gateway.options.fetcher = (async (_url, init = {}) => {
+      if (init.method === 'POST') {
+        submits++;
+        if (outcome === 'unauthorized') return new Response('private-provider-diagnostics', { status: 401 });
+        return Response.json({ code: 200, data: { id: outcome === 'unsafe-id' ? '../outside' : 'safe-id', status: 'created' } });
+      }
+      return Response.json({ code: 200, data: { status: 'deleted' } });
+    }) as Fetcher;
+    await gateway.configureProvider('wavespeed', { apiKey: 'test-wavespeed-key' });
+    const submitted = await gateway.submit({ projectId: store.projectId, model: 'wavespeed:vendor/image', modality: 'image', prompt: 'test' });
+    const job = await finish(store, submitted.id);
+    assert.equal(job.state, 'failed'); assert.equal(submits, 1); assert.deepEqual(job.assets, []);
+    assert.match(job.error!, outcome === 'deleted' ? /deleted/ : outcome === 'unsafe-id' ? /prediction ID/ : /401/);
+    assert.doesNotMatch(JSON.stringify(job), /test-wavespeed-key|private-provider-diagnostics/);
+  }
+  assert.equal((await gateway.status()).providers.find(p => p.id === 'wavespeed')!.verification, 'rejected');
+  await gateway.close();
+}));

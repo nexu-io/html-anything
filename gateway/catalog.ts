@@ -1,7 +1,7 @@
 import type { Model, Modality, ProviderId } from '../shared/gateway.ts';
 import { apiJson, type Fetcher } from './network.ts';
 
-export const providerLabels: Record<ProviderId, string> = { codex: 'Codex', atlascloud: 'Atlas Cloud', fal: 'fal.ai', opendesign: 'OpenDesign Cloud' };
+export const providerLabels: Record<ProviderId, string> = { codex: 'Codex', atlascloud: 'Atlas Cloud', fal: 'fal.ai', opendesign: 'OpenDesign Cloud', wavespeed: 'WaveSpeedAI' };
 export const providerIds = Object.keys(providerLabels) as ProviderId[];
 export function modelKey(provider: ProviderId, modelId: string) { return `${provider}:${modelId}`; }
 export function validModelId(id: unknown): asserts id is string {
@@ -34,17 +34,17 @@ export function classifyModel(category: string, output?: string): { modality: Mo
   if (output && ['image', 'video', 'audio'].includes(output.toLowerCase())) return { modality: output.toLowerCase() as Modality, mode: `text-to-${output.toLowerCase()}` };
   return null;
 }
-export function normalizeModels(provider: 'atlascloud' | 'fal', rows: any[]): Model[] {
+export function normalizeModels(provider: 'atlascloud' | 'fal' | 'wavespeed', rows: any[]): Model[] {
   return rows.flatMap(row => {
     if (row?.deprecated || row?.removed || row?.metadata?.status === 'deprecated') return [];
-    const id = provider === 'atlascloud' ? row?.model : row?.endpoint_id ?? row?.id;
+    const id = provider === 'atlascloud' ? row?.model : provider === 'wavespeed' ? row?.model_id : row?.endpoint_id ?? row?.id;
     try { validModelId(id); } catch { return []; }
     const metadata = row?.metadata ?? row;
-    const category = [metadata.category, ...(Array.isArray(row.categories) ? row.categories : []), ...(Array.isArray(row.tags) ? row.tags : []), id].filter(Boolean).join(' ');
+    const category = [metadata.category, row.type, ...(Array.isArray(row.categories) ? row.categories : []), ...(Array.isArray(row.tags) ? row.tags : []), id].filter(Boolean).join(' ');
     const outputTag = row?.discovery?.tags?.find((s: unknown) => typeof s === 'string' && s.startsWith('output:'))?.slice(7);
     const classified = classifyModel(category, outputTag ?? row.output_type ?? row.type);
     if (!classified) return [];
-    return [{ id: modelKey(provider, id), provider, modelId: id, label: String(row.displayName ?? metadata.display_name ?? metadata.title ?? id).slice(0, 180),
+    return [{ id: modelKey(provider, id), provider, modelId: id, label: String(row.displayName ?? metadata.display_name ?? metadata.title ?? row.name ?? id).slice(0, 180),
       ...classified, source: 'live' as const, description: String(row.profile ?? metadata.description ?? '').slice(0, 500) }];
   });
 }
