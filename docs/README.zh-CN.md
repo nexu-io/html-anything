@@ -45,6 +45,32 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 
 ### 在 Agent 中安装
 
+复制下面的指令，发给你的本地 Agent，即可从源码安装 OpenMotion：
+
+```text
+阅读 https://github.com/nexu-io/openmotion/blob/main/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
+```
+
+安装完成后，Agent 会打开本地模板库并推荐一个模板，确认选择后再创建工程。[源码安装指南](../install.md)
+
+### 克隆仓库并在本地启动
+
+需要 Git、npm 和 Node.js 26.11.1：
+
+```sh
+git clone --depth 1 https://github.com/nexu-io/openmotion.git
+cd openmotion
+npm ci
+npm run build:studio
+npm start
+```
+
+打开启动时打印的实际 `studioUrl` 或 `previewUrl`，进入 **模板库**。Studio 和 MCP 读取此仓库中的模板。要让 Agent 连接同一份源码，请参阅 [源码接入与 MCP 配置](#agent-setup)。[仓库大小与可选素材](repository-storage.md)
+
+### 在 Agent 中安装已发布版
+
+此方式安装已发布的 npm 应用，使用其配置的在线模板目录。使用或贡献仓库模板，请选择上面的源码启动方式。
+
 复制下面的指令，发给你的本地 Agent，即可开始安装：
 
 ```text

@@ -29,6 +29,7 @@
 - [openmotion-director.md](openmotion-director.md)
 - [motion-extension-scope.md](motion-extension-scope.md)
 - [npm-installation.md](npm-installation.md)
+- [Install from the source repository](../install.md)
 - [Agent installation guide source template](install.md)
 - [test and stable acceptance](release-guide.md)
 - [Manual candidate build, test publication and immutable snapshots](release-workflows.md)

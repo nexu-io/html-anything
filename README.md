@@ -45,7 +45,33 @@ OpenMotion is **the first full-stack agentic video generator**. Upload a referen
 
 ### Install in your agent
 
-Copy this instruction into your local agent to install OpenMotion:
+Copy this instruction into your local agent to set up OpenMotion from source:
+
+```text
+Read https://github.com/nexu-io/openmotion/blob/main/install.md and follow the instructions to install and connect OpenMotion in the current agent.
+```
+
+After setup, the agent opens the local template library and suggests a template. Confirm the choice before creating a project. [Source installation guide](install.md)
+
+### Run the repository locally
+
+Use Git, npm and Node.js 26.11.1:
+
+```sh
+git clone --depth 1 https://github.com/nexu-io/openmotion.git
+cd openmotion
+npm ci
+npm run build:studio
+npm start
+```
+
+Open the actual `studioUrl` or `previewUrl` printed at startup, then choose **Template library**. Studio and MCP read the templates in this checkout. To connect your agent to this same copy, follow [source setup and MCP configuration](#agent-setup). [Clone size and optional media](docs/repository-storage.md)
+
+### Install the published app in your agent
+
+This installs the published npm application and uses its configured online catalog. To use or contribute repository templates, use the local source setup above.
+
+Copy this instruction into your local agent:
 
 ```text
 Read https://releases.open-design.ai/open-motion/install.md and follow the instructions to install and connect OpenMotion in the current agent.
