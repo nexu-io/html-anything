@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 
 const read = (file: string) => readFileSync(new URL(file, import.meta.url), "utf8");
 const source = read("./studioCodeTheme.ts");
-const themeCss = read("../../styles/theme.css");
+const themeCss = read("../../../../packages/design-system/studio/tokens.css");
 
 describe("the code editor theme", () => {
   it("takes every colour from a token theme.css declares", () => {

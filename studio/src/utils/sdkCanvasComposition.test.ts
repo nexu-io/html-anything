@@ -58,7 +58,7 @@ describe("canvas browser-stub alias", () => {
   it("is configured, so the browser build never resolves the Node canvas package", () => {
     const config = readFileSync(resolve(import.meta.dirname, "../../vite.config.ts"), "utf8");
     expect(config).toMatch(
-      /\bcanvas:\s*local\('\.\/src\/shims\/canvasBrowserStub\.js'\)/,
+      /find:\s*'canvas',\s*replacement:\s*local\('\.\/src\/shims\/canvasBrowserStub\.js'\)/,
     );
   });
 

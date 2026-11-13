@@ -9,7 +9,7 @@ import * as icons from "./RemixIcons";
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
 it("bundles a real vector for every exported editor icon and its filled state", () => {
-  const sprite = new DOMParser().parseFromString(readFileSync(path.resolve(import.meta.dirname, "../../../web/design-system/icons.svg"), "utf8"), "image/svg+xml");
+  const sprite = new DOMParser().parseFromString(readFileSync(path.resolve(import.meta.dirname, "../../../packages/design-system/icons.svg"), "utf8"), "image/svg+xml");
   const host = document.createElement("div");
   const root = createRoot(host);
   const components = Object.entries(icons).filter(([name]) => name !== "RemixIcon");

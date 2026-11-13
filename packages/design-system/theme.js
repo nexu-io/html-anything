@@ -17,7 +17,7 @@
       const next = modes[(modes.indexOf(preference) + 1) % modes.length];
       const label = `外观：${labels[preference]}。切换为${labels[next]}`;
       button.setAttribute('aria-label', label); button.setAttribute('title', label);
-      button.querySelector('use')?.setAttribute('href', '/web/design-system/icons.svg#icon-' + (preference === 'system' ? 'monitor' : theme === 'dark' ? 'moon' : 'sun'));
+      button.querySelector('use')?.setAttribute('href', '/design-system/icons.svg#icon-' + (preference === 'system' ? 'monitor' : theme === 'dark' ? 'moon' : 'sun'));
     }
     for (const select of document.querySelectorAll('[data-theme-select]')) select.value = preference;
   }

@@ -1,5 +1,3 @@
-@import './controlStates.css';
-
 /* OpenDesign Motion adapter. The shared token JSON owns all UI colors. */
 :root[data-motion-ui] :is(input, textarea)::placeholder { color: var(--motion-placeholder); opacity: 1; }
 :root[data-motion-ui] .motion-audio-row { padding-inline: 6px; gap: 6px; }
@@ -7,7 +5,7 @@
   background: var(--motion-strong);
   color: var(--motion-panel);
   border-color: var(--motion-strong);
-  font-size: 12px;
+  font-size: var(--motion-text-sm);
 }
 :root[data-motion-ui] .motion-timeline-zoom input[type="range"] { width: 64px; margin-inline: 0; }
 .motion-timeline-zoom { position: relative; }
@@ -16,79 +14,14 @@
 .motion-timeline-zoom::before { left: -7px; }
 .motion-timeline-zoom::after { right: -7px; }
 
-:root[data-motion-ui] {
-  color-scheme: light;
-  --font-sans: var(--motion-font-sans);
-  --font-mono: var(--motion-font-mono);
-  --color-bg-0: var(--motion-bg);
-  --color-bg-1: var(--motion-bg);
-  --color-bg-2: var(--motion-inset);
-  --color-input: var(--motion-panel);
-  --color-surface: var(--motion-panel);
-  --color-surface-alt: var(--motion-panel);
-  --color-raised: var(--motion-raised);
-  --color-hover: var(--motion-hover);
-  --color-press: var(--motion-border);
-  --color-on: var(--motion-accent-soft);
-  --color-on-hover: var(--motion-brand-soft);
-  --color-border: var(--motion-border);
-  --color-border-strong: var(--motion-border-strong);
-  --color-border-input: var(--motion-border);
-  --color-hairline: var(--motion-border);
-  --color-text-0: var(--motion-strong);
-  --color-text-1: var(--motion-text);
-  --color-text-body: var(--motion-text);
-  --color-text-2: var(--motion-muted);
-  --color-text-3: var(--motion-muted);
-  --color-text-muted: var(--motion-dim);
-  --color-text-4: var(--motion-dim);
-  --color-text-5: var(--motion-dim);
-  --color-text-off: var(--motion-dim);
-  --color-accent: var(--motion-accent);
-  --color-accent-hover: var(--motion-accent-hover);
-  --color-accent-ink: var(--motion-accent);
-  --color-on-accent: var(--motion-raised);
-  --color-ring: var(--motion-selected);
-  --color-selection: var(--motion-accent);
-  --color-panel-accent: var(--motion-accent);
-  --color-playhead: var(--motion-strong);
-  --color-danger: var(--motion-danger);
-  --color-danger-ink: var(--motion-danger);
-  --color-warning-ink: var(--motion-warning);
-  --radius-sm: var(--motion-radius-sm);
-  --radius-button: var(--motion-radius-sm);
-  --ease-standard: var(--motion-ease-standard);
-  --radius-md: var(--motion-radius-sm);
-  --radius-lg: var(--motion-radius-md);
-  --shadow-menu: var(--motion-shadow-md);
-  --shadow-popover: var(--motion-shadow-lg);
-  --shadow-btn-primary: none;
-  --timeline-shell-bg: var(--motion-panel);
-  --timeline-shell-border: var(--motion-border);
-  --timeline-row-bg: var(--motion-panel);
-  --timeline-row-border: var(--motion-border);
-  --timeline-gutter-bg: var(--motion-panel);
-  --timeline-gutter-border: var(--motion-border);
-  --timeline-clip-bg: var(--motion-inset);
-  --timeline-clip-selection: var(--motion-accent);
-  --timeline-clip-label-active: var(--motion-accent);
-  --timeline-clip-label-shadow: none;
-  --timeline-clip-radius: var(--motion-radius-sm);
-  --timeline-clip-shadow: var(--motion-shadow-sm);
-  --panel-shell-bg: var(--motion-bg);
-  --panel-card-bg: var(--motion-panel);
-  --panel-card-border: var(--motion-border);
-  --panel-strip-bg: var(--motion-panel);
-  --panel-tab-bg-hover: var(--motion-hover);
-}
-:root[data-motion-ui][data-motion-studio]:not([data-theme="paper"]) { color-scheme: dark; --color-on-accent: var(--motion-inset); }
+
 body { font-family: var(--motion-font-sans); font-size: var(--motion-text-md); }
 button, input, select, textarea { font-family: inherit; }
 :root[data-motion-ui] :focus-visible { outline: 1px solid var(--motion-border-strong); outline-offset: 1px; }
 :root[data-motion-ui] [data-panel-search-input]:focus-visible { outline: none; }
 .hf-dock .dv-view:has(> .dv-groupview) { padding: 0; }
 .hf-dock .dv-groupview { border-radius: 0; border: 0; outline: 0; }
-.hf-dock { --dv-tabs-and-actions-container-height: 34px; --dv-tab-font-size: 12px; --dv-tabs-and-actions-container-font-size: 12px; }
+.hf-dock { --dv-tabs-and-actions-container-height: 34px; --dv-tab-font-size: var(--motion-text-sm); --dv-tabs-and-actions-container-font-size: var(--motion-text-sm); }
 .hf-dock .dv-tabs-and-actions-container { padding: 0 6px; align-items: center; border-bottom: 1px solid var(--motion-border); }
 /* Keep selected labels legible even when Dockview injects its theme rules later. */
 :root[data-motion-ui] .hf-dock {
@@ -97,7 +30,7 @@ button, input, select, textarea { font-family: inherit; }
   --dv-activegroup-hiddenpanel-tab-color: var(--motion-text);
   --dv-inactivegroup-hiddenpanel-tab-color: var(--motion-text);
 }
-:root[data-motion-ui] .hf-dock .dv-groupview .dv-tabs-container > .dv-tab.dv-active-tab { color: var(--motion-strong); font-weight: 600; box-shadow: none; }
+:root[data-motion-ui] .hf-dock .dv-groupview .dv-tabs-container > .dv-tab.dv-active-tab { color: var(--motion-strong); font-weight: var(--motion-weight-semibold); box-shadow: none; }
 /* A single panel title has no sibling tab to switch to. */
 :root[data-motion-ui] .hf-dock .dv-groupview .dv-tabs-container:not(:has(> .dv-tab ~ .dv-tab)) > .dv-tab.dv-active-tab { box-shadow: none; cursor: default; }
 :root[data-motion-ui] :is(.motion-timeline-toolbar, .motion-player-controls) button:enabled { color: var(--motion-text); }
@@ -110,16 +43,16 @@ button, input, select, textarea { font-family: inherit; }
 .hf-dock .dv-right-actions-container { align-self: center; }
 .motion-icon { display: block; flex-shrink: 0; fill: currentColor; stroke: none; stroke-linecap: round; stroke-linejoin: round; }
 .motion-brand { display: flex; align-items: center; gap: 10px; min-width: 196px; color: var(--motion-strong); text-decoration: none; }
-.motion-brand-mark { width: 28px; height: 28px; display: grid; place-items: center; border-radius: 7px; color: var(--motion-on-action); background: var(--motion-action); }
-.motion-brand strong { display: block; font-size: 16px; font-weight: 600; letter-spacing: -.35px; line-height: 19px; }
-.motion-brand small { display: block; font-size: 9px; color: var(--motion-dim); letter-spacing: .06em; }
+.motion-brand-mark { width: 28px; height: 28px; display: grid; place-items: center; border-radius: var(--motion-radius-step-7); color: var(--motion-on-action); background: var(--motion-action); }
+.motion-brand strong { display: block; font-size: var(--motion-text-heading); font-weight: var(--motion-weight-semibold); letter-spacing: -.35px; line-height: 19px; }
+.motion-brand small { display: block; font-size: var(--motion-text-step-9); color: var(--motion-dim); letter-spacing: .06em; }
 .motion-project-control { display: flex; gap: 9px; align-items: center; min-width: 0; flex: 1; }
 .motion-project-dot { width: 5px; height: 5px; background: var(--motion-accent); border-radius: 50%; flex-shrink: 0; }
-.motion-project-control select { color: var(--motion-strong); background: transparent; border: 0; padding: 8px 2px; min-width: 120px; max-width: 260px; font-size: 13px; text-overflow: ellipsis; }
+.motion-project-control select { color: var(--motion-strong); background: transparent; border: 0; padding: 8px 2px; min-width: 120px; max-width: 260px; font-size: var(--motion-text-md); text-overflow: ellipsis; }
 .motion-project-control option { color: var(--motion-text); background: var(--motion-panel); }
-.motion-save-state { display: inline-flex; align-items: center; gap: 4px; padding: 5px; border: 0; border-radius: var(--motion-radius-sm); background: transparent; color: var(--motion-dim); font-size: 11px; white-space: nowrap; cursor: pointer; }
+.motion-save-state { display: inline-flex; align-items: center; gap: 4px; padding: 5px; border: 0; border-radius: var(--motion-radius-sm); background: transparent; color: var(--motion-dim); font-size: var(--motion-text-xs); white-space: nowrap; cursor: pointer; }
 .motion-save-state:hover { color: var(--motion-strong); background: var(--motion-hover); }
-.motion-button, .motion-icon-button { display: inline-flex; justify-content: center; align-items: center; gap: 7px; border: 1px solid var(--motion-border); border-radius: var(--motion-radius-sm); background: var(--motion-raised); color: var(--motion-text); height: 32px; padding: 0 11px; font-size: 12px; font-weight: 500; white-space: nowrap; text-decoration: none; cursor: pointer; transition: background 150ms ease, color 150ms ease; }
+.motion-button, .motion-icon-button { display: inline-flex; justify-content: center; align-items: center; gap: 7px; border: 1px solid var(--motion-border); border-radius: var(--motion-radius-sm); background: var(--motion-raised); color: var(--motion-text); height: 32px; padding: 0 11px; font-size: var(--motion-text-sm); font-weight: var(--motion-weight-medium); white-space: nowrap; text-decoration: none; cursor: pointer; transition: background var(--motion-duration-fast) ease, color var(--motion-duration-fast) ease; }
 .motion-button:hover, .motion-icon-button:hover { background: var(--motion-hover); }
 .motion-button-primary { background: var(--motion-action); border-color: var(--motion-action); color: var(--motion-on-action); }
 .motion-button-primary:hover { background: var(--motion-action-hover); }
@@ -127,40 +60,40 @@ button, input, select, textarea { font-family: inherit; }
 .motion-icon-button { width: 28px; height: 28px; padding: 0; }
 .motion-button:disabled, .motion-icon-button:disabled { opacity: .45; cursor: default; }
 .motion-button.is-active { color: var(--motion-accent); background: var(--motion-accent-soft); }
-.motion-message { background: var(--motion-warning-soft); color: var(--motion-warning); padding: 8px 18px; font-size: 12px; flex-shrink: 0; }
+.motion-message { background: var(--motion-warning-soft); color: var(--motion-warning); padding: 8px 18px; font-size: var(--motion-text-sm); flex-shrink: 0; }
 .motion-library { position: fixed; inset: 0; margin: auto; width: min(1130px, calc(100vw - 64px)); max-height: calc(100dvh - 64px); padding: 36px; background: var(--motion-panel); color: var(--motion-text); border: 1px solid var(--motion-border); border-radius: var(--motion-radius-xl); box-shadow: var(--motion-shadow-lg); }
 .motion-library::backdrop { background: var(--motion-overlay); backdrop-filter: blur(4px); }
 .motion-library-heading { display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; }
-.motion-eyebrow { font-size: 10px; letter-spacing: .18em; font-weight: 600; color: var(--motion-dim); margin: 0 0 16px; }
-.motion-library h1 { font-family: var(--motion-font-display); font-size: 32px; font-weight: 500; color: var(--motion-strong); line-height: 1.4; margin: 0; }
+.motion-eyebrow { font-size: var(--motion-text-step-10); letter-spacing: .18em; font-weight: var(--motion-weight-semibold); color: var(--motion-dim); margin: 0 0 16px; }
+.motion-library h1 { font-family: var(--motion-font-display); font-size: var(--motion-text-display); font-weight: var(--motion-weight-medium); color: var(--motion-strong); line-height: 1.4; margin: 0; }
 .motion-library h1 span { box-shadow: inset 0 -.3em var(--motion-highlight); }
-.motion-library-intro { font-size: 13px; line-height: 1.8; color: var(--motion-muted); margin: 16px 0 30px; }
+.motion-library-intro { font-size: var(--motion-text-md); line-height: 1.8; color: var(--motion-muted); margin: 16px 0 30px; }
 .motion-template-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
 .motion-template-card { border: 1px solid var(--motion-border); border-radius: var(--motion-radius-md); overflow: hidden; background: var(--motion-raised); }
 .motion-template-poster { position: relative; display: block; width: 100%; padding: 0; overflow: hidden; background: var(--motion-inset); border-bottom: 1px solid var(--motion-border); }
 .motion-template-poster img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
-.motion-template-play { position: absolute; inset: 0; margin: auto; display: grid; place-items: center; border-radius: 50%; width: 40px; height: 40px; background: var(--motion-panel); color: var(--motion-strong); box-shadow: var(--motion-shadow-sm); opacity: 0; transition: opacity 150ms; }
+.motion-template-play { position: absolute; inset: 0; margin: auto; display: grid; place-items: center; border-radius: 50%; width: 40px; height: 40px; background: var(--motion-panel); color: var(--motion-strong); box-shadow: var(--motion-shadow-sm); opacity: 0; transition: opacity var(--motion-duration-fast); }
 .motion-template-poster:hover .motion-template-play, .motion-template-poster:focus-visible .motion-template-play { opacity: 1; }
-.motion-template-duration { position: absolute; right: 10px; bottom: 10px; padding: 2px 6px; background: var(--motion-panel); color: var(--motion-muted); border: 1px solid var(--motion-border); border-radius: 4px; font: 10px var(--motion-font-mono); }
+.motion-template-duration { position: absolute; right: 10px; bottom: 10px; padding: 2px 6px; background: var(--motion-panel); color: var(--motion-muted); border: 1px solid var(--motion-border); border-radius: var(--motion-radius-sm); font: 10px var(--motion-font-mono); }
 .motion-template-content { padding: 20px; }
 .motion-template-meta { display: flex; justify-content: space-between; gap: 10px; color: var(--motion-dim); font: 10px var(--motion-font-mono); margin-bottom: 12px; }
 .motion-template-meta span:first-child { color: var(--motion-accent); font-family: var(--motion-font-sans); }
-.motion-template-content h2 { font-size: 18px; font-weight: 600; color: var(--motion-strong); margin: 0 0 10px; }
-.motion-template-content p { color: var(--motion-muted); font-size: 12px; line-height: 1.8; min-height: 44px; margin: 0 0 24px; }
+.motion-template-content h2 { font-size: var(--motion-text-step-18); font-weight: var(--motion-weight-semibold); color: var(--motion-strong); margin: 0 0 10px; }
+.motion-template-content p { color: var(--motion-muted); font-size: var(--motion-text-sm); line-height: 1.8; min-height: 44px; margin: 0 0 24px; }
 .motion-template-content .motion-button { width: 100%; justify-content: space-between; }
-.motion-library-foot { display: flex; justify-content: space-between; gap: 16px; margin-top: 26px; font-size: 11px; line-height: 1.7; color: var(--motion-dim); }
+.motion-library-foot { display: flex; justify-content: space-between; gap: 16px; margin-top: 26px; font-size: var(--motion-text-xs); line-height: 1.7; color: var(--motion-dim); }
 .motion-library-credit { white-space: nowrap; }
 .motion-error { color: var(--motion-danger); }
 .motion-connection { display: grid; place-content: center; gap: 14px; height: 100%; text-align: center; background: var(--motion-bg); color: var(--motion-dim); }
 @media(max-width: 1120px) { .motion-save-state { display: none; } }
 @media(max-width: 900px) { .motion-library { padding: 28px; width: calc(100vw - 32px); } .motion-template-grid { gap: 12px; } .motion-template-content { padding: 14px; } }
-@media(max-width: 650px) { .motion-library { width: calc(100vw - 20px); max-height: calc(100dvh - 20px); padding: 22px; } .motion-library h1 { font-size: 26px; } .motion-template-grid { grid-template-columns: 1fr; } .motion-template-content p { min-height: 0; } .motion-library-foot { display: block; } .motion-library-credit { display: block; margin-top: 8px; } }
+@media(max-width: 650px) { .motion-library { width: calc(100vw - 20px); max-height: calc(100dvh - 20px); padding: 22px; } .motion-library h1 { font-size: var(--motion-text-step-26); } .motion-template-grid { grid-template-columns: 1fr; } .motion-template-content p { min-height: 0; } .motion-library-foot { display: block; } .motion-library-credit { display: block; margin-top: 8px; } }
 @media(prefers-reduced-motion: reduce) { .motion-button, .motion-icon-button, .motion-template-play { transition: none; } }
 
 .motion-preview-well { margin: 0; border: 0; background: var(--motion-bg); }
 .motion-preview-frame { box-shadow: none; }
 :root[data-motion-ui] .motion-asset-thumbnail { background: var(--motion-inset); }
-.motion-asset-name-input { box-sizing: border-box; width: 100%; min-width: 0; padding: 2px 4px; border: 1px solid var(--motion-border-strong); border-radius: var(--motion-radius-sm); background: var(--motion-inset); color: var(--motion-strong); font-size: 10px; line-height: 14px; outline: none; }
+.motion-asset-name-input { box-sizing: border-box; width: 100%; min-width: 0; padding: 2px 4px; border: 1px solid var(--motion-border-strong); border-radius: var(--motion-radius-sm); background: var(--motion-inset); color: var(--motion-strong); font-size: var(--motion-text-step-10); line-height: 14px; outline: none; }
 .motion-asset-name-input[aria-invalid="true"] { border-color: var(--motion-danger); }
 
 /* Keep resize handles available without permanent lines between panel cards. */
@@ -175,11 +108,11 @@ button, input, select, textarea { font-family: inherit; }
 :root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"],
 :root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"] { appearance: none; -webkit-appearance: none; height: 24px; background: transparent; cursor: pointer; }
 :root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-webkit-slider-runnable-track,
-:root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"]::-webkit-slider-runnable-track { height: 2px; border: 0; border-radius: 2px; background: var(--motion-border-strong); }
+:root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"]::-webkit-slider-runnable-track { height: 2px; border: 0; border-radius: var(--motion-radius-xs); background: var(--motion-border-strong); }
 :root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-webkit-slider-thumb,
 :root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"]::-webkit-slider-thumb { appearance: none; -webkit-appearance: none; width: 6px; height: 6px; margin-top: -2px; border: 0; border-radius: 50%; background: var(--motion-text); box-shadow: none; }
 :root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-moz-range-track,
-:root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"]::-moz-range-track { height: 2px; border: 0; border-radius: 2px; background: var(--motion-border-strong); }
+:root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"]::-moz-range-track { height: 2px; border: 0; border-radius: var(--motion-radius-xs); background: var(--motion-border-strong); }
 :root[data-motion-ui] input[type="range"][data-studio-control="seek-preview"]::-moz-range-thumb,
 :root[data-motion-ui] input[type="range"][data-studio-control="timeline-zoom"]::-moz-range-thumb { width: 6px; height: 6px; border: 0; border-radius: 50%; background: var(--motion-text); }
 
@@ -202,9 +135,9 @@ button, input, select, textarea { font-family: inherit; }
 .motion-studio-header > div:last-child { flex-shrink: 0; flex-wrap: wrap; max-width: 100%; margin-left: auto; gap: 10px; }
 .motion-studio-header .motion-brand { min-width: 0; flex-shrink: 0; }
 .motion-studio-header .motion-project-control { gap: 8px; }
-.motion-studio-header .motion-project-control select { height: 30px; padding: 0 3px; min-width: 100px; max-width: 240px; font-size: 12px; }
+.motion-studio-header .motion-project-control select { height: 30px; padding: 0 3px; min-width: 100px; max-width: 240px; font-size: var(--motion-text-sm); }
 .motion-studio-header .motion-workspace-actions { display: flex; align-items: center; gap: 2px; padding-right: 12px; margin-right: 2px; border-right: 1px solid var(--motion-border); }
-.motion-studio-header .motion-button { height: 28px; padding: 0 9px; font-size: 11px; }
+.motion-studio-header .motion-button { height: 28px; padding: 0 9px; font-size: var(--motion-text-xs); }
 .motion-studio-header [data-testid="header-export"] { background: var(--motion-action); color: var(--motion-on-action); }
 .motion-studio-header [data-testid="header-export"]:enabled:hover { background: var(--motion-action-hover); }
 :root[data-motion-studio] .motion-player-controls .motion-player-play:enabled { color: var(--motion-action); }
@@ -225,47 +158,47 @@ button, input, select, textarea { font-family: inherit; }
 
 .motion-connections { width: min(760px, calc(100vw - 32px)); }
 .motion-connection-hosts, .motion-connection-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.motion-connection-description { font-size: 12px; line-height: 1.7; margin: 18px 0; color: var(--motion-muted); }
-.motion-connection-code { white-space: pre-wrap; overflow-wrap: anywhere; font: 11px/1.8 var(--motion-font-mono); background: var(--motion-inset); border: 1px solid var(--motion-border); border-radius: 8px; padding: 16px; margin: 16px 0; }
-.motion-connections details { margin-top: 24px; font-size: 12px; }
+.motion-connection-description { font-size: var(--motion-text-sm); line-height: 1.7; margin: 18px 0; color: var(--motion-muted); }
+.motion-connection-code { white-space: pre-wrap; overflow-wrap: anywhere; font: 11px/1.8 var(--motion-font-mono); background: var(--motion-inset); border: 1px solid var(--motion-border); border-radius: var(--motion-radius-md); padding: 16px; margin: 16px 0; }
+.motion-connections details { margin-top: 24px; font-size: var(--motion-text-sm); }
 .motion-connections summary { cursor: pointer; color: var(--motion-muted); }
 
 .motion-history-actions { display: flex; align-items: center; gap: 2px; }
 .motion-history-actions > button, .motion-history-actions > span > button { width: 28px; height: 28px; }
 .motion-history-actions .motion-button { width: auto; }
 .motion-layout-menu { min-width: 224px; }
-.motion-menu-label { padding: 7px 9px 4px; color: var(--motion-dim); font-size: 10px; }
-.motion-menu-hint { max-width: 224px; padding: 8px 9px 5px; color: var(--motion-dim); font-size: 10px; line-height: 1.6; }
-.motion-history-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; color: var(--motion-text); font-size: 12px; }
+.motion-menu-label { padding: 7px 9px 4px; color: var(--motion-dim); font-size: var(--motion-text-step-10); }
+.motion-menu-hint { max-width: 224px; padding: 8px 9px 5px; color: var(--motion-dim); font-size: var(--motion-text-step-10); line-height: 1.6; }
+.motion-history-panel { display: flex; flex-direction: column; height: 100%; min-height: 0; color: var(--motion-text); font-size: var(--motion-text-sm); }
 .motion-history-toolbar { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 12px; justify-content: space-between; padding: 16px; border-bottom: 1px solid var(--motion-border); }
 .motion-history-toolbar-compact { padding: 4px 12px 12px; }
-.motion-history-toolbar strong { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 600; }
-.motion-history-toolbar > div > span { display: block; color: var(--motion-dim); font-size: 11px; line-height: 1.6; }
-.motion-history-toolbar .motion-button { font-size: 11px; height: 28px; }
+.motion-history-toolbar strong { display: block; margin-bottom: 5px; font-size: var(--motion-text-md); font-weight: var(--motion-weight-semibold); }
+.motion-history-toolbar > div > span { display: block; color: var(--motion-dim); font-size: var(--motion-text-xs); line-height: 1.6; }
+.motion-history-toolbar .motion-button { font-size: var(--motion-text-xs); height: 28px; }
 .motion-history-filters { display: flex; flex-shrink: 0; gap: 4px; padding: 10px 12px; }
-.motion-history-filters button { padding: 5px 9px; border: 0; border-radius: var(--motion-radius-sm); background: transparent; color: var(--motion-muted); font-size: 11px; cursor: pointer; }
-.motion-history-filters button[aria-pressed="true"] { color: var(--motion-strong); background: var(--motion-inset); font-weight: 600; }
+.motion-history-filters button { padding: 5px 9px; border: 0; border-radius: var(--motion-radius-sm); background: transparent; color: var(--motion-muted); font-size: var(--motion-text-xs); cursor: pointer; }
+.motion-history-filters button[aria-pressed="true"] { color: var(--motion-strong); background: var(--motion-inset); font-weight: var(--motion-weight-semibold); }
 .motion-history-filters span { margin-left: 4px; font: 10px var(--motion-font-mono); }
 .motion-history-list { flex: 1; min-height: 70px; overflow: auto; padding: 0 8px 8px; }
 .motion-history-entry { display: block; width: 100%; margin-bottom: 4px; padding: 10px; border: 1px solid transparent; border-radius: var(--motion-radius-sm); background: transparent; color: inherit; text-align: left; cursor: pointer; }
 .motion-history-entry:hover { background: var(--motion-hover); }
 .motion-history-entry[aria-pressed="true"] { background: var(--motion-inset); border-color: var(--motion-border); }
 .motion-history-entry-heading { display: flex; align-items: center; gap: 6px; }
-.motion-history-entry-heading strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12px; font-weight: 500; }
-.motion-history-badge { flex-shrink: 0; border: 1px solid var(--motion-border); border-radius: 3px; padding: 1px 4px; color: var(--motion-muted); font-size: 9px; }
+.motion-history-entry-heading strong { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: var(--motion-text-sm); font-weight: var(--motion-weight-medium); }
+.motion-history-badge { flex-shrink: 0; border: 1px solid var(--motion-border); border-radius: var(--motion-radius-step-3); padding: 1px 4px; color: var(--motion-muted); font-size: var(--motion-text-step-9); }
 .motion-history-badge-latest { border-color: transparent; background: var(--motion-accent-soft); color: var(--motion-accent); }
-.motion-history-entry-meta { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 6px; color: var(--motion-dim); font-size: 10px; line-height: 1.6; }
+.motion-history-entry-meta { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 6px; color: var(--motion-dim); font-size: var(--motion-text-step-10); line-height: 1.6; }
 .motion-history-empty { padding: 24px 12px; color: var(--motion-dim); text-align: center; line-height: 1.8; }
 .motion-history-detail { flex-shrink: 0; padding: 14px 16px; border-top: 1px solid var(--motion-border); background: var(--motion-panel); }
-.motion-history-detail-title { margin-bottom: 8px; color: var(--motion-muted); font-size: 11px; }
+.motion-history-detail-title { margin-bottom: 8px; color: var(--motion-muted); font-size: var(--motion-text-xs); }
 .motion-history-detail ul { max-height: 90px; overflow: auto; margin: 0 0 14px; padding: 0; list-style: none; }
-.motion-history-detail li { display: flex; gap: 12px; align-items: center; padding: 3px 0; font-size: 10px; }
+.motion-history-detail li { display: flex; gap: 12px; align-items: center; padding: 3px 0; font-size: var(--motion-text-step-10); }
 .motion-history-detail code { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 10px/1.6 var(--motion-font-mono); }
 .motion-history-detail li > span { color: var(--motion-dim); flex-shrink: 0; }
 .motion-history-detail-actions { display: flex; flex-wrap: wrap; gap: 8px; }
-.motion-history-detail .motion-button { flex: 1; height: 29px; padding-inline: 8px; font-size: 11px; }
-.motion-history-detail p { margin: 10px 0 0; color: var(--motion-dim); font-size: 10px; line-height: 1.7; }
-.motion-history-message { padding: 8px 16px; font-size: 11px; line-height: 1.7; }
+.motion-history-detail .motion-button { flex: 1; height: 29px; padding-inline: 8px; font-size: var(--motion-text-xs); }
+.motion-history-detail p { margin: 10px 0 0; color: var(--motion-dim); font-size: var(--motion-text-step-10); line-height: 1.7; }
+.motion-history-message { padding: 8px 16px; font-size: var(--motion-text-xs); line-height: 1.7; }
 @media(max-width: 1300px) {
   .motion-studio-header { gap: 10px; }
   .motion-studio-header > div:last-child { gap: 5px; }
@@ -296,33 +229,17 @@ button, input, select, textarea { font-family: inherit; }
 }
 .motion-language-options { display: grid; grid-template-columns: minmax(0, 1fr); gap: 2px; }
 
-/* OD control recipes, scoped to visual hooks; existing sizes and state handling stay native. */
-:root[data-motion-ui] .hf-od-primary {
-  --color-accent: var(--motion-action);
-  --color-accent-hover: var(--motion-action-hover);
-  --color-on-accent: var(--motion-on-action);
-}
-:root[data-motion-ui] .hf-od-field {
-  --color-accent: var(--motion-selected);
-}
-/* Pointer focus must not leave a second frame around boxed controls. */
-:root[data-motion-ui] .hf-od-field:focus-within { outline: none; }
-:root[data-motion-ui] .hf-od-field:is(:focus-visible, :has(:focus-visible)) {
-  border-color: var(--motion-border-strong);
-  background: var(--motion-inset);
-}
-
 /* Preview identity follows the live composition, including full-video navigation. */
 :root[data-motion-ui] .motion-composition-card[aria-current="true"] { background: var(--motion-inset); }
-:root[data-motion-ui] .motion-composition-card[aria-current="true"] .motion-composition-name { color: var(--motion-strong); font-weight: 600; }
+:root[data-motion-ui] .motion-composition-card[aria-current="true"] .motion-composition-name { color: var(--motion-strong); font-weight: var(--motion-weight-semibold); }
 
 .motion-composition-placeholder { background: var(--motion-inset); color: var(--motion-dim); }
 .motion-composition-placeholder-mark {
   width: 20px;
   height: 20px;
   background: currentColor;
-  -webkit-mask: url('./od-loading-mark.svg') center / contain no-repeat;
-  mask: url('./od-loading-mark.svg') center / contain no-repeat;
+  -webkit-mask: url('../../../packages/design-system/brand/loading-mark.svg') center / contain no-repeat;
+  mask: url('../../../packages/design-system/brand/loading-mark.svg') center / contain no-repeat;
 }
 
 :root[data-motion-ui] .hf-od-floating-surface.motion-speed-menu { background: var(--motion-raised); border: 0; outline: none; box-shadow: var(--motion-shadow-sm); }
@@ -411,8 +328,8 @@ button, input, select, textarea { font-family: inherit; }
   padding: 6px 8px;
   border-radius: var(--motion-radius-sm);
   font-family: inherit;
-  font-size: 11px;
-  font-weight: 400;
+  font-size: var(--motion-text-xs);
+  font-weight: var(--motion-weight-regular);
   line-height: 16px;
 }
 :root[data-motion-ui] .motion-context-menu [role="group"] { border-color: var(--motion-border); }
@@ -421,31 +338,31 @@ button, input, select, textarea { font-family: inherit; }
 /* Empty projects keep the preview mounted, but offer an actionable blank state. */
 .motion-preview-empty { position: absolute; inset: 0; z-index: 40; display: flex; align-items: center; justify-content: center; overflow: auto; background: var(--motion-bg); color: var(--motion-text); padding: 20px; }
 .motion-preview-empty-content { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 360px; min-width: 0; margin: auto; text-align: center; }
-.motion-preview-empty-content p { margin: 0; font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
+.motion-preview-empty-content p { margin: 0; font-size: var(--motion-text-body); line-height: 1.6; overflow-wrap: anywhere; }
 .motion-preview-empty-content button { min-height: 36px; }
 
-.motion-conflict-notice { position: absolute; top: 64px; left: 50%; transform: translateX(-50%); z-index: 94; width: min(420px, calc(100% - 32px)); max-height: calc(100% - 80px); overflow: auto; padding: 12px 16px; border-radius: 12px; background: var(--motion-panel); color: var(--motion-text); box-shadow: var(--motion-shadow-md); font-size: 12px; line-height: 1.6; }
+.motion-conflict-notice { position: absolute; top: 64px; left: 50%; transform: translateX(-50%); z-index: 94; width: min(420px, calc(100% - 32px)); max-height: calc(100% - 80px); overflow: auto; padding: 12px 16px; border-radius: var(--motion-radius-lg); background: var(--motion-panel); color: var(--motion-text); box-shadow: var(--motion-shadow-md); font-size: var(--motion-text-sm); line-height: 1.6; }
 .motion-conflict-notice p { margin: 0; overflow-wrap: anywhere; }
 .motion-conflict-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
 .motion-conflict-actions button { min-width: 0; max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 
 /* Empty titles and lanes reuse the populated timeline's column and row geometry. */
-.motion-empty-timeline { position: absolute; left: 0; right: 12px; color: var(--motion-muted); font-size: 11px; line-height: 1.25; pointer-events: none; }
+.motion-empty-timeline { position: absolute; left: 0; right: 12px; color: var(--motion-muted); font-size: var(--motion-text-xs); line-height: 1.25; pointer-events: none; }
 .motion-empty-timeline-label { position: absolute; inset-block: 0; left: 0; display: flex; align-items: center; padding: 0 6px; color: color-mix(in srgb, var(--motion-muted) 50%, var(--motion-panel)); }
-.motion-empty-timeline-lane { position: absolute; right: 0; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--motion-border); border-radius: 4px; }
+.motion-empty-timeline-lane { position: absolute; right: 0; display: flex; align-items: center; justify-content: center; border: 1px dashed var(--motion-border); border-radius: var(--motion-radius-sm); }
 .motion-empty-timeline.is-drag-over .motion-empty-timeline-lane { border-color: var(--motion-accent); color: var(--motion-accent); }
 
 .motion-panel-empty-content { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
 /* Asset and timeline imports share one compact secondary-button recipe. */
-:root[data-motion-ui] button.motion-import-button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; flex-shrink: 0; height: 28px; min-height: 28px; padding: 0 8px; border: 1px solid var(--motion-border); border-radius: 6px; background: var(--motion-raised); font-size: 11px; font-weight: 500; line-height: 16px; white-space: nowrap; }
+:root[data-motion-ui] button.motion-import-button { display: inline-flex; align-items: center; justify-content: center; gap: 4px; flex-shrink: 0; height: 28px; min-height: 28px; padding: 0 8px; border: 1px solid var(--motion-border); border-radius: var(--motion-radius-step-6); background: var(--motion-raised); font-size: var(--motion-text-xs); font-weight: var(--motion-weight-medium); line-height: 16px; white-space: nowrap; }
 :root[data-motion-ui] button.motion-import-button:enabled { color: var(--motion-strong); }
 :root[data-motion-ui] button.motion-import-button:enabled:hover { background: var(--motion-hover); }
 /* The toolbar owns the single separator above both populated and empty timelines. */
 :root[data-motion-ui] :is([data-timeline-element-count], .motion-timeline-empty) { border-top: 0; }
-.motion-assets-empty-drop { width: min(240px, 100%); min-height: 132px; padding: 24px 16px; border: 1px dashed var(--motion-border); border-radius: 8px; }
+.motion-assets-empty-drop { width: min(240px, 100%); min-height: 132px; padding: 24px 16px; border: 1px dashed var(--motion-border); border-radius: var(--motion-radius-md); }
 
 /* Passive empty hints share the disabled-control tone in both themes. */
-.motion-panel-empty-content { color: color-mix(in srgb, var(--motion-strong) 30%, var(--motion-panel)); font-size: 12px; line-height: 1.5; }
+.motion-panel-empty-content { color: color-mix(in srgb, var(--motion-strong) 30%, var(--motion-panel)); font-size: var(--motion-text-sm); line-height: 1.5; }
 .motion-panel-empty-content :is(svg, p) { color: inherit; font-size: inherit; }
 :root[data-motion-ui] .motion-timeline-zoom input:disabled { cursor: not-allowed; }
 :root[data-motion-ui] .motion-timeline-zoom input:disabled::-webkit-slider-thumb { cursor: not-allowed; }
