@@ -48,6 +48,8 @@ List has no arguments and returns source, indexPath, total and catalogVersion. S
 
 ### openmotion_open_preview
 
+`target=templates` opens the editor template library without a project/session binding, native project initialization, lint, template-source download or active-project switch. It accepts only action=open (or omitted), embedded and presentation; project, session, revision and review/display fields are rejected. The result contains target, previewUrl, projectCreated=false and a page previewHandoff without revision/version. The host presents and observes this page; project record_display receipts do not apply. Studio creates an independent project only after the user selects an editable template's Open and edit action. Template details and playback alone do not create projects.
+
 Default action=open accepts an explicit projectId or bound sessionId, optional embedded, presentation, expectedRevision and expectedVersionId. When supplied, both identities are checked before and after lint/open. The result includes previewHandoff, previewUrl, preflight, selectionSource and openedByHost=false; the host must present the existing project. No project is created implicitly.
 
 Preview and export preflight use the same pinned native `host:"studio"` lint policy as the editor. Structural errors return `PROJECT_VALIDATION_FAILED` before preview opening, or a failed export before rendering, with native code/file/location/fix hints. Warnings do not fail the check. See the [shared lint command](hyperframes.md).

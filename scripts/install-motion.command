@@ -35,8 +35,8 @@ if [ ! -f "$openmotion_root/studio/build/index.html" ]; then
   )
 fi
 
-# Prepare the shared handoff before changing host registration.
-openmotion_onboarding="$(node --experimental-strip-types "$openmotion_root/scripts/install-onboarding.mjs" "$openmotion_root")"
+# Validate the contract before registration; prepare the live page only after success.
+node --experimental-strip-types "$openmotion_root/scripts/install-onboarding.mjs" "$openmotion_root" --check-contract
 
 echo '只注册 openmotion-local 并安装 OpenMotion，不升级或移除其他插件。'
 codex plugin marketplace add "$openmotion_root"
@@ -44,4 +44,5 @@ codex plugin add openmotion@openmotion-local
 codex plugin list --marketplace openmotion-local
 node "$openmotion_root/scripts/check-installed-mcp.mjs"
 
+openmotion_onboarding="$(node --experimental-strip-types "$openmotion_root/scripts/install-onboarding.mjs" "$openmotion_root")"
 printf '%s\n' 'OpenMotion registration and independent MCP preflight succeeded; current-chat loading is not verified.' "$openmotion_onboarding"
