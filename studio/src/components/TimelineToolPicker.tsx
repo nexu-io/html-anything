@@ -53,6 +53,7 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
         {rows.map((row) => (
           <Tooltip
             key={row.label}
+            side="bottom"
             label={`${t(row.label)} (${row.shortcut})`}
             description={row.label === "Split"
               ? t("Click a clip where you want to split it. Switch back to Select to move or select clips.")

@@ -550,7 +550,7 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
   }
 }
 
-export async function startServer(store = sharedStore, port = Number(process.env.PORT || 4173), options: { editor?: boolean; editorToken?: string; privateHandler?: (req: IncomingMessage, res: ServerResponse) => Promise<boolean> } = { editor: process.env.MOTION_HEADLESS !== '1' }) {
+export async function startServer(store = sharedStore, port = Number(process.env.PORT || 4173), options: { editor?: boolean; fallbackIfPortBusy?: boolean; editorToken?: string; privateHandler?: (req: IncomingMessage, res: ServerResponse) => Promise<boolean> } = { editor: process.env.MOTION_HEADLESS !== '1' }) {
   await access(path.join(pluginRoot, 'studio/build/index.html')).catch(() => { throw new Error('编辑器尚未构建，请先运行 npm run build:studio。'); });
   const runtimeRoot = await ensureRuntime(store.directory, false);
   void startNativePreparation(pluginRoot).catch(error => console.error('Native preparation could not start: ' + error.message));
@@ -586,7 +586,15 @@ export async function startServer(store = sharedStore, port = Number(process.env
   if (options.editor !== false) await context.ensureStudio();
   const server = createServer((req, res) => { void (async () => { if (!options.privateHandler || !await options.privateHandler(req, res)) await handler(req, res, store, context); })().catch(error => { if (!res.headersSent) json(res, 500, { error: (error as Error).message }); else res.destroy(); }); });
   try {
-    await new Promise<void>((resolve, reject) => { server.once('error', reject); server.listen(port, '127.0.0.1', resolve); });
+    const listen = (target: number) => new Promise<void>((resolve, reject) => {
+      server.once('error', reject);
+      server.listen(target, '127.0.0.1', () => { server.off('error', reject); resolve(); });
+    });
+    try { await listen(port); }
+    catch (error) {
+      if (!options.fallbackIfPortBusy || !port || (error as NodeJS.ErrnoException).code !== 'EADDRINUSE') throw error;
+      await listen(0);
+    }
   } catch (error) { context.tracking?.close(); await context.studio?.close(); throw error; }
   const origin = `http://127.0.0.1:${(server.address() as { port: number }).port}`;
   const gateway = gatewayFor(store);

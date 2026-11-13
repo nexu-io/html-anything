@@ -1814,5 +1814,22 @@
   "Create videos with OpenMotion, right in {host}.": "Erstellen Sie Videos mit OpenMotion, direkt in {host}.",
   "Back to the OpenMotion editor": "Zurück zum OpenMotion-Editor",
   "Workspace unavailable. Check that the OpenMotion service is running.": "Arbeitsbereich nicht verfügbar. Überprüfen Sie, ob der OpenMotion-Dienst ausgeführt wird.",
-  "Invalid connection configuration. Update or restart the OpenMotion service.": "Ungültige Verbindungskonfiguration. Aktualisieren Sie den OpenMotion-Dienst oder starten Sie ihn neu."
+  "Invalid connection configuration. Update or restart the OpenMotion service.": "Ungültige Verbindungskonfiguration. Aktualisieren Sie den OpenMotion-Dienst oder starten Sie ihn neu.",
+  "Compiling composition": "Komposition wird kompiliert",
+  "Extracting video frames": "Videoframes werden extrahiert",
+  "Processing audio tracks": "Audiospuren werden verarbeitet",
+  "Starting frame capture": "Bildaufnahme startet",
+  "Checking browser GPU": "Browser-GPU wird geprüft",
+  "Measuring capture speed": "Aufnahmegeschwindigkeit wird gemessen",
+  "Starting browsers": "Browser werden gestartet",
+  "Encoding frame": "Frame wird kodiert",
+  "Encoding video": "Video wird kodiert",
+  "Writing PNG sequence": "PNG-Sequenz wird geschrieben",
+  "Encoding GIF": "GIF wird kodiert",
+  "Assembling final video": "Video wird zusammengesetzt",
+  "Render complete": "Rendering abgeschlossen",
+  "Render cancelled": "Rendering abgebrochen",
+  "Queued": "In der Warteschlange",
+  "Export blocked": "Export blockiert",
+  "Export failed": "Export fehlgeschlagen"
 }
