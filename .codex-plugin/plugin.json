@@ -5,6 +5,11 @@
   "skills": "./skills/",
   "mcpServers": "./.mcp.json",
   "requires_local_executor": true,
+  "extensions": {
+    "com.openai": {
+      "onboardingSkill": "./.codex-plugin/onboarding/SKILL.md"
+    }
+  },
   "interface": {
     "displayName": "OpenMotion",
     "shortDescription": "用 OpenMotion 制作、复刻和编辑视频",

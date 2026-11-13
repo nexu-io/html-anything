@@ -124,3 +124,5 @@ library/templates/catalog/**/*.zip
 
 /docs/readme/community-star.gif
 web/inline-video.html
+# Generated native MCP presentation assets.
+/mcp-ui/template-recommendations/build/

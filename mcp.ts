@@ -21,6 +21,8 @@ import { identifyHost, unknownHost } from './tracking/host.ts';
 import type { HostContext } from './tracking/host.ts';
 import { templateCatalogFor } from './prism-templates.ts';
 import { templateConfig } from './shared/template-config.ts';
+import { createMcpClientState, negotiateTemplatePresentation, showTemplateRecommendations, templatePresentationName } from './shared/mcp-template-recommendations.ts';
+import type { McpClientState } from './shared/mcp-template-recommendations.ts';
 
 export function mcpRegistry(profile = releaseProfile) { return createToolRegistry(profile === 'phase1' ? phase1Tools : tools, profile); }
 export const releaseRegistry = mcpRegistry();
@@ -42,7 +44,7 @@ const serverIcons = ['light', 'dark'].map(theme => ({
   mimeType: 'image/svg+xml', sizes: ['any'], theme,
 }));
 
-export async function rpc(message: any, store = new WorkspaceStore(), registry = releaseRegistry, connection?: { selection: Selection }) {
+export async function rpc(message: any, store = new WorkspaceStore(), registry = releaseRegistry, connection?: { selection: Selection }, clientState?: McpClientState) {
   if (message?.jsonrpc === '2.0' && message.id !== undefined && message.method === 'initialize') {
     connectionHosts.set(connection ?? store, identifyHost(message.params?.clientInfo, process.env));
   }
@@ -58,14 +60,14 @@ export async function rpc(message: any, store = new WorkspaceStore(), registry =
   const trackingContext = contexts.get(hostKey)!;
   const name = legacyToolName(message?.params?.name);
   if (message?.jsonrpc !== '2.0' || message.id === undefined || message.method !== 'tools/call'
-    || registry.profile !== 'phase1' || !(toolNames as readonly unknown[]).includes(name)) return invokeRpc(message, store, registry, connection, host, trackingContext);
+    || registry.profile !== 'phase1' || !(toolNames as readonly unknown[]).includes(name)) return invokeRpc(message, store, registry, connection, host, trackingContext, clientState);
   const tracking = await trackingFor(store), started = performance.now(), callId = crypto.randomUUID();
   let accepted = false;
   try { validateInput(phase1Tools.find(tool => tool.name === publicToolName(name))!.inputSchema, message.params.arguments ?? {}); accepted = true; } catch {}
   const fields = { tool_name: name as typeof toolNames[number], call_id: callId, accepted,
     ...(uuid.test(message.params.arguments?.requestId) ? { operation_id: message.params.arguments.requestId } : {}) };
   if (accepted) tracking.track('mcp_tool_started', fields, undefined, undefined, host);
-  const response = await invokeRpc(message, store, registry, connection, host, trackingContext);
+  const response = await invokeRpc(message, store, registry, connection, host, trackingContext, clientState);
   const value = (response as any)?.result;
   const content = value?.structuredContent;
   const outcome = value?.isError || content?.status === 'failed' ? 'failure' : content?.status === 'partial' ? 'partial' : value ? 'success' : 'unknown';
@@ -75,16 +77,19 @@ export async function rpc(message: any, store = new WorkspaceStore(), registry =
   return response;
 }
 
-async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnType<typeof mcpRegistry>, connection?: { selection: Selection }, host: HostContext = unknownHost, trackingContext?: string) {
+async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnType<typeof mcpRegistry>, connection?: { selection: Selection }, host: HostContext = unknownHost, trackingContext?: string, clientState?: McpClientState) {
   if (!message || message.jsonrpc !== '2.0' || typeof message.method !== 'string') return { jsonrpc: '2.0', id: message?.id ?? null, error: { code: -32600, message: 'Invalid request' } };
   if (message.id === undefined) return null;
   const result = (value: unknown) => ({ jsonrpc: '2.0', id: message.id, result: value });
   if (message.method === 'initialize') {
+    negotiateTemplatePresentation(clientState, registry.profile, message.params?.capabilities);
     const protocolVersion = ['2024-11-05', '2025-03-26', '2025-06-18', '2025-11-25'].includes(message.params?.protocolVersion) ? message.params.protocolVersion : '2025-11-25';
     return result({ protocolVersion, capabilities: { tools: {}, ...(registry.profile === 'phase1' ? { resources: {} } : {}) }, serverInfo: { name: 'openmotion', title: 'OpenMotion', version: VERSION, ...(protocolVersion === '2025-11-25' ? { icons: serverIcons } : {}) }, instructions: registry.instructions ?? workflowEntryGuide + ' Load only references needed by the current task and reuse already loaded documentId/contentHash. Reuse saved decisions for small edits. OpenMotion wraps Hyperframes Studio and its renderer. Only for tasks that require working in the editor or authoring a project, call openmotion_open_preview, read its pinned authoringGuide and open previewUrl with the host built-in browser before reporting it opened. Author native HTML compositions with seekable GSAP timelines, never custom shot JSON or canvas recording. Read openmotion_get_project before source edits and pass its revision as expectedRevision; inspect lint/timeline afterwards. Only when the user scope includes export/final delivery, query any applicable existing export to avoid duplicate jobs and export the inspected revision in the background, wait for completed, then call openmotion_verify_export with that job ID/revision and the brief audio policy. Separately inspect final visuals, sound and actual player playback before claiming full verification. MCP previewUrl defaults to embed=1; preserve its query and hash. Use sessionUrl or embedded=false only for the full OpenMotion workspace. Do not restart the host Agent or ask users to start a terminal server.' });
   }
+  const effectiveRegistry = registry.profile === 'phase1' && clientState?.presentation
+    ? createToolRegistry(registry.tools, registry.profile, [clientState.presentation.tool]) : registry;
   if (message.method === 'ping') return result({});
-  if (registry.profile === 'phase1' && message.method === 'resources/list') return result({ resources: [...workflowResources(), { uri: inlineVideoUri, name: 'Video progress and version playback', mimeType: 'text/html;profile=mcp-app' }] });
+  if (registry.profile === 'phase1' && message.method === 'resources/list') return result({ resources: [...workflowResources(), { uri: inlineVideoUri, name: 'Video progress and version playback', mimeType: 'text/html;profile=mcp-app' }, ...(clientState?.presentation ? [clientState.presentation.descriptor] : [])] });
   if (registry.profile === 'phase1' && message.method === 'resources/read') {
     if (message.params?.uri === inlineVideoUri) {
       try { return result({ contents: [{ uri: inlineVideoUri, mimeType: 'text/html;profile=mcp-app',
@@ -93,10 +98,17 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
           'openai/ui': { availableDisplayModes: ['inline'], preferredDisplayMode: 'inline' } } }] }); }
       catch { return { jsonrpc: '2.0', id: message.id, error: { code: -32603, message: 'INLINE_UI_NOT_BUILT: run npm run build:inline' } }; }
     }
-    try { return result({ contents: [await readWorkflowResource(message.params?.uri, store.directory)] }); }
+    try {
+      const uri = message.params?.uri;
+      if (typeof uri === 'string' && uri.startsWith('ui://openmotion/template-recommendations/')) {
+        if (!clientState?.presentation || uri !== clientState.presentation.uri) throw new Error('Unknown or unnegotiated UI resource');
+        return result({ contents: [clientState.presentation.content] });
+      }
+      return result({ contents: [await readWorkflowResource(uri, store.directory)] });
+    }
     catch (error) { return { jsonrpc: '2.0', id: message.id, error: { code: -32602, message: (error as Error).message } }; }
   }
-  if (message.method === 'tools/list') return result({ tools: registry.tools });
+  if (message.method === 'tools/list') return result({ tools: effectiveRegistry.tools });
   if (message.method === 'tools/call') {
     try {
       if (registry.profile !== 'phase1') {
@@ -107,7 +119,15 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
         );
       }
       const name = publicToolName(message.params?.name);
-      if (!registry.tools.some(tool => tool.name === name)) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + String(message.params?.name));
+      const exposed = effectiveRegistry.tools.find(tool => tool.name === name);
+      if (!exposed) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + String(message.params?.name));
+      if (name === templatePresentationName && clientState?.presentation) {
+        validateInput(exposed.inputSchema, message.params.arguments ?? {});
+        const value = showTemplateRecommendations(clientState.presentation, message.params.arguments);
+        return result({ content: [{ type: 'text', text: value.onboarding
+          ? 'The native onboarding component includes the complete welcome and three template cards. Do not append a duplicate welcome, verification status or an acknowledgment after this successful result. End the onboarding turn without an additional text reply and wait for the user. No project has been created.'
+          : 'Preview these templates, then choose a card or reply with its number. No project has been created.' }], structuredContent: value });
+      }
       if (registry.profile === 'phase1') {
         const internalName = legacyToolName(name);
         const args = { ...(message.params.arguments ?? {}) };
@@ -153,11 +173,12 @@ if (isMain(import.meta.url)) {
   const store = new WorkspaceStore();
   if ((await trackingFor(store)).enabled()) process.stderr.write('OpenMotion shares usage data and coarse region. Disable in Studio Privacy settings or set OPENMOTION_TELEMETRY=0.\n');
   const connection = sharedEditorEnabled ? { selection: {} } : undefined;
+  const clientState = createMcpClientState();
   const lines = createInterface({ input: process.stdin, crlfDelay: Infinity });
   for await (const line of lines) {
     if (!line.trim()) continue;
     let response;
-    try { response = await rpc(JSON.parse(line), store, releaseRegistry, connection); }
+    try { response = await rpc(JSON.parse(line), store, releaseRegistry, connection, clientState); }
     catch { response = { jsonrpc: '2.0', id: null, error: { code: -32700, message: 'Parse error' } }; }
     if (response) process.stdout.write(JSON.stringify(response) + '\n');
   }
