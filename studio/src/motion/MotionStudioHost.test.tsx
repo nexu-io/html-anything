@@ -10,6 +10,7 @@ import { useMotionHistoryOperation } from './MotionHistoryState';
 
 const state = vi.hoisted(() => ({
   connectionError: '',
+  workspaceBusy: false,
   renderQueue: { isRendering: false, ffmpegMissing: false },
   writeBlockedReason: null as string | null,
   open: vi.fn(), export: vi.fn(), setTab: vi.fn(), setCollapsed: vi.fn(),
@@ -32,7 +33,7 @@ vi.mock('../utils/studioTelemetry', () => ({ trackStudioEvent: vi.fn() }));
 vi.mock('./MotionHistoryPanel', () => ({ MotionHistoryPanel: () => <div>History versions</div> }));
 vi.mock('./useWorkspace', () => ({ useWorkspace: () => ({
   status: state.status, projects: [{ id: 'demo', title: 'Demo' }, { id: 'second', title: 'Second' }],
-  busy: false, error: state.connectionError, errorSource: 'connection', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
+  busy: state.workspaceBusy, error: state.connectionError, errorSource: 'connection', clearError: vi.fn(), open: state.open, openSession: state.open, startSession: state.create, create: state.create, home: state.home, rename: state.rename,
 }) }));
 vi.mock('./ConnectionDialog', () => ({ ConnectionDialog: ({ open, section, busy, onOpen }: { open: boolean; section: string; busy: boolean; onOpen: (id: string) => void }) =>
   open ? <div role="dialog" aria-label="MCP connections" data-section={section}>
@@ -46,6 +47,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   localStorage.clear();
   state.connectionError = '';
+  state.workspaceBusy = false;
   state.renderQueue.isRendering = false;
   state.writeBlockedReason = null;
   state.status = { projectId: 'demo', historyRestoreError: null };
@@ -122,6 +124,15 @@ it('keeps project switching, templates, history actions and native export in the
   expect(container.querySelector('[role="dialog"]')!.getAttribute('data-section')).toBe('templates');
   act(() => button('Open Product Promo').click());
   expect(state.create).toHaveBeenCalledWith(undefined, 'product-promo');
+});
+
+it('keeps the project title visible without a generic status while the workspace is busy', () => {
+  state.workspaceBusy = true;
+  render();
+  const input = container.querySelector<HTMLInputElement>('.motion-project-name-input')!;
+  expect(input.value).toBe('Demo');
+  expect(input.disabled).toBe(true);
+  expect(container.querySelector('.motion-save-state')).toBeNull();
 });
 
 it('prevents project replacement during a native render', () => {
@@ -264,6 +275,7 @@ it('shows connection failure as a one-line reconnecting toast and removes it on 
   render();
   expect(document.querySelectorAll('[data-testid="motion-connection-toast"]')).toHaveLength(1);
   state.connectionError = '';
+  state.workspaceBusy = false;
   render();
   expect(document.querySelector('[data-testid="motion-connection-toast"]')).toBeNull();
 });

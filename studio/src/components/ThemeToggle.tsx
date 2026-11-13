@@ -1,7 +1,7 @@
 import { RemixIcon } from "../icons/RemixIcons";
 import { createContext } from "react";
 import { useI18n } from '../i18n/I18n';
-import { setStudioTheme, useShownStudioTheme } from "../utils/studioTheme";
+import { setStudioTheme, studioUsesHostTheme, useShownStudioTheme } from "../utils/studioTheme";
 import { IconButton, Tooltip } from "./ui";
 
 // hyperframes.dev's theme toggle: the same sun and moon, revealing the new theme in a circle from
@@ -56,6 +56,7 @@ const iconProps = {
 export function ThemeToggle() {
   const { t } = useI18n();
   const isDark = useShownStudioTheme() === "dark";
+  if (studioUsesHostTheme()) return null;
   const label = t(isDark ? 'Switch to light theme' : 'Switch to dark theme');
 
   function toggle(e: React.MouseEvent<HTMLButtonElement>) {

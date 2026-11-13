@@ -68,7 +68,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
   // Hiding a notice never clears an editor's write guard. New errors reset the dismissal.
   const visibleNotice = notice && dismissedNotice !== noticeKey;
   if (!notice && dismissedNotice !== null) setDismissedNotice(null);
-  const value: WorkspaceChrome = { workspace, switchingDisabled, saveState: workspace.busy ? t('Working…') : editorState?.saveState || saveState, registerEditor, beforeViewChange,
+  const value: WorkspaceChrome = { workspace, switchingDisabled, saveState: editorState?.saveState || saveState, registerEditor, beforeViewChange,
     openLibrary: trigger => { libraryTrigger.current = trigger ?? null; workspace.clearError(); setConnectionSection('templates'); setConnectionsOpen(true); },
     openConnections: () => {},
     openModelSettings: () => { setSidebarOpen(false); setModelSettingsOpen(true); },

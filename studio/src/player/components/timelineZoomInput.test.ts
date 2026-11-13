@@ -396,20 +396,16 @@ describe("zoomTimelineStep", () => {
     for (let i = 0; i < 30; i++) vi.advanceTimersToNextFrame();
   };
 
-  it.each(["in", "out"] as const)("keeps the ruler text scale neutral through a zoom-%s animation", (direction) => {
+  it.each(["in", "out"] as const)("lays out a zoom-%s directly without stretching the rows", (direction) => {
     usePlayerStore.setState({ currentTime: 110, duration: 1000, zoomMode: "manual", manualZoomPercent: 400, timelinePps: 40 });
     const { row } = viewport(4000);
     zoomTimelineStep(direction);
-    let previewFrames = 0;
+    expect(usePlayerStore.getState().timelinePps).toBe(direction === "in" ? 80 : 20);
+    expect(laidOutX(110)).toBeCloseTo(432);
     for (let i = 0; i < 30; i++) {
       vi.advanceTimersToNextFrame();
-      const scale = /scaleX\(([\d.]+)\)/.exec(row.style.transform);
-      if (!scale) continue;
-      previewFrames++;
-      expect(Number(scale[1]) * Number(row.style.getPropertyValue("--timeline-zoom-inverse"))).toBeCloseTo(1, 10);
+      expect(row.style.transform).toBe("");
     }
-    expect(previewFrames).toBeGreaterThan(1);
-    expect(row.style.getPropertyValue("--timeline-zoom-inverse")).toBe("");
   });
 
   it("counts as a person's zoom", () => {
@@ -429,52 +425,12 @@ describe("zoomTimelineStep", () => {
     expect(laidOutX(40)).toBeCloseTo(432);
   });
 
-  it("lays a zoom-out step out once, at its start, then eases by scaling", () => {
-    usePlayerStore.setState({
-      currentTime: 110,
-      duration: 1000,
-      zoomMode: "manual",
-      manualZoomPercent: 400,
-      timelinePps: 40,
-    });
-    // 100..126 s on screen at 40 px/s, the playhead at 110 s among it.
-    const { row } = viewport(4000);
-    const laidOut: number[] = [];
-    const unsubscribe = usePlayerStore.subscribe((s, prev) => {
-      if (s.timelinePps !== prev.timelinePps) laidOut.push(s.timelinePps);
-    });
-    zoomTimelineStep("out");
-    // Laid out in the first frame, never inside the caller (a host's effect, a click).
-    expect(laidOut).toEqual([]);
-    vi.advanceTimersToNextFrame();
-    expect(laidOut).toEqual([20]);
-    // Near the old view, drawn in the first frame by scaling the new layout up.
-    expect(Number(/scaleX\(([\d.]+)\)/.exec(row.style.transform)?.[1])).toBeGreaterThan(1.5);
-    run();
-    unsubscribe();
-    expect(laidOut).toEqual([20]);
-    // Counted once as the person's zoom: the end of the ease writes nothing more.
-    expect(usePlayerStore.getState().userZoomCount).toBe(1);
-  });
-
-  it("eases a zoom-out that pans away without laying its target out first", () => {
-    // 100..126 s on screen at 40 px/s; the playhead at 0 s is off screen, so the new view
-    // (centred on it) does not hold the old one.
-    usePlayerStore.setState({
-      duration: 1000,
-      zoomMode: "manual",
-      manualZoomPercent: 400,
-      timelinePps: 40,
-    });
-    viewport(4000);
-    const laidOut: number[] = [];
-    const unsubscribe = usePlayerStore.subscribe((s, prev) => {
-      if (s.timelinePps !== prev.timelinePps) laidOut.push(s.timelinePps);
-    });
-    zoomTimelineStep("out");
-    vi.advanceTimersToNextFrame();
-    unsubscribe();
-    expect(laidOut[0]).not.toBe(20);
+  it("counts consecutive clicks from the last committed scale", () => {
+    viewport();
+    zoomTimelineStep("in");
+    zoomTimelineStep("in");
+    expect(usePlayerStore.getState().timelinePps).toBe(40);
+    expect(usePlayerStore.getState().userZoomCount).toBe(2);
   });
 
   it("centres an off-screen playhead", () => {

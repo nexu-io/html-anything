@@ -161,6 +161,7 @@ const localReadmeResourceFiles = [
   'examples/motion-studies/signoff.mp4',
   'docs/readme/openmotion-logo.svg',
   'docs/readme/community-star.svg', 'docs/readme/community-star.zh-CN.svg', 'docs/readme/community-star.ja.svg',
+  'docs/readme/community-star.gif',
   'docs/readme/brand-hero.ja.jpg',
   'docs/readme/brand-hero.mobile.ja.jpg',
   'docs/readme/badges/built-by-opendesign.ja.svg',

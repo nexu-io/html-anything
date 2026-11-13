@@ -73,6 +73,7 @@ export function buildTimelineShellMeta(input: TimelineShellMetaInputs): Timeline
       contentOrigin: input.contentOrigin,
       zoomMode: input.zoomMode,
       onScroll: (e) => {
+        razor.clearRazorGuide();
         input.lastScrollLeftRef.current = e.currentTarget.scrollLeft;
         input.recordTimelineScroll(e.currentTarget);
         input.syncScrollViewport(e.currentTarget, true);

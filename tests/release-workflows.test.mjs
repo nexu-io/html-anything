@@ -368,7 +368,22 @@ sudo() {
     assert.match(workflow, /path: \$\{\{ runner.temp \}\}\/motion-rendering-apt/);
     const cacheStep = workflow.split('      - name: Restore rendering package downloads\n')[1].split('\n      - name: ')[0];
     const keyPrefix = 'rendering-apt-ubuntu24.04-${{ runner.arch }}-zip-unzip-ffmpeg-fonts-noto-core-';
-    assert(cacheStep.includes(`key: ${keyPrefix}\${{ github.run_id }}-\${{ github.run_attempt }}\n`), 'the save key must rotate so newer packages can be stored');
+    assert(cacheStep.includes(`key: ${keyPrefix}v2-\${{ steps.rendering-cache.outputs.version }}\n`), 'cache identity must track the runner image rather than each run');
+    assert(!cacheStep.includes('github.run_id') && !cacheStep.includes('github.run_attempt'));
+    const versionStep = workflow.split('      - name: Select rendering package cache version\n')[1].split('\n      - name: ')[0];
+    const versionScript = versionStep.split('        run: ')[1].trim();
+    const output = path.join(directory, 'cache-version');
+    const version = async (image, runId) => {
+      await writeFile(output, '');
+      await runFile('bash', ['-e', '-c', versionScript], {
+        env: { ...env, ImageVersion: image, GITHUB_RUN_ID: runId, GITHUB_OUTPUT: output },
+      });
+      return readFile(output, 'utf8');
+    };
+    assert.equal(await version('20261113.1', '100'), 'version=20261113.1\n');
+    assert.equal(await version('20261113.1', '101'), 'version=20261113.1\n');
+    assert.equal(await version('20261114.1', '102'), 'version=20261114.1\n');
+    assert.match(await version('', '103'), /^version=\d{4}-W\d{2}\n$/);
     assert(cacheStep.includes(`restore-keys: |\n            ${keyPrefix}`), 'the newest saved entry must be restored by key prefix');
     const script = step.split('        run: |\n')[1].split('\n').map(line => line.replace(/^ {10}/, '')).join('\n');
     const run = (missing, failure) => runFile('bash', ['-e', '-o', 'pipefail', '-c', mock + '\n' + script], {
