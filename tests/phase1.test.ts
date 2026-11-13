@@ -1,4 +1,6 @@
 import test from 'node:test';
+import { createTracker } from '../tracking/core.ts';
+import { omEvents } from '../tracking/events.ts';
 import assert from 'node:assert/strict';
 import { readFile, writeFile, rm, mkdir, stat, truncate } from 'node:fs/promises';
 import path from 'node:path';
@@ -209,13 +211,20 @@ test('an interrupted partial save rolls back, but recovery never overwrites fore
 
 test('queued export cancel is project-bound and historical jobs remain addressable', () => fixture(async store => {
   const service = api(store), p = await create(service);
+  const tracking = createTracker({ registry: omEvents, entrypoint: 'mcp', enabled: true, flushIntervalMs: 0, send: async () => 'accepted' });
+  service.context.tracking = tracking;
   const args = { projectId: p.projectId, requestId: 'export', expectedRevision: p.revision, versionId: p.version.versionId, audio: 'silent' };
-  const exported = await service.call('openmotion_export_request', args);
+  const host = { host_agent: 'deepseek', host_agent_source: 'mcp_client_info' } as const;
+  const exported = await service.call('openmotion_export_request', args, host);
+  assert.deepEqual((await store.job(exported.job.id))!.trackingHost, host);
+  assert.equal(exported.job.trackingHost, undefined);
   assert.equal((await service.call('openmotion_export_request', args)).job.id, exported.job.id);
   await assert.rejects(cancelExport(store, crypto.randomUUID(), exported.job.id), /EXPORT_NOT_FOUND/);
   const cancelled = await service.call('openmotion_export_cancel', { projectId: p.projectId, requestId: 'cancel', jobId: exported.job.id });
   assert.equal(cancelled.job.state, 'cancelled'); assert.equal(await store.claimExport(), null);
-  const next = await service.call('openmotion_export_request', { ...args, requestId: 'export2' });
+  tracking.setEnabled(false);
+  const next = await service.call('openmotion_export_request', { ...args, requestId: 'export2' }, host);
+  assert.equal((await store.job(next.job.id))!.trackingHost, undefined, 'opt-out does not persist new tracking metadata');
   assert.notEqual(next.job.id, exported.job.id);
   const old = await service.call('openmotion_get_project', { projectId: p.projectId, exportJobId: exported.job.id });
   assert.equal(old.exportJob.state, 'cancelled');

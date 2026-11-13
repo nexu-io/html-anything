@@ -18,6 +18,7 @@ import { phase1Tools, validateInput } from './shared/phase1-tools.ts';
 import { atomicJson, cloneFile, fileHash, jsonFile, ProjectVersions, recoverProjectTransactions } from './phase1-versions.ts';
 import type { ContentVersion } from './phase1-versions.ts';
 import { trackPhase1Result, type OmTracking } from './shared/tracking.ts';
+import type { HostContext } from './tracking/host.ts';
 
 const metadataPath = 'motion-project.json', assetIndexPath = 'motion-assets.json';
 const textExtensions = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.txt', '.md', '.vtt', '.srt', '.glsl', '.vert', '.frag']);
@@ -79,24 +80,24 @@ export class Phase1Service {
   readonly context: Phase1Context;
   constructor(store: WorkspaceStore, runtimeRoot: string, context: Phase1Context) { this.store = store; this.runtimeRoot = runtimeRoot; this.context = context; }
   versions(projectId: string) { return new ProjectVersions(this.store.forProject(projectId), this.runtimeRoot, this.context.nativeUrl(projectId)); }
-  async call(name: string, args: any) {
+  async call(name: string, args: any, host?: HostContext) {
     name = legacyToolName(name);
     try {
-      const result = await this.invoke(name, args);
+      const result = await this.invoke(name, args, host);
       if (name === 'motion_restore_version') this.restoreErrors.delete(args.projectId);
-      trackPhase1Result(this.context.tracking, name, args, result);
+      trackPhase1Result(this.context.tracking, name, args, result, undefined, host);
       return publicToolResult(result);
     } catch (error) {
       if (name === 'motion_restore_version' && errorText(error).startsWith('VERSION_NOT_RESTORABLE:')) {
         this.restoreErrors.set(args.projectId, { requestId: args.requestId, message: errorText(error) });
       }
-      trackPhase1Result(this.context.tracking, name, args, undefined, error);
+      trackPhase1Result(this.context.tracking, name, args, undefined, error, host);
       await recordDiagnostic(this.store.directory, { kind: 'mcp_failure', tool: name, requestId: args?.requestId,
         projectId: args?.projectId, message: errorText(error), stack: error instanceof Error ? error.stack : undefined });
       throw error;
     }
   }
-  private async invoke(name: string, args: any) {
+  private async invoke(name: string, args: any, host?: HostContext) {
     const definition = phase1Tools.find(tool => tool.name === publicToolName(name));
     if (!definition) throw new Error('MCP_TOOL_NOT_EXPOSED: ' + name);
     validateInput(definition.inputSchema, args);
@@ -110,7 +111,7 @@ export class Phase1Service {
     if (name === 'motion_get_template') return templateCatalogFor(this.store.directory).detail(args.templateId);
     const run = async () => {
       if (!this.recovered) { await recoverProjectTransactions(this.store, this.runtimeRoot); this.recovered = true; }
-      const result = await this.dispatch(name, args);
+      const result = await this.dispatch(name, args, host);
       if (name === 'motion_edit_project' || name === 'motion_restore_version') {
         const owner = this.store.projectCatalog().sessions!.find(session => session.artifacts.some(artifact => artifact.projectId === args.projectId))!;
         result.previewHandoff = previewHandoff(this.context.origin(), { projectId: args.projectId, sessionId: owner.id,
@@ -168,7 +169,7 @@ export class Phase1Service {
   async publicJob(jobId: string) {
     const job = (await this.store.status(jobId)).exportJob;
     if (!job) throw new Error('EXPORT_NOT_FOUND');
-    const { token, workerPid, ...safe } = job;
+    const { token, workerPid, trackingHost, ...safe } = job;
     return { ...safe, ...(job.state === 'completed' ? { path: path.join(this.store.directory, job.file!), downloadUrl: this.context.origin() + '/api/exports/' + job.id + '/file' } : {}) };
   }
   async detail(projectId: string, args: any = {}) {
@@ -211,7 +212,7 @@ export class Phase1Service {
         requirements: meta.requirements ?? (await scoped.conversation(projectId)).messages.map(message => message.content).join('\n'),
         projectType: meta.projectType ?? 'legacy', source: meta.source ?? null, assets, file, exportJob,
         previewDisplay: await this.previewDisplay(projectId, version),
-        exports: jobs.map(({ token, workerPid, ...job }) => job), reviews: await jsonFile(path.join(this.store.directory, 'phase1', 'reviews', projectId + '.json'), []),
+        exports: jobs.map(({ token, workerPid, trackingHost, ...job }) => job), reviews: await jsonFile(path.join(this.store.directory, 'phase1', 'reviews', projectId + '.json'), []),
         limits: { textBatchFiles: 100, textBatchBytes: 8388608, textReadBytes: 2097152, assetBytes: MAX_ASSET_BYTES, attachmentTransport: 'local_path' } };
     });
   }
@@ -246,7 +247,7 @@ export class Phase1Service {
     const record = { ...review, projectId: args.projectId, requestId: args.requestId, createdAt: Date.now(), verifiedUserAdoption: false };
     reviews.push(record); await atomicJson(file, reviews); return { projectId: args.projectId, review: record, changed: false };
   }
-  async dispatch(name: string, args: any): Promise<any> {
+  async dispatch(name: string, args: any, host?: HostContext): Promise<any> {
     if (name === 'motion_get_project' && !args.projectId) {
       if (args.file || args.exportJobId || args.expectedRevision) throw new Error('INVALID_ARGUMENT: projectId is required for details');
       const scope = args.sessionId ?? 'workspace';
@@ -391,8 +392,9 @@ export class Phase1Service {
       if (!args.versionId || !args.expectedRevision) throw new Error('INVALID_ARGUMENT: versionId and expectedRevision are required');
       const detail = await this.detail(args.projectId);
       if (detail.currentVersionId !== args.versionId || detail.revision !== args.expectedRevision) throw new Error('VERSION_CONFLICT');
-      const job = await this.store.forProject(args.projectId).requestExport(args.expectedRevision, { phase1: true, versionId: args.versionId, requestId: args.requestId, audio: args.audio });
-      return { projectId: args.projectId, job: { ...job, token: undefined, workerPid: undefined }, technicalVerification: 'automatic_after_render', contentReview: 'pending' };
+      const job = await this.store.forProject(args.projectId).requestExport(args.expectedRevision, { phase1: true, versionId: args.versionId, requestId: args.requestId, audio: args.audio,
+        trackingHost: this.context.tracking?.enabled() ? host : undefined });
+      return { projectId: args.projectId, job: { ...job, token: undefined, workerPid: undefined, trackingHost: undefined }, technicalVerification: 'automatic_after_render', contentReview: 'pending' };
     });
     throw new Error('MCP_TOOL_NOT_EXPOSED: ' + name);
   }

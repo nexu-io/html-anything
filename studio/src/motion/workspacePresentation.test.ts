@@ -15,3 +15,9 @@ it('keeps embedding and individual visibility settings through document transiti
   expect(preservePresentation('/?session=next&project=two#project/two', '?embed=1&session=old')).toBe('/?session=next&project=two&embed=1#project/two');
   expect(preservePresentation('/?session=next', '?sidebar=0&conversation=0')).toBe('/?session=next&sidebar=0&conversation=0');
 });
+it('keeps the opening Agent context across project navigation without replacing a new context', () => {
+  const current = '11111111-1111-4111-8111-111111111111', next = '22222222-2222-4222-8222-222222222222';
+  expect(preservePresentation('/?project=next', '?embed=1&tracking_context=' + current)).toContain('tracking_context=' + current);
+  expect(preservePresentation('/?tracking_context=' + next, '?tracking_context=' + current)).toContain('tracking_context=' + next);
+  expect(preservePresentation('/?project=next', '?tracking_context=PRIVATE')).not.toContain('tracking_context');
+});

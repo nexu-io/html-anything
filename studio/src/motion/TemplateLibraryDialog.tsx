@@ -1,3 +1,4 @@
+import { trackMotion } from './tracking';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { isEditableTemplate, type GalleryTemplate, type TemplatePage } from '../../../shared/catalog';
 import { templatePrompt, type IntegrationInfo } from '../../../shared/integration';
@@ -148,11 +149,20 @@ export function TemplateLibraryDialog(props: Props) {
     try {
       const connection = info.current ?? await motionApi<IntegrationInfo>('/integration'); info.current = connection;
       setPrompt(templatePrompt(connection, 'codex', preview, locale));
-    } catch (err) { setFeedback((err as Error).message); }
+    } catch (err) {
+      void trackMotion('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'failed' });
+      setFeedback((err as Error).message);
+    }
   }
   async function copy() {
-    try { await navigator.clipboard.writeText(prompt); setFeedback('Copied'); }
-    catch { setFeedback('Copy the instruction below and send it to your Agent.'); }
+    void trackMotion('ui_click', { page_name: 'studio', area: 'templates', element: 'copy_template' });
+    try {
+      await navigator.clipboard.writeText(prompt); setFeedback('Copied');
+      void trackMotion('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'clipboard_written' });
+    } catch {
+      setFeedback('Copy the instruction below and send it to your Agent.');
+      void trackMotion('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'manual_fallback_shown' });
+    }
   }
   async function downloadMotion() {
     if (!preview?.motionDocumentUrl) return;
@@ -166,7 +176,10 @@ export function TemplateLibraryDialog(props: Props) {
     } catch { setDownloadError('Download failed. Please try again.'); }
     finally { setDownloading(false); }
   }
-  const show = (item: GalleryTemplate) => { setPreview(item); setPrompt(''); setFeedback(''); setDownloadError(''); detail.current?.showModal(); };
+  const show = (item: GalleryTemplate) => {
+    void trackMotion('ui_click', { page_name: 'studio', area: 'templates', element: 'select_template' });
+    setPreview(item); setPrompt(''); setFeedback(''); setDownloadError(''); detail.current?.showModal();
+  };
   const cards = (items: GalleryTemplate[]) => <div className={styles.grid}>{items.map(item => <TemplateCard key={item.id} template={item} onSelect={() => show(item)} />)}</div>;
   return <dialog ref={dialog} className={styles.library} aria-label={t('Template library')} onKeyDown={event => event.stopPropagation()} onCancel={event => { if (event.target !== dialog.current) return; event.preventDefault(); if (!props.busy) props.onClose(); }}>
     <header className={styles.header}><h1>{t('Template library')}</h1><button disabled={props.busy} onClick={props.onClose} aria-label={t('Close template library')}><MotionIcon name="close" size={24} /></button></header>

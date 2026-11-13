@@ -3,6 +3,7 @@ import path from 'node:path';
 import os from 'node:os';
 import { createTracker, uuid } from './core.ts';
 import type { Entry, Registry, PendingEvent, Receipt } from './core.ts';
+import { unknownHost } from './host.ts';
 
 export type Identity = { installation_id: string; utm_source: string | null; created_at: string };
 const sourcePattern = /^[A-Za-z0-9_.-]{1,64}$/;
@@ -42,6 +43,7 @@ export function createPosthogSender(options: {
   return async (events: readonly PendingEvent[], signal: AbortSignal): Promise<Receipt> => {
     const batch = events.map(event => ({ event: event.event, uuid: event.event_id, timestamp: event.occurred_at,
       properties: { ...event.properties, event_schema_version: 1, schema_version: 1, product: 'openmotion',
+        ...(event.host_context ?? unknownHost),
         app_version: options.appVersion, env: options.env, channel: 'standalone',
         ...(options.testRunId ? { test_run_id: options.testRunId } : {}),
         event_id: event.event_id, $insert_id: event.event_id, occurred_at: event.occurred_at,

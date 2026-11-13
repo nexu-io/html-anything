@@ -3,6 +3,8 @@ import type { Registry } from './core.ts';
 export function createBrowserTracking<const R extends Registry>(options: { endpoint: string; registry: R; enabled: boolean; flushIntervalMs?: number; isEnabled?: () => boolean }) {
   const endpoint = new URL(options.endpoint, window.location.href);
   if (endpoint.origin !== window.location.origin || endpoint.username || endpoint.password) throw new Error('SAME_ORIGIN_REQUIRED');
+  const context = new URLSearchParams(window.location.search).get('tracking_context');
+  if (context && /^[0-9a-f-]{36}$/i.test(context)) endpoint.searchParams.set('context', context);
   const tracking = createTracker({ ...options, entrypoint: 'studio', send: async (events, signal) => {
     try {
       const response = await fetch(endpoint, { method: 'POST', redirect: 'error', headers: { 'content-type': 'application/json' },

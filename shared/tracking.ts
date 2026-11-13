@@ -6,6 +6,7 @@ import type { Entry } from '../tracking/core.ts';
 import { createNodeTracking, loadIdentity } from '../tracking/node.ts';
 import { omEvents } from '../tracking/events.ts';
 import { VERSION } from '../preview.ts';
+import type { HostContext } from '../tracking/host.ts';
 
 export type OmTracking = ReturnType<typeof createTracker<typeof omEvents>>;
 export function trackingLockReason() {
@@ -73,20 +74,20 @@ export function trackingError(error: unknown) {
 }
 
 /** Business results follow committed domain operations, separately from transport results. */
-export function trackPhase1Result(tracking: OmTracking | undefined, name: string, args: any, result: any, error?: unknown) {
+export function trackPhase1Result(tracking: OmTracking | undefined, name: string, args: any, result: any, error?: unknown, host?: HostContext) {
   if (!tracking || args?.action === 'record_review' || result?.replayed) return;
   const outcome = error ? 'failure' : result?.status === 'partial' ? 'partial' : result?.status === 'failed' ? 'failure' : 'success';
   const fields = { outcome, ...(uuid.test(result?.projectId) ? { project_id: result.projectId } : {}),
     ...(uuid.test(args?.requestId) ? { operation_id: args.requestId } : {}), ...(error ? { error_code: trackingError(error) } : {}) } as const;
-  if (name === 'motion_create_project') tracking.track('project_create_result', { ...fields, effect_status: error ? 'unknown' : 'applied' });
-  if (name === 'motion_open_preview' && args?.target !== 'templates') tracking.track('project_open_result', { ...fields, opened_by_host_status: 'unknown' });
+  if (name === 'motion_create_project') tracking.track('project_create_result', { ...fields, effect_status: error ? 'unknown' : 'applied' }, undefined, undefined, host);
+  if (name === 'motion_open_preview' && args?.target !== 'templates') tracking.track('project_open_result', { ...fields, opened_by_host_status: 'unknown' }, undefined, undefined, host);
   if (name === 'motion_edit_project') tracking.track('project_edit_result', { ...fields,
-    ...(!error && Array.isArray(result?.changedFiles) ? { changed_file_count: result.changedFiles.length } : {}) });
-  if (name === 'motion_restore_version') tracking.track('version_restore_result', fields);
+    ...(!error && Array.isArray(result?.changedFiles) ? { changed_file_count: result.changedFiles.length } : {}) }, undefined, undefined, host);
+  if (name === 'motion_restore_version') tracking.track('version_restore_result', fields, undefined, undefined, host);
   if (name === 'motion_import_assets') tracking.track('asset_import_result', { ...fields,
-    ...(Array.isArray(args?.items) ? { requested_count: args.items.length } : {}) });
+    ...(Array.isArray(args?.items) ? { requested_count: args.items.length } : {}) }, undefined, undefined, host);
   if (name === 'motion_export_request') tracking.track('export_request_result', { ...fields,
-    ...(uuid.test(result?.job?.id) ? { job_id: result.job.id, queue_state: result.job.state } : {}) });
+    ...(uuid.test(result?.job?.id) ? { job_id: result.job.id, queue_state: result.job.state } : {}) }, undefined, undefined, host);
   if (name === 'motion_export_cancel') tracking.track('export_cancel_result', { ...fields,
-    ...(uuid.test(result?.job?.id) ? { job_id: result.job.id, state_after: result.job.state } : {}) });
+    ...(uuid.test(result?.job?.id) ? { job_id: result.job.id, state_after: result.job.state } : {}) }, undefined, undefined, host);
 }

@@ -4,6 +4,8 @@ import { createRoot, type Root } from 'react-dom/client';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { I18nProvider, useI18n, translate } from '../i18n/I18n';
 import { TemplateLibraryDialog } from './TemplateLibraryDialog';
+import { trackMotion } from './tracking';
+vi.mock('./tracking', () => ({ trackMotion: vi.fn(async () => 'queued') }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root, host: HTMLDivElement;
@@ -12,6 +14,7 @@ const items = [
   { id: 'two', title: 'Second', author: 'Author', brand: 'Other', uses: ['Launch'], tags: [], kind: 'prism', hasHtmlProject: false, sortOrder: 1, posterUrl: '/two.jpg' },
 ];
 beforeEach(() => {
+  vi.clearAllMocks();
   window.happyDOM.settings.enableIframePageLoading = false;
   vi.stubGlobal('IntersectionObserver', class { observe() {} disconnect() {} });
   vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
@@ -66,8 +69,21 @@ it('copies the requested remote DEV prompt and preserves editable opening', asyn
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith('使用说明：请使用 OpenMotion 插件。如未安装，请按 https://releases.open-design.ai/open-motion/dev/install.md 安装并接入后继续。\n指定模板：First（one）\n创作要求：基于模板，结合我的要求和附件创作，默认保留主要动效与风格，并交付 HTML 和 MP4。\n我的要求：\n');
   await act(async () => button('打开并编辑 ↗').click());
   expect(onOpen).toHaveBeenCalledWith('one');
+  expect(trackMotion).toHaveBeenCalledWith('ui_click', { page_name: 'studio', area: 'templates', element: 'select_template' });
+  expect(trackMotion).toHaveBeenCalledWith('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'clipboard_written' });
   await act(async () => button('Second').click());
   expect(button('打开并编辑 ↗')).toBeUndefined();
+});
+
+it('reports clipboard fallback from the actual prompt without counting it as copied', async () => {
+  await mount();
+  await act(async () => button('First').click());
+  await act(async () => button('复刻模板').click());
+  vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('PRIVATE_CLIPBOARD_ERROR'));
+  await act(async () => host.querySelector<HTMLButtonElement>('button[aria-label=复制]')!.click());
+  expect(trackMotion).toHaveBeenCalledWith('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'manual_fallback_shown' });
+  expect(host.querySelector<HTMLTextAreaElement>('textarea')!.value).toContain('First');
+  expect(trackMotion).not.toHaveBeenCalledWith('template_instruction_copy_result', expect.objectContaining({ copy_status: 'clipboard_written' }));
 });
 
 it('reloads template data when the editor language changes and clears language-specific filters', async () => {

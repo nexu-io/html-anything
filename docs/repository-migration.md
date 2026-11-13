@@ -12,7 +12,7 @@ The complete tree comparison found 2,626 identical entries, three files differin
 
 - Public licenses, contribution guides, installation URLs, documentation and source attribution replace source-repository-specific instructions and internal material.
 - GitHub CI and the positive distribution list retain standalone packaging checks and disabled publication; source-repository upload/release helpers are excluded.
-- Browser telemetry and automatic experiment assignment remain disabled, with matching tests.
+- Upstream browser telemetry and automatic experiment assignment remain disabled; explicit Studio events use the installation-owned OpenMotion collector.
 - Recreation guidance retains the npm native-cache instructions alongside the complete ZIP runtime paths.
 
 No additional runtime change is needed for this source snapshot. Future synchronization should compare against this recorded snapshot and review incoming changes while retaining these public adaptations. Open pull requests are separate changes until they land in their source branch; this checkpoint does not include them or authorize merging or publishing.
@@ -39,7 +39,7 @@ The import includes the completed recreation workflow and its measurement valida
 
 All three artifact formats use the positive file list in `scripts/distribution.ts`: required runtime modules (including the macOS Perl launcher), built editor assets, explicitly approved docs, the five phase-one Skills, their shared discovery module and references, approved bilingual guides/Motion MD assets, and licenses. Tests, Studio development source/fixtures, sourcemaps and unapproved docs/scripts do not ship. npm tar creation disables macOS resource metadata. New docs and scripts require an explicit distribution decision.
 
-Upstream Studio/template attribution and font notices remain intact. Motion removes the embedded upstream browser analytics identifiers and both sending transports, preserving caller-compatible functions. Browser measurement and automatic experiment enrolment are disabled; engine subprocesses keep `HYPERFRAMES_NO_TELEMETRY=1`. Third-party npm packages and native executables retain their pinned identities.
+Upstream Studio/template attribution and font notices remain intact. Motion removes the embedded upstream browser analytics identifiers and both upstream sending transports. The caller-compatible functions now forward registered explicit events through OpenMotion's own field adapter, installation identity and opt-out policy; upstream measurement and automatic experiment enrolment remain disabled. Engine subprocesses keep `HYPERFRAMES_NO_TELEMETRY=1`. Third-party npm packages and native executables retain their pinned identities.
 
 ## CI and acceptance
 

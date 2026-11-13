@@ -13,6 +13,8 @@ export function sessionPath(sessionId: string, projectId?: string, options: { op
 export function preservePresentation(target: string, search: string) {
   const url = new URL(target, 'http://workspace.local'), current = new URLSearchParams(search);
   for (const key of ['embed', 'sidebar', 'conversation']) if (current.has(key)) url.searchParams.set(key, current.get(key)!);
+  const tracking = current.get('tracking_context');
+  if (tracking && /^[0-9a-f-]{36}$/i.test(tracking) && !url.searchParams.has('tracking_context')) url.searchParams.set('tracking_context', tracking);
   return url.pathname + url.search + url.hash;
 }
 

@@ -14,6 +14,7 @@ import { ErrorNotice } from '../components/ui/ErrorNotice';
 import { isConnectionFailure } from '../components/ui/errorNoticeMessage';
 import { useShownStudioTheme } from '../utils/studioTheme';
 import { workspacePresentation } from '../../../shared/workspace-url';
+import { trackMotion } from './tracking';
 
 const PrivacySettings = lazy(() => import('./PrivacySettings').then(module => ({ default: module.PrivacySettings })));
 
@@ -119,7 +120,10 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
     <div className="motion-session-heading">
       <span>{t('Projects')}</span>
       <Tooltip label={t('New project')}>
-        <button type="button" className="motion-icon-button" aria-label={t('New project')} disabled={switchingDisabled} onClick={() => void workspace.create()}>
+        <button type="button" className="motion-icon-button" aria-label={t('New project')} disabled={switchingDisabled} onClick={event => {
+          void trackMotion('ui_click', { page_name: 'studio', area: 'workspace', element: 'new_creation', interaction_method: event.detail === 0 ? 'keyboard' : 'pointer' });
+          void workspace.create();
+        }}>
           <MotionIcon name="plus" size={16} />
         </button>
       </Tooltip>
@@ -129,7 +133,13 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
       {!workspace.status && !workspace.error && <p className="motion-session-empty" role="status">{t('Loading projects…')}</p>}
       {workspace.status && !filtered.length && <p className="motion-session-empty">{t(query ? 'No matching projects' : 'Create a project with your Agent to start editing.')}</p>}
       {filtered.map(project => <button key={project.id} className="motion-session" aria-current={currentId === project.id ? 'page' : undefined}
-        title={project.title} disabled={switchingDisabled} onClick={() => { if (project.id === currentId) close(); else void workspace.open('projects', project.id); }}>
+        title={project.title} disabled={switchingDisabled} onClick={event => {
+          if (project.id === currentId) close();
+          else {
+            void trackMotion('ui_click', { page_name: 'studio', area: 'workspace', element: 'open_project', interaction_method: event.detail === 0 ? 'keyboard' : 'pointer' });
+            void workspace.open('projects', project.id);
+          }
+        }}>
         <span className="motion-session-dot" aria-hidden="true" /><span><strong>{project.title}</strong></span>
       </button>)}
     </nav>
