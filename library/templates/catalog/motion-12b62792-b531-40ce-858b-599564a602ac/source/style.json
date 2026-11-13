@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#ffffff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Gg",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Noir",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "衬线字形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "基线网格",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "贝塞尔控制点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "字符集",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "字重对比",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色三角",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1515f4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1414ff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b4b7ff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7777cf",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "蓝白两色；大幅衬线字、细工程标注与字重对照并置。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "以三角标志进入蓝底工程图，再放大单字轮廓。细线、尺寸标记和控制点服务于笔画结构，不能盖过字形。",
+      "status": "inferred"
+    },
+    {
+      "rule": "裁切到衬线端部之后，拉回大小写、数字与符号的完整字符集；字重对照按由粗到细纵向排列，保持同一基线逻辑。",
+      "status": "inferred"
+    },
+    {
+      "rule": "放大 k、R、O 等字形，展示曲线节点、替代字形或轴线角度。控制点与轮廓同步，不添加与字形无关的背景运动。",
+      "status": "inferred"
+    }
+  ]
+}

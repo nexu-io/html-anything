@@ -1,0 +1,119 @@
+{
+  "background": {
+    "color": "#100851",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "球体",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网页平面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "线框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "门户",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "表单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "连接轨迹",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "窗口群",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#100851",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f4f0f6",
+      "status": "inferred"
+    },
+    {
+      "hex": "#473af4",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ad78e7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#75def1",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ed9ccf",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "少量品牌字标；主体是窗口线框、控件与空间几何",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "将网页拆成底板、图片、标题与线框，沿深度方向留距离。小球沿共同透视方向穿行，近处平面移动更快，远处更慢。",
+      "status": "inferred"
+    },
+    {
+      "rule": "门户与透明立方体负责换空间，进入工作台后用输入栏、按钮和控件组建立功能感。蓝紫为主，粉、青、黄只分配给局部内容。",
+      "status": "inferred"
+    },
+    {
+      "rule": "后段让数据轨迹在窗口、表单与用户节点之间流动。路径要有明确起点和终点，球体抵达后才触发下一个窗口的状态。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可换为产品模块或业务卡，但保留一个持续出现的球体或小物件。准备可分层的界面元素，不将整屏图片当成所有空间层。",
+      "status": "inferred"
+    }
+  ]
+}

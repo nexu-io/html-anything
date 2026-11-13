@@ -1,0 +1,281 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Notion AI 大升级（Agents 等） · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#ffffff;--brand-ink:#191919;--accent:#2f91cb;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Notion <span>/</span> V084</div><div class="intro-line"><h1>Notion AI 大升级（Agents 等）</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>先展示代理完成任务，再交代模型与订阅如何配置。能力和使用方式分成三段，依次回答不同问题。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 51.416667, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 10, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Your agents. Now doing more.&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#2f91cb&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Your agents. Now doing more.&quot;, &quot;accent&quot;: &quot;#2f91cb&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="51.416667" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 51.42 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Notion AI 大升级（Agents 等） · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#ffffff}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Notion</div><div class="type-sample">Your agents. Now doing more.</div><p>无衬线中粗主标题；细边框界面与小号功能文字</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button><button class="swatch" data-color="#191919" style="--swatch:#191919" aria-label="复制色值 #191919"><span></span><code>#191919</code></button><button class="swatch" data-color="#2f91cb" style="--swatch:#2f91cb" aria-label="复制色值 #2f91cb"><span></span><code>#2F91CB</code></button><button class="swatch" data-color="#f2e1bb" style="--swatch:#f2e1bb" aria-label="复制色值 #f2e1bb"><span></span><code>#F2E1BB</code></button><button class="swatch" data-color="#aea0ce" style="--swatch:#aea0ce" aria-label="复制色值 #aea0ce"><span></span><code>#AEA0CE</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>代理图标</span><span>任务输入</span><span>执行列表</span><span>模型清单</span><span>订阅状态</span><span>用量看板</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule has-demo" id="section-1"><div class="rule-label"><span>01</span><h2>用一项完成的任务开场</h2></div><figure class="demo" id="demo-clip-1" data-demo="{&quot;id&quot;: &quot;clip-1&quot;, &quot;title&quot;: &quot;用一项完成的任务开场&quot;, &quot;src&quot;: &quot;demos/clip-1.html&quot;, &quot;duration&quot;: 13, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;5–18 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>用一项完成的任务开场</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="用一项完成的任务开场" data-src="demos/clip-1.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="13" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 13.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>5–18 秒 · 动作示意 <a href="demos/clip-1.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Notion AI 大升级（Agents 等） · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#ffffff}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;5&quot; data-end=&quot;18&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>标题之后直接进入输入、执行清单和结果，先建立产品价值。执行行逐步更新，完成产物有独立停留，避免过早进入配置菜单。</p>
+
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>模型与订阅各有一个清楚动作</h2></div><div class="rule-copy">
+<p>第二任务之后展示模型切换，再转入已有订阅的连接与用量。切换模型强调选中态，连接订阅强调确认状态，用量图表强调信息汇总；三种界面不共用同一个加载动画。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>用柔和底色分段</h2></div><div class="rule-copy">
+<p>主界面始终保持明亮，段落背景在淡蓝、粉杏和浅黄之间切换。主标题用中粗无衬线，功能文字减小字重；细边框与清楚间距维持工具感。</p>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>改品牌时保留任务线和配置线</h2></div><div class="rule-copy">
+<p>先替换任务及其结果，再替换模型选项、连接对象和用量指标。若产品无需订阅连接，可删去对应段落，但不要用另一段聊天填满时长。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>生态标题</b></button><button class="beat" data-time="5.0"><span>5.00<small>s</small></span><b>任务输入</b></button><button class="beat" data-time="10.0"><span>10.00<small>s</small></span><b>执行清单</b></button><button class="beat" data-time="14.0"><span>14.00<small>s</small></span><b>结果</b></button><button class="beat" data-time="18.0"><span>18.00<small>s</small></span><b>第二任务</b></button><button class="beat" data-time="24.0"><span>24.00<small>s</small></span><b>模型切换</b></button><button class="beat" data-time="31.0"><span>31.00<small>s</small></span><b>订阅主张</b></button><button class="beat" data-time="36.0"><span>36.00<small>s</small></span><b>连接确认</b></button><button class="beat" data-time="40.0"><span>40.00<small>s</small></span><b>用量图表</b></button><button class="beat" data-time="48.0"><span>48.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="10.00 秒的构图参考" loading="lazy"><figcaption>10.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="18.00 秒的构图参考" loading="lazy"><figcaption>18.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="24.00 秒的构图参考" loading="lazy"><figcaption>24.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="36.00 秒的构图参考" loading="lazy"><figcaption>36.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="48.00 秒的构图参考" loading="lazy"><figcaption>48.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>主题迁移保留任务与配置两条信息线，别把所有操作变成聊天。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>代理图标 / 任务输入 / 执行列表 / 模型清单 / 订阅状态 / 用量看板</p>
+<ul><li>能力展示分为执行、换模型、连接已有订阅三个段落。</li><li>背景淡蓝、粉杏、淡黄随段落换色，主界面始终浅色。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Notion / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Notion AI 大升级（Agents 等）
+
+先展示代理完成任务，再交代模型与订阅如何配置。能力和使用方式分成三段，依次回答不同问题。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 51.416667,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 10,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Your agents. Now doing more.&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#2f91cb&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Your agents. Now doing more.&quot;,
+        &quot;accent&quot;: &quot;#2f91cb&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 用一项完成的任务开场
+
+标题之后直接进入输入、执行清单和结果，先建立产品价值。执行行逐步更新，完成产物有独立停留，避免过早进入配置菜单。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-1&quot;,
+  &quot;title&quot;: &quot;用一项完成的任务开场&quot;,
+  &quot;src&quot;: &quot;demos/clip-1.html&quot;,
+  &quot;duration&quot;: 13,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;5–18 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 模型与订阅各有一个清楚动作
+
+第二任务之后展示模型切换，再转入已有订阅的连接与用量。切换模型强调选中态，连接订阅强调确认状态，用量图表强调信息汇总；三种界面不共用同一个加载动画。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–5.00s | 生态标题 |
+| 5.00–10.00s | 任务输入 |
+| 10.00–14.00s | 执行清单 |
+| 14.00–18.00s | 结果 |
+| 18.00–24.00s | 第二任务 |
+| 24.00–31.00s | 模型切换 |
+| 31.00–36.00s | 订阅主张 |
+| 36.00–40.00s | 连接确认 |
+| 40.00–48.00s | 用量图表 |
+| 48.00–51.42s | 品牌 |
+
+## 用柔和底色分段
+
+主界面始终保持明亮，段落背景在淡蓝、粉杏和浅黄之间切换。主标题用中粗无衬线，功能文字减小字重；细边框与清楚间距维持工具感。
+
+## 改品牌时保留任务线和配置线
+
+先替换任务及其结果，再替换模型选项、连接对象和用量指标。若产品无需订阅连接，可删去对应段落，但不要用另一段聊天填满时长。
+
+## 配色与字形
+
+无衬线中粗主标题；细边框界面与小号功能文字。
+
+#ffffff · #191919 · #2f91cb · #f2e1bb · #aea0ce
+
+## 元素与制作规则
+
+代理图标 / 任务输入 / 执行列表 / 模型清单 / 订阅状态 / 用量看板
+
+- 能力展示分为执行、换模型、连接已有订阅三个段落。
+- 背景淡蓝、粉杏、淡黄随段落换色，主界面始终浅色。
+
+## 内容替换
+
+- 主题迁移保留任务与配置两条信息线，别把所有操作变成聊天。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Notion&quot;,
+  &quot;id&quot;: &quot;V084&quot;,
+  &quot;palette&quot;: [
+    &quot;#ffffff&quot;,
+    &quot;#191919&quot;,
+    &quot;#2f91cb&quot;,
+    &quot;#f2e1bb&quot;,
+    &quot;#aea0ce&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线中粗主标题；细边框界面与小号功能文字&quot;,
+  &quot;sample&quot;: &quot;Your agents. Now doing more.&quot;,
+  &quot;objects&quot;: [
+    &quot;代理图标&quot;,
+    &quot;任务输入&quot;,
+    &quot;执行列表&quot;,
+    &quot;模型清单&quot;,
+    &quot;订阅状态&quot;,
+    &quot;用量看板&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 10.0,
+      &quot;frameId&quot;: &quot;K0025&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 18.0,
+      &quot;frameId&quot;: &quot;K0040&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 24.0,
+      &quot;frameId&quot;: &quot;K0052&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 36.0,
+      &quot;frameId&quot;: &quot;K0084&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 48.0,
+      &quot;frameId&quot;: &quot;K0105&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;生态标题&quot;,
+      &quot;end&quot;: 5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 5,
+      &quot;label&quot;: &quot;任务输入&quot;,
+      &quot;end&quot;: 10,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 10,
+      &quot;label&quot;: &quot;执行清单&quot;,
+      &quot;end&quot;: 14,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 14,
+      &quot;label&quot;: &quot;结果&quot;,
+      &quot;end&quot;: 18,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 18,
+      &quot;label&quot;: &quot;第二任务&quot;,
+      &quot;end&quot;: 24,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 24,
+      &quot;label&quot;: &quot;模型切换&quot;,
+      &quot;end&quot;: 31,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 31,
+      &quot;label&quot;: &quot;订阅主张&quot;,
+      &quot;end&quot;: 36,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 36,
+      &quot;label&quot;: &quot;连接确认&quot;,
+      &quot;end&quot;: 40,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 40,
+      &quot;label&quot;: &quot;用量图表&quot;,
+      &quot;end&quot;: 48,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 48,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 51.416667,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 51.416667,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

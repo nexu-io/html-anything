@@ -1,0 +1,400 @@
+{
+  "templateId": "motion-c8db7c7c-819c-486f-b807-a56864837620",
+  "entry": {
+    "templateId": "motion-c8db7c7c-819c-486f-b807-a56864837620",
+    "sortOrder": 242,
+    "folderPath": "motion-template/P0-20261111/",
+    "folderId": "6acca2cc-3a31-45f4-b931-6d6a59e36044",
+    "indexUrl": null,
+    "jsUrl": null,
+    "cssUrl": null,
+    "previewUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+    "coverUrl": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+    "motionDocumentUrl": "https://r.open-design.ai/files/4dcc803c18e8d5c9fd911c0623384fc23dd8c11a120f6ef0fc53c0062c40bc14",
+    "motionGuideUrl": "https://r.open-design.ai/files/1ea2787d32f267861e8f43483f2953a29082ea634a7ee895f4306c7a71500399",
+    "projectFileUrl": null,
+    "files": [],
+    "verification": {
+      "render": "not_run",
+      "portableFiles": "not_run",
+      "remoteDelivery": "not_run"
+    },
+    "featuredOrder": null,
+    "original": {
+      "templateName": "Parallel Decisions API",
+      "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+      "summary": "从一个业务问题出发，拆成可查询的事实，再把事实拼成可行动的表格。橙色只标记问题焦点和最终优先级。",
+      "styleDescription": "短问题居中无衬线；结果表格和来源标签采用紧凑小字",
+      "promotionalUseCases": "产品演示",
+      "visualPresentation": "界面动效",
+      "attributionAvatar": "",
+      "attributionNickname": "",
+      "selectedForTesting": "",
+      "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+      "reviewFocus": "浅灰网格与点状地图做背景，白色问题栏居中。问题被拆成公司规模、产品变化与关联信息，事实卡逐一出现并带来源区域。；先给账户和负责人，再增加人数、近期事件与相关性列。每列从左向右补入，行的身份不变，最后通过优先级标记选出行动对象。；完整表格回到问题栏下方，说明查询如何支持选择。迁移时重写决策、维度与输出动作，不只替换公司名；来源与状态应与示例数据对应。",
+      "category": "",
+      "durationSeconds": "35.3",
+      "firstRoundRecommended": "",
+      "notes": "",
+      "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+      "motionTags": "",
+      "author": "",
+      "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+      "exampleVideo": "",
+      "templateId": "V198",
+      "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+    },
+    "brand": "Parallel Web Systems",
+    "colors": [
+      "monochrome"
+    ],
+    "width": 1280,
+    "height": 720,
+    "industries": [],
+    "creationModels": [],
+    "conversionStatus": "pending",
+    "conversionNotes": "参考视频与动效说明包，尚无已验证可编辑的 OpenMotion 工程。"
+  },
+  "locales": {
+    "de": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "Eine Geschäftsfrage in recherchierbare Fakten zerlegen und zu einer handlungsfähigen Tabelle zusammenfügen. Orange markiert nur Fragefokus und letzte Priorität.",
+        "styleDescription": "Kurze Fragen mittig und serifenlos; Ergebnistabelle und Quellenlabels kompakt klein",
+        "promotionalUseCases": "Produktdemo",
+        "visualPresentation": "Oberflächenanimation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "Hellgraues Raster und Punktkarte im Hintergrund, weiße Frageleiste mittig. Die Frage zerfällt in Unternehmensgröße, Produktänderungen und Beziehungen. Faktenkarten mit Quellenbereich nacheinander zeigen. Erst Konto und Verantwortliche, dann Beschäftigtenzahl, jüngste Ereignisse und Relevanz ergänzen. Spalten von links nach rechts, Zeilenidentitäten bleiben gleich; Prioritätsmarker wählen die Handlungskandidaten. Die ganze Tabelle kehrt unter die Frageleiste zurück. Bei neuem Thema Entscheidung, Dimensionen und Handlungsausgabe neu schreiben, nicht nur Firmennamen wechseln. Quellen und Zustände müssen Beispieldaten entsprechen.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "Referenzvideo und Paket mit Bewegungsrichtlinien; ein geprüftes, bearbeitbares OpenMotion-Projekt ist noch nicht verfügbar."
+    },
+    "en": {
+      "motionDocumentUrl": "https://r.open-design.ai/files/67fa1ecdf54642716bcf9a470e9deb8a802b38fa1bb546aecd002c733231a411",
+      "motionGuideUrl": "https://r.open-design.ai/files/e3a5d7f7eadd4fa39bfff9e3e1d9cee48702ed0c5930fd0943bed24036898160",
+      "original": {
+        "templateName": "Research to decision table",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "Start with a business question, break it into queryable facts, then assemble facts into an actionable table. Orange marks only the question focus and final priority.",
+        "styleDescription": "Centered short sans-serif questions, with compact result tables and source labels",
+        "promotionalUseCases": "Product demo",
+        "visualPresentation": "Interface animation",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "Use a pale gray grid and dotted map behind a centered white question bar. Split the question into company size, product changes and related information, revealing fact cards with source regions one by one. Start with accounts and owners, then add headcount, recent events and relevance columns left to right without changing row identities. Finally select action targets through priority markers. Return the complete table beneath the question bar to explain how the query informs selection. Rewrite the decision, dimensions and output action when adapting, not just company names; sources and states must match sample data.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "Reference video and motion guidance package; no verified editable OpenMotion project is available yet."
+    },
+    "es": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "Partir de una pregunta de negocio, dividirla en hechos consultables y reunirlos en una tabla accionable. Reservar naranja al foco de la pregunta y la prioridad final.",
+        "styleDescription": "Preguntas breves centradas sin serifa; resultados y fuentes en texto pequeño compacto",
+        "promotionalUseCases": "Demostración de producto",
+        "visualPresentation": "Animación de interfaz",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "Usar cuadrícula gris clara y mapa punteado de fondo, con pregunta blanca centrada. Descomponerla en tamaño de empresa, cambios del producto y relaciones; mostrar tarjetas de hechos una por una con sus fuentes.; Mostrar cuentas y responsables primero; añadir columnas de personal, eventos recientes y relevancia de izquierda a derecha. Mantener la identidad de las filas y seleccionar objetivos mediante prioridades al final.; Volver a la tabla completa bajo la pregunta para explicar cómo la consulta ayuda a elegir. Al adaptar, reescribir decisión, dimensiones y acción, sin cambiar solo empresas; fuentes y estados deben corresponder a los datos de ejemplo.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "Vídeo de referencia y paquete de instrucciones de animación; aún no hay un proyecto editable de OpenMotion verificado."
+    },
+    "fr": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "Une question métier devient des faits consultables, puis un tableau exploitable. Orange réservé au point de la question et à la priorité finale.",
+        "styleDescription": "Question courte centrée sans empattements ; tableau et sources en petits caractères compacts",
+        "promotionalUseCases": "Démonstration produit",
+        "visualPresentation": "Animation d’interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "Grille gris clair et carte pointillée derrière une barre blanche centrale. Décomposer la question en taille d’entreprise, changements produit et relations ; montrer les faits un par un avec sources. Compte et responsable d’abord, puis effectifs, événements et pertinence. Colonnes de gauche à droite, mêmes identités de lignes ; priorité sélectionnant les actions. Ramener le tableau sous la question pour montrer son utilité. Adapter décision, dimensions et action, pas seulement les noms ; sources et états doivent correspondre aux données d’exemple.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "Vidéo de référence et dossier de consignes d’animation ; aucun projet OpenMotion modifiable et vérifié n’est encore disponible."
+    },
+    "it": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "Una domanda aziendale si scompone in fatti ricercabili, poi tabella operativa. Arancio solo per focus e priorità finale.",
+        "styleDescription": "Domanda breve centrale sans serif; tabella e fonti piccole e compatte",
+        "promotionalUseCases": "Demo di prodotto",
+        "visualPresentation": "Animazione dell’interfaccia",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "Griglia grigia e mappa puntinata dietro la domanda bianca centrale. Scomporre in dimensione aziendale, novità prodotto e relazioni, con fatti e fonti progressivi. Prima account e referente, poi organico, eventi e rilevanza. Colonne da sinistra a destra, identità delle righe fissa; priorità seleziona i destinatari. Tabella sotto la domanda per mostrare il supporto alla scelta. Riscrivere decisione, dimensioni e azioni, non solo aziende; fonti e stati coerenti coi dati esempio.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "Video di riferimento e pacchetto di indicazioni sull’animazione; non è ancora disponibile un progetto OpenMotion modificabile e verificato."
+    },
+    "ja": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "一つの業務上の問いを検索できる事実へ分解し、それを行動につながる表へまとめる。オレンジは問いの焦点と最後の優先度だけに使う。",
+        "styleDescription": "短い問いをサンセリフで中央に配置；結果の表と出典ラベルはコンパクトな小文字を使う",
+        "promotionalUseCases": "製品デモ",
+        "visualPresentation": "UIアニメーション",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "淡いグレーのグリッドと点状の地図を背景に、白い質問欄を中央へ置く。問いを会社規模、製品の変化、関連情報へ分け、出典領域を持つ事実カードを一つずつ出す。；まずアカウントと担当者を示し、人数、最近の出来事、関連性の列を加える。行の同一性を保って左から右へ列を増やし、最後に優先度の印で行動対象を選ぶ。；表全体を質問欄の下に戻し、検索が選択をどう支えるかを示す。転用時は会社名だけでなく意思決定、観点、出力後の行動を書き直し、出典と状態を例示データに対応させる。",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "参考動画とモーションガイドのパッケージです。検証済みの編集可能なOpenMotionプロジェクトはまだありません。"
+    },
+    "ko": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "업무 문제 하나를 조회 가능한 사실로 나눈 뒤 행동으로 옮길 수 있는 표로 조합한다. 주황은 질문의 초점과 최종 우선순위에만 쓴다.",
+        "styleDescription": "짧은 산세리프 질문을 중앙에 둔다；결과 표와 출처 태그는 촘촘한 작은 글자를 사용한다",
+        "promotionalUseCases": "제품 시연",
+        "visualPresentation": "인터페이스 애니메이션",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "연회색 그리드와 점 지도를 배경으로 하고 흰 질문창을 중앙에 둔다. 질문을 회사 규모, 제품 변화, 관련 정보로 나누고 출처 영역을 가진 사실 카드를 하나씩 표시한다.；계정과 담당자를 먼저 보여 주고 인원, 최근 사건, 관련성 열을 추가한다. 왼쪽에서 오른쪽으로 열을 채우되 행의 정체성은 유지하고 마지막에 우선순위 표시로 행동 대상을 고른다.；완성된 표를 질문창 아래로 돌려 조회가 선택을 지원하는 방식을 설명한다. 재사용 시 회사명만 바꾸지 말고 결정, 차원, 출력 동작을 다시 작성한다；출처와 상태는 예시 데이터에 대응해야 한다.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "참고 영상과 모션 가이드 패키지입니다. 검증된 편집 가능한 OpenMotion 프로젝트는 아직 없습니다."
+    },
+    "pt-br": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "Partir de uma pergunta de negócio, dividi-la em fatos consultáveis e reuni-los em uma tabela acionável. Reservar laranja ao foco da pergunta e à prioridade final.",
+        "styleDescription": "Perguntas curtas centralizadas sem serifa; resultados e fontes em texto pequeno compacto",
+        "promotionalUseCases": "Demonstração de produto",
+        "visualPresentation": "Animação de interface",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "Usar grade cinza-clara e mapa pontilhado ao fundo, com pergunta branca centralizada. Dividi-la em tamanho da empresa, mudanças no produto e relações; mostrar cartões de fatos um por um com suas fontes.; Primeiro mostrar contas e responsáveis; acrescentar colunas de pessoal, eventos recentes e relevância da esquerda para a direita. Manter a identidade das linhas e selecionar alvos por prioridades ao final.; Voltar à tabela inteira sob a pergunta para explicar como a consulta ajuda a escolher. Ao adaptar, reescrever decisão, dimensões e ação, sem mudar apenas empresas; fontes e estados devem corresponder aos dados de exemplo.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "Vídeo de referência e pacote de orientações de animação; ainda não há um projeto editável do OpenMotion verificado."
+    },
+    "ru": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "Бизнес-вопрос разбивается на факты, которые можно найти, затем факты собираются в таблицу для принятия решения. Оранжевый выделяет только суть вопроса и итоговый приоритет.",
+        "styleDescription": "Короткий вопрос по центру шрифтом без засечек; таблица результатов и метки источников — компактным мелким текстом",
+        "promotionalUseCases": "Демонстрация продукта",
+        "visualPresentation": "Анимация интерфейса",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "Фон — светло-серая сетка и точечная карта, белая строка вопроса расположена в центре. Вопрос разбивается на размер компании, изменения продукта и связанные сведения; карточки фактов появляются по одной с областью источника.；Сначала показаны клиентская организация и ответственный, затем добавляются колонки численности, недавних событий и релевантности. Колонки заполняются слева направо, идентичность строк неизменна; в конце метки приоритета выбирают объект действия.；Полная таблица возвращается под строку вопроса, показывая, как поиск помогает выбору. При адаптации переписать решение, измерения и итоговое действие, а не только названия компаний; источники и статусы должны соответствовать примерным данным.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "Референсное видео и пакет рекомендаций по анимации; проверенного редактируемого проекта OpenMotion пока нет."
+    },
+    "tr": {
+      "original": {
+        "templateName": "Parallel Decisions API",
+        "videoPreview": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "summary": "İş sorusu sorgulanabilir olgulara, sonra eylem tablosuna dönüşür. Turuncu yalnız soru odağı ve son önceliktir.",
+        "styleDescription": "Kısa soru ortada sans serif; sonuç ve kaynak etiketi kompakt küçük",
+        "promotionalUseCases": "Ürün demosu",
+        "visualPresentation": "Arayüz animasyonu",
+        "attributionAvatar": "",
+        "attributionNickname": "",
+        "selectedForTesting": "",
+        "sourceVideoUrl": "https://r.open-design.ai/files/81a80ce727c5c3e565dbe0750265a562bfbf5c0cc2c23ee5026eae7940800925",
+        "reviewFocus": "Açık gri ızgara ve noktalı harita önünde beyaz soru çubuğu. Soru şirket boyutu, ürün değişimi ve ilişkiye ayrılır; kaynaklı olgu kartları tek tek gelir. Önce hesap ve sorumlu, sonra kişi sayısı, güncel olay ve ilgi sütunu. Soldan sağa eklenir, satır kimliği değişmez; öncelik eylem hedefini seçer. Tam tablo soru altına dönüp seçimi açıklar. Uyarlamada yalnız şirket değil karar, boyut ve eylem yeniden yazılır; kaynak ve durum veriye uyar.",
+        "category": "",
+        "durationSeconds": "35.3",
+        "firstRoundRecommended": "",
+        "notes": "",
+        "cover": "https://r.open-design.ai/files/eff72a55e1fc2fbb6351a0fa32c14542107319a15df1cdb50d941334e1064c78",
+        "motionTags": "",
+        "author": "",
+        "sourceUrl": "https://x.com/p0/status/2115111877558898931",
+        "exampleVideo": "",
+        "templateId": "V198",
+        "sourceVideoTitle": "242_ParallelWebSystems.mp4"
+      },
+      "conversionNotes": "Referans video ve hareket tasarımı kılavuz paketi; henüz doğrulanmış, düzenlenebilir bir OpenMotion projesi yok."
+    },
+    "zh-CN": {}
+  },
+  "sourceArchive": {
+    "url": "https://r.open-design.ai/files/4dcc803c18e8d5c9fd911c0623384fc23dd8c11a120f6ef0fc53c0062c40bc14",
+    "bytes": 1062544,
+    "sha256": "4dcc803c18e8d5c9fd911c0623384fc23dd8c11a120f6ef0fc53c0062c40bc14"
+  },
+  "remoteAssets": [
+    {
+      "source": {
+        "path": "assets/reference-1.jpg",
+        "bytes": 167463,
+        "sha256": "ddff752f04f85df3643bdf3a6bbbc3c7682e75bf1175671e8d805a967c537d9d"
+      },
+      "url": "https://r.open-design.ai/files/146f8ce750e22c8907c360fbca262b913e8fd7c25ae2014ddc5232260690110d",
+      "bytes": 52044,
+      "sha256": "146f8ce750e22c8907c360fbca262b913e8fd7c25ae2014ddc5232260690110d"
+    },
+    {
+      "source": {
+        "path": "assets/reference-2.jpg",
+        "bytes": 259874,
+        "sha256": "ebb32e39356e96c3df6e7877a279f70eb2afec7c8dd1019e068c54c00653d6a0"
+      },
+      "url": "https://r.open-design.ai/files/585d68026cf9b7febf7ff5f8f75847f3e05625abff80a440703a82b38272c22c",
+      "bytes": 136822,
+      "sha256": "585d68026cf9b7febf7ff5f8f75847f3e05625abff80a440703a82b38272c22c"
+    },
+    {
+      "source": {
+        "path": "assets/reference-3.jpg",
+        "bytes": 159799,
+        "sha256": "73458c34e5353d01ff7d15f3c006fc56778a6ecdb0da92fbb4d35df6532a105e"
+      },
+      "url": "https://r.open-design.ai/files/7104c1bd729f3e7113db4b5a85a3274db6fbbc28e2f308baff2a2d5bce1c7906",
+      "bytes": 49212,
+      "sha256": "7104c1bd729f3e7113db4b5a85a3274db6fbbc28e2f308baff2a2d5bce1c7906"
+    },
+    {
+      "source": {
+        "path": "assets/reference-4.jpg",
+        "bytes": 164624,
+        "sha256": "396d0b8fcf9bcb089433cacf00ee907c394b32ca46b6780c7eb06507b5d321c3"
+      },
+      "url": "https://r.open-design.ai/files/deeba629fcd0d9e2585ee0d3a89a00251c1e45b7533d57491fbf5e03d809e784",
+      "bytes": 53136,
+      "sha256": "deeba629fcd0d9e2585ee0d3a89a00251c1e45b7533d57491fbf5e03d809e784"
+    },
+    {
+      "source": {
+        "path": "assets/reference-5.jpg",
+        "bytes": 130497,
+        "sha256": "3a0005c6ec0b90b8092306d8691e147ad7ba61bb43d30720282c8c8a4486038b"
+      },
+      "url": "https://r.open-design.ai/files/83590ffe2c99551dcfb1559d3ac105e1fb51d59ffc724951ad8c4b626df7983a",
+      "bytes": 38704,
+      "sha256": "83590ffe2c99551dcfb1559d3ac105e1fb51d59ffc724951ad8c4b626df7983a"
+    },
+    {
+      "source": {
+        "path": "assets/reference-6.jpg",
+        "bytes": 153769,
+        "sha256": "bbee501c8c38664f61de0cc223e2e28e0262769eed3c952b0f6823327ddf6ab7"
+      },
+      "url": "https://r.open-design.ai/files/eb14b5a839b16ca10cc1a2e042ff92c3ab71fb351f590f4de60a0ca610313883",
+      "bytes": 57406,
+      "sha256": "eb14b5a839b16ca10cc1a2e042ff92c3ab71fb351f590f4de60a0ca610313883"
+    }
+  ]
+}

@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#f4f9fe",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Sales Outbound",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Meet Sales Outbound",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Research prospects, personalize outreach, and draft",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "助手身份",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "设置菜单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "分享按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "公开模板卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "添加按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "接收方侧栏",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f4f9fe",
+      "status": "inferred"
+    },
+    {
+      "hex": "#191d20",
+      "status": "inferred"
+    },
+    {
+      "hex": "#84adcf",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d5e3ed",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f5b78a",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "淡蓝光晕桌面、白色设置页与公开模板卡",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "同一助手的名称和头像贯穿设置、公开页面和接收方。",
+      "status": "inferred"
+    },
+    {
+      "rule": "分享后要展示可被别人打开的页面，再展示添加成功。",
+      "status": "inferred"
+    },
+    {
+      "rule": "这是可复用配置的传播，不能仅做一张卡翻面。",
+      "status": "inferred"
+    }
+  ]
+}

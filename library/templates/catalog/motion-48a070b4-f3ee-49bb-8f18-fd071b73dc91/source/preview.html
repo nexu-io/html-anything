@@ -1,0 +1,264 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Manus 做的网站能装成桌面 app · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f7f8f6;--brand-ink:#222522;--accent:#538cbe;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Manus <span>/</span> V045</div><div class="intro-line"><h1>Manus 做的网站能装成桌面 app</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>让同一个网站从浏览器进入桌面环境。内容保持不变，通过窗口容器、程序坞和快捷切换说明应用化之后的使用方式。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 19.283333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 4.3, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Any website. One click.&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#538cbe&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Any website. One click.&quot;, &quot;accent&quot;: &quot;#538cbe&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="19.283333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 19.28 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Manus 做的网站能装成桌面 app · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f8f6}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Manus</div><div class="type-sample">Any website. One click.</div><p>无衬线界面文字与清晰大小层级</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f7f8f6" style="--swatch:#f7f8f6" aria-label="复制色值 #f7f8f6"><span></span><code>#F7F8F6</code></button><button class="swatch" data-color="#222522" style="--swatch:#222522" aria-label="复制色值 #222522"><span></span><code>#222522</code></button><button class="swatch" data-color="#538cbe" style="--swatch:#538cbe" aria-label="复制色值 #538cbe"><span></span><code>#538CBE</code></button><button class="swatch" data-color="#b6cbb9" style="--swatch:#b6cbb9" aria-label="复制色值 #b6cbb9"><span></span><code>#B6CBB9</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>浏览器窗口</span><span>安装弹框</span><span>独立窗口</span><span>程序坞图标</span><span>快捷键提示</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>安装动作改变的是容器</h2></div><div class="rule-copy">
+<p>先展示网站，再推近安装入口与确认框。安装后网页内容从浏览器框中脱离，变成独立应用窗口；不要同时更换网页内容，否则观众容易理解成另一个产品。</p>
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>用系统位置建立“已安装”的感觉</h2></div><div class="rule-copy">
+<p>独立窗口出现后，在程序坞补上对应图标。系统搜索、快捷键切换和并排工作依次展示，让同一个图标与窗口在各场景中保持一致。</p>
+<p>浅色背景、细边框与轻阴影突出窗口层次。界面文字用清晰无衬线字体，快捷键符号保持紧凑，强调色只用于安装与当前选择。</p>
+</div></section><section class="rule has-demo" id="section-3"><div class="rule-label"><span>03</span><h2>一组连续的桌面动作</h2></div><figure class="demo" id="demo-clip-3" data-demo="{&quot;id&quot;: &quot;clip-3&quot;, &quot;title&quot;: &quot;一组连续的桌面动作&quot;, &quot;src&quot;: &quot;demos/clip-3.html&quot;, &quot;duration&quot;: 7.5, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;7.5–15 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>一组连续的桌面动作</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="一组连续的桌面动作" data-src="demos/clip-3.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="7.5" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 7.50 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>7.5–15 秒 · 动作示意 <a href="demos/clip-3.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Manus 做的网站能装成桌面 app · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f8f6}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;7.5&quot; data-end=&quot;15&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>搜索启动时先出现搜索词，再打开窗口；快捷键切换时先出现选择状态，再转到目标窗口。并排阶段保持窗口边界清楚，让空间关系自己说明工作方式。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>替换为你的网站</h2></div><div class="rule-copy">
+<p>准备同一网站的浏览器态和独立应用态，再补齐图标、应用名与搜索词。可以替换网站类型，保留安装、启动、切换、并排四个动作。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>网页变应用主张</b></button><button class="beat" data-time="1.5"><span>1.50<small>s</small></span><b>多站点</b></button><button class="beat" data-time="3.5"><span>3.50<small>s</small></span><b>安装按钮</b></button><button class="beat" data-time="5.5"><span>5.50<small>s</small></span><b>独立应用</b></button><button class="beat" data-time="7.5"><span>7.50<small>s</small></span><b>系统搜索启动</b></button><button class="beat" data-time="9.5"><span>9.50<small>s</small></span><b>快捷键切换</b></button><button class="beat" data-time="12.0"><span>12.00<small>s</small></span><b>并排窗口</b></button><button class="beat" data-time="15.0"><span>15.00<small>s</small></span><b>应用队列</b></button><button class="beat" data-time="17.0"><span>17.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="3.50 秒的构图参考" loading="lazy"><figcaption>3.50s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="5.60 秒的构图参考" loading="lazy"><figcaption>5.60s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="9.40 秒的构图参考" loading="lazy"><figcaption>9.40s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="12.00 秒的构图参考" loading="lazy"><figcaption>12.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="17.00 秒的构图参考" loading="lazy"><figcaption>17.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可迁移为网页到不同终端的转换，保留内容不变而容器改变</li><li>系统入口和快捷键需随目标平台替换</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>浏览器窗口 / 安装弹框 / 独立窗口 / 程序坞图标 / 快捷键提示</p>
+<ul><li>同一网站从浏览器框中脱离成为独立窗口，内容身份保持</li><li>安装后程序坞增加对应图标，再演示启动与切换</li><li>最后窗口并排和堆叠说明系统级使用，动作不是无目的漂浮</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Manus / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Manus 做的网站能装成桌面 app
+
+让同一个网站从浏览器进入桌面环境。内容保持不变，通过窗口容器、程序坞和快捷切换说明应用化之后的使用方式。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 19.283333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 4.3,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Any website. One click.&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#538cbe&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Any website. One click.&quot;,
+        &quot;accent&quot;: &quot;#538cbe&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 安装动作改变的是容器
+
+先展示网站，再推近安装入口与确认框。安装后网页内容从浏览器框中脱离，变成独立应用窗口；不要同时更换网页内容，否则观众容易理解成另一个产品。
+
+## 用系统位置建立“已安装”的感觉
+
+独立窗口出现后，在程序坞补上对应图标。系统搜索、快捷键切换和并排工作依次展示，让同一个图标与窗口在各场景中保持一致。
+
+浅色背景、细边框与轻阴影突出窗口层次。界面文字用清晰无衬线字体，快捷键符号保持紧凑，强调色只用于安装与当前选择。
+
+## 一组连续的桌面动作
+
+搜索启动时先出现搜索词，再打开窗口；快捷键切换时先出现选择状态，再转到目标窗口。并排阶段保持窗口边界清楚，让空间关系自己说明工作方式。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-3&quot;,
+  &quot;title&quot;: &quot;一组连续的桌面动作&quot;,
+  &quot;src&quot;: &quot;demos/clip-3.html&quot;,
+  &quot;duration&quot;: 7.5,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;7.5–15 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 替换为你的网站
+
+准备同一网站的浏览器态和独立应用态，再补齐图标、应用名与搜索词。可以替换网站类型，保留安装、启动、切换、并排四个动作。
+
+## 配色与字形
+
+无衬线界面文字与清晰大小层级。
+
+#f7f8f6 · #222522 · #538cbe · #b6cbb9 · #ffffff
+
+## 元素与制作规则
+
+浏览器窗口 / 安装弹框 / 独立窗口 / 程序坞图标 / 快捷键提示
+
+- 同一网站从浏览器框中脱离成为独立窗口，内容身份保持
+- 安装后程序坞增加对应图标，再演示启动与切换
+- 最后窗口并排和堆叠说明系统级使用，动作不是无目的漂浮
+
+## 内容替换
+
+- 可迁移为网页到不同终端的转换，保留内容不变而容器改变
+- 系统入口和快捷键需随目标平台替换
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Manus&quot;,
+  &quot;id&quot;: &quot;V045&quot;,
+  &quot;palette&quot;: [
+    &quot;#f7f8f6&quot;,
+    &quot;#222522&quot;,
+    &quot;#538cbe&quot;,
+    &quot;#b6cbb9&quot;,
+    &quot;#ffffff&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线界面文字与清晰大小层级&quot;,
+  &quot;sample&quot;: &quot;Any website. One click.&quot;,
+  &quot;objects&quot;: [
+    &quot;浏览器窗口&quot;,
+    &quot;安装弹框&quot;,
+    &quot;独立窗口&quot;,
+    &quot;程序坞图标&quot;,
+    &quot;快捷键提示&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 3.5,
+      &quot;frameId&quot;: &quot;K0010&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 5.6,
+      &quot;frameId&quot;: &quot;K0015&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 9.4,
+      &quot;frameId&quot;: &quot;K0028&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 12.0,
+      &quot;frameId&quot;: &quot;K0036&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 17.0,
+      &quot;frameId&quot;: &quot;K0048&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0.0,
+      &quot;label&quot;: &quot;网页变应用主张&quot;,
+      &quot;end&quot;: 1.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 1.5,
+      &quot;label&quot;: &quot;多站点&quot;,
+      &quot;end&quot;: 3.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3.5,
+      &quot;label&quot;: &quot;安装按钮&quot;,
+      &quot;end&quot;: 5.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 5.5,
+      &quot;label&quot;: &quot;独立应用&quot;,
+      &quot;end&quot;: 7.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 7.5,
+      &quot;label&quot;: &quot;系统搜索启动&quot;,
+      &quot;end&quot;: 9.5,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 9.5,
+      &quot;label&quot;: &quot;快捷键切换&quot;,
+      &quot;end&quot;: 12.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 12.0,
+      &quot;label&quot;: &quot;并排窗口&quot;,
+      &quot;end&quot;: 15.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 15.0,
+      &quot;label&quot;: &quot;应用队列&quot;,
+      &quot;end&quot;: 17.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 17.0,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 19.283333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 19.283333,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

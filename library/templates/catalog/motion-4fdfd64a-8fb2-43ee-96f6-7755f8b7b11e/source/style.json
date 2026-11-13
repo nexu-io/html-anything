@@ -1,0 +1,90 @@
+{
+  "background": {
+    "color": "#000000",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "前景窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "后景窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色边缘",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "拖尾颗粒",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#000000",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#173aff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#061748",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7ddaff",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无正文的蓝色发光玻璃图形；黑底留出宽阔负空间。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "前窗固定在右上，后窗位于左下。两者保持相同透视方向，后窗收起时先缩为一点，再沿斜轴展开。",
+      "status": "inferred"
+    },
+    {
+      "rule": "纯黑背景上只用电蓝、浅蓝与白色高光。玻璃面半透明，左上边缘最亮，细碎拖尾沿移动方向向外散开。",
+      "status": "inferred"
+    },
+    {
+      "rule": "替换窗口内部标志即可表达另一组工具。维持前景主体稳定，避免两个窗口同时大幅移动而失去参照。",
+      "status": "inferred"
+    }
+  ]
+}

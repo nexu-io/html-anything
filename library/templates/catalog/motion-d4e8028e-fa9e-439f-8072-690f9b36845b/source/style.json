@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#101010",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：VISA",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：DEBIT",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "不等宽网格",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "产品物件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "局部小循环",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "竖向文案栏",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌图标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#101010",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f9f9f5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#0ce82a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7e36d5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#d7ff38",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线粗短句置于网格窄栏；产品物件以轮廓和颜色建立识别",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "稳定的多格网格容纳不同小循环，只有右侧窄栏轮换主张，让丰富素材仍有阅读顺序。",
+      "status": "inferred"
+    },
+    {
+      "rule": "各格保留黑色间隙和圆角，耳机、球体、卡片等物件在自己的裁切区域内运动。运动幅度保持克制，不能同时穿出格子破坏整体秩序。",
+      "status": "inferred"
+    },
+    {
+      "rule": "主张、储蓄、优惠与费用依次在右栏替换，其他格子作为持续背景。荧光绿主色由紫、灰、白辅助，粗无衬线短句始终有足够对比。",
+      "status": "inferred"
+    }
+  ]
+}

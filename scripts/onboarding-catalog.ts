@@ -18,7 +18,7 @@ export async function onboardingCatalog(appRoot: string, dataDirectory: string, 
     kind: item.kind, eligibility: 'unknown', requirements: 'HTML source available; asset and paid-generation requirements are not confirmed.',
   }));
   const templates = [...remote, ...bundled];
-  return { source: page.warning ? 'cached' : 'remote', environment: catalog.environment,
+  return { source: catalog.source === 'repository' ? 'repository' : page.warning ? 'cached' : 'remote', environment: catalog.environment,
     catalogVersion: page.catalogVersion, catalogTotal: page.catalogTotal, included: templates.length,
     truncated: page.total > templates.length, stale: Boolean(page.warning), warning: page.warning, templates };
 }

@@ -1,0 +1,183 @@
+{
+  "tracks": [
+    {
+      "id": "text-0.center",
+      "target": "text-0",
+      "property": "center",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          2,
+          4
+        ]
+      ],
+      "samples": [
+        [
+          2,
+          [
+            879.0697674418604,
+            500.93023221383453
+          ]
+        ],
+        [
+          2.5,
+          [
+            620.9302326680232,
+            479.99999986267176
+          ]
+        ],
+        [
+          3,
+          [
+            277.67441947934594,
+            320.7790697964522
+          ]
+        ],
+        [
+          3.5,
+          [
+            277.4877843430186,
+            300.60136569913107
+          ]
+        ],
+        [
+          4,
+          [
+            358.60465160465117,
+            340.46511613953487
+          ]
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.height",
+      "target": "text-0",
+      "property": "height",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          2,
+          4
+        ]
+      ],
+      "samples": [
+        [
+          2,
+          103.25581356460361
+        ],
+        [
+          2.5,
+          228.83720870424253
+        ],
+        [
+          3,
+          223.55813895750785
+        ],
+        [
+          3.5,
+          185.77401304099772
+        ],
+        [
+          4,
+          22.32558059692377
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.text",
+      "target": "text-0",
+      "property": "text",
+      "unit": "text",
+      "space": "canvas",
+      "status": "measured",
+      "source": "video",
+      "method": "text",
+      "interpolation": "step",
+      "valid": [
+        [
+          2,
+          4
+        ]
+      ],
+      "samples": [
+        [
+          2,
+          "CPU\nCPU\nCPU"
+        ],
+        [
+          3,
+          "CPU Rail\nCPU\nCPU\nCPU\nCPU"
+        ],
+        [
+          3.5,
+          "CPU Rail\nCPU\nCPU\nCPU"
+        ],
+        [
+          4,
+          "CPU"
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    },
+    {
+      "id": "text-0.width",
+      "target": "text-0",
+      "property": "width",
+      "unit": "px",
+      "space": "canvas",
+      "status": "fitted",
+      "source": "video",
+      "method": "text",
+      "interpolation": "linear",
+      "valid": [
+        [
+          2,
+          4
+        ]
+      ],
+      "samples": [
+        [
+          2,
+          55.81395432989075
+        ],
+        [
+          2.5,
+          577.6744169842739
+        ],
+        [
+          3,
+          214.88371851889582
+        ],
+        [
+          3.5,
+          215.25698879155067
+        ],
+        [
+          4,
+          53.02325439453125
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility",
+      "interpretation": "OCR matched text and union geometry at observed timestamps; not a recovered layer or visibility curve."
+    }
+  ]
+}

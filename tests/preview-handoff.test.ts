@@ -23,13 +23,31 @@ function display(saved: any, visibility = 'visible', contentVerified = true) {
     visibility, contentVerified, evidence: 'Host panel visibility read back; inspected the edited text in the live preview at 1s.' } };
 }
 
-test('default deferred preview preserves the current chat and resolves the latest version on return', () => fixture(async store => {
+test('template library opens without a bound project or initializing source, preserving existing work', async () => {
+  for (const initialized of [false, true]) await fixture(async store => {
+    const service = api(store), before = await store.get(), catalog = store.projectCatalog();
+    const opened = await service.call('openmotion_open_preview', { target: 'templates' });
+    assert.equal(opened.projectCreated, false);
+    assert.equal(opened.projectId, undefined);
+    assert.equal(new URL(opened.previewUrl).searchParams.get('templates'), '1');
+    assert.equal(new URL(opened.previewUrl).searchParams.has('project'), false);
+    assert.equal(opened.previewHandoff.nextAction.kind, 'host');
+    assert.equal(opened.previewHandoff.openedByHost, false);
+    assert.equal(opened.previewHandoff.focusPolicy, 'preserve_current_chat');
+    assert.deepEqual(await store.get(), before);
+    assert.deepEqual(store.projectCatalog(), catalog);
+    await assert.rejects(service.call('openmotion_open_preview', { target: 'templates', projectId: 'project' }), /INVALID_ARGUMENT/);
+    await assert.rejects(service.call('openmotion_open_preview', { target: 'templates', action: 'record_display' }), /INVALID_ARGUMENT/);
+  }, initialized);
+});
+
+test('confirmed inactive-chat deferral preserves the current chat and resolves the latest version on return', () => fixture(async store => {
   const service = api(store, async () => {}), p = await create(service), first = await edit(service, p, 'first');
   const opened = await service.call('openmotion_open_preview', first.previewHandoff.nextAction.arguments);
   assert.equal(opened.previewHandoff.focusPolicy, 'preserve_current_chat');
   assert.equal(opened.previewHandoff.nextAction.codex.recovery.tool, undefined);
-  const queued = display(first, 'hidden', false);
-  queued.display = { ...queued.display, hostStatus: 'queued' } as any;
+  const queued = display(first, 'queued', false);
+  queued.display = { ...queued.display, hostStatus: 'queued', evidence: 'Host confirms the calling chat is inactive; preview is queued for its return.' } as any;
   const pending = await service.call('openmotion_open_preview', queued);
   assert.equal(pending.previewHandoff.state, 'pending');
   assert.equal(pending.previewHandoff.nextAction.operation, 'wait_for_calling_chat');
@@ -40,6 +58,23 @@ test('default deferred preview preserves the current chat and resolves the lates
   assert.equal(latest.previewHandoff.focusPolicy, 'preserve_current_chat');
   await assert.rejects(service.call('openmotion_open_preview', display(first)), /VERSION_CONFLICT/);
   assert.equal((await service.call('openmotion_open_preview', display({ ...second, previewHandoff: latest.previewHandoff }))).previewHandoff.state, 'confirmed');
+}, false));
+
+test('a queued acknowledgment with a hidden or unavailable panel retains presentation recovery', () => fixture(async store => {
+  const service = api(store, async () => {}), p = await create(service), saved = await edit(service, p, 'complete film');
+  const nativeTabId = crypto.randomUUID();
+  for (const visibility of ['hidden', 'unavailable']) {
+    const receipt = display(saved, visibility, true);
+    receipt.display = { ...receipt.display, hostStatus: 'queued', hostTabId: nativeTabId } as any;
+    const result = await service.call('openmotion_open_preview', receipt);
+    assert.equal(result.previewHandoff.state, 'pending');
+    assert.equal(result.previewHandoff.openedByHost, false);
+    assert.equal(result.previewHandoff.nextAction.operation, 'present_preview');
+    assert.equal(result.previewHandoff.nextAction.codex.arguments.target.url, saved.previewHandoff.previewUrl);
+    assert.equal(result.previewHandoff.nextAction.codex.arguments.target.tabId, nativeTabId);
+    assert.equal(result.previewHandoff.nextAction.codex.recovery.when, 'calling_chat_confirmed_inactive');
+    assert.equal(result.previewHandoff.nextAction.codex.recovery.tool, undefined, 'ordinary display recovery must not navigate chats');
+  }
 }, false));
 
 test('every edit returns a version-bound foreground handoff without claiming the host opened', () => fixture(async store => {
@@ -179,9 +214,16 @@ test('public MCP round trips expose the handoff and reject a stale host receipt'
     return response.result;
   };
   try {
+    const library = await call('openmotion_open_preview', { target: 'templates' });
+    assert.equal(library.isError, undefined);
+    assert.equal(library.structuredContent.projectCreated, false);
+    assert.equal((await store.get()).project, null);
     const created = await call('openmotion_create_project', { requestId: crypto.randomUUID(), projectType: 'natural_language', title: 'RPC preview', requirements: 'Check a two-turn editing handoff' });
     assert.equal(created.isError, undefined);
     const p = created.structuredContent;
+    const boundLibrary = await call('openmotion_open_preview', { target: 'templates' });
+    assert.equal(boundLibrary.isError, undefined, 'A project binding must not leak into the template library target');
+    assert.equal(boundLibrary.structuredContent.projectId, undefined);
     const save = async (current: any, content: string) => call('openmotion_edit_project', { projectId: p.projectId, requestId: crypto.randomUUID(),
       expectedRevision: current.revision, expectedVersionId: current.version.versionId, files: [{ path: 'note.txt', content }] });
     const first = await save(p, 'first'); assert.equal(first.isError, undefined);

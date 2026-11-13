@@ -9,7 +9,6 @@ import { WorkspaceStore, Conflict } from './workspace.ts';
 import { isMain } from './shared/entry.ts';
 import { templateConfig } from './shared/template-config.ts';
 import { phase1McpCapabilities, supportsPhase1Tool } from './shared/phase1-tools.ts';
-import { trackingReleaseEnabled } from './tracking/node.ts';
 
 export const sharedEditorEnabled = process.platform === 'darwin';
 const root = fileURLToPath(new URL('./', import.meta.url));
@@ -56,9 +55,7 @@ export async function ensureEditor(directory: string, mcpTool?: string): Promise
       try {
         const health = await editorRequest(registry, '/editor-api/health', undefined, 1200);
         if (health.service !== service || health.dataDirectory !== data || health.instanceId !== registry.instanceId) throw Object.assign(new Error('编辑器实例身份不匹配'), { terminal: true });
-        // Test clients must not execute through a stable authority that can report their actions.
-        const sameReleasePolicy = trackingReleaseEnabled(health.version) === trackingReleaseEnabled(version);
-        const compatible = sameReleasePolicy && (mcpTool ? supportsPhase1Tool(health, mcpTool) : health.version === version && health.build === editorBuild);
+        const compatible = mcpTool ? supportsPhase1Tool(health, mcpTool) : health.version === version && health.build === editorBuild;
         if (health.protocol !== protocol || !compatible) throw Object.assign(
           new Error('Editor runtime incompatible. Reconnect the OpenMotion MCP connection to the installed runtime and compare the expected and actual versions/builds. Stop an older editor only after confirming it is idle; do not bypass MCP or switch workspaces to continue.'),
           { terminal: true, code: 'EDITOR_RUNTIME_INCOMPATIBLE', details: {
@@ -116,7 +113,15 @@ export async function serveEditor(directory: string) {
   const { stopCommands } = await import('./hyperframes.ts');
   const identity = () => ({ service, protocol, version, build: editorBuild, instanceId, pid: process.pid, dataDirectory: data, mcp: phase1McpCapabilities });
   let active = 0, stopping = false, queue = Promise.resolve();
-  const running = await startServer(store, 0, { editor: false, editorToken: token, privateHandler: async (req, res) => {
+  const portFile = path.join(runtime, 'editor-port');
+  let preferredPort = 0;
+  try {
+    const saved = Number((await readFile(portFile, 'utf8')).trim());
+    if (Number.isInteger(saved) && saved >= 1024 && saved <= 65535) preferredPort = saved;
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error;
+  }
+  const running = await startServer(store, preferredPort, { fallbackIfPortBusy: true, editor: false, editorToken: token, privateHandler: async (req, res) => {
     if (!req.url?.startsWith('/editor-api/')) return false;
     const json = (status: number, value: unknown) => { res.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff' }); res.end(JSON.stringify(value)); };
     try {
@@ -175,7 +180,10 @@ export async function serveEditor(directory: string) {
     } catch (error) { json(error instanceof Conflict ? 409 : 400, { error: (error as Error).message, code: error instanceof Conflict ? 'REVISION_CONFLICT' : 'EDITOR_ERROR' }); }
     return true;
   } });
-  const endpoint = `http://127.0.0.1:${(running.server.address() as any).port}/`;
+  const port = (running.server.address() as { port: number }).port;
+  await writeFile(portFile + '.tmp', String(port), { mode: 0o600 });
+  await rename(portFile + '.tmp', portFile);
+  const endpoint = `http://127.0.0.1:${port}/`;
   const registry = { ...identity(), endpoint, token }, temporary = path.join(runtime, `runtime.${randomUUID()}.tmp`);
   await writeFile(temporary, JSON.stringify(registry), { mode: 0o600 }); await rename(temporary, path.join(runtime, 'runtime.json'));
   await appendFile(path.join(runtime, 'starts.jsonl'), JSON.stringify(identity()) + '\n', { mode: 0o600 });

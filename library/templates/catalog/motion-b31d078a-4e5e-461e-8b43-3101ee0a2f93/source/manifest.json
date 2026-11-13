@@ -1,0 +1,240 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "fps": 30,
+  "durationSeconds": 103.533333,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "91203186458d57604f8cdab7d3d1c89a94286a6e5e7c487833a6436b3044ded5"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "timeSeconds": 13,
+      "frameId": "K0056",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "timeSeconds": 31,
+      "frameId": "K0126",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "timeSeconds": 48,
+      "frameId": "K0191",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "timeSeconds": 70,
+      "frameId": "K0288",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "timeSeconds": 98,
+      "frameId": "K0401",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 43.32169291600076,
+    "measurementSeconds": 4.346626082999137,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "空间示例使用二维投影模拟层叠；原片三维材质、相机轨迹和反射未完整重建。",
+    "原片主要为图形空间，业务功能语义只保留画面可以支持的层级关系。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V352",
+      "sha256": "91203186458d57604f8cdab7d3d1c89a94286a6e5e7c487833a6436b3044ded5",
+      "sourceUrl": "https://www.ordinaryfolk.co/project/webflow-a-new-era-of-no-code"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.webp",
+      "bytes": 9356,
+      "sha256": "706dbddcf7a33e59fc3b09e9fad92ed96e430eab393ea78a7eb4d9cfab10e4a3"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "bytes": 14026,
+      "sha256": "41b848ea07d3e90dae9099b519d7cea21c7a11589b6676eb628a911d3384372b"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "bytes": 16758,
+      "sha256": "5e789cf0fdbfcbcc7dc2091d78f25ae66e3eb3c3a1ca72cf9ea2dd7f5e3396f4"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "bytes": 15354,
+      "sha256": "ca2308bdbbb01b2a43a18a28bd1dd871b18eea7ea79db27a5d3951e61d56899d"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "bytes": 22726,
+      "sha256": "595942bcb79864889196d2797e8deb6fe577c5e986164bb4c9c7e0672a57599b"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "bytes": 16344,
+      "sha256": "e96f59e84f685ccc7ca7e61a215b3137c0c4fd0ac28b73801a5f92573de3bbcb"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/clip-1.html",
+      "bytes": 564,
+      "sha256": "943c1425c4417b1a6ed11f5a771a77cf2b838187d3236edfe77598f145fb9997"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 5179,
+      "sha256": "fcbd25144e5491a21afc549418432f291504852d673d6a0c1d4c31526bfedf1a"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 2488,
+      "sha256": "6899dc0ea6a9676deb77c7d3d96fff93dee88ce3bf344a1c756e7c2c5a0f86c7"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 539,
+      "sha256": "8ca757ccbd92198610e40571b687a0208054f7ba3eb25895799d3c17bd035dcd"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 6961,
+      "sha256": "2c0f92108a0196459337ad47289d98443bd9d1eb3804c072f795e2c99715988b"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 22333,
+      "sha256": "fe5138c4c40952ec2f874dd06b54c90eed31d83096539419f8de453afa284813"
+    },
+    {
+      "path": "style.json",
+      "bytes": 2933,
+      "sha256": "42647f793c7f0dfaa59f66ec3f0199fe2e4bbe84489dd0e25b2f1cede369645a"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 2275,
+      "sha256": "ca217db0847ecdc30443c367dbb13e40b9ff591756d6bf7756f691fefb98d0ef"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 1928,
+      "sha256": "de561fc8d05deda3b61f2b4bab451a4262846be1bd08ca02b4b00b6733277f68"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12581,
+      "sha256": "9c6ebea34a3b5f4803cb6dcbb619530e44acffabb201361fdb35a833c137a182"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4904,
+      "sha256": "0614c48b41d6aa4b565565018d8816d8a3da0ce24070bdf937c23c604a748e8a"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Webflow"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#473af4"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/clip-1.html",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 2
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 103.533333,
+      "status": "authored"
+    },
+    {
+      "id": "clip-1",
+      "src": "demos/clip-1.html",
+      "duration": 9,
+      "status": "authored"
+    }
+  ]
+}

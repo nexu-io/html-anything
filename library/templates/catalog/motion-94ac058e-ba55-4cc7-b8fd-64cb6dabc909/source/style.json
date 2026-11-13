@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#fff6ee",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：United sign-in",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：United.com needs your login info.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Book my flight to San Francisco on Sept 8",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "请求",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "待操作卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "继续按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "登录表单",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "密码管理器",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "提交回执",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fff6ee",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1f2021",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ef9768",
+      "status": "inferred"
+    },
+    {
+      "hex": "#65bc83",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e4e4e4",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "橙色光晕、白手机、认证表单与绿色提交状态",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "代理遇到认证才转给用户；用户提供输入后流程恢复。",
+      "status": "inferred"
+    },
+    {
+      "rule": "橙色等待态转为绿色完成态，信息内容持续对应同一任务。",
+      "status": "inferred"
+    },
+    {
+      "rule": "不得展示真实密码，迁移使用占位输入。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#101010",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：FABLE 5",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：ONTNOMS MON",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：NOW SHOMENG",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "像素角色",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "梯子",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "灯牌",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "逐字标题",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#101010",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e8e2bf",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c8775c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bf4d61",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4a4942",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "黑底点阵、像素角色、影院灯牌",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "角色到达灯牌后才逐字出现产品名，动作与字母有因果。",
+      "status": "inferred"
+    },
+    {
+      "rule": "点亮发生在标题完整后；随后角色从画面右侧退出。",
+      "status": "inferred"
+    },
+    {
+      "rule": "梯子与招牌固定，角色运动承担叙事。",
+      "status": "inferred"
+    }
+  ]
+}

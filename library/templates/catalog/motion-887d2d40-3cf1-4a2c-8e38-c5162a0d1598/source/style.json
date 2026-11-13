@@ -1,0 +1,97 @@
+{
+  "background": {
+    "color": "#050609",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机边框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "助手头像",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "用户气泡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "助理气泡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入栏",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#050609",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f4f5f7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2478ed",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6553d9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#303238",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "手机聊天正文采用清楚的无衬线；不增加画外大标题",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "手机轻微倾斜但聊天坐标跟随屏幕。用户蓝色气泡右对齐，助理深灰气泡左对齐；前一条稳定后才加入下一条。",
+      "status": "inferred"
+    },
+    {
+      "rule": "第一条提出看房请求，第二条给两段可选时间，第三条确认。最后整体淡出回到空会话；不要在循环结束时倒放消息。",
+      "status": "inferred"
+    },
+    {
+      "rule": "更换品牌头像、地点与两个时段。保持一问、一组选择、一次确认的容量，长消息先改写成两行以内。",
+      "status": "inferred"
+    }
+  ]
+}

@@ -291,7 +291,10 @@
     "Duplicate": "複製",
     "Volume": "音量",
     "Show": "表示",
-    "Hide": "非表示"
+    "Hide": "非表示",
+    "About {seconds}s remaining": "残り約 {seconds} 秒",
+    "Download attempt {attempt}/{total}": "ダウンロード試行 {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "自動再試行後もダウンロードがタイムアウトしました。接続を確認して再試行してください。"
   },
   "ko": {
     "Join the OpenDesign community": "OpenDesign 커뮤니티에 참여하세요",
@@ -585,7 +588,10 @@
     "Duplicate": "복제",
     "Volume": "음량",
     "Show": "표시",
-    "Hide": "숨기기"
+    "Hide": "숨기기",
+    "About {seconds}s remaining": "약 {seconds}초 남음",
+    "Download attempt {attempt}/{total}": "다운로드 시도 {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "자동 재시도 후에도 다운로드 시간이 초과되었습니다. 연결을 확인하고 다시 시도하세요."
   },
   "de": {
     "Join the OpenDesign community": "Tritt der OpenDesign-Community bei",
@@ -879,7 +885,10 @@
     "Duplicate": "Duplizieren",
     "Volume": "Lautstärke",
     "Show": "Einblenden",
-    "Hide": "Ausblenden"
+    "Hide": "Ausblenden",
+    "About {seconds}s remaining": "Noch etwa {seconds} s",
+    "Download attempt {attempt}/{total}": "Downloadversuch {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "Zeitüberschreitung nach automatischen Wiederholungen. Verbindung prüfen und erneut versuchen."
   },
   "fr": {
     "Join the OpenDesign community": "Rejoignez la communauté OpenDesign",
@@ -1173,7 +1182,10 @@
     "Duplicate": "Dupliquer",
     "Volume": "Volume",
     "Show": "Afficher",
-    "Hide": "Masquer"
+    "Hide": "Masquer",
+    "About {seconds}s remaining": "Environ {seconds} s restantes",
+    "Download attempt {attempt}/{total}": "Tentative de téléchargement {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "Le téléchargement a expiré après les tentatives automatiques. Vérifiez votre connexion et réessayez."
   },
   "ru": {
     "Join the OpenDesign community": "Присоединяйтесь к сообществу OpenDesign",
@@ -1467,7 +1479,10 @@
     "Duplicate": "Дублировать",
     "Volume": "Громкость",
     "Show": "Показать",
-    "Hide": "Скрыть"
+    "Hide": "Скрыть",
+    "About {seconds}s remaining": "Осталось около {seconds} с",
+    "Download attempt {attempt}/{total}": "Попытка загрузки {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "Время загрузки истекло после автоматических повторов. Проверьте подключение и повторите попытку."
   },
   "es": {
     "Join the OpenDesign community": "Únete a la comunidad de OpenDesign",
@@ -1761,7 +1776,10 @@
     "Duplicate": "Duplicar",
     "Volume": "Volumen",
     "Show": "Mostrar",
-    "Hide": "Ocultar"
+    "Hide": "Ocultar",
+    "About {seconds}s remaining": "Quedan unos {seconds} s",
+    "Download attempt {attempt}/{total}": "Intento de descarga {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "La descarga agotó el tiempo tras los reintentos automáticos. Comprueba la conexión y vuelve a intentarlo."
   },
   "pt-BR": {
     "Join the OpenDesign community": "Junte-se à comunidade OpenDesign",
@@ -2055,7 +2073,10 @@
     "Duplicate": "Duplicar",
     "Volume": "Volume",
     "Show": "Mostrar",
-    "Hide": "Ocultar"
+    "Hide": "Ocultar",
+    "About {seconds}s remaining": "Cerca de {seconds} s restantes",
+    "Download attempt {attempt}/{total}": "Tentativa de download {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "O download excedeu o tempo após as tentativas automáticas. Verifique a conexão e tente novamente."
   },
   "it": {
     "Join the OpenDesign community": "Unisciti alla community OpenDesign",
@@ -2349,7 +2370,10 @@
     "Duplicate": "Duplica",
     "Volume": "Volume",
     "Show": "Mostra",
-    "Hide": "Nascondi"
+    "Hide": "Nascondi",
+    "About {seconds}s remaining": "Circa {seconds} s rimanenti",
+    "Download attempt {attempt}/{total}": "Tentativo di download {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "Il download è scaduto dopo i tentativi automatici. Controlla la connessione e riprova."
   },
   "tr": {
     "Join the OpenDesign community": "OpenDesign topluluğuna katılın",
@@ -2643,6 +2667,9 @@
     "Duplicate": "Çoğalt",
     "Volume": "Ses düzeyi",
     "Show": "Göster",
-    "Hide": "Gizle"
+    "Hide": "Gizle",
+    "About {seconds}s remaining": "Yaklaşık {seconds} sn kaldı",
+    "Download attempt {attempt}/{total}": "İndirme denemesi {attempt}/{total}",
+    "Download timed out after automatic retries. Check your connection and retry.": "Otomatik yeniden denemelerden sonra indirme zaman aşımına uğradı. Bağlantınızı kontrol edip tekrar deneyin."
   }
 }

@@ -61,18 +61,20 @@ test('unrelated services and mismatched versions or data directories are left in
   const result = await openPreview(store, mock.environment);
   assert.equal(result.previewUrl, `http://localhost:${port + 3}`); assert.deepEqual(mock.stops, []);
 }));
-test('a phase1 call reuses a compatible newer backend without restarting it or changing workspaces', () => fixture(async store => {
-  const mock = runtime(store), port = Number(process.env.PORT || 4173);
-  mock.occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: '0.6.4',
-    dataDirectory: store.directory, ffmpeg: true, ready: true, mcp: { protocol: 1, tools: ['openmotion_export_request'] } } });
-  const before = await store.get();
-  const result = await ensureService(store, mock.environment, 'openmotion_export_request');
-  assert.equal(result.previewUrl, `http://localhost:${port}`);
-  assert.equal(result.reused, true);
-  assert.deepEqual(mock.launches, []); assert.deepEqual(mock.stops, []);
-  assert.deepEqual(await store.get(), before);
-  assert.equal(JSON.parse(await readFile(path.join(store.directory, 'preview.json'), 'utf8')).version, '0.6.4');
-}, false));
+test('a phase1 call reuses compatible stable and prerelease backends without restarting them', async t => {
+  for (const version of ['0.6.4', '0.6.4-test.8']) await t.test(version, () => fixture(async store => {
+    const mock = runtime(store), port = Number(process.env.PORT || 4173);
+    mock.occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version,
+      dataDirectory: store.directory, ffmpeg: true, ready: true, mcp: { protocol: 1, tools: ['openmotion_export_request'] } } });
+    const before = await store.get();
+    const result = await ensureService(store, mock.environment, 'openmotion_export_request');
+    assert.equal(result.previewUrl, `http://localhost:${port}`);
+    assert.equal(result.reused, true);
+    assert.deepEqual(mock.launches, []); assert.deepEqual(mock.stops, []);
+    assert.deepEqual(await store.get(), before);
+    assert.equal(JSON.parse(await readFile(path.join(store.directory, 'preview.json'), 'utf8')).version, version);
+  }, false));
+});
 test('phase1 port discovery leaves unrelated services and other workspaces intact', () => fixture(async store => {
   const mock = runtime(store), port = Number(process.env.PORT || 4173);
   const health = { service: 'motion-preview', protocol: 2, version: '0.6.4', dataDirectory: store.directory, ffmpeg: true, ready: true, mcp: { protocol: 1, tools: ['openmotion_export_request'] } };
@@ -83,7 +85,7 @@ test('phase1 port discovery leaves unrelated services and other workspaces intac
   assert.deepEqual(mock.stops, []);
 }, false));
 test('phase1 port discovery refuses an incompatible same-workspace authority without launching another', async t => {
-  for (const change of [{ protocol: 999 }, { version: '0.6.4-test.8', mcp: phase1McpCapabilities }, { version: VERSION, mcp: { protocol: 2, tools: ['openmotion_export_request'] } }, { mcp: { protocol: 1, tools: ['openmotion_get_project'] } }, { mcp: undefined }]) await t.test(JSON.stringify(change), () => fixture(async store => {
+  for (const change of [{ protocol: 999 }, { version: VERSION, mcp: { protocol: 2, tools: ['openmotion_export_request'] } }, { mcp: { protocol: 1, tools: ['openmotion_get_project'] } }, { mcp: undefined }]) await t.test(JSON.stringify(change), () => fixture(async store => {
     const mock = runtime(store), port = Number(process.env.PORT || 4173);
     mock.occupied.set(port, { kind: 'motion', health: { service: 'motion-preview', protocol: 2, version: '0.6.4', dataDirectory: store.directory, ffmpeg: true, ready: true, ...change } });
     const before = await store.get();

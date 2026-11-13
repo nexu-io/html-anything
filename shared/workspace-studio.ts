@@ -1,3 +1,6 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
+import { lstatSync, writeFileSync, unlinkSync } from 'node:fs';
+import { renderFilenameStem } from './render-name.ts';
 import { createServer } from 'node:http';
 import { createRequire } from 'node:module';
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
@@ -24,6 +27,7 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
   if (typeof createStudioServer !== 'function') throw new Error('Hyperframes workspace host factory is unavailable');
   const { getRequestListener } = await import(pathToFileURL(require.resolve('@hono/node-server')).href);
   const { Hono } = await import(pathToFileURL(require.resolve('hono')).href);
+  const { serveStatic } = await import(pathToFileURL(require.resolve('@hono/node-server/serve-static')).href);
   const { bodyLimit } = await import(pathToFileURL(require.resolve('hono/body-limit')).href);
   const coreRoot = path.dirname(require.resolve('@hyperframes/core/package.json'));
   const core = JSON.parse(await readFile(path.join(coreRoot, 'package.json'), 'utf8'));
@@ -48,7 +52,44 @@ export async function startWorkspaceStudio(runtimeRoot: string, dataDirectory: s
         const host = createStudioServer({ projectDir: scoped.projectDirectory, projectName: id,
           origin: () => origin, historyRoot });
         const nativeApp = host.app;
+        const renderRequest = new AsyncLocalStorage<{ filename?: string }>();
+        const startRender = host.adapter.startRender.bind(host.adapter);
+        host.adapter.startRender = (options: { outputPath: string }) => {
+          const request = renderRequest.getStore();
+          if (!request) return startRender(options);
+          const directory = path.dirname(options.outputPath);
+          const extension = path.extname(options.outputPath);
+          const title = renderFilenameStem(scoped.projectCatalog().projects.find(project => project.id === id)?.title);
+          // Native history and deletion share one metadata file across all formats.
+          // Reserve that stem before starting the worker, including concurrent submissions.
+          for (let n = 0; ; n++) {
+            const stem = n ? title + ' (' + n + ')' : title;
+            if (['.mp4', '.mov', '.webm', '.gif'].some(ext => lstatSync(path.join(directory, stem + ext), { throwIfNoEntry: false }))) continue;
+            const metadata = path.join(directory, stem + '.meta.json');
+            try { writeFileSync(metadata, '{}', { flag: 'wx' }); }
+            catch (error) { if ((error as NodeJS.ErrnoException).code === 'EEXIST') continue; throw error; }
+            request.filename = stem + extension;
+            try { return startRender({ ...options, outputPath: path.join(directory, request.filename) }); }
+            catch (error) { unlinkSync(metadata); throw error; }
+          }
+        };
         host.app = new Hono().get('/api/fonts', async c => c.json({ fonts: await fonts.families() }))
+          .post('/api/projects/:id/render', c => {
+            const result: { filename?: string } = {};
+            return renderRequest.run(result, async () => {
+              const response = await nativeApp.fetch(c.req.raw);
+              if (!response.ok || !result.filename) return response;
+              return c.json({ ...await response.json(), filename: result.filename });
+            });
+          })
+          .get('/api/projects/:id/renders/file/:filename', async c => {
+            const filename = c.req.param('filename');
+            if (/[\/\\\x00]/.test(filename) || !/\.(mp4|mov|webm|gif)$/i.test(filename)) return c.notFound();
+            const directory = path.join(scoped.projectDirectory, 'renders');
+            if (!lstatSync(directory, { throwIfNoEntry: false })?.isDirectory() ||
+                !lstatSync(path.join(directory, filename), { throwIfNoEntry: false })?.isFile()) return c.notFound();
+            return serveStatic({ root: directory, path: filename })(c, () => c.notFound());
+          })
           .get('/api/fonts/file', async c => {
             const family = c.req.query('family');
             if (!family) return c.json({ error: 'family parameter required' }, 400);

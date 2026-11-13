@@ -9,4 +9,6 @@ description: OpenMotion 原生 Hyperframes 编写的兼容入口，供旧引用�
 
 直接读取 [共享上下文](../openmotion-production/references/context.md)、[运行规范](../openmotion-production/references/production.md) 和 [Native authoring](../openmotion-production/references/native.md)，继续当前阶段，不返回总入口重做需求或选模板。托管工程通过 `openmotion_edit_project` 写入，须携带 projectId、requestId、expectedRevision 和 expectedVersionId；导出按 [验证](../openmotion-production/references/verification.md) 检查实际文件。
 
+需要选择、获取或替换素材时，按 [共享素材规范](../openmotion-production/references/materials.md) 执行；仅查看、预览或导出沿用既有素材。
+
 MCP-only 使用 resources/read `openmotion://workflow/production/native` 获取全文。此兼容入口不是新的复刻专业能力。

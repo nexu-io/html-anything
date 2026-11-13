@@ -1,11 +1,32 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, rm } from 'node:fs/promises';
+import { copyFile, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { JSDOM } from 'jsdom';
 import { copyTemplate } from '../template-library.ts';
 import { pluginRoot } from '../hyperframes.ts';
+import { renderNext } from '../server.ts';
+import { fixture } from './fixtures.ts';
+
+test('the unchanged decision-tree template exports a verified 1080p MP4', { timeout: 180_000 }, () => fixture(async store => {
+  await copyTemplate('decision-tree', store.projectDirectory, pluginRoot);
+  const before = await store.get();
+  const job = await store.requestExport(before.revision, { phase1: true, audio: 'silent' });
+  await renderNext(store, pluginRoot);
+  const completed = (await store.job(job.id))!;
+  const evidence = process.env.OPENMOTION_DECISION_TREE_EVIDENCE;
+  if (evidence) {
+    await mkdir(evidence, { recursive: true });
+    await writeFile(path.join(evidence, 'export.json'), JSON.stringify(completed, null, 2));
+    await copyFile(path.join(store.directory, 'jobs', job.id, 'render.log'), path.join(evidence, 'render.log'));
+    if (completed.file) await copyFile(path.join(store.directory, completed.file), path.join(evidence, 'decision-tree.mp4'));
+  }
+  assert.equal(completed.state, 'completed', JSON.stringify(completed));
+  assert.deepEqual(completed.expected, { width: 1920, height: 1080, fps: 30, duration: 10, audio: 'silent' });
+  assert.equal((completed.verification as any).status, 'passed', JSON.stringify(completed.verification));
+  assert.equal((await store.get()).revision, before.revision, 'export must preserve the template source');
+}, false));
 
 test('the decision-tree selection follows playback, seeking, replay and loops', async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-decision-tree-'));

@@ -5,6 +5,13 @@ import { splitFailureMessage } from './editorErrors';
 import { systemMessage } from './systemMessages';
 import { languages } from './messages';
 
+it('localizes unavailable timeline media in every interface language', () => {
+  expect(translate('zh-CN', 'Media unavailable')).toBe('素材已失效');
+  for (const { locale } of languages) {
+    if (locale !== 'en') expect(translate(locale, 'Media unavailable')).not.toBe('Media unavailable');
+  }
+});
+
 it('localizes rejected history restores while preserving project-relative paths', () => {
   const files = 'assets/原始配乐.wav, assets/photo.png';
   const messages = [

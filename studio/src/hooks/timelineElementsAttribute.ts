@@ -1,6 +1,8 @@
 import { useCallback } from "react";
 import type { TimelineEditCallbacks } from "../player/components/timelineCallbacks";
 import { syncStoredElementAttribute } from "../player/lib/automationStoreSync";
+import { setPreviewMediaMuted } from "../player/lib/timelineIframeHelpers";
+import { usePlayerStore } from "../player/store/playerStore";
 import { saveProjectFilesWithHistory } from "../utils/studioFileHistory";
 import { applyPatchByTarget } from "../utils/sourcePatcher";
 import {
@@ -42,6 +44,11 @@ function patchLive(
     if (value === null) node?.removeAttribute(attr);
     else node?.setAttribute(attr, value);
     syncStoredElementAttribute(element, attr, value);
+  }
+  if (attr === "muted") {
+    // The HTML attribute changes defaultMuted, not the currently playing media.
+    // Reapply the monitor state so the runtime also reads each clip's saved mute.
+    setPreviewMediaMuted(iframe, usePlayerStore.getState().audioMuted);
   }
 }
 

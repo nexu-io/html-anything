@@ -3,7 +3,7 @@
 <p align="center"><strong>Reverse engineering for any video</strong></p>
 
 <p align="center">
-  <a href="docs/readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="docs/readme/brand-hero.mobile.jpg"><img src="docs/readme/brand-hero.jpg" width="100%" alt="Dan Martell’s original beside an OpenMotion remake with Riya. A handwritten keyword sits between two lines of bold captions, with the editable Studio timeline below."></picture></a>
+  <a href="docs/readme/media/presenter-caption-remake.mp4"><picture><source media="(max-width: 600px)" srcset="https://releases.open-design.ai/open-motion/media/sha256/730e1d6235820d39ba8adde42810d1165377992136a3b20290ad5d504abb527b.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/730e1d6235820d39ba8adde42810d1165377992136a3b20290ad5d504abb527b.jpg" width="100%" alt="Dan Martell’s original beside an OpenMotion remake with Riya. A handwritten keyword sits between two lines of bold captions, with the editable Studio timeline below."></picture></a>
 </p>
 
 <p align="center">
@@ -60,19 +60,19 @@ Edit around the speaker’s voice, with captions and screen inserts that follow 
 <tr><th colspan="3" align="left">🎓 Teach & explain</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="docs/readme/people/careerwithriya.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/7716c7166bf9f098f67845d55872e08f5765eaeb1439eb5760db785fa6d2d41e.gif" width="216" alt="Presenter video reference: 6 essential skills to transform your career"></picture></a><br>
 <strong>6 essential skills to transform your career</strong><br>
 Numbered points + kinetic keywords<br>
 <sub>Reference · <a href="https://www.instagram.com/reel/Ddd57MBszhc/">@careerwithriya</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/dan-martell-tools-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="docs/readme/people/dan-martell-tools.gif" width="216" alt="Presenter video reference: What's the best AI tool right now?"></picture></a><br>
+<a href="docs/readme/media/dan-martell-tools-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/dan-martell-tools.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0d7e7316322a28b6ce9013beaee4208c84b12bbb5565f04fcbc175c72e6aeadc.gif" width="216" alt="Presenter video reference: What's the best AI tool right now?"></picture></a><br>
 <strong>What's the best AI tool right now?</strong><br>
 Presenter + floating tool cards<br>
 <sub>Reference · <a href="https://www.youtube.com/shorts/mk1zJd9Rm4c">Dan Martell</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/harpercarrollai-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="docs/readme/people/harpercarrollai.gif" width="216" alt="Presenter video reference: 10 Days of AI Basics, Day 1"></picture></a><br>
+<a href="docs/readme/media/harpercarrollai-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/harpercarrollai.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/9b4a957dc004efc4f1ddfdfed546ca3ccc6b1a1978c15d0887d0175b84caa39f.gif" width="216" alt="Presenter video reference: 10 Days of AI Basics, Day 1"></picture></a><br>
 <strong>10 Days of AI Basics, Day 1</strong><br>
 A personal lesson + readable captions<br>
 <sub>Reference · <a href="https://www.instagram.com/reel/C4eNPF3PdpG/">@harpercarrollai</a></sub>
@@ -81,19 +81,19 @@ A personal lesson + readable captions<br>
 <tr><th colspan="3" align="left">🖥️ Show the workflow</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="docs/readme/people/ali-abdaal-workflow.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/03b9096a894f0572289ec31f9476854e660113852a97b4898c5b88158030b9a8.gif" width="216" alt="Presenter video reference: 5 tools I use every day"></picture></a><br>
 <strong>5 tools I use every day</strong><br>
 Desk-side story + workflow inserts<br>
 <sub>Reference · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="docs/readme/people/john-tagudin-capso.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/a8a09b0b4837125c948bcdeff964ae7a9ff971ea0275927d045bc72f81141d72.gif" width="216" alt="Presenter video reference: Tool demo with callouts"></picture></a><br>
 <strong>Tool demo with callouts</strong><br>
 Presenter + screens + callouts<br>
 <sub>Reference · <a href="https://www.tiktok.com/@john.tagudin/video/7524883942328126728">@john.tagudin</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/aiwithsachi-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="docs/readme/people/aiwithsachi.gif" width="216" alt="Presenter video reference: Top 5 plugins to install in Claude"></picture></a><br>
+<a href="docs/readme/media/aiwithsachi-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/aiwithsachi.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e04f9c2fdfb1bce2a2f83bbf28bde8765af58c589bb52b904694ff8113d61a7e.gif" width="216" alt="Presenter video reference: Top 5 plugins to install in Claude"></picture></a><br>
 <strong>Top 5 plugins to install in Claude</strong><br>
 A spoken list + supporting screenshots<br>
 <sub>Reference · <a href="https://www.instagram.com/reel/Dc7G9Pxu_1O/">@aiwithsachi</a></sub>
@@ -102,19 +102,19 @@ A spoken list + supporting screenshots<br>
 <tr><th colspan="3" align="left">🎬 Tell a story, show a product</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/khris-sheer-founder-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="docs/readme/people/khris-sheer-founder.gif" width="216" alt="Presenter video reference: The Founder Experiments, Ep. 1"></picture></a><br>
+<a href="docs/readme/media/khris-sheer-founder-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/khris-sheer-founder.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0359b48294cb978df976f9ae2ab6ca4644854bee438dca09accc1144c30259bc.gif" width="216" alt="Presenter video reference: The Founder Experiments, Ep. 1"></picture></a><br>
 <strong>The Founder Experiments, Ep. 1</strong><br>
 Founder diary + everyday B-roll<br>
 <sub>Reference · <a href="https://www.tiktok.com/@khris.sheer/video/7491715587895430402">@khris.sheer</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/ugc-rachelll-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="docs/readme/people/ugc-rachelll.gif" width="216" alt="Presenter video reference: AI creator with product"></picture></a><br>
+<a href="docs/readme/media/ugc-rachelll-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ugc-rachelll.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0b779052281e89a3efc44e5a4b4492e245a12a14c0c5118813e59876419ad5c5.gif" width="216" alt="Presenter video reference: AI creator with product"></picture></a><br>
 <strong>AI creator with product</strong><br>
 Product story + proof + picture-in-picture<br>
 <sub>Reference · <a href="https://www.tiktok.com/@ugc.rachelll/video/7616996050066345246">@ugc.rachelll</a></sub>
 </td>
 <td width="33%" valign="top" align="center">
-<a href="docs/readme/media/kevinstratvert-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="docs/readme/people/kevinstratvert.gif" width="216" alt="Presenter video reference: Stop Paying for 5 AI Tools"></picture></a><br>
+<a href="docs/readme/media/kevinstratvert-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/kevinstratvert.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/31655004df5561a835eacd093fdd7e2a247b3c5fec0a9074ce59c6d9c9c56291.gif" width="216" alt="Presenter video reference: Stop Paying for 5 AI Tools"></picture></a><br>
 <strong>Stop Paying for 5 AI Tools</strong><br>
 Product tutorial + live demonstration<br>
 <sub>Reference · <a href="https://www.youtube.com/shorts/1fA5j5_5TRY">Kevin Stratvert</a></sub>
@@ -123,19 +123,19 @@ Product tutorial + live demonstration<br>
 <tr><th colspan="3" align="left">Original → external adaptation</th></tr>
 <tr>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="docs/readme/people/careerwithriya-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/careerwithriya-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/68fae88f1bd057ca91fd02b0de88c8112d675bf0d140bed14481cac14af9521e.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
 <strong>Career advice → video-production explainer</strong><br>
 Numbered ideas and proof cards follow the new presenter’s explanation.<br>
 <sub><a href="library/skills/openmotion-presenter-story/references/presenter-listicle/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/careerwithriya-reference.mp4">Original</a> · <a href="library/skills/openmotion-presenter-story/assets/careerwithriya-result.mp4">Full adaptation</a></sub>
 </td>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="docs/readme/people/ali-abdaal-workflow-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/ali-abdaal-workflow-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e6c2078a7595d03b644129697a6c26b12b32d7f0014ea74d7d2ec58c3f4cc07f.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
 <strong>Everyday tools → a design-workspace story</strong><br>
 Screen inserts follow the speaker through a different workflow.<br>
 <sub><a href="library/skills/openmotion-presenter-story/references/workflow-demo/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4">Original</a> · <a href="library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-result.mp4">Full adaptation</a></sub>
 </td>
 <td colspan="1" width="33%" align="center" valign="top">
-<a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="docs/readme/people/john-tagudin-capso-comparison.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
+<a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/people/john-tagudin-capso-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/b4690ff3537552b1237c2b16bdb83c439447e5ca9f288ff27a775c525e9b5c23.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></a><br>
 <strong>Tool demo → video-editor walkthrough</strong><br>
 Picture-in-picture and callouts turn a tool demo into an editing walkthrough.<br>
 <sub><a href="library/skills/openmotion-presenter-story/references/product-walkthrough/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-presenter-story/SKILL.md">Skill</a> · <a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-reference.mp4">Original</a> · <a href="library/skills/openmotion-presenter-story/assets/john-tagudin-capso-result.mp4">Full adaptation</a></sub>
@@ -152,7 +152,7 @@ Give a folder of clips and photos a beginning, a turning point and an ending.
 <td colspan="1" width="100%" align="center" valign="top">
 <a href="docs/readme/media/hundred-days-story-reference.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/story-recut.jpg">
-<img src="docs/readme/examples/story-recut.gif" width="208" alt="External creative reference: 100 days with stickers and photo cards">
+<img src="https://releases.open-design.ai/open-motion/media/sha256/0b5abe1037fe28bd752d4c6c204c79d1cedf9cb34d10f949aafe05f6ba98f77a.gif" width="208" alt="External creative reference: 100 days with stickers and photo cards">
 </picture></a><br>
 <strong>100 days in photos</strong><br>
 Stickers and photo cards mark time in a personal video diary.<br>
@@ -181,13 +181,13 @@ The remake keeps Stripe’s flip and reveals an illustrated film frame.<br>
 <tr><th colspan="2" align="left">Original films</th></tr>
 <tr>
 <td width="50%" valign="top">
-<a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="docs/readme/gallery/kimi-k3.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
+<a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/7efe6482e818eaa61e61a3f1105bbf0f711c5719f605277f79bee2f0d3d5d354.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
 <strong>Kimi · K3 teaser</strong><br>
 Your next release, distilled into a short, memorable teaser.<br>
 <sub>Reference · @Kimi_Moonshot</sub>
 </td>
 <td width="50%" valign="top">
-<a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="docs/readme/gallery/elevenlabs-reception.gif" width="440" alt="Reception by ElevenLabs reference film"></picture></a><br>
+<a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/593e5ea9029984b620b795ad16ae07ed8ebf28501134cec3dd67fa0cf2777c4f.gif" width="440" alt="Reception by ElevenLabs reference film"></picture></a><br>
 <strong>ElevenLabs · Reception</strong><br>
 Introduce a new product with a focused launch story.<br>
 <sub>Reference · @ElevenLabs</sub>
@@ -195,13 +195,13 @@ Introduce a new product with a focused launch story.<br>
 </tr>
 <tr>
 <td width="50%" valign="top" align="center">
-<a href="docs/readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-unboxing.jpg"><img src="docs/readme/brand-showcase/rea-unboxing.gif" width="250" alt="Live-action product unboxing reference"></picture></a><br>
+<a href="docs/readme/brand-showcase/rea-unboxing.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-unboxing.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/f4c8addcc5c60f7c0f6aa2ef6f3e652d88b9b0d3b78d96f612c63ed506c65047.gif" width="250" alt="Live-action product unboxing reference"></picture></a><br>
 <strong>A real product, a tactile story</strong><br>
 Study close-ups, hand movement and the reveal; film your own product.<br>
 <sub>Live footage · product unboxing</sub>
 </td>
 <td width="50%" valign="top" align="center">
-<a href="docs/readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-dual-role.jpg"><img src="docs/readme/brand-showcase/rea-dual-role.gif" width="250" alt="Mixed-production reference with AI characters, coded interface and screen footage"></picture></a><br>
+<a href="docs/readme/brand-showcase/rea-dual-role.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/brand-showcase/rea-dual-role.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0d02c85931e92aae6753716c4a59f1b5023922e346661f194271e8d5b1959fa6.gif" width="250" alt="Mixed-production reference with AI characters, coded interface and screen footage"></picture></a><br>
 <strong>Characters meet the interface</strong><br>
 Combine a character-led hook with UI motion and screen footage.<br>
 <sub>AI characters + code + screen recording</sub>
@@ -235,13 +235,13 @@ The cursor types on a film slate. A warm flash carries the last keystroke into t
 <tr><th colspan="2" align="left">Editable studies · original and adaptation from the same project</th></tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="library/skills/openmotion-design-remix/previews/wireframe-portal-title.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Wireframe portal · BREAKTHROUGH → OPENMOTION</strong><br>
 Keep: Portal timing, dimensional lettering and camera push. Replace: Title, subtitle and the 3D phrase.<br>
 <sub><a href="library/skills/openmotion-design-remix/references/wireframe-portal-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/wireframe-portal-title.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="library/skills/openmotion-design-remix/previews/canopy-part-title.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/canopy-part-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/canopy-part-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/600a3791258b1b9873bc5626254f6a024a6dfc5df88dded9b468400853c0ccb0.gif" width="100%" alt="Canopy typography: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Canopy typography · Understory → OpenMotion</strong><br>
 Keep: Leaf sweeps, depth, occlusion and reading holds. Replace: Two brand headlines.<br>
 <sub><a href="library/skills/openmotion-design-remix/references/canopy-part-title/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/canopy-part-title.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/canopy-part-title.mp4">MP4</a></sub>
@@ -249,13 +249,13 @@ Keep: Leaf sweeps, depth, occlusion and reading holds. Replace: Two brand headli
 </tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="library/skills/openmotion-design-remix/previews/ui-3d-reveal.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/ui-3d-reveal.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/bb31f3558e38bde6ee01b3dbf23c8bed8b7d458ae7af851b3a3c198aee382d40.gif" width="100%" alt="Interface reveal: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Interface reveal · Product tour → AI editing story</strong><br>
 Keep: Tilted canvas, depth hierarchy and continuous camera. Replace: Hero headline, document and community copy.<br>
 <sub><a href="library/skills/openmotion-design-remix/references/ui-3d-reveal/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/ui-3d-reveal.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/ui-3d-reveal.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="library/skills/openmotion-design-remix/previews/code-3d-extrude.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/code-3d-extrude.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/ad7adbd831a97e3af69ce46d332396cec0b633f04de9f8c5c2cf070d9df7b076.gif" width="100%" alt="Dimensional code: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Dimensional code · loadConfig() → cutVideo()</strong><br>
 Keep: Extruded slab, syntax colors and the camera move. Replace: Function, variables and displayed calls.<br>
 <sub><a href="library/skills/openmotion-design-remix/references/code-3d-extrude/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/code-3d-extrude.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/code-3d-extrude.mp4">MP4</a></sub>
@@ -263,13 +263,13 @@ Keep: Extruded slab, syntax colors and the camera move. Replace: Function, varia
 </tr>
 <tr>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="library/skills/openmotion-design-remix/previews/code-particle-assemble.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/code-particle-assemble.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/6866faabec5d5cf7d1a7b609166915e22c2e0ec44202999344491abe5e6df516.gif" width="100%" alt="Particle assembly: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Particle assembly · parse / optimize / emit → select / trim / render</strong><br>
 Keep: Seeded particle motion and assembly rhythm. Replace: Pipeline name and steps.<br>
 <sub><a href="library/skills/openmotion-design-remix/references/code-particle-assemble/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/code-particle-assemble.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/code-particle-assemble.mp4">MP4</a></sub>
 </td>
 <td colspan="1" width="50%" align="center" valign="top">
-<a href="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a><br>
+<a href="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/39d97875c565d4673f5aa74df2a0f0a46244c12d3466b059b5b8de7d09b2ed9f.gif" width="100%" alt="Glass information cards: synchronized original on the left and changed content on the right"></picture></a><br>
 <strong>Glass information cards · Device widgets → creator workspace</strong><br>
 Keep: Glass treatment, card hierarchy, stagger and meters. Replace: Labels, units and feature story.<br>
 <sub><a href="library/skills/openmotion-design-remix/references/liquid-glass-widgets/MOTION_DESIGN.md">Motion.md</a> · <a href="library/skills/openmotion-design-remix/SKILL.md">Skill</a> · <a href="library/skills/openmotion-design-remix/presets/liquid-glass-widgets.json">Content preset</a> · <a href="library/skills/openmotion-design-remix/previews/liquid-glass-widgets.mp4">MP4</a></sub>
@@ -301,7 +301,7 @@ Animate a comparison so the viewer can follow how the values change.
 <td colspan="1" width="100%" align="center" valign="top">
 <a href="docs/readme/media/M1128-clip.mp4"><picture>
 <source media="(prefers-reduced-motion: reduce)" srcset="docs/readme/examples/data-story.jpg">
-<img src="docs/readme/examples/data-story.gif" width="480" alt="External creative reference: Animated comparison bars · @Vintage_god">
+<img src="https://releases.open-design.ai/open-motion/media/sha256/5ac8b202d47c934688cc04659066b7c85df5f14102a3eee28bd802308f3e164f.gif" width="480" alt="External creative reference: Animated comparison bars · @Vintage_god">
 </picture></a><br>
 <strong>Animated comparison bars</strong><br>
 The values stay visible as the bars change height.<br>
@@ -453,17 +453,17 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <tr><th colspan="3" align="left">Reusable motion components</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="docs/readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="docs/readme/gallery/app-showcase.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
+<a href="docs/readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/2e63fa988d5a2da0c845136b47225ae72fffe8b98e5bfdc18a6eede74a25003b.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
 <strong>App Showcase</strong><br>
 <sub>Component · <a href="library/components/showcase/app-showcase/index.html">View component</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="docs/readme/gallery/glass-shard-title.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
+<a href="docs/readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/1d4e48b21944f1b75358fd0f135eef1abb3526527236b2a72a9bffd381035876.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
 <strong>Glass Shard Title</strong><br>
 <sub>Component · <a href="library/components/showcase/glass-shard-title/index.html">View component</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="docs/readme/gallery/flight-map.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
+<a href="docs/readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/951cd2cd4a6232410990a01426c6d7c96b6be79956019194165967baff36cb7b.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
 <strong>NYC Paris Flight</strong><br>
 <sub>Component · <a href="library/components/showcase/nyc-paris-flight/index.html">View component</a></sub>
 </td>
@@ -471,17 +471,17 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <tr><th colspan="3" align="left">Product and brand films</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="docs/readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
+<a href="docs/readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.webp"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
 <strong>Pond: a new Linux OS</strong><br>
 <sub>Reference · @bflycomputer</sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="docs/readme/gallery/cyera.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
+<a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/2ae8ca04b773f2bea17e2e368680d2f84071f7ae4457f02dd3a460b952434a99.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
 <strong>Cyera brand video</strong><br>
 <sub>Reference · Cyera</sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="docs/readme/gallery/glyph.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
+<a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/645600cd403b233ede34313e0eb6b1632d63298dbffa3ff4137a47f987b15316.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
 <strong>Glyph: GPU typography for the web</strong><br>
 <sub>Reference · @pmndrs</sub>
 </td>
@@ -489,17 +489,17 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <tr><th colspan="3" align="left">Light and loops</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="docs/readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="docs/readme/gallery/iskra-light.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
+<a href="docs/readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/bff72b30b77e4b2991776bab55428b8ec82fe633d9f71fbdf62b8b9c32b76ebf.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
 <strong>Iskra Light</strong><br>
 <sub>Reference · @world_is_web</sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="docs/readme/gallery/linear-loops.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
+<a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/c4352874fdad22dbe7481e8adf706ae6671f0aaed3fa907cfb1bd413051eaca9.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
 <strong>Linear Loops</strong><br>
 <sub>Reference · @linear</sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="docs/readme/gallery/aurora.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
+<a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/3b7fc53ee3a44365ccf66c5441c9dc1ed42c26696689fe32353bf1aca3a24c70.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
 <strong>Aurora</strong><br>
 <sub>Component · <a href="library/components/showcase/aurora/index.html">View component</a></sub>
 </td>
@@ -673,19 +673,19 @@ export an MP4 and retain the source for the next edit.
 
 #### Start in your agent
 
-![OpenMotion embedded viewer for Codex, showing the editable Product Promo project, preview, layers and timeline.](docs/readme/product-tour/codex-embedded.png)
+![OpenMotion embedded viewer for Codex, showing the editable Product Promo project, preview, layers and timeline.](https://releases.open-design.ai/open-motion/media/sha256/1fbaaffd0c77d9f7c6eda67cd452b37735c1fce5d5c4d747db1a1db03bd8cab8.png)
 
 #### Start in Studio
 
 Browse references, open a template or bring in your recordings. Choose **Connect Agent**, follow the workspace-specific instructions and give the agent your brief. Review its edits on the same timeline and make hands-on adjustments whenever you want.
 
-![Standalone OpenMotion Studio with sessions, the saved request and an editable video project.](docs/readme/product-tour/standalone-studio.png)
+![Standalone OpenMotion Studio with sessions, the saved request and an editable video project.](https://releases.open-design.ai/open-motion/media/sha256/07882f8677e7d52c8b04b52f2fa9f85be7785cff8b7f69c193a529278e13b1c2.png)
 
 #### Connect your agent to a template
 
-![Connect Agent dialog with workspace-specific connection instructions and a choice of local clients.](docs/readme/product-tour/connect-agent.png)
+![Connect Agent dialog with workspace-specific connection instructions and a choice of local clients.](https://releases.open-design.ai/open-motion/media/sha256/9655dec62e7ee41cb7c1c6f9bc94b1f6c18c419ed2e8b4f48ab2da9932d37bf5.png)
 
-![Product Promo template preview with an expanded, template-specific instruction to copy into the agent.](docs/readme/product-tour/template-to-agent.png)
+![Product Promo template preview with an expanded, template-specific instruction to copy into the agent.](https://releases.open-design.ai/open-motion/media/sha256/7ed60a6f7dd91d9660de47b9d3489e9183e5091de7e7d765084ccce7c59be3af.png)
 
 **Preview → copy the instruction → paste into your agent with your brand assets.** A bundled template opens as an editable copy; an external reference starts a reconstruction task. [Full product tour](docs/product-tour.md)
 
@@ -699,7 +699,7 @@ Editing the timeline in Studio and asking your agent to change a shot both updat
 
 #### How the modules work together
 
-![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and the renderer exports and checks the selected project version.](docs/readme/diagrams/runtime-architecture-painterly.png)
+![The local agent connects through nine MCP project tools and Studio through local HTTP. The application manages revisions, assets and export jobs; the Model Gateway supplies media to the editable project, and the renderer exports and checks the selected project version.](https://releases.open-design.ai/open-motion/media/sha256/3e93e9896c3dbb930ab5492c12fdca48db226eddf881601b75400ca4011e01f0.png)
 
 Edits made through the project tools include a revision check so an outdated request cannot overwrite newer work. Generated media enters the project when you select it. Each export uses the version saved when the job starts. The exporter checks the file specifications, and you can play the cut to review the picture, sound and timing.
 
@@ -823,7 +823,7 @@ Channel connections, scheduled publishing and performance feedback are planned.
 | **Publish to every platform — Coming** | Authored aspect-ratio variants and MP4 handoff | Platform connectors, release review, scheduling, automatic reframing and social presets |
 | **Feedback** | Human review and saved project versions | Version-linked performance data and recurring production tasks |
 
-![Generated concept for people and agents reviewing a shared timeline; the collaboration experience is planned.](docs/readme/collaboration-concept-v2.png)
+![Generated concept for people and agents reviewing a shared timeline; the collaboration experience is planned.](https://releases.open-design.ai/open-motion/media/sha256/a5efa5be51936f33ecc7ef4241ce2602ebf4e7efcc8ce30e0dac5a8bd2b34957.png)
 
 *Concept preview of planned collaboration. No release date announced.* [Studio vision](docs/product/studio-vision.md) · [Knowledge and feedback](docs/product/studio-vision.md#knowledge-and-feedback)
 

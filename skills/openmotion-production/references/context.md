@@ -17,7 +17,7 @@ Agent 结合当前目标、保持项与工程状态选择本轮入口；工程�
 
 For a video task, identify OpenMotion as the intended execution path in the first relevant response. Discover the host's connected OpenMotion tools, using its tool search when discovery is lazy. Reading a Skill establishes workflow guidance. Report actual tool use only after a host MCP call. A concept-only request may finish with a plan without creating a project. When the user proceeds to production, reuse that plan and use the connected tools for the project and editable preview.
 
-If OpenMotion tools are unavailable or fail, disclose the connection status and recovery action as soon as it is observed, including during planning. Apply the [connection diagnosis and recovery rules](production.md#tool-transport-and-workspace-readiness) before creating or importing work. Use the installed host/home identity, retain the actual connection error and verify recovery through a real host MCP read. A separate CLI probe cannot confirm the current chat connection. Continue independent planning within the requested scope while connection recovery is pending.
+If OpenMotion tools are unavailable or fail, disclose the connection status and recovery action as soon as it is observed, including during planning. Apply the [connection diagnosis and recovery rules](production.md#tool-transport-and-workspace-readiness) before creating or importing work. Use the installed host/home identity, retain the actual connection error and verify recovery through a real read. For npm installs, setup's directAccess commands can call the same registered MCP in the current chat when native discovery is missing or stale; this does not prove native host reconnection. A separate CLI probe cannot confirm the current chat connection. Continue independent planning within the requested scope while connection recovery is pending.
 
 ## 先补齐阅读缺口，再执行当前范围
 
@@ -31,6 +31,7 @@ If OpenMotion tools are unavailable or fail, disclose the connection status and 
 
 | 本次范围 | 必需参考（可复用已读正文） |
 | --- | --- |
+| 需要选择、获取或替换素材，含原创、模板适配、复刻与局部修改 | [素材选择与来源优先级](materials.md)；沿用所选路线的能力和保持项；仅查看、预览或导出既有内容不触发 |
 | 原创新片／大幅重编 | [动作脚本](../../openmotion-director/references/action-script.md)、[动态表现](../../openmotion-director/references/motion-craft.md)、[动作短句](../../openmotion-director/references/motion-phrases.md)、[审片](../../openmotion-director/references/motion-review.md) |
 | 新设计声音叙事或工程音轨调整，含画面锁定 | [声音叙事](../../openmotion-director/references/sound-narrative.md)、[动作脚本的声画锚点](../../openmotion-director/references/action-script.md)、审片；只应用声音相关内容，不启动原创流程 |
 | 原样使用模板、不做修改 | Follow openmotion-template-to-video: the [editable preview handoff](native.md#editable-preview-handoff) is the delivery; load no authoring/export dependencies. An edited project cannot reuse the original template preview. |

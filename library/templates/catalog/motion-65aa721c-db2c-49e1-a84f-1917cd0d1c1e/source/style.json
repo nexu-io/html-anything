@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#0d1115",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：SYS • READY",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：+ FRAME",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：SAVE",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "草图画布",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "参考图片",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "输入面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码区",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "运行预览",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "对照视图",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#0d1115",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f4f4ee",
+      "status": "inferred"
+    },
+    {
+      "hex": "#7b64c2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ce5d22",
+      "status": "inferred"
+    },
+    {
+      "hex": "#437692",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "等宽状态标签与代码，主张使用斜体无衬线；黑底细网格",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "保持输入材料和生成结果同时可见，让草图、图片和录屏分别证明不同的视觉输入能力。",
+      "status": "inferred"
+    },
+    {
+      "rule": "草图或参考图留在左侧，执行时右侧先出现代码，再切成运行结果。结果的关键布局应能对应输入，不能只留下漂亮的独立成品。",
+      "status": "inferred"
+    },
+    {
+      "rule": "Sketch、Reference、动态网页与图像音乐各有独立段落。黑底细网格、等宽状态信息与紫色操作按钮贯穿，主张大字短促出现后退出。",
+      "status": "inferred"
+    }
+  ]
+}

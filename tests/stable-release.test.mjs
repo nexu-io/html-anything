@@ -50,6 +50,7 @@ test('stable selection is explicit and rejects prerelease/prod or stable/DEV cha
 
 test('stable stage, native acceptance, latest and exact/prod guides use the same immutable bytes', async t => {
   const f = await candidateFixture(t, 'main', { version: '0.6.4' }), store = services(f);
+  assert.equal(f.manifest.skills.length, 10);
   await publishNpm(f.directory, f.inputs, store);
   assert.equal(store.getLatest(), '0.5.0');
   const native = path.join(f.directory, 'registry-win32-x64.json'), original = await readFile(native, 'utf8');
@@ -70,6 +71,32 @@ test('stable stage, native acceptance, latest and exact/prod guides use the same
   assert.equal(record.nativeChecks, 'passed-before-latest'); assert.equal(record.platformVerification.length, 2);
   await publishNpm(f.directory, f.inputs, store); await promoteStable(f.directory, f.inputs, store); await archiveRelease(f.directory, f.inputs, config, store);
   assert.equal(store.writes.length, 2, 'Retry does not republish or move latest again');
+});
+
+test('stable rejects native tool and Skill counts that differ from the candidate on either platform', async t => {
+  const f = await candidateFixture(t, 'main', { version: '0.6.7' }), store = services(f);
+  await publishNpm(f.directory, f.inputs, store);
+  for (const platform of ['darwin-arm64', 'win32-x64']) {
+    const file = path.join(f.directory, `registry-${platform}.json`), original = await readFile(file, 'utf8');
+    for (const patch of [{ skills: 5 }, { skills: 9 }, { skills: 11 }, { mcpTools: 10 }, { mcpTools: 12 }]) {
+      await writeFile(file, JSON.stringify({ ...JSON.parse(original), ...patch }));
+      await assert.rejects(promoteStable(f.directory, f.inputs, store), /Native report mismatch: (skills|mcpTools)/);
+      await assert.rejects(archiveRelease(f.directory, f.inputs, config, store), /Native report mismatch: (skills|mcpTools)/);
+      assert.equal(store.getLatest(), '0.5.0');
+      assert.equal(store.writes.length, 1, 'Mismatched reports must not promote latest');
+      assert.equal(store.objects.size, 0, 'Mismatched reports must not archive the release');
+    }
+    await writeFile(file, original);
+  }
+  assert.equal((await promoteStable(f.directory, f.inputs, store)).status, 'promoted');
+});
+
+test('stable accepts an older candidate with only the five canonical Skills', async t => {
+  const skills = ['production', 'director', 'template-to-video', 'recreate', 'video-to-template'].map(name => 'openmotion-' + name);
+  const f = await candidateFixture(t, 'main', { version: '0.6.5', skills }), store = services(f);
+  await publishNpm(f.directory, f.inputs, store);
+  assert.equal((await promoteStable(f.directory, f.inputs, store)).status, 'promoted');
+  await archiveRelease(f.directory, f.inputs, config, store);
 });
 
 test('stable recovery never publishes, changes tags or touches the moving guide; newer latest is preserved', async t => {

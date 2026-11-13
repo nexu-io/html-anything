@@ -4,7 +4,7 @@
   --motion-control-disabled: color-mix(in srgb, var(--motion-strong) 30%, var(--motion-panel));
 }
 
-:root[data-motion-ui][data-motion-studio] :is(button, [role="button"], [role="tab"], [role="combobox"], [role="option"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], .motion-community-link):not(:where(.connection-dialog *, .connect-preview-dialog *, .motion-library *, [data-motion-catalog] *, .timeline-clip, .timeline-clip *)) {
+:root[data-motion-ui][data-motion-studio] :is(button, [role="button"], [role="tab"], [role="combobox"], [role="option"], [role="menuitem"], [role="menuitemradio"], [role="menuitemcheckbox"], .motion-community-link):not(:where(.connection-dialog *, .connect-preview-dialog *, .motion-library *, [data-motion-catalog] *, .timeline-clip, .timeline-clip *, .dv-tabs-container:not(:has(> .dv-tab ~ .dv-tab)) > .dv-tab:has([data-preview-heading]))) {
   &:not(:disabled):not([aria-disabled="true"]):not([data-disabled]):not(.hf-od-primary, .motion-button-primary, .bg-danger):is(:hover, :focus-visible, [data-highlighted]) {
     background-color: var(--motion-hover);
     color: var(--motion-strong);

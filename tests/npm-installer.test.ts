@@ -35,7 +35,9 @@ async function setupFixture(t: any) {
   const directory = await fixture(t), application = path.join(directory, 'source'), home = path.join(directory, 'install'), skillsDirectory = path.join(directory, 'skills');
   for (const name of ['scripts', 'shared', 'studio/build', 'skills/openmotion-production', 'docs']) await mkdir(path.join(application, name), { recursive: true });
   for (const name of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'README.md', 'AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(application, name), 'fixture');
-  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
+  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs', 'scripts/open-template-library.ts', 'shared/workspace-url.ts']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
+  await writeFile(path.join(application, 'workspace.ts'), 'export class WorkspaceStore { constructor(directory = process.env.MOTION_DATA_DIR) { this.directory = directory; } }');
+  await writeFile(path.join(application, 'preview.ts'), `export async function ensureService(store) { if (store.directory !== process.env.MOTION_DATA_DIR) throw new Error('Wrong workspace'); return { previewUrl: 'http://127.0.0.1:4173' }; }`);
   await writeFile(path.join(application, 'skills/openmotion-production/SKILL.md'), '---\nname: openmotion-production\ndescription: fixture\n---\nFixture');
   await writeJSON(path.join(application, 'shared/template-config.json'), { environment: 'prod' });
   await cp(new URL('../shared/mcp-profiles.json', import.meta.url), path.join(application, 'shared/mcp-profiles.json'));
@@ -50,12 +52,24 @@ async function setupFixture(t: any) {
   return { directory, application, home, skillsDirectory, manifest, codex, config };
 }
 
-test('successful setup hands the current Agent an invitation before any MCP use, without persisting an offer', async t => {
+test('successful setup hands the current Agent a project-free template library before any MCP use', async t => {
   const options = await setupFixture(t);
   const installed = await setup(options);
   assert.equal(installed.onboarding.hostSessionVerified, false);
-  assert.match(installed.onboarding.instructions, /OpenMotion 开源免费/);
+  assert.deepEqual(installed.onboarding.directAccess.toolsArgs, [path.join(installed.appRoot, 'scripts/npm-installer.mjs'), 'tools', '--home', installed.launcher.replace(/[/\\]run-mcp.mjs$/, ''), '--host', 'codex', '--codex', options.codex]);
+  const examples = [...installed.onboarding.instructions.matchAll(/```text\n([\s\S]*?)```/g)].map(([, text]) => text);
+  assert.equal(examples.length, 1);
+  const [example] = examples;
+  assert(example.startsWith('OpenMotion 已安装完成。\n\n'));
+  assert.doesNotMatch(example, /MCP|Skills?|prod|DEV|刷新|连接|新聊天|后台|开源免费/);
+  assert.match(example, /模板库已打开/);
+  assert.match(example, /打开并编辑/);
+  assert.doesNotMatch(example, /要用这个模板|回复编号/);
   assert(Array.isArray(installed.onboarding.catalog.templates));
+  assert.equal(installed.onboarding.preview.status, 'ready', installed.onboarding.preview.warning);
+  assert.equal(installed.onboarding.preview.projectCreated, false);
+  assert.equal(new URL(installed.onboarding.preview.previewUrl).searchParams.get('templates'), '1');
+  assert.equal(installed.onboarding.preview.previewHandoff.nextAction.kind, 'host');
   assert.equal('onboarding' in JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')), false);
 });
 
@@ -89,7 +103,7 @@ test('a flat-host upgrade replaces an owned legacy Skill with an explicit alias 
 test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and rejects a mixed-environment home', async t => {
   const options = await setupFixture(t), bundle = path.join(options.directory, 'bundle');
   await mkdir(path.join(bundle, 'scripts'), { recursive: true }); await mkdir(path.join(bundle, 'payload'));
-  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) {
+  for (const file of ['npm-installer.mjs', 'npm-hosts.mjs', 'npm-runtime.mjs', 'runtime-assets.mjs', 'check-installed-mcp.mjs', 'mcp-client.mjs', 'diagnostics.mjs', 'diagnostic-redaction.mjs', 'zip.mjs']) {
     await cp(new URL('../scripts/' + file, import.meta.url), path.join(bundle, 'scripts', file));
   }
   await writeJSON(path.join(bundle, 'package.json'), { version: '1.2.3', type: 'module' });
@@ -118,6 +132,20 @@ test('bundled CLI installs without a sidecar manifest, isolates DEV defaults and
   }), /template environment does not match manifest/);
   await writeJSON(path.join(bundle, 'package.json'), { version: '9.9.9', type: 'module' });
   await assert.rejects(runFile(process.execPath, command, { env }), /match the npm package version/);
+});
+
+test('a library startup failure reports the limitation without undoing successful host registration', async t => {
+  const options = await setupFixture(t);
+  await writeFile(path.join(options.application, 'scripts/open-template-library.ts'), 'throw new Error("Preview unavailable");');
+  const manifest = JSON.parse(await readFile(options.manifest, 'utf8'));
+  manifest.application = await archive(options.directory, options.application, 'failed-preview');
+  await writeJSON(options.manifest, manifest);
+  const installed = await setup(options);
+  assert.equal(installed.onboarding.preview.status, 'unavailable');
+  assert.equal(installed.onboarding.preview.projectCreated, false);
+  assert.match(installed.onboarding.preview.warning, /Preview unavailable/);
+  assert.equal(JSON.parse(await readFile(path.join(options.home, 'install.json'), 'utf8')).appRoot, installed.appRoot);
+  assert.ok(JSON.parse(await readFile(options.config, 'utf8')).openmotion);
 });
 
 test('local assets require pinned checksums and preserve earlier cache after corruption', async t => {
@@ -495,4 +523,27 @@ test('registration failure restores obsolete flat Skills, and malformed install 
   const state = path.join(options.home, 'install.json'); await writeJSON(state, false);
   await assert.rejects(setup(options), /belongs to another/);
   assert.equal(JSON.parse(await readFile(state, 'utf8')), false);
+});
+
+
+test('installed CLI uses the selected host transport and keeps failed tool results nonzero', async t => {
+  const options = await setupFixture(t), installed = await setup(options);
+  const tools = (JSON.parse(await readFile(path.join(installed.appRoot, 'shared/mcp-profiles.json'), 'utf8'))).phase1.tools;
+  await writeFile(installed.launcher, `import { createInterface } from 'node:readline';
+    for await (const line of createInterface({ input: process.stdin })) {
+      const q=JSON.parse(line); if(q.id===undefined) continue;
+      const result=q.method==='initialize'?{serverInfo:{version:'1.2.3'}}:q.method==='tools/list'?{tools:${JSON.stringify(tools.map(name => ({name,inputSchema:{type:'object'}})))}}:q.params.name==='openmotion_get_project'?{structuredContent:{dataDirectory:${JSON.stringify(installed.dataDirectory)}}}:{isError:true,structuredContent:{error:{code:'VERSION_CONFLICT',applied:false}}};
+      console.log(JSON.stringify({jsonrpc:'2.0',id:q.id,result}));
+    }`);
+  const cli = fileURLToPath(new URL('../scripts/npm-installer.mjs', import.meta.url));
+  const flags = ['--home', options.home, '--host', 'codex', '--codex', options.codex];
+  const listed = JSON.parse(await runFile(process.execPath, [cli, 'tools', ...flags]));
+  assert.equal(listed.dataDirectory, installed.dataDirectory);
+  assert.equal(listed.tools.length, tools.length);
+  const argsFile=path.join(options.directory, 'arguments 中文.json'); await writeJSON(argsFile, {requestId:'stable-request'});
+  await assert.rejects(runFile(process.execPath, [cli, 'call', 'openmotion_edit_project', '--args-file', argsFile, ...flags]), /VERSION_CONFLICT/);
+  await writeFile(argsFile, '[]');
+  await assert.rejects(runFile(process.execPath, [cli, 'call', 'openmotion_edit_project', '--args-file', argsFile, ...flags]), /JSON object/);
+  const config=JSON.parse(await readFile(options.config,'utf8')); config.openmotion.enabled=false; await writeJSON(options.config,config);
+  await assert.rejects(runFile(process.execPath, [cli, 'tools', ...flags]), /disabled/);
 });

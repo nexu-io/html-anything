@@ -51,7 +51,7 @@ MCP 工具说明和领域执行位于 `mcp-tools.ts`；`mcp.ts` 保留初始化�
 
 | Skill | workflow 短 ID | section |
 | --- | --- | --- |
-| openmotion-production | production（默认） | start、context、intake、templates、native、production、verification、edit、portable |
+| openmotion-production | production（默认） | start、context、intake、templates、native、production、verification、edit、portable、materials |
 | openmotion-director | director | start、actions、craft、phrases、decisions、sound、review、examples |
 | openmotion-template-to-video | template | start |
 | openmotion-recreate | recreate | start、rebuild、verification |
@@ -71,6 +71,10 @@ Gallery prompts carry the guide URL and exact template ID; the host reads the gu
 
 ## 共享质量与工具边界
 
+When selecting, obtaining or replacing media, all five routes conditionally read the [shared material policy](../skills/openmotion-production/references/materials.md), exposed as `openmotion://workflow/production/materials`. It owns source priorities, acquisition and usability checks; director decisions retain material/motion, timing and state relationships. Viewing, previewing or exporting existing content does not trigger acquisition. User constraints, supported workflow scope and reference fidelity remain authoritative; no new generation or retrieval Tool is introduced.
+
+A prior local trial used only “做一个哈利波特宣传片” in a fresh gpt-6.1-sol/high session, with no supplied media or follow-up sourcing prompt. It retrieved the Warner Bros. trailer and official imagery/wordmark, using ten original excerpts totaling 20.5 seconds in a 32-second 1080p30 MP4. Selected/project hashes and exported frames were checked. That trial used runtime 0.6.1 and director 1.5.5; this PR preserves current main and canonicalizes the shared policy links. The attached sample is historical execution evidence, not a behavioral rerun of this PR head. Harry Potter is already a policy example; no causal, generalization, conflicting-upload or full playback/listening claim follows from this single run.
+
 修改已有内容时，五个入口按需接入 [共享修改流程](../skills/openmotion-production/references/edit.md)，MCP resource 为 `openmotion://workflow/production/edit`；不新增自动触发的 motion-edit。该流程确定变化、保持项及连带影响，基于当前源文件修改，并核对受影响区间、邻接转场、声画锚点和后续再现。初次创建默认草稿、仅打开预览或复用成片链接不因此重走修改流程。
 
 首次缺少的规范和源文件须通过完成的工具调用先返回模型，再执行依赖操作；不能在同一个外层调用里补读并写入/套模板。完整正文仍可用时直接复用。长文档按实际返回预算分批，识别截断后补缺口；命令成功或 STATE 阅读记录均不能代替实际正文。此为宿主 Agent 的执行指导，MCP 未增加无法证明模型阅读状态的硬门禁。
@@ -87,7 +91,7 @@ Gallery prompts carry the guide URL and exact template ID; the host reads the gu
 | --- | --- | --- |
 | [SKILL.md](../skills/openmotion-recreate/SKILL.md) frontmatter description | 触发范围按动态图形复刻描述 | 支持新视频类型后同步触发范围，并重跑选路测试 |
 | SKILL.md Role and goal 第二段 | 只支持动态图形；实拍、口播、AI 视频说明不支持，不暗示给素材就能复刻，只提出动态图形版 | 放宽支持范围，缩小拒绝条件 |
-| SKILL.md §3 素材缺口（“This package exposes no generation Tool”） | 缺图片、片段、声音时用用户素材、询问，或提出宿主实际已有的生成工具 | 本包公开生成 Tool 时改写此句，补调用、采用结果和失败处理规则 |
+| SKILL.md §3 素材缺口（“This package exposes no generation Tool”） | Within supported media scope, use shared materials guidance for missing assets; ask only for unresolved inputs or access/capability limits. No generation Tool is added | 本包公开生成 Tool 时改写此句，补调用、采用结果和失败处理规则 |
 | [production.md](../skills/openmotion-production/references/production.md) 第 3 条 | 一期 MCP 包不提供生成 Tool，生成交给宿主或 Studio | 与上一行同步修改 |
 | SKILL.md §5 Sound | 默认沿用原片音轨并重新对齐；删去念出原品牌的旁白 | 有 TTS 后可改为重新配音，不只删除 |
 | SKILL.md §5 原片作底层（用户自有成片只改几处细节） | 仅此情况可把原片放在时间线上并打补丁 | 支持实拍局部修改或分镜混排时扩展适用条件 |

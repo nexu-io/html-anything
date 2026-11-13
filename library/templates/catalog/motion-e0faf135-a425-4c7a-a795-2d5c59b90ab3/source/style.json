@@ -1,0 +1,120 @@
+{
+  "background": {
+    "color": "#e983f2",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Final.txt",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：int num",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "复古窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "重复文件",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "代码片段",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "情绪图形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "总开关",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "任务条",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#e983f2",
+      "status": "inferred"
+    },
+    {
+      "hex": "#25124c",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4d16ed",
+      "status": "inferred"
+    },
+    {
+      "hex": "#dfffa5",
+      "status": "inferred"
+    },
+    {
+      "hex": "#f47a4e",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "等宽代码和文件名配复古系统窗口；硬边细框、强饱和渐变与像素符号",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "用复制失控的桌面表现繁杂工作，再让一个开关把所有噪声整理成少量完成的流程。",
+      "status": "inferred"
+    },
+    {
+      "rule": "一个窗口引出代码和文件，随后沿对角线形成层层残影。文件名越加越长，窗口互相压住；指针穿行，饱和粉紫背景逐渐加入橙色。",
+      "status": "inferred"
+    },
+    {
+      "rule": "OFF 状态让画面维持拥挤，切到 ON 后整体清空，三条流程在中心按行对齐。流程再合成一条，留下图标、短线与完成勾；不继续保留混乱桌面的碎片。",
+      "status": "inferred"
+    }
+  ]
+}

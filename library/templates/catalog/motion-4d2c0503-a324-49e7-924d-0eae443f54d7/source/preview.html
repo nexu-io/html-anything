@@ -1,0 +1,262 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Figma node — connect frames into Weave workflows · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#171819;--brand-ink:#f4f4f3;--accent:#bc92ce;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Figma <span>/</span> V270</div><div class="intro-line"><h1>Figma node — connect frames into Weave workflows</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>把设计帧变成工作流节点，再接入文字、图像与样式，分出多个结果。端口和连线是核心视觉语言。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 31.333333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 8, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Figma in Weave&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#bc92ce&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Figma in Weave&quot;, &quot;accent&quot;: &quot;#bc92ce&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="31.333333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 31.33 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Figma node — connect frames into Weave workflows · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#171819}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Figma</div><div class="type-sample">Figma in Weave</div><p>无衬线中粗主标题；细边框界面与小号功能文字</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#171819" style="--swatch:#171819" aria-label="复制色值 #171819"><span></span><code>#171819</code></button><button class="swatch" data-color="#f4f4f3" style="--swatch:#f4f4f3" aria-label="复制色值 #f4f4f3"><span></span><code>#F4F4F3</code></button><button class="swatch" data-color="#bc92ce" style="--swatch:#bc92ce" aria-label="复制色值 #bc92ce"><span></span><code>#BC92CE</code></button><button class="swatch" data-color="#68c6a4" style="--swatch:#68c6a4" aria-label="复制色值 #68c6a4"><span></span><code>#68C6A4</code></button><button class="swatch" data-color="#bda1df" style="--swatch:#bda1df" aria-label="复制色值 #bda1df"><span></span><code>#BDA1DF</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>设计源帧</span><span>节点容器</span><span>输入端口</span><span>文本节点</span><span>图像节点</span><span>产物分支</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule has-reference" id="section-1"><div class="rule-label"><span>01</span><h2>先确定设计源，再让它成为节点</h2></div><img class="reference" loading="eager" alt="3.00s · 构图参考" src="assets/reference-2.webp"><div class="rule-copy">
+<p>从应用场景进入复制设计，用过渡把熟悉的设计帧带到节点画布。源节点保留设计缩略图或名称，避免观众以为它变成了另一份素材。</p>
+
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>输入与输出朝向明确</h2></div><div class="rule-copy">
+<p>图像、文字和样式分别进入对应端口，中心设计节点接收输入，结果从另一侧分叉。连线随连接动作出现，落点固定在端口，完成后保持稳定。</p>
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>每条线都说明一个数据关系</h2></div><div class="rule-copy">
+<p>输入节点名称与目标槽位对应，多输出分支体现同一设计的不同使用方式。不要通过随机连线增加复杂感；需要新增参数时，先给它独立标签和清楚位置。</p>
+<div class="table-wrap"><table><thead><tr><th>区域</th><th>排布方式</th></tr></thead><tbody>
+<tr><td>输入</td><td>按参数类型排列</td></tr>
+<tr><td>设计节点</td><td>保留源设计身份</td></tr>
+<tr><td>输出</td><td>分支对应不同产物</td></tr>
+<tr><td>联名结束页</td><td>用简洁连接回应工作流关系</td></tr>
+</tbody></table></div>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>暗画布上保留轻量节点</h2></div><div class="rule-copy">
+<p>深灰底、浅色文字、淡紫主节点与青绿辅助强调形成层级。节点标签用无衬线字，端口文字避免过小；连线比节点弱，选择态比普通关系亮。</p>
+</div></section><section class="rule text-only" id="section-5"><div class="rule-label"><span>05</span><h2>换工作流时先定义接口</h2></div><div class="rule-copy">
+<p>可以更换设计工具和自动化平台。先列可输入的字段与可输出的产物，再替换节点名称、缩略图和品牌；所有连线都要有明确的起点职责与终点用途。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>应用场景</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>复制设计</b></button><button class="beat" data-time="8.0"><span>8.00<small>s</small></span><b>波浪字过渡</b></button><button class="beat" data-time="11.0"><span>11.00<small>s</small></span><b>节点画布</b></button><button class="beat" data-time="14.0"><span>14.00<small>s</small></span><b>连接属性</b></button><button class="beat" data-time="18.0"><span>18.00<small>s</small></span><b>文本与图像输入</b></button><button class="beat" data-time="22.0"><span>22.00<small>s</small></span><b>多输出</b></button><button class="beat" data-time="27.0"><span>27.00<small>s</small></span><b>双品牌连线</b></button></div><div class="filmstrip"><figure><img src="https://r.open-design.ai/files/01de939eca868c5aba87cda5f633d4875528615f6cf5f65357c648ed6732254d" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="3.00 秒的构图参考" loading="lazy"><figcaption>3.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="11.00 秒的构图参考" loading="lazy"><figcaption>11.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="14.00 秒的构图参考" loading="lazy"><figcaption>14.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="22.00 秒的构图参考" loading="lazy"><figcaption>22.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/4021e0720c2ad7ea0ceeb85fd485e5a9c70bdaf3d08445f5df252813f27fd03a" alt="27.00 秒的构图参考" loading="lazy"><figcaption>27.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>替换设计和工作流工具；保留源→参数→多输出。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>设计源帧 / 节点容器 / 输入端口 / 文本节点 / 图像节点 / 产物分支</p>
+<ul><li>设计帧变成可连接节点，文本与图像分别连到槽位，输出再分叉到不同使用场景。</li><li>连线须落在正确端口，不能装饰性随机相连。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Figma / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Figma node — connect frames into Weave workflows
+
+把设计帧变成工作流节点，再接入文字、图像与样式，分出多个结果。端口和连线是核心视觉语言。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 31.333333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 8,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Figma in Weave&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#bc92ce&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Figma in Weave&quot;,
+        &quot;accent&quot;: &quot;#bc92ce&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 先确定设计源，再让它成为节点
+
+从应用场景进入复制设计，用过渡把熟悉的设计帧带到节点画布。源节点保留设计缩略图或名称，避免观众以为它变成了另一份素材。
+
+![3.00s · 构图参考](assets/reference-2.webp)
+
+## 输入与输出朝向明确
+
+图像、文字和样式分别进入对应端口，中心设计节点接收输入，结果从另一侧分叉。连线随连接动作出现，落点固定在端口，完成后保持稳定。
+
+## 每条线都说明一个数据关系
+
+输入节点名称与目标槽位对应，多输出分支体现同一设计的不同使用方式。不要通过随机连线增加复杂感；需要新增参数时，先给它独立标签和清楚位置。
+
+| 区域 | 排布方式 |
+| --- | --- |
+| 输入 | 按参数类型排列 |
+| 设计节点 | 保留源设计身份 |
+| 输出 | 分支对应不同产物 |
+| 联名结束页 | 用简洁连接回应工作流关系 |
+
+## 暗画布上保留轻量节点
+
+深灰底、浅色文字、淡紫主节点与青绿辅助强调形成层级。节点标签用无衬线字，端口文字避免过小；连线比节点弱，选择态比普通关系亮。
+
+## 换工作流时先定义接口
+
+可以更换设计工具和自动化平台。先列可输入的字段与可输出的产物，再替换节点名称、缩略图和品牌；所有连线都要有明确的起点职责与终点用途。
+
+## 配色与字形
+
+无衬线中粗主标题；细边框界面与小号功能文字。
+
+#171819 · #f4f4f3 · #bc92ce · #68c6a4 · #bda1df
+
+## 元素与制作规则
+
+设计源帧 / 节点容器 / 输入端口 / 文本节点 / 图像节点 / 产物分支
+
+- 设计帧变成可连接节点，文本与图像分别连到槽位，输出再分叉到不同使用场景。
+- 连线须落在正确端口，不能装饰性随机相连。
+
+## 内容替换
+
+- 替换设计和工作流工具；保留源→参数→多输出。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Figma&quot;,
+  &quot;id&quot;: &quot;V270&quot;,
+  &quot;palette&quot;: [
+    &quot;#171819&quot;,
+    &quot;#f4f4f3&quot;,
+    &quot;#bc92ce&quot;,
+    &quot;#68c6a4&quot;,
+    &quot;#bda1df&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线中粗主标题；细边框界面与小号功能文字&quot;,
+  &quot;sample&quot;: &quot;Figma in Weave&quot;,
+  &quot;objects&quot;: [
+    &quot;设计源帧&quot;,
+    &quot;节点容器&quot;,
+    &quot;输入端口&quot;,
+    &quot;文本节点&quot;,
+    &quot;图像节点&quot;,
+    &quot;产物分支&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/01de939eca868c5aba87cda5f633d4875528615f6cf5f65357c648ed6732254d&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 3.0,
+      &quot;frameId&quot;: &quot;K0013&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 11.0,
+      &quot;frameId&quot;: &quot;K0045&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 14.0,
+      &quot;frameId&quot;: &quot;K0057&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 22.0,
+      &quot;frameId&quot;: &quot;K0086&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/4021e0720c2ad7ea0ceeb85fd485e5a9c70bdaf3d08445f5df252813f27fd03a&quot;,
+      &quot;timeSeconds&quot;: 27.0,
+      &quot;frameId&quot;: &quot;K0105&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;应用场景&quot;,
+      &quot;end&quot;: 3,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3,
+      &quot;label&quot;: &quot;复制设计&quot;,
+      &quot;end&quot;: 8,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 8,
+      &quot;label&quot;: &quot;波浪字过渡&quot;,
+      &quot;end&quot;: 11,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 11,
+      &quot;label&quot;: &quot;节点画布&quot;,
+      &quot;end&quot;: 14,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 14,
+      &quot;label&quot;: &quot;连接属性&quot;,
+      &quot;end&quot;: 18,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 18,
+      &quot;label&quot;: &quot;文本与图像输入&quot;,
+      &quot;end&quot;: 22,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 22,
+      &quot;label&quot;: &quot;多输出&quot;,
+      &quot;end&quot;: 27,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 27,
+      &quot;label&quot;: &quot;双品牌连线&quot;,
+      &quot;end&quot;: 31.333333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 31.333333,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

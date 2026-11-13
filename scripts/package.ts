@@ -3,7 +3,7 @@ import { readFile, mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { distributionFiles } from './distribution.ts';
+import { distributionFiles, requireDownloadedMedia } from './distribution.ts';
 import { zip } from './zip.mjs';
 export { zip } from './zip.mjs';
 const root = fileURLToPath(new URL('../', import.meta.url));
@@ -20,6 +20,7 @@ async function main() {
   await check();
   const manifest = JSON.parse(await readFile(path.join(root, '.codex-plugin/plugin.json'), 'utf8'));
   const files = await distributionFiles(profile);
+  await requireDownloadedMedia(files);
   let commit: string | null;
   try { commit = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'ignore'] }).trim(); }
   catch { commit = JSON.parse(await readFile(path.join(root, 'shared/build-info.json'), 'utf8')).commit; }

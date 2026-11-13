@@ -12,7 +12,7 @@ test('default MCP discovery publishes only OpenMotion tool and resource names', 
   assert.equal(list.result.tools.length, 11);
   assert.ok(list.result.tools.every((tool: any) => tool.name.startsWith('openmotion_')));
   const resources: any = await rpc({ jsonrpc: '2.0', id: 2, method: 'resources/list' });
-  assert.equal(resources.result.resources.length, 28);
+  assert.equal(resources.result.resources.length, 29);
   assert.ok(resources.result.resources.every((resource: any) => resource.uri.startsWith('openmotion://')));
 });
 

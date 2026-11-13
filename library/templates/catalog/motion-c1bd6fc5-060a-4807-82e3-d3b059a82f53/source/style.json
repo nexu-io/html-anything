@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#f8f8fa",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Send",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Create card",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：Stripe",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "手机",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "收款通知",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "转账面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "支付卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "收益数字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "账目表格",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#f8f8fa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#242331",
+      "status": "inferred"
+    },
+    {
+      "hex": "#6533ef",
+      "status": "inferred"
+    },
+    {
+      "hex": "#dceafa",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ded3f5",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "浅色产品底、紫色行动按钮；数字比说明文字更突出。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "从通知进入余额，再发送付款、创建卡片、对话操作，最后回到总览。每次只让一张操作面板居中，确认后再移交给下一个场景。",
+      "status": "inferred"
+    },
+    {
+      "rule": "白色面板浮在低对比蓝紫渐变上，按钮和焦点描边使用鲜紫色。近景显示字段和点击，远景交代手机与仪表盘。",
+      "status": "inferred"
+    },
+    {
+      "rule": "创建卡片后立即展示带高光的紫色实体卡，并让 2% 数字占据另一半画面。卡片转动幅度小，数字稳定。",
+      "status": "inferred"
+    }
+  ]
+}

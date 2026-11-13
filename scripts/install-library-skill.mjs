@@ -3,6 +3,7 @@ import { cp, lstat, mkdir, mkdtemp, readFile, readdir, rename, rm } from 'node:f
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { validateMediaManifest } from '../shared/repository-media.ts';
 
 const source = fileURLToPath(new URL('../library/skills/', import.meta.url));
 const aliases = { brandkit: 'openmotion-brandkit', 'presenter-story': 'openmotion-presenter-story', 'motion-design-remix': 'openmotion-design-remix' };
@@ -14,7 +15,10 @@ async function snapshot(directory, relative = '') {
     if (item.isDirectory()) Object.assign(files, await snapshot(directory, name));
     else {
       assert(item.isFile(), 'Unsupported Skill entry: ' + name);
-      files[name] = createHash('sha256').update(await readFile(path.join(directory, name))).digest('hex');
+      const bytes = await readFile(path.join(directory, name));
+      assert(!bytes.subarray(0, 128).toString().startsWith('version https://git-lfs.github.com/spec/v1'),
+        'Skill media is not downloaded. Run git lfs pull --include="library/skills/**" --exclude="" before installing a Library Skill.');
+      files[name] = createHash('sha256').update(bytes).digest('hex');
     }
   }
   return files;
@@ -26,6 +30,13 @@ export async function installLibrarySkill(name, destination) {
   const canonical = aliases[name] ?? name;
   assert(Object.values(aliases).includes(canonical), 'Unknown Library Skill: ' + name);
   assert(destination, 'An explicit destination skills directory is required');
+  const media = validateMediaManifest(JSON.parse(await readFile(new URL('../repository-media.json', import.meta.url), 'utf8')));
+  for (const file of media.files.filter(file => file.path.startsWith('library/skills/' + canonical + '/'))) {
+    const bytes = await readFile(new URL('../' + file.path, import.meta.url)).catch(() => {
+      throw new Error('Optional Skill media is missing. Run npm run media:pull -- library/skills/' + canonical);
+    });
+    assert(bytes.length === file.bytes && createHash('sha256').update(bytes).digest('hex') === file.sha256, 'Optional Skill media does not match repository-media.json');
+  }
   const directory = path.resolve(destination), names = canonical === name ? [canonical] : [canonical, name];
   await mkdir(directory, { recursive: true });
   const missing = [];

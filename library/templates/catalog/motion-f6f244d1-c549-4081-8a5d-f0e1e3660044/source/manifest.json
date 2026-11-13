@@ -1,0 +1,240 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "fps": 30,
+  "durationSeconds": 61,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "82cada1c091bda4b6e5d82284dc956df7857acaabaff600ccad14854a4b53361"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "timeSeconds": 8,
+      "frameId": "K0027",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "timeSeconds": 18,
+      "frameId": "K0055",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "timeSeconds": 32,
+      "frameId": "K0092",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "timeSeconds": 46,
+      "frameId": "K0124",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "timeSeconds": 56,
+      "frameId": "K0146",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 24.315155042000697,
+    "measurementSeconds": 0.927319541999168,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "演示为重新编写的机制示例，时间与构图为制作参考，不是完整原样复刻。",
+    "具体字体文件、原始缓动及音画同步点未从源工程取得。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V379",
+      "sha256": "82cada1c091bda4b6e5d82284dc956df7857acaabaff600ccad14854a4b53361",
+      "sourceUrl": "https://www.linkedin.com/posts/gleanwork_introducing-glean-agents-activity-7295472145118240768-sTRT"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.webp",
+      "bytes": 5850,
+      "sha256": "2fe68ca96747f687950c6cd3bb293d0be799dcb1412a50c78af146a19d7f8a0c"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "bytes": 9322,
+      "sha256": "b7f49600980fa438f71f7a5361345f8c032b944eafef97a418a4552dc325a1c7"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "bytes": 12150,
+      "sha256": "0dca7abdb1a01c400eff75f5aca7f6c350d3ca80ba36bbab46b0c3eb2a34499b"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "bytes": 20130,
+      "sha256": "1529a5ab7f496416f3b0306754c2f176c78eb1da8ca6821f9d4d31476148371f"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "bytes": 10144,
+      "sha256": "7d2cb19acb9f3dfa026436c34049c7e5fa776f2c1bb8cbb4b38208758d76523b"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "bytes": 22284,
+      "sha256": "2ec78bfbc534410ea490128c9151b81facb3887ac950d9e333ea5c0b7311be2d"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/clip-2.html",
+      "bytes": 564,
+      "sha256": "60ab63a177ad4f8fcae808e89e3a7e92eedfb0ee431e81b4a99ece46d220670e"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 5271,
+      "sha256": "4610a1e85f27b199282d08ca1166c5d63d3681c3a23265050deae08b16f23323"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 2183,
+      "sha256": "0a25dad8ec9f9c796b696a75b4cc378a496ea34415ea624ee32c8de8e2a32720"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 538,
+      "sha256": "7b505d5cfc4cb0249d2300b3607d694e01a9d9a3e231f7a79b465cca20dbb4cf"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 7246,
+      "sha256": "a3defc50c39e03f6cab3a6de5900a392da2236b6420636e43805654414dd51e8"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 22736,
+      "sha256": "b47422c0ad433245c125d88dfa3005852fb0437722e4cbc5845c56162e3be913"
+    },
+    {
+      "path": "style.json",
+      "bytes": 2920,
+      "sha256": "f5a250a6a9b0782b14136e9f96d5e180e88a4b0de6464c07d742816dbb650605"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 2441,
+      "sha256": "6000a5902cfbd34fdb0467398251857b64219f5c7e838262a206ccdc4d76bd6a"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 1952,
+      "sha256": "4a2ef7ba3c54dc0b08e6cde79576188cf925a91d7a9b22e2885d8113b3c39522"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12581,
+      "sha256": "9c6ebea34a3b5f4803cb6dcbb619530e44acffabb201361fdb35a833c137a182"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4904,
+      "sha256": "0614c48b41d6aa4b565565018d8816d8a3da0ce24070bdf937c23c604a748e8a"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Glean Agents"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#3a2ee9"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/clip-2.html",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 2
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 61,
+      "status": "authored"
+    },
+    {
+      "id": "clip-2",
+      "src": "demos/clip-2.html",
+      "duration": 7,
+      "status": "authored"
+    }
+  ]
+}

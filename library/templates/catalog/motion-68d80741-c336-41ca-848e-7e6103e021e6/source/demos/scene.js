@@ -1,0 +1,11 @@
+
+function paper(x,y,w,h,title,color='#fff'){rect(x,y,w,h,color,12);text(title,x+18,y+24,18,(/^#[0-9a-f]{6}$/i.test(color)&&[1,3,5].reduce((v,j)=>v+parseInt(color.slice(j,j+2),16),0)<350)?'#fff':'#25262b','left','Arial',600,w-35);}
+function rows(x,y,w,n=4,c='#b8bdc2',gap=22){for(let j=0;j<n;j++)rect(x,y+j*gap,w*(.64+rand(j)*.32),5,c,2)}
+function ring(x,y,r,c,width=3){ctx.beginPath();ctx.arc(x,y,r,0,TAU);ctx.strokeStyle=c;ctx.lineWidth=width;ctx.stroke()}
+function pill(x,y,w,txt,c='#fff',ink='#222'){rect(x-w/2,y-22,w,44,c,22);text(txt,x,y,18,ink,'center','Arial',500,w-26)}
+function arrow(x,y,xx,yy,c){line(x,y,xx,yy,c,2);let a=Math.atan2(yy-y,xx-x);poly([[xx,yy],[xx-10*cos(a-.5),yy-10*sin(a-.5)],[xx-10*cos(a+.5),yy-10*sin(a+.5)]],c)}
+function header(t,color=CONFIG.palette[1]){fittedText(P.title,500,55,30,color,870,'Arial',600)}
+function foot(t,color=CONFIG.palette[1]){text(CONFIG.stages[stageAt(t)].label,500,557,16,color)}
+function orbitNode(x,y,r,c,labelText){ellipse(x,y,r,r,c);text(labelText,x,y,16,'#25262b','center','Arial',500,r*1.65)}
+function wave(x,y,w,h,c,t,phaseOffset=0){ctx.beginPath();for(let j=0;j<=80;j++){let xx=x+j*w/80,yy=y+sin(j*.15+t+phaseOffset)*h*(.4+.6*sin(j/80*Math.PI));j?ctx.lineTo(xx,yy):ctx.moveTo(xx,yy)}ctx.strokeStyle=c;ctx.lineWidth=3;ctx.stroke()}
+function drawScene(t){bg();let n=stageAt(t),u=stageProgress(t);at(500,300,1,0,()=>{if(n<3){let a=[[-95,-90],[0,-90],[0,-15],[80,-15],[80,95],[-5,95],[-5,10],[-95,10]],b=n===0?[[-20,-120],[5,-120],[5,-20],[90,-20],[20,120],[-5,120],[-5,20],[-90,20]]:n===1?[[-100,-90],[100,-90],[100,-35],[25,20],[25,100],[-10,100],[-60,20],[-100,-50]]:[[-100,-70],[100,-70],[100,65],[5,65],[-30,100],[-55,65],[-100,65],[-100,0]];poly(a.map((p,j)=>p.map((v,k)=>mix(v,b[j][k],ease(u)))),P.accent)}else if(n===3){let h=30+70*Math.abs(sin(u*TAU));ctx.beginPath();ctx.moveTo(-130,0);ctx.quadraticCurveTo(0,-h*2,130,0);ctx.quadraticCurveTo(0,h*2,-130,0);ctx.fillStyle=P.accent;ctx.fill();ellipse(0,0,22,Math.max(4,h*.3),'#000')}else{let s=n===5?1-u*.6:1;ellipse(0,0,110*s,110*s,P.accent);for(let j=-1;j<=1;j++)line(-120*s,j*65*s,120*s,j*65*s,'#000',15*s);ctx.strokeStyle='#000';ctx.lineWidth=15*s;ctx.beginPath();ctx.ellipse(0,0,55*s,120*s,0,0,TAU);ctx.stroke()}});if(P.title!==CONFIG.demoTitle)text(P.title,500,540,22,P.accent)}

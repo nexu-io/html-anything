@@ -1,0 +1,12 @@
+# One topic across documents and designs
+
+Reference guidance and authored HTML motion examples, not a verified complete Studio project.
+
+- Read [motion.md](source/motion.md) and open [preview.html](source/preview.html). All guide images and demo files are local.
+- Edit source in this folder; refresh its manifest with `npm run templates:manifest -- motion-55c19bf3-dbb1-4890-98c7-5ea7fb5ee432`, stage the change and run `npm run templates:check`.
+- [Reference video](https://r.open-design.ai/files/276a2f773c18fe3cc14425e139f227489be559952a3bab8f3870f3f0c47ae20f) · [Published package](https://r.open-design.ai/files/13a01ba2d72d304369878e2a9882983a66edee671e44792e038ae76c47b41628). Videos and duplicate archives remain in the CMS.
+- Metadata, translations and imported package identity: [template.json](template.json).
+
+## Acknowledgements
+
+[Original reference](https://x.com/claudeai/status/2100258492590207079). Reference footage, brands, screenshots and fonts retain their original rights; the repository license does not relicense them. Measured/inferred limits and import normalization remain in [manifest.json](source/manifest.json).

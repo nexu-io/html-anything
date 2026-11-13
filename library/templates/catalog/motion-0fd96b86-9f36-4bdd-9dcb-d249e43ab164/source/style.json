@@ -1,0 +1,113 @@
+{
+  "background": {
+    "color": "#080808",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Framer is now",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：in Cursor",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "任务输入框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "CMS 行列表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "蓝色选择边框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "结论标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "双品牌标志",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#080808",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#315dfb",
+      "status": "inferred"
+    },
+    {
+      "hex": "#242424",
+      "status": "inferred"
+    },
+    {
+      "hex": "#929292",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "黑底白色中等字重无衬线；蓝色只标记被操作的数据行。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "从键盘近景过渡到暗色输入框，输入完成后切到 CMS 表格。让蓝框顺着行列表出现，说明一条请求影响多条数据。",
+      "status": "inferred"
+    },
+    {
+      "rule": "输入特写、表格全貌和发布标题使用不同景别；数据视图缩小退出后，白字标题从超大画幅回到中央。黑底和蓝色细边保持一致。",
+      "status": "inferred"
+    },
+    {
+      "rule": "结论写成两行短句，留读后收为两个等视觉重量的标志，中间用乘号。替换品牌时保留“输入—结果—接入公告”的因果链。",
+      "status": "inferred"
+    }
+  ]
+}

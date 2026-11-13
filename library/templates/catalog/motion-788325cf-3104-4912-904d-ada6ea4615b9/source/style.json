@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#ffffff",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：Hire instantly",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Compliance.",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "搜索框",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "候选人卡",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "详情页",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "视频面试",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "转写文本",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "聘用按钮",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "付款表",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#242424",
+      "status": "inferred"
+    },
+    {
+      "hex": "#8060d9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e8e1f7",
+      "status": "inferred"
+    },
+    {
+      "hex": "#b9b9c4",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "纯白界面、紫色行动按钮与能力短句，细线候选人卡片。",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "输入技能条件后展示候选人，再打开详情看面试与文字记录，接着聘用、介绍和付款。用同一位候选人把多个步骤连起来。",
+      "status": "inferred"
+    },
+    {
+      "rule": "Find、Access、Hire、Compliance 等短句用紫色居中，停留短于实际界面。白底与小量散点保持轻盈，避免抢走资料可读性。",
+      "status": "inferred"
+    },
+    {
+      "rule": "聘用按钮短暂从界面抽出独立展示，点击后转向介绍邮件。迁移时替换职位条件、人物资料与动作结果，保持流程真实对应。",
+      "status": "inferred"
+    }
+  ]
+}

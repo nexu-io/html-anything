@@ -15,7 +15,7 @@ const metadataById = new Map(metadata.entries.map(entry => [entry.id, entry]));
 export const libraryTemplates: GalleryTemplate[] = [...catalogTemplates(snapshot.entries, frames.frames).map(template => {
   const cover = covers.get(template.id);
   const original = snapshot.entries.find((entry: { id: string }) => entry.id === template.id);
-  return { ...enrichTemplate(template, original.video, metadataById.get(template.id), metadata), posterUrl: cover && cover.video === original.video && /^\/web\/catalog\/covers\/[a-f0-9]{24}\.jpg$/.test(cover.poster) ? cover.poster : undefined };
+  return { ...enrichTemplate(template, original.video, metadataById.get(template.id), metadata), posterUrl: cover && cover.video === original.video && /^\/web\/catalog\/covers\/[a-f0-9]{24}\.(?:jpg|webp)$/.test(cover.poster) ? cover.poster : undefined };
 }), ...templates.map(template => ({
   id: template.id, title: template.title, subtitle: `${template.label} · Hyperframes`, description: template.description,
   collection: 'builtin' as const, kind: 'builtin' as const, tags: [template.label], duration: template.duration, ratio: '16:9',

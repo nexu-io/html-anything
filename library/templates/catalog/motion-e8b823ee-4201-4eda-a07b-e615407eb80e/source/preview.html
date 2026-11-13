@@ -1,0 +1,292 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Introducing Glean · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f7f2e7;--brand-ink:#35223b;--board-label-ink:#000000;--accent:#6c22c8;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Glean <span>/</span> V380</div><div class="intro-line"><h1>Introducing Glean</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>先展示助理理解个人任务，再把个人偏好扩展为人员、项目和数据的企业关系图。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 91.933333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 49, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Glean Assistant&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#6c22c8&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Glean Assistant&quot;, &quot;accent&quot;: &quot;#6c22c8&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="91.933333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 91.93 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Introducing Glean · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f2e7}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Glean</div><div class="type-sample">Glean Assistant</div><p>中等字重无衬线；紫色陈述句与白色结果卡分层</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f7f2e7" style="--swatch:#f7f2e7" aria-label="复制色值 #f7f2e7"><span></span><code>#F7F2E7</code></button><button class="swatch" data-color="#35223b" style="--swatch:#35223b" aria-label="复制色值 #35223b"><span></span><code>#35223B</code></button><button class="swatch" data-color="#6c22c8" style="--swatch:#6c22c8" aria-label="复制色值 #6c22c8"><span></span><code>#6C22C8</code></button><button class="swatch" data-color="#e8c4ef" style="--swatch:#e8c4ef" aria-label="复制色值 #e8c4ef"><span></span><code>#E8C4EF</code></button><button class="swatch" data-color="#d4ef90" style="--swatch:#d4ef90" aria-label="复制色值 #d4ef90"><span></span><code>#D4EF90</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>柔和曲面</span><span>提示栏</span><span>结果文本</span><span>人物节点</span><span>项目节点</span><span>工具图标</span><span>网络连线</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>个人任务用结果说明理解</h2></div><div class="rule-copy">
+<p>粉紫与米白渐变背景上保留细网格。提示栏输入后扩成白色结果卡，让策划方案或团队更新占据主要阅读时间，标题只在任务切换时出现。</p>
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>人物中心转成企业图谱</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;人物中心转成企业图谱&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 20, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;35–55 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>人物中心转成企业图谱</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="人物中心转成企业图谱" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="20" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 20.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>35–55 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Introducing Glean · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f7f2e7}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;35&quot; data-end=&quot;55&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>先以单个人物为圆心放置写作、思考等偏好，再拉远加入人员、项目、数据与任务节点。连线随节点入场生长，近景文字清楚后再缩小成整体。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>图谱回到可使用的代理</h2></div><div class="rule-copy">
+<p>网络解释上下文，下一段仍要回到提示栏、流程和工具入口。将复杂图谱与简洁任务界面交替，不让所有镜头都变成漫游关系图。</p>
+
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>把新行业的关系填进去</h2></div><div class="rule-copy">
+<p>替换人物、项目和数据源时，按真实关联连线。个人写作习惯与组织资源分别保留一个示例，结果文本只需展示最关键段落。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>柔和几何品牌</b></button><button class="beat" data-time="6.0"><span>6.00<small>s</small></span><b>个人助理</b></button><button class="beat" data-time="14.0"><span>14.00<small>s</small></span><b>任务输入</b></button><button class="beat" data-time="20.0"><span>20.00<small>s</small></span><b>策划结果</b></button><button class="beat" data-time="27.0"><span>27.00<small>s</small></span><b>个人写作</b></button><button class="beat" data-time="35.0"><span>35.00<small>s</small></span><b>个人偏好图</b></button><button class="beat" data-time="45.0"><span>45.00<small>s</small></span><b>企业关系图</b></button><button class="beat" data-time="58.0"><span>58.00<small>s</small></span><b>创建代理</b></button><button class="beat" data-time="69.0"><span>69.00<small>s</small></span><b>代理流程</b></button><button class="beat" data-time="74.0"><span>74.00<small>s</small></span><b>工具生态</b></button><button class="beat" data-time="79.0"><span>79.00<small>s</small></span><b>企业网络收束</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="14.00 秒的构图参考" loading="lazy"><figcaption>14.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="27.00 秒的构图参考" loading="lazy"><figcaption>27.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="45.00 秒的构图参考" loading="lazy"><figcaption>45.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="69.00 秒的构图参考" loading="lazy"><figcaption>69.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="79.00 秒的构图参考" loading="lazy"><figcaption>79.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可替换为组织知识助理；保留个人→组织→代理的扩展。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>柔和曲面 / 提示栏 / 结果文本 / 人物节点 / 项目节点 / 工具图标 / 网络连线</p>
+<ul><li>粉紫与米白渐变背景上保留细网格。提示栏输入后扩成白色结果卡，让策划方案或团队更新占据主要阅读时间，标题只在任务切换时出现。</li><li>先以单个人物为圆心放置写作、思考等偏好，再拉远加入人员、项目、数据与任务节点。连线随节点入场生长，近景文字清楚后再缩小成整体。</li><li>网络解释上下文，下一段仍要回到提示栏、流程和工具入口。将复杂图谱与简洁任务界面交替，不让所有镜头都变成漫游关系图。</li><li>替换人物、项目和数据源时，按真实关联连线。个人写作习惯与组织资源分别保留一个示例，结果文本只需展示最关键段落。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Glean / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Introducing Glean
+
+先展示助理理解个人任务，再把个人偏好扩展为人员、项目和数据的企业关系图。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 91.933333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 49,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Glean Assistant&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#6c22c8&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Glean Assistant&quot;,
+        &quot;accent&quot;: &quot;#6c22c8&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 个人任务用结果说明理解
+
+粉紫与米白渐变背景上保留细网格。提示栏输入后扩成白色结果卡，让策划方案或团队更新占据主要阅读时间，标题只在任务切换时出现。
+
+## 人物中心转成企业图谱
+
+先以单个人物为圆心放置写作、思考等偏好，再拉远加入人员、项目、数据与任务节点。连线随节点入场生长，近景文字清楚后再缩小成整体。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;人物中心转成企业图谱&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 20,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;35–55 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 图谱回到可使用的代理
+
+网络解释上下文，下一段仍要回到提示栏、流程和工具入口。将复杂图谱与简洁任务界面交替，不让所有镜头都变成漫游关系图。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–6.00s | 柔和几何品牌 |
+| 6.00–14.00s | 个人助理 |
+| 14.00–20.00s | 任务输入 |
+| 20.00–27.00s | 策划结果 |
+| 27.00–35.00s | 个人写作 |
+| 35.00–45.00s | 个人偏好图 |
+| 45.00–58.00s | 企业关系图 |
+| 58.00–69.00s | 创建代理 |
+| 69.00–74.00s | 代理流程 |
+| 74.00–79.00s | 工具生态 |
+| 79.00–91.93s | 企业网络收束 |
+
+## 把新行业的关系填进去
+
+替换人物、项目和数据源时，按真实关联连线。个人写作习惯与组织资源分别保留一个示例，结果文本只需展示最关键段落。
+
+## 配色与字形
+
+中等字重无衬线；紫色陈述句与白色结果卡分层。
+
+#f7f2e7 · #35223b · #6c22c8 · #e8c4ef · #d4ef90
+
+## 元素与制作规则
+
+柔和曲面 / 提示栏 / 结果文本 / 人物节点 / 项目节点 / 工具图标 / 网络连线
+
+- 粉紫与米白渐变背景上保留细网格。提示栏输入后扩成白色结果卡，让策划方案或团队更新占据主要阅读时间，标题只在任务切换时出现。
+- 先以单个人物为圆心放置写作、思考等偏好，再拉远加入人员、项目、数据与任务节点。连线随节点入场生长，近景文字清楚后再缩小成整体。
+- 网络解释上下文，下一段仍要回到提示栏、流程和工具入口。将复杂图谱与简洁任务界面交替，不让所有镜头都变成漫游关系图。
+- 替换人物、项目和数据源时，按真实关联连线。个人写作习惯与组织资源分别保留一个示例，结果文本只需展示最关键段落。
+
+## 内容替换
+
+- 可替换为组织知识助理；保留个人→组织→代理的扩展。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Glean&quot;,
+  &quot;id&quot;: &quot;V380&quot;,
+  &quot;palette&quot;: [
+    &quot;#f7f2e7&quot;,
+    &quot;#35223b&quot;,
+    &quot;#6c22c8&quot;,
+    &quot;#e8c4ef&quot;,
+    &quot;#d4ef90&quot;
+  ],
+  &quot;typography&quot;: &quot;中等字重无衬线；紫色陈述句与白色结果卡分层&quot;,
+  &quot;sample&quot;: &quot;Glean Assistant&quot;,
+  &quot;objects&quot;: [
+    &quot;柔和曲面&quot;,
+    &quot;提示栏&quot;,
+    &quot;结果文本&quot;,
+    &quot;人物节点&quot;,
+    &quot;项目节点&quot;,
+    &quot;工具图标&quot;,
+    &quot;网络连线&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 14.0,
+      &quot;frameId&quot;: &quot;K0045&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 27.0,
+      &quot;frameId&quot;: &quot;K0080&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 45.0,
+      &quot;frameId&quot;: &quot;K0120&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 69.0,
+      &quot;frameId&quot;: &quot;K0177&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 79.0,
+      &quot;frameId&quot;: &quot;K0206&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;柔和几何品牌&quot;,
+      &quot;end&quot;: 6,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 6,
+      &quot;label&quot;: &quot;个人助理&quot;,
+      &quot;end&quot;: 14,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 14,
+      &quot;label&quot;: &quot;任务输入&quot;,
+      &quot;end&quot;: 20,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 20,
+      &quot;label&quot;: &quot;策划结果&quot;,
+      &quot;end&quot;: 27,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 27,
+      &quot;label&quot;: &quot;个人写作&quot;,
+      &quot;end&quot;: 35,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 35,
+      &quot;label&quot;: &quot;个人偏好图&quot;,
+      &quot;end&quot;: 45,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 45,
+      &quot;label&quot;: &quot;企业关系图&quot;,
+      &quot;end&quot;: 58,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 58,
+      &quot;label&quot;: &quot;创建代理&quot;,
+      &quot;end&quot;: 69,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 69,
+      &quot;label&quot;: &quot;代理流程&quot;,
+      &quot;end&quot;: 74,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 74,
+      &quot;label&quot;: &quot;工具生态&quot;,
+      &quot;end&quot;: 79,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 79,
+      &quot;label&quot;: &quot;企业网络收束&quot;,
+      &quot;end&quot;: 91.933333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 91.933333,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

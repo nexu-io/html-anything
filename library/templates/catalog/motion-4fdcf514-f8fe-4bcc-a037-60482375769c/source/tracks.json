@@ -1,0 +1,97 @@
+{
+  "tracks": [
+    {
+      "id": "composition.center",
+      "target": "composition",
+      "property": "center",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          4.72
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          [
+            300.0,
+            312.0
+          ]
+        ],
+        [
+          4.72,
+          [
+            300.0,
+            312.0
+          ]
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    },
+    {
+      "id": "composition.height",
+      "target": "composition",
+      "property": "height",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          4.72
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          312
+        ],
+        [
+          4.72,
+          312
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    },
+    {
+      "id": "composition.width",
+      "target": "composition",
+      "property": "width",
+      "unit": "px",
+      "space": "canvas",
+      "status": "inferred",
+      "source": "video",
+      "method": "static",
+      "interpolation": "linear",
+      "valid": [
+        [
+          0.0,
+          4.72
+        ]
+      ],
+      "samples": [
+        [
+          0.0,
+          300
+        ],
+        [
+          4.72,
+          300
+        ]
+      ],
+      "maxCompressionErrorVsObservations": 0,
+      "outsideValid": "unknown; use declared state intervals only as inferred visibility"
+    }
+  ]
+}

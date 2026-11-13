@@ -1,0 +1,130 @@
+{
+  "background": {
+    "color": "#efeee9",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "纸面",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "网络节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "连线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "橙色节点",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "点阵",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "地球网格",
+      "status": "inferred"
+    },
+    {
+      "id": "role-6",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "索引纹样",
+      "status": "inferred"
+    },
+    {
+      "id": "role-7",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌字",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#efeee9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#111111",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ed6429",
+      "status": "inferred"
+    },
+    {
+      "hex": "#64959a",
+      "status": "inferred"
+    },
+    {
+      "hex": "#bcbd79",
+      "status": "inferred"
+    },
+    {
+      "hex": "#989ac8",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "小字号等宽叙事与短品牌字；图形密度承担节奏变化",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "纸白底上将几个彩色节点围绕中心摆开，细线形成关系。历史感来自小字、纸边和有限颜色，避免用密集装饰抢占节点。",
+      "status": "inferred"
+    },
+    {
+      "rule": "橙色节点进入后，连线与流向重新安排。先展示一个请求，再增加到成排小点；节点颜色与位置要能解释角色变化。",
+      "status": "inferred"
+    },
+    {
+      "rule": "单点、点阵、巨大的裁切圆、网格地球依次交接。黑白与橙色整场切换控制段落，形状仍围绕中心或固定轴线组织。",
+      "status": "inferred"
+    },
+    {
+      "rule": "地球网格缩成条纹圆标，随后再把彩色个体加入网络。结尾恢复纸白与简短主张，让长片的最后一幕比中段清楚。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可换其他基础设施叙事，但要先定义谁提供内容、谁发起访问、谁连接双方。品牌纹样从节点或线条推导，不突然插入无关标志。",
+      "status": "inferred"
+    }
+  ]
+}

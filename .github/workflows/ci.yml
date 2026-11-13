@@ -31,6 +31,40 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
+  template-library:
+    name: Template library policy
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout source and contribution history without LFS media
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+          lfs: false
+          persist-credentials: false
+      - name: Setup pinned Node
+        uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - name: Require Squash merges for sanitized media history
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # GraphQL variables are passed through gh fields, not expanded by the shell.
+          # shellcheck disable=SC2016
+          gh api graphql -f owner="$GITHUB_REPOSITORY_OWNER" -f repo="${GITHUB_REPOSITORY#*/}" \
+            -f query='query($owner: String!, $repo: String!) { repository(owner: $owner, name: $repo) { squashMergeAllowed mergeCommitAllowed rebaseMergeAllowed } }' \
+            --jq '.data.repository | if .squashMergeAllowed and (.mergeCommitAllowed | not) and (.rebaseMergeAllowed | not) then "Squash-only merge policy confirmed" else error("Enable Squash merge only before accepting cleaned media PRs") end'
+      - name: Check the final merge tree and media policy
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [[ "$BASE_SHA" =~ ^0+$ ]]; then unset BASE_SHA; fi
+          npm run templates:check -- --final-tree
+          npm run storage:check -- --final-tree
+          node --test tests/repository-storage.test.ts tests/media-transfer.test.ts
+          node --test tests/template-library.test.ts
+
   maintainability:
     name: Maintainability report
     if: github.event_name == 'pull_request' && github.base_ref == 'main'
@@ -78,12 +112,22 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6.0.2
+      - name: Cache optional LFS media
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs/objects
+          key: optional-lfs-${{ runner.os }}-${{ hashFiles('**/*.mp4', '**/*.motion', '!library/templates/catalog/**') }}
+          restore-keys: optional-lfs-${{ runner.os }}-
       - name: Setup pinned Node
         uses: actions/setup-node@v6
         with:
           node-version: '26.11.1'
           cache: npm
           cache-dependency-path: package-lock.json
+      - name: Download full-bundle media explicitly
+        run: |
+          git lfs pull --include="docs/readme/**,library/**,examples/**" --exclude="library/templates/catalog/**"
+          npm run media:pull
       - name: Restore rendering package downloads
         uses: actions/cache@v4
         with:
@@ -141,7 +185,9 @@ jobs:
         run: node --experimental-strip-types --test tests/diagnostics.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/public-names.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/editor-urls.test.ts tests/workspace-studio.test.ts tests/sync.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/library-install.test.mjs tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
       - name: Studio regression
         run: npm run test:studio -- --maxWorkers=2
-      - name: Built-in template playback regression
+      - name: Repository template runtime regression
+        run: node --test tests/repository-template-runtime.test.ts
+      - name: Built-in template playback and export regression
         run: node --experimental-strip-types --test tests/decision-tree.test.ts
       - name: Build phase-one ZIP and exercise all public tools
         run: |

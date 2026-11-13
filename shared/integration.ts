@@ -1,4 +1,4 @@
-import { templatePrompts } from './template-prompts.ts';
+import { templatePrompts, repositoryTemplatePrompts } from './template-prompts.ts';
 import { catalogLocale } from './template-locale.ts';
 import { workflowEntryGuide } from './workflow-entry.js';
 
@@ -13,6 +13,7 @@ export const hostDescriptions: Record<IntegrationHost, string> = {
   mcp: '连接你喜欢的 MCP 客户端，也可以从终端和脚本开始。',
 };
 export type IntegrationInfo = {
+  templateSource?: 'repository' | 'cms';
   templateEnvironment?: 'dev' | 'prod';
   name: string; version: string; previewUrl: string; dataDirectory: string;
   transport: { type: 'stdio'; command: string; args: string[]; cwd: string; env: Record<string, string> };
@@ -74,6 +75,10 @@ export function setupPrompt(info: IntegrationInfo, host: IntegrationHost, locale
   return `请读取 ${guideUrl(info, host)}，将 OpenMotion 接入 ${hostNames[host]}，验证后带我开始创作。`;
 }
 export function templatePrompt(info: IntegrationInfo, _host: IntegrationHost, template: { id: string; title: string }, locale = 'zh-CN') {
+  if (info.templateSource === 'repository') {
+    const message = repositoryTemplatePrompts[catalogLocale(Object.keys(repositoryTemplatePrompts), locale, 'en')];
+    return message.replace(/\{(name|id)\}/g, (_, key: 'name' | 'id') => template[key === 'name' ? 'title' : 'id']);
+  }
   const environment = info.templateEnvironment ?? info.transport.env?.MOTION_TEMPLATE_ENV ?? 'prod';
   const installUrl = `https://releases.open-design.ai/open-motion/${environment === 'dev' ? 'dev/' : ''}install.md`;
   const message = templatePrompts[catalogLocale(Object.keys(templatePrompts), locale, 'en')];
@@ -137,7 +142,7 @@ ${workflowEntryGuide}
 
 素材通过 openmotion_import_assets 批量持久导入实际本机附件，检查逐项结果；再用 openmotion_edit_project 保存原生 HTML/CSS/JS 和可选需求，传 expectedRevision、expectedVersionId 及稳定 requestId。冲突时重新读，不盲目覆盖 GUI 修改。媒体生成使用宿主或 Studio 已有能力，本期 MCP 不公开生成/供应商配置入口。
 
-After each content edit or restore, follow previewHandoff and production/native#continuing-edits. Request the same project on the calling chat's right panel, preserving embed/query/hash and reusing the actual native Tab ID. Default foreground preserves the current chat: queue while inactive, resolve the latest version on return, and verify actual visibility and changed live content before action=record_display. Codex IAB visibility synchronization is scoped to the calling chat and does not navigate. queued is only an acknowledgment. Only this turn's explicit show-now request permits presentation=now and switching back; background skips presentation. Never guess a project from another chat or workspace.
+After each content edit or restore, follow previewHandoff and production/native#continuing-edits. Request the same project on the calling chat's right panel, preserving embed/query/hash and reusing the actual native Tab ID. Default foreground preserves the current chat: queue while inactive, resolve the latest version on return, and verify actual visibility and changed live content before action=record_display. Codex IAB visibility synchronization is scoped to the calling chat and does not navigate. queued is only an acknowledgment, not proof that the calling chat is inactive. Apply the same visibility checks to first delivery; hidden automation tabs, markDeliverable and completed MP4 export do not replace the editor handoff. Use visibility=queued only for confirmed inactive-chat deferral; otherwise report the display failure. Only this turn's explicit show-now request permits presentation=now and switching back; background skips presentation. Never guess a project from another chat or workspace.
 
 ## 版本与导出
 

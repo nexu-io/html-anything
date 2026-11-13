@@ -6,18 +6,24 @@ import { RemixIcon } from '../icons/RemixIcons';
 
 const names = { browser: 'Rendering component', media: 'Media components', ffmpeg: 'Media processing', ffprobe: 'Media inspection' };
 const stages = { idle: 'Waiting to prepare', waiting: 'Waiting for shared download', downloading: 'Downloading', verifying: 'Verifying download', extracting: 'Extracting', checking: 'Checking component', ready: 'Ready', failed: 'Preparation failed' };
-const reasons: Record<string, string> = { integrity: 'Download verification failed. Retry the download.', disk_space: 'Not enough disk space. Free some space and retry.', permission: 'Cannot write the preparation cache. Check folder permissions.', platform: 'This platform needs compatible video components.', download: 'Download failed. Check your connection and retry.', checking: 'The component could not be prepared. Retry or inspect the details.' };
+const reasons: Record<string, string> = { integrity: 'Download verification failed. Retry the download.', disk_space: 'Not enough disk space. Free some space and retry.', permission: 'Cannot write the preparation cache. Check folder permissions.', platform: 'This platform needs compatible video components.', timeout: 'Download timed out after automatic retries. Check your connection and retry.', download: 'Download failed. Check your connection and retry.', checking: 'The component could not be prepared. Retry or inspect the details.' };
 export function componentProgress(component: NativeComponent): number | null {
   return component.stage === 'downloading' && component.totalBytes && component.receivedBytes !== undefined
     ? Math.min(100, Math.floor(component.receivedBytes / component.totalBytes * 100)) : null;
 }
 
-export function NativeRuntimeNotice({ status, checking, onRetry, pendingImport }: { pendingImport?: { count: number; retry: () => void }; status: FfmpegStatus | null; checking: boolean; onRetry: () => void }) {
+export function componentRemainingSeconds(component: NativeComponent, now = Date.now()): number | null {
+  const { receivedBytes, totalBytes, downloadStartedAt, updatedAt } = component;
+  if (component.stage !== 'downloading' || !receivedBytes || !totalBytes || !downloadStartedAt || !updatedAt
+    || totalBytes <= receivedBytes || updatedAt - downloadStartedAt < 1000 || now - updatedAt > 10_000 || updatedAt > now) return null;
+  return Math.ceil((totalBytes - receivedBytes) / receivedBytes * (updatedAt - downloadStartedAt) / 1000);
+}
+
+export function NativeRuntimeNotice({ status, onRetry, pendingImport }: { pendingImport?: { count: number; retry: () => void }; status: FfmpegStatus | null; checking: boolean; onRetry: () => void }) {
   const { t } = useI18n();
   const runtime = status?.runtime;
   if (!runtime || status.ok && !status.runtimeUnavailable && !pendingImport) return null;
   const failed = runtime.components.some(component => component.stage === 'failed');
-  const retryable = failed || runtime.components.some(component => component.stage === 'idle') || status.runtimeUnavailable;
   const headline = status.runtimeUnavailable ? 'Preparation progress unavailable' : status.ok ? 'Your files are ready to import' : failed ? 'Video export is not ready' : 'Preparing video features';
   return (
     <div data-testid="native-runtime-notice" className="flex min-h-9 shrink-0 flex-wrap items-center justify-between gap-2 border-b border-border-strong bg-surface px-3 py-1 text-step-11 text-text-2">
@@ -28,20 +34,29 @@ export function NativeRuntimeNotice({ status, checking, onRetry, pendingImport }
       </div>
       <div className="flex shrink-0 items-center gap-1">
         {pendingImport && runtime.capabilities.media && !status.runtimeUnavailable && <Button size="sm" variant="secondary" onClick={pendingImport.retry}>{t('Continue import')}</Button>}
-        {retryable && <Button size="sm" variant="ghost" disabled={checking} onClick={onRetry}>{t(checking ? 'Checking…' : 'Retry')}</Button>}
+        {!status.ok && <Button size="sm" variant="ghost" onClick={onRetry}>{t('Retry')}</Button>}
         <Popover align="end" aria-label={t('Video preparation')} className="w-72 max-w-[calc(100vw-16px)]" trigger={<Button size="sm" variant="ghost">{t('View progress')}</Button>}>
           <div className="mb-2 flex items-center justify-between gap-3 font-medium">
             <span>{t('Video preparation')}</span>
             <span className="text-text-4">{runtime.components.filter(component => component.stage === 'ready').length}/{runtime.components.length}</span>
           </div>
           <ul>
-            {runtime.components.map(component => <li key={component.id} className="border-b border-border-strong py-2 last:border-0">
+            {runtime.components.map(component => {
+              const progress = componentProgress(component);
+              const remaining = componentRemainingSeconds(component);
+              return <li key={component.id} className="border-b border-border-strong py-2 last:border-0">
               <div className="flex items-center justify-between gap-4">
                 <span>{t(names[component.id])}</span>
-                <span className="text-text-4">{componentProgress(component) !== null ? `${componentProgress(component)}%` : t(stages[component.stage])}</span>
+                <span className="text-text-4">{progress !== null ? `${progress}%` : t(stages[component.stage])}</span>
               </div>
+              {component.stage === 'downloading' && component.receivedBytes !== undefined && <p className="mt-1 text-text-4">
+                {(component.receivedBytes / 1_000_000).toFixed(1)} MB{component.totalBytes ? ` / ${(component.totalBytes / 1_000_000).toFixed(1)} MB` : ''}
+                {remaining !== null && <> · {t('About {seconds}s remaining', { seconds: remaining })}</>}
+              </p>}
+              {component.stage !== 'ready' && component.stage !== 'failed' && (component.attempt ?? 0) > 1 && (component.maxAttempts ?? 0) > 1 && <p className="mt-1 text-text-4">{t('Download attempt {attempt}/{total}', { attempt: component.attempt!, total: component.maxAttempts! })}</p>}
               {component.stage === 'failed' && <p className="mt-1 text-warning-ink">{t(reasons[component.errorCode ?? 'checking'] ?? reasons.checking)}</p>}
-            </li>)}
+            </li>;
+            })}
           </ul>
           {pendingImport && <p className="mt-2 text-text-4">{t('Files waiting for import: {count}', { count: pendingImport.count })}</p>}
           {runtime.components.some(component => component.error) && <details className="mt-2 text-text-4"><summary className="cursor-pointer">{t('Technical details')}</summary><p className="mt-1 break-all">{runtime.components.filter(component => component.error).map(component => component.error).join('\n')}</p></details>}

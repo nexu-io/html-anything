@@ -1,3 +1,5 @@
+import type { LocalTemplateSource } from './repository-template-catalog.ts';
+
 export const templateCategories = [
   { id: 'featured', label: '精选模板' }, { id: 'clone', label: '视频复刻' },
   { id: 'ads', label: '产品宣传' }, { id: 'motion', label: '动态设计' }, { id: 'script', label: '口播内容' },
@@ -16,9 +18,10 @@ export type GalleryTemplate = {
   variants?: GalleryTemplate[];
   motionDocumentUrl?: string; motionGuideUrl?: string; projectFileUrl?: string; authorAvatarUrl?: string;
   styleDescription?: string; reviewFocus?: string;
-  brand?: string; uses?: string[]; styles?: string[]; industries?: string[];
+  brand?: string; brandLogoUrl?: string; uses?: string[]; styles?: string[]; industries?: string[];
   creationModels?: string[]; colors?: string[]; width?: number; height?: number;
   sortOrder?: number; featuredOrder?: number | null; hasHtmlProject?: boolean;
+  localSource?: LocalTemplateSource;
 };
 export type SocialPlatform = 'X' | 'Instagram' | 'YouTube' | 'TikTok';
 export type TemplateSocial = { platform: SocialPlatform; views: number; sourceUrl: string; syncedAt: string; metadataUrl: string };
@@ -72,7 +75,7 @@ export function catalogTemplates(entries: CatalogEntry[], frames: { id: string; 
     const source = new URL(entry.sourceUrl);
     if (source.protocol !== 'https:' || source.username || source.password) throw new Error('模板来源无效');
     const frame = posters.get(entry.id);
-    const poster = frame && frame.video === entry.video && /^\/web\/catalog\/template-frames\/[a-f0-9]{24}\.jpg$/.test(frame.poster) ? frame.poster : entry.posterAvailable === false ? undefined : entry.poster;
+    const poster = frame && frame.video === entry.video && /^\/web\/catalog\/template-frames\/[a-f0-9]{24}\.(?:jpg|webp)$/.test(frame.poster) ? frame.poster : entry.posterAvailable === false ? undefined : entry.poster;
     return {
       id: entry.id, title: entry.title, description: entry.description || '', tags: entry.tags, role: entry.role,
       collection: entry.collection, kind: ['reference', 'moment'].includes(entry.collection) ? 'reference' : 'registry',

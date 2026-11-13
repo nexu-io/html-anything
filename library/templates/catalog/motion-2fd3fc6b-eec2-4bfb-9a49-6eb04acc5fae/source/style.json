@@ -1,0 +1,101 @@
+{
+  "background": {
+    "color": "#10362f",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "composition",
+      "parent": null,
+      "role": "构图参考区域",
+      "kind": "semantic-region",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {},
+      "motionMechanism": "仅模型声明构图范围，非测量轨迹。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "菱形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "窄体大字",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "关键词",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "对角遮罩",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "品牌标",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#10362f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#dfff58",
+      "status": "inferred"
+    },
+    {
+      "hex": "#c400e8",
+      "status": "inferred"
+    },
+    {
+      "hex": "#1b998d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#430453",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "极粗窄体大写字；短词以巨大字号占据中心",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "主词使用极粗窄体，尽量一至两行；连接词缩小放在上下或侧边。文字可在入场时裁切，但落定的关键词要完整可读。",
+      "status": "inferred"
+    },
+    {
+      "rule": "菱形从中心扩张覆盖画面，或四角向内合拢。用青绿／深绿和亮紫／深紫交替分组，柠檬黄突出情绪重词。",
+      "status": "inferred"
+    },
+    {
+      "rule": "把前一关键词的放大或移出当作下一句的入场空间。ARTISTS 与 FANS 使用相似形变形成呼应，收尾回到稳定的三行品牌句。",
+      "status": "inferred"
+    },
+    {
+      "rule": "可替换品牌和社群称谓，保留呼喊式短句与强弱词层级。中段可替换为新品牌的用户群像，例举之间保持相似句式与不同的关键词。",
+      "status": "inferred"
+    }
+  ]
+}

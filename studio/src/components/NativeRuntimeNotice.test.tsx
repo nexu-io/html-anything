@@ -2,7 +2,7 @@
 import { act } from 'react';
 import { createRoot } from 'react-dom/client';
 import { expect, it, vi } from 'vitest';
-import { NativeRuntimeNotice, componentProgress } from './NativeRuntimeNotice';
+import { NativeRuntimeNotice, componentProgress, componentRemainingSeconds } from './NativeRuntimeNotice';
 import { I18nProvider, languages, translate, useI18n } from '../i18n/I18n';
 Object.assign(globalThis, { IS_REACT_ACT_ENVIRONMENT: true });
 it('keeps technical progress collapsed, with retry and readiness without remounting the editor', async () => {
@@ -12,6 +12,9 @@ it('keeps technical progress collapsed, with retry and readiness without remount
   const render = (status: any) => act(() => root.render(<I18nProvider initialLocale="zh-CN"><NativeRuntimeNotice status={status} checking={false} onRetry={retry} /></I18nProvider>));
   render({ ok: false, runtime });
   expect(host.textContent).toContain('可继续编辑'); expect(host.textContent).not.toContain('25%');
+  act(() => Array.from(host.querySelectorAll('button')).find(button => button.textContent === '重试')!.click());
+  expect(retry).toHaveBeenCalledOnce();
+  retry.mockClear();
   await act(async () => { Array.from(host.querySelectorAll('button')).find(button => button.textContent === '查看进度')!.click(); });
   expect(document.body.textContent).toContain('25%');
   render({ ok: false, runtime: { ...runtime, components: [{ id: 'browser', stage: 'failed', error: 'Offline' }] } });
@@ -24,6 +27,10 @@ it('keeps technical progress collapsed, with retry and readiness without remount
 it('does not invent progress or confuse completed transfer with readiness', () => {
   expect(componentProgress({ id: 'browser', stage: 'downloading', receivedBytes: 25 })).toBeNull();
   expect(componentProgress({ id: 'browser', stage: 'checking', receivedBytes: 100, totalBytes: 100 })).toBeNull();
+  expect(componentRemainingSeconds({ id: 'browser', stage: 'downloading', receivedBytes: 25, totalBytes: 100, downloadStartedAt: 1000, updatedAt: 3000 }, 3000)).toBe(6);
+  expect(componentRemainingSeconds({ id: 'browser', stage: 'downloading', receivedBytes: 25, totalBytes: 100, downloadStartedAt: 1000, updatedAt: 3000 }, 15000)).toBeNull();
+  expect(componentRemainingSeconds({ id: 'browser', stage: 'checking', receivedBytes: 25, totalBytes: 100, downloadStartedAt: 1000, updatedAt: 3000 })).toBeNull();
+  expect(componentRemainingSeconds({ id: 'browser', stage: 'downloading', receivedBytes: 25 })).toBeNull();
 });
 
 it('updates an open preparation panel in all eleven languages and keeps import retry available', async () => {

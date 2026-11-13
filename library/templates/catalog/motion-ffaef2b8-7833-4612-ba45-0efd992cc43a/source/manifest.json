@@ -1,0 +1,228 @@
+{
+  "schema": "motion-package-v1",
+  "purpose": "style-guidance",
+  "canvas": {
+    "width": 1280,
+    "height": 720
+  },
+  "fps": 30.016844300859944,
+  "durationSeconds": 59.366667,
+  "timebase": "seconds",
+  "coordinates": "Source pixels; top-left origin; all tracks in absolute canvas space. visualGroup does not inherit transforms.",
+  "sources": [
+    {
+      "id": "video",
+      "type": "video",
+      "sha256": "e37c0eea1a627f614323d479a89a88cd79ec021d5022b70f21dd39f1e55c37cc"
+    }
+  ],
+  "assets": [
+    {
+      "path": "assets/reference-1.webp",
+      "timeSeconds": 0,
+      "frameId": "K0001",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "timeSeconds": 10.993827222222222,
+      "frameId": "K0043",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "timeSeconds": 24.985970959595956,
+      "frameId": "K0087",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "timeSeconds": 37.97867585858586,
+      "frameId": "K0130",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "timeSeconds": 43.97530888888889,
+      "frameId": "K0151",
+      "role": "reference-evidence",
+      "status": "measured"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "timeSeconds": 51.97081959595959,
+      "frameId": "K0185",
+      "role": "reference-evidence",
+      "status": "measured"
+    }
+  ],
+  "timings": {
+    "prepareSeconds": 16.706800334000036,
+    "measurementSeconds": 0.5378002090001246,
+    "agentPlanningSeconds": null,
+    "renderSeconds": null
+  },
+  "unrecovered": [
+    "原片营销数据未核验，金属纹理与实拍设备为示意。",
+    "HTML 为 authored 机制示例，不是完整原样复刻。"
+  ],
+  "stopReason": "completed",
+  "provenance": {
+    "planAndMechanisms": "model-inferred",
+    "numericalTracks": "local algorithms; see each track",
+    "sourceIdentity": {
+      "id": "V056",
+      "sha256": "e37c0eea1a627f614323d479a89a88cd79ec021d5022b70f21dd39f1e55c37cc",
+      "sourceUrl": "https://www.linkedin.com/posts/sharmaaseem01_8-months-100m-arr-one-stat-i-keep-coming-activity-7429865965368115200-b8yW"
+    },
+    "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
+    "originalProductionModel": "unknown",
+    "extraction": "Codex visual reasoning + local algorithms",
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
+  },
+  "files": [
+    {
+      "path": "assets/reference-1.webp",
+      "bytes": 3602,
+      "sha256": "1f4426764ebbf8705e812d062d5d9e67227510500205202e7859484c23cac5f9"
+    },
+    {
+      "path": "assets/reference-2.webp",
+      "bytes": 3838,
+      "sha256": "46a08255982069be9501b8aa8d55161f8ae43eb7417753fdb091e0edfaf44fa2"
+    },
+    {
+      "path": "assets/reference-3.webp",
+      "bytes": 10266,
+      "sha256": "0b7666118f9e298f59ae4fc9d32b727af175ab9fe01fb333262a840aaef0020d"
+    },
+    {
+      "path": "assets/reference-4.webp",
+      "bytes": 10922,
+      "sha256": "3d16adf8cb58a1238a19bde2757a56c1e57e2ee00da5cfdc657cef0305c086ed"
+    },
+    {
+      "path": "assets/reference-5.webp",
+      "bytes": 15390,
+      "sha256": "925841d561e17a277f2d758343e0e9571ec35deb3a5d21b175c332392217ed1a"
+    },
+    {
+      "path": "assets/reference-6.webp",
+      "bytes": 6656,
+      "sha256": "8cb7b1a97795f88b801fb02f9d9b24036e4031cba38b8c7bcb6dac929a8a10da"
+    },
+    {
+      "path": "demos/bridge.js",
+      "bytes": 1657,
+      "sha256": "b297fdbeb26a4f8658081f0e00920363bf0398d8c9eef1e2ff7c79a141ce243c"
+    },
+    {
+      "path": "demos/common.js",
+      "bytes": 10431,
+      "sha256": "741221822eba5f80be17482cd421ee8a83e61992e165fe0d3de38a198216edb4"
+    },
+    {
+      "path": "demos/data.js",
+      "bytes": 12579,
+      "sha256": "03194bee005c9d4302bae9155e0ef271ad534502a8e77afffbf44b4403c4318c"
+    },
+    {
+      "path": "demos/scene.js",
+      "bytes": 1634,
+      "sha256": "1ba418e8f48626bac7a3eb94d45f93252a68a13fc53ee50a9cf68762194e5f60"
+    },
+    {
+      "path": "demos/sequence.html",
+      "bytes": 551,
+      "sha256": "c009ec4faa6b21c10ed3b2284d42447c0cc00d40ab68218f62e39676f789ca87"
+    },
+    {
+      "path": "motion.md",
+      "bytes": 7077,
+      "sha256": "86aede97ceea6c591f5a926037e8b3acc89b0044b57c943d2f8856742f65ae16"
+    },
+    {
+      "path": "preview.html",
+      "bytes": 20206,
+      "sha256": "98213549ab512bc5d1d820c750814e33a54237813ccde43243277eb3a5d3b596"
+    },
+    {
+      "path": "style.json",
+      "bytes": 3431,
+      "sha256": "3c0c4dab122a16d4eaa391d4e5fe2e4516ef151f122c54a11fc005473e67d425"
+    },
+    {
+      "path": "timeline.json",
+      "bytes": 2803,
+      "sha256": "004e0096801bfcdb01acee14022848f96902c58e9d9a428f2141bc89f5827ac1"
+    },
+    {
+      "path": "tracks.json",
+      "bytes": 13438,
+      "sha256": "e2849817224cdee3865051451c16ef905e94b1bb11bc10ded279c0328d772750"
+    },
+    {
+      "path": "viewer/board.css",
+      "bytes": 12500,
+      "sha256": "dbafb8d810e47ec5e6cad17f29f0d1f2912f5a802013f70431656b01109db576"
+    },
+    {
+      "path": "viewer/board.js",
+      "bytes": 1407,
+      "sha256": "f2da379b8984ba7ec3838d287f31d844714f94dfb56b6a3e5f638bc520befe53"
+    },
+    {
+      "path": "viewer/guide.css",
+      "bytes": 4965,
+      "sha256": "0dbd862b0d39894ce3149f39a094e991b9a401784cf1b392b8bfa0f5273e968d"
+    },
+    {
+      "path": "viewer/guide.js",
+      "bytes": 4315,
+      "sha256": "dd981be273f26282da81a5c957cc078b5e8594b4d1096d93de3ee817b47e90c2"
+    }
+  ],
+  "contentSlots": [
+    {
+      "key": "title",
+      "status": "authored",
+      "default": "Build from your phone"
+    },
+    {
+      "key": "accent",
+      "status": "authored",
+      "default": "#67f0b1"
+    }
+  ],
+  "implementationFiles": [
+    "preview.html",
+    "demos/sequence.html",
+    "demos/scene.js",
+    "demos/bridge.js",
+    "demos/data.js",
+    "demos/common.js",
+    "viewer/guide.css",
+    "viewer/board.js",
+    "viewer/guide.js",
+    "viewer/board.css"
+  ],
+  "visualGuide": {
+    "path": "preview.html",
+    "source": "motion.md",
+    "layout": "specimen-board-v1",
+    "demoCount": 1
+  },
+  "demos": [
+    {
+      "id": "sequence",
+      "src": "demos/sequence.html",
+      "duration": 59.366667,
+      "status": "authored"
+    }
+  ]
+}

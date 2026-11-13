@@ -6,7 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { releaseProfile } from '../shared/mcp-registry.ts';
-import { distributionFiles } from './distribution.ts';
+import { distributionFiles, requireDownloadedMedia } from './distribution.ts';
 import { packageTemplateConfig } from '../shared/template-config.ts';
 import { checkReleaseVersion, testVersion } from './release-version.mjs';
 export { checkReleaseVersion, testVersion } from './release-version.mjs';
@@ -74,7 +74,9 @@ export async function build(target, version, profile = releaseProfile, templateE
   const directory = path.join(root, 'dist', version), name = `OpenMotion-Codex-${version}-${target}${suffix}`;
   const stage = path.join(directory, name), runtime = path.join(root, '.artifacts', 'test-runtime', target, 'runtime');
   await mkdir(directory, { recursive: true }); await mkdir(stage);
-  for (const file of await distributionFiles(profile)) {
+  const files = await distributionFiles(profile);
+  await requireDownloadedMedia(files);
+  for (const file of files) {
     await mkdir(path.dirname(path.join(stage, file)), { recursive: true });
     await cp(path.join(root, file), path.join(stage, file));
   }

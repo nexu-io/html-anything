@@ -1,5 +1,40 @@
 # 公开变更记录
 
+
+## 2026-11-13: Share material sourcing priorities across production routes
+
+- Centralize source priority, acquisition and usability checks in one shared material reference: explicit choices first, suitable existing assets next, original sources for established subjects, and generated/procedural content for original or supporting expression.
+- Link all five canonical Skills conditionally, retain compatibility forwarding entries, and expose the reference through the canonical workflow resource and legacy URI alias. Existing media support, reference fidelity and preview/export-only scope remain unchanged.
+- Consolidate the director, intake, template and execution rules rather than maintaining competing acquisition policies. No new media service, Tool, permission or release is introduced.
+- Retain the prior local Harry Potter trial as a single execution observation: one user message, original footage retrieved and used, ten excerpts totaling 20.5 seconds in a 32-second film. It is an existing example and a prior local snapshot, not a behavioral rerun of this PR head, a generalization result or a listening/visual acceptance claim. The viewing copy is attached to the PR; film media and private traces are excluded from product distributions.
+
+## 2026-11-12: Version motion guidance source in the product repository
+
+- Import 286 public guidance templates with stable IDs, existing eleven-locale metadata and authored text examples; preserve pending conversion state and original source attribution.
+- Include unpacked text source and 1,419 images at most 100 KB in Git (about 104 MB with metadata); link 236 larger originals through verified existing CMS WebP renditions. Keep reference videos and duplicate ZIP downloads at existing CMS URLs.
+- Add staged/index and new-history storage checks, source manifest refresh, 100 KB local asset limits and verified CMS rendition identities and a CI policy job. No publishing credentials or media downloads are needed for the policy check.
+- Source Studio and MCP read repository templates directly. Local tools return a searchable index, Motion document content and absolute source paths; local edits appear on the next read. CMS mode remains available for published catalog testing.
+- Export the existing CMS catalog shape for review, including collection facets; CMS publication remains separate. Source-only catalog files are excluded from npm/plugin distribution.
+
+
+## 2026-11-12: Match stable installation reports to the candidate manifest
+
+- Stable promotion and archive recovery compare native MCP Tool and Skill counts with the verified candidate manifest. Packages with compatibility Skill aliases no longer fail the obsolete five-Skill assertion, while mismatched reports still block promotion.
+- Regression coverage includes ten-Skill promotion and archiving, older five-Skill candidates, and missing or extra Tools/Skills on either platform. The existing stable npm packaging test also passes its real generated manifest through the promotion report gate, catching contract drift during both PR checks and candidate builds. Native reports and external writes are simulated; publication remains a separate authorized operation.
+
+## 2026-11-12: Save SVG styles and initialize the initial project on open
+
+- SVG inline-style edits use the existing source patcher, guarded file writer and edit history when the pinned engine cannot persist SVG targets. Missing element identities and concurrent source changes still reject the edit and keep navigation blocked.
+- Opening the initial project from the sidebar or a direct preview initializes the bundled six-second example if its sources are absent. Existing edits, partial-project refusal and legacy migration safeguards remain unchanged.
+- Validation: static checks, Studio typecheck/build, 79 targeted Studio tests, 14 project/session/legacy/cold-start tests and the phase-one creation regression passed locally. Installed-host, cross-platform and human visual acceptance remain separate.
+
+## 2026-11-12: Complete visible editor delivery after video creation
+
+- **Problem:** A queued host acknowledgment with a hidden panel could send an Agent into waiting for the user to return without evidence that the calling chat was inactive. A separate hidden inspection tab or successful MP4 export could then end the turn without visible editor delivery.
+- **Implementation:** Hidden/unavailable display receipts retain native-panel presentation recovery and its tab reuse hint. Only explicit host-confirmed inactive-chat deferral returns the wait action. First delivery follows the same visibility and latest-content checks as continued edits, and unresolved display failures remain visible in the final handoff.
+- **Validation:** 53 targeted contract, workflow, adapter, naming-compatibility and packaging tests passed, alongside static checks, Studio type checking and the Studio build. Regression coverage separates queued acknowledgments from observed visibility, preserves inactive-chat deferral and verifies that the updated Skill and Tool sources ship together.
+- **Limits:** Original-machine host reproduction and a new model-driven video creation/handoff acceptance run remain unverified. The service records host-reported evidence; it does not independently measure the outer host panel. This change does not publish a package.
+
 ## 2026-11-11: Check historical media before offering MCP restoration
 
 - **Problem and audience:** Agents and creators could be told that a historical version was restorable after its media blobs had disappeared; restoration then exposed a low-level file-copy error.

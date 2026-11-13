@@ -1,0 +1,276 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Cursor Figma Component Creation — Cursor can now… · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#f5f5f1;--brand-ink:#202122;--accent:#9966cc;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Cursor <span>/</span> V239</div><div class="intro-line"><h1>Cursor Figma Component Creation — Cursor can now…</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>从已有设计系统出发生成页面，再进入设计工具检查图层与组件。最终画面不仅要好看，还要让结构可见。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 25.416667, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 8.2, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Build with a design system&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#9966cc&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Build with a design system&quot;, &quot;accent&quot;: &quot;#9966cc&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="25.416667" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 25.42 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Cursor Figma Component Creation — Cursor can now… · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f1}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Cursor</div><div class="type-sample">Build with a design system</div><p>无衬线界面文字与清晰大小层级</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#f5f5f1" style="--swatch:#f5f5f1" aria-label="复制色值 #f5f5f1"><span></span><code>#F5F5F1</code></button><button class="swatch" data-color="#202122" style="--swatch:#202122" aria-label="复制色值 #202122"><span></span><code>#202122</code></button><button class="swatch" data-color="#9966cc" style="--swatch:#9966cc" aria-label="复制色值 #9966cc"><span></span><code>#9966CC</code></button><button class="swatch" data-color="#f1ba8a" style="--swatch:#f1ba8a" aria-label="复制色值 #f1ba8a"><span></span><code>#F1BA8A</code></button><button class="swatch" data-color="#9ab8ad" style="--swatch:#9ab8ad" aria-label="复制色值 #9ab8ad"><span></span><code>#9AB8AD</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>提示框</span><span>工具调用列表</span><span>设计系统变量</span><span>结果链接</span><span>画板</span><span>图层树</span><span>组件选框</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule text-only" id="section-1"><div class="rule-label"><span>01</span><h2>先说明采用哪套设计系统</h2></div><div class="rule-copy">
+<p>输入里同时交代目标页面与设计系统。执行过程按查找组件、读取变量、构建画板、检查结构推进，工具列表保持整齐，不需要逐条展开冗长日志。</p>
+<p>对话区用浅色、常规无衬线与清楚的状态标记；强调色只标正在处理的步骤。</p>
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>结果链接把观众带进可编辑画板</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;结果链接把观众带进可编辑画板&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 9, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;16–25 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>结果链接把观众带进可编辑画板</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="结果链接把观众带进可编辑画板" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="9" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 9.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>16–25 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Cursor Figma Component Creation — Cursor can now… · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#f5f5f1}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;16&quot; data-end=&quot;25&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>生成完成后，先出现明确结果链接，再打开设计工具。完整画板先停留，随后推近侧栏或某个组件；图层树与画布中的选中边框同步变化。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>用局部结构证明编辑关系</h2></div><div class="rule-copy">
+<p>选择一个能体现组件复用的区域，例如侧栏、统计卡或导航项。选中状态只框住相应对象，属性面板跟随对象更新；不要只放一张最终截图。</p>
+<p>画板内部遵循所选设计系统的字形、间距和配色。工具外壳与作品样式分开处理，避免主题色覆盖所有工具文字。</p>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>换系统时重建组件来源</h2></div><div class="rule-copy">
+<p>新主题需要对应的变量、组件和页面内容。保留读取规范到生成，再到局部编辑检查的顺序，结果层级与实际页面内容保持一致。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>输入Figma需求</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>搜索设计系统</b></button><button class="beat" data-time="7.0"><span>7.00<small>s</small></span><b>读取组件变量</b></button><button class="beat" data-time="10.0"><span>10.00<small>s</small></span><b>构建画板</b></button><button class="beat" data-time="13.0"><span>13.00<small>s</small></span><b>检查元数据</b></button><button class="beat" data-time="16.0"><span>16.00<small>s</small></span><b>输出链接</b></button><button class="beat" data-time="17.0"><span>17.00<small>s</small></span><b>打开Figma</b></button><button class="beat" data-time="19.0"><span>19.00<small>s</small></span><b>选中侧栏</b></button><button class="beat" data-time="21.0"><span>21.00<small>s</small></span><b>检查图层</b></button><button class="beat" data-time="24.0"><span>24.00<small>s</small></span><b>局部组件</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/61a0ae6b5ff140ad6e99f54881def1a66fb4978d7cc451dc07e7551ed4dfaacf" alt="7.00 秒的构图参考" loading="lazy"><figcaption>7.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/c638392c76ae2e9da9c00e1dd72fabd44d16b190a9f4548d22cd9203cd194618" alt="13.00 秒的构图参考" loading="lazy"><figcaption>13.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/d4f9df7283caa4d0c6a1ddce5c202dd56422e2e954741f5116139a953dbc5f72" alt="16.00 秒的构图参考" loading="lazy"><figcaption>16.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="19.00 秒的构图参考" loading="lazy"><figcaption>19.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/9a15f95a04371434f84cfba621c53c63278c9e2f81abaa55f7b6a842ffc2c17d" alt="24.00 秒的构图参考" loading="lazy"><figcaption>24.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可迁移为结构化设计生成，保留查规范→生成→检查可编辑结构</li><li>只给最终截图不足以表达可编辑性，需要层级对象</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>提示框 / 工具调用列表 / 设计系统变量 / 结果链接 / 画板 / 图层树 / 组件选框</p>
+<ul><li>先查已有设计系统与变量，后创建画板而不是自由画一个相似图</li><li>成果链接带到外部设计工具，选择组件与图层证明可编辑性</li><li>镜头逐步放大至局部结构，保持画板和图层选择同步</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Cursor / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Cursor Figma Component Creation — Cursor can now…
+
+从已有设计系统出发生成页面，再进入设计工具检查图层与组件。最终画面不仅要好看，还要让结构可见。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 25.416667,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 8.2,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Build with a design system&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#9966cc&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Build with a design system&quot;,
+        &quot;accent&quot;: &quot;#9966cc&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 先说明采用哪套设计系统
+
+输入里同时交代目标页面与设计系统。执行过程按查找组件、读取变量、构建画板、检查结构推进，工具列表保持整齐，不需要逐条展开冗长日志。
+
+对话区用浅色、常规无衬线与清楚的状态标记；强调色只标正在处理的步骤。
+
+## 结果链接把观众带进可编辑画板
+
+生成完成后，先出现明确结果链接，再打开设计工具。完整画板先停留，随后推近侧栏或某个组件；图层树与画布中的选中边框同步变化。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;结果链接把观众带进可编辑画板&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 9,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;16–25 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 用局部结构证明编辑关系
+
+选择一个能体现组件复用的区域，例如侧栏、统计卡或导航项。选中状态只框住相应对象，属性面板跟随对象更新；不要只放一张最终截图。
+
+画板内部遵循所选设计系统的字形、间距和配色。工具外壳与作品样式分开处理，避免主题色覆盖所有工具文字。
+
+## 换系统时重建组件来源
+
+新主题需要对应的变量、组件和页面内容。保留读取规范到生成，再到局部编辑检查的顺序，结果层级与实际页面内容保持一致。
+
+## 配色与字形
+
+无衬线界面文字与清晰大小层级。
+
+#f5f5f1 · #202122 · #9966cc · #f1ba8a · #9ab8ad
+
+## 元素与制作规则
+
+提示框 / 工具调用列表 / 设计系统变量 / 结果链接 / 画板 / 图层树 / 组件选框
+
+- 先查已有设计系统与变量，后创建画板而不是自由画一个相似图
+- 成果链接带到外部设计工具，选择组件与图层证明可编辑性
+- 镜头逐步放大至局部结构，保持画板和图层选择同步
+
+## 内容替换
+
+- 可迁移为结构化设计生成，保留查规范→生成→检查可编辑结构
+- 只给最终截图不足以表达可编辑性，需要层级对象
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Cursor&quot;,
+  &quot;id&quot;: &quot;V239&quot;,
+  &quot;palette&quot;: [
+    &quot;#f5f5f1&quot;,
+    &quot;#202122&quot;,
+    &quot;#9966cc&quot;,
+    &quot;#f1ba8a&quot;,
+    &quot;#9ab8ad&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线界面文字与清晰大小层级&quot;,
+  &quot;sample&quot;: &quot;Build with a design system&quot;,
+  &quot;objects&quot;: [
+    &quot;提示框&quot;,
+    &quot;工具调用列表&quot;,
+    &quot;设计系统变量&quot;,
+    &quot;结果链接&quot;,
+    &quot;画板&quot;,
+    &quot;图层树&quot;,
+    &quot;组件选框&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/61a0ae6b5ff140ad6e99f54881def1a66fb4978d7cc451dc07e7551ed4dfaacf&quot;,
+      &quot;timeSeconds&quot;: 7.0,
+      &quot;frameId&quot;: &quot;K0012&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/c638392c76ae2e9da9c00e1dd72fabd44d16b190a9f4548d22cd9203cd194618&quot;,
+      &quot;timeSeconds&quot;: 13.0,
+      &quot;frameId&quot;: &quot;K0025&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/d4f9df7283caa4d0c6a1ddce5c202dd56422e2e954741f5116139a953dbc5f72&quot;,
+      &quot;timeSeconds&quot;: 16.0,
+      &quot;frameId&quot;: &quot;K0033&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 19.0,
+      &quot;frameId&quot;: &quot;K0044&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/9a15f95a04371434f84cfba621c53c63278c9e2f81abaa55f7b6a842ffc2c17d&quot;,
+      &quot;timeSeconds&quot;: 24.0,
+      &quot;frameId&quot;: &quot;K0053&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0.0,
+      &quot;label&quot;: &quot;输入Figma需求&quot;,
+      &quot;end&quot;: 3.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3.0,
+      &quot;label&quot;: &quot;搜索设计系统&quot;,
+      &quot;end&quot;: 7.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 7.0,
+      &quot;label&quot;: &quot;读取组件变量&quot;,
+      &quot;end&quot;: 10.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 10.0,
+      &quot;label&quot;: &quot;构建画板&quot;,
+      &quot;end&quot;: 13.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 13.0,
+      &quot;label&quot;: &quot;检查元数据&quot;,
+      &quot;end&quot;: 16.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 16.0,
+      &quot;label&quot;: &quot;输出链接&quot;,
+      &quot;end&quot;: 17.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 17.0,
+      &quot;label&quot;: &quot;打开Figma&quot;,
+      &quot;end&quot;: 19.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 19.0,
+      &quot;label&quot;: &quot;选中侧栏&quot;,
+      &quot;end&quot;: 21.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 21.0,
+      &quot;label&quot;: &quot;检查图层&quot;,
+      &quot;end&quot;: 24.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 24.0,
+      &quot;label&quot;: &quot;局部组件&quot;,
+      &quot;end&quot;: 25.416667,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 25.416667,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

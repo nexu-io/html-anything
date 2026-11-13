@@ -1,0 +1,127 @@
+{
+  "background": {
+    "color": "#080e13",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：GPT-6 Luna",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：Introducing",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：GPT-6 Sol",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "星点场",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "螺旋构图",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "太阳",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "月牙",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "产品标题",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#080e13",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#e8b85b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a5b9ee",
+      "status": "inferred"
+    },
+    {
+      "hex": "#24434e",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "深空星点、暖太阳与冷月牙、白色无衬线标题",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "推进先由星点径向拉伸建立速度，再让太阳与月牙依次接管中心。",
+      "status": "inferred"
+    },
+    {
+      "rule": "大天体从边缘掠过，作为遮挡转场；不是两个圆简单淡入。",
+      "status": "inferred"
+    },
+    {
+      "rule": "标题从小到大承接最后推进，尾帧可超出画面。",
+      "status": "inferred"
+    }
+  ]
+}

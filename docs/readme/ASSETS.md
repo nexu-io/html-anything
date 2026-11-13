@@ -1,5 +1,7 @@
 # OpenMotion README artwork
 
+Artwork inventory paths below are stable logical paths. Files above 100 KB are served from the public URLs in `repository-media.json`; run `npm run media:pull -- docs/readme` to recover their original bytes for reproduction. Historical capture and encoding records retain the original identities. See [resource availability](RESOURCES.md).
+
 ## One visual family
 
 The public README follows the painterly direction of the [OpenDesign website](https://open-design.ai/): sky blue, turquoise and emerald brushwork, warm ivory space, a little apricot, and crisp charcoal type. The supplied website screenshots were visual references; the new artwork was generated with the **built-in Codex ImageGen tool**. No website screenshots or promotional prices are reproduced as OpenMotion features.
@@ -18,22 +20,22 @@ The local agent gallery and setup buttons use client marks from the [source icon
 
 | Asset | Source and use |
 | --- | --- |
-| [README cover](brand-hero.jpg) · [简体中文](brand-hero.zh-CN.jpg) · [日本語](brand-hero.ja.jpg) | Dan Martell’s talking-head reference and the OpenMotion caption remake with @careerwithriya, with a capture of the editable Studio timeline. The desktop and mobile covers open the [2.4-second comparison](media/presenter-caption-remake.mp4). [Footage and edit credits](reverse-engineering-cover.md) |
-| [Earlier cover](cover.png) | Previous AI-editing positioning, preserved as artwork history; no longer the main README cover. |
-| [Animated cover](cover-motion.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |
-| [Social preview](social-preview.jpg) | 1280 × 640 sharing image derived from the cover. |
-| [Library](library.png) | Generated 2172 × 724 companion artwork for the five resource collections. |
-| [Community](community.png) | Generated 2172 × 724 companion invitation to create and contribute. |
-| [Collaboration roadmap](collaboration-concept-v2.png) | Generated 1774 × 887 concept of human–agent editing. Retains **Concept preview**; the README states that collaboration is planned. The [earlier version](collaboration-coming.png) is preserved. |
+| [README cover](https://releases.open-design.ai/open-motion/media/sha256/730e1d6235820d39ba8adde42810d1165377992136a3b20290ad5d504abb527b.jpg) · [简体中文](https://releases.open-design.ai/open-motion/media/sha256/45ee17734fb1315decef29c116fdd6794ee275fe83239328526b982a8ebe17ac.jpg) · [日本語](https://releases.open-design.ai/open-motion/media/sha256/1b567187bc527cc99f8ef2c91c41c9adf5fa91fa9bbc5f8e2f579ad9c7837a46.jpg) | Dan Martell’s talking-head reference and the OpenMotion caption remake with @careerwithriya, with a capture of the editable Studio timeline. The desktop and mobile covers open the [2.4-second comparison](media/presenter-caption-remake.mp4). [Footage and edit credits](reverse-engineering-cover.md) |
+| [Earlier cover](https://releases.open-design.ai/open-motion/media/sha256/cfeb12861412bd36d34000ee1fe6d7f4e7b124ac9cad680d595c3cb44708eead.png) | Previous AI-editing positioning, preserved as artwork history; no longer the main README cover. |
+| [Animated cover](https://releases.open-design.ai/open-motion/media/sha256/6f6379825bac5cc67ee2d8fdc328ec25a16eea64fdac420f358092ddae95ad47.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |
+| [Social preview](https://releases.open-design.ai/open-motion/media/sha256/9683e195639f5f6a54524f33fe4c7c3f4ec47efebb97fc93e4ec38895dd08412.jpg) | 1280 × 640 sharing image derived from the cover. |
+| [Library](https://releases.open-design.ai/open-motion/media/sha256/e84a6ce63123aac0c1e48e78a2faf261638f9cfa75bf3e92b9c35192802f85bd.png) | Generated 2172 × 724 companion artwork for the five resource collections. |
+| [Community](https://releases.open-design.ai/open-motion/media/sha256/41d8a0cc3d4bf6796fb215c4d0c764f074aa847d9fb010fa5184d4dc1a67fceb.png) | Generated 2172 × 724 companion invitation to create and contribute. |
+| [Collaboration roadmap](https://releases.open-design.ai/open-motion/media/sha256/a5efa5be51936f33ecc7ef4241ce2602ebf4e7efcc8ce30e0dac5a8bd2b34957.png) | Generated 1774 × 887 concept of human–agent editing. Retains **Concept preview**; the README states that collaboration is planned. The [earlier version](https://releases.open-design.ai/open-motion/media/sha256/d0d44450f450157390471f775bb8f893284892aca5a553ec7354ae044cf5690a.png) is preserved. |
 | [Architecture diagrams](diagrams/) | Creation workflow, explicit creative context and runtime boundaries; [editable SVG source](diagrams/generate.py). Diagrams explain the architecture, not measured creation results. |
 | [Additional brand and production references](brand-showcase/README.md) | Local campaign still and two case-study videos; external examples with [source and integrity records](brand-showcase/manifest.json). |
 | [Community banner](community-star.svg) · [简体中文](community-star.zh-CN.svg) · [日本語](community-star.ja.svg) | The localized GitHub invitation uses the prototype logo and the cover paper. The star animation respects reduced-motion preferences. |
-| [Earlier stay tuned GIF](stay-tuned.gif) | Generated 960 × 480 Star → Starred invitation; 40 frames, 4 seconds, infinite loop, about 437 KB. Linked to the repository. Inspired by the community CTA pattern in [Hypit](https://github.com/hypit-ai/hypit); no Hypit image or GitHub screenshot is reproduced. |
-| [Star frame](stay-tuned.png) / [Starred frame](stay-tuned-starred.png) | Two ImageGen frames used to reproduce the animation; illustration only, no fabricated repository counts or notification guarantees. |
-| [Editor](editor.jpg) and [workspace](workspace.jpg) | Historical Studio captures at commit `7aee372`, using an isolated demo workspace and bundled Product Promo project. Retained for provenance; the README now uses the product tour below. |
-| [Codex embedded editor](product-tour/codex-embedded.png) / [standalone workspace](product-tour/standalone-studio.png) | Real Studio captures of the same Product Promo project. The Codex image is the embedded Viewer, without a Codex desktop shell. |
+| [Earlier stay tuned GIF](https://releases.open-design.ai/open-motion/media/sha256/eb6fb4149cee41e46bab25c9df3bc2d3975ebd6924e0549335a96e43ab486bda.gif) | Generated 960 × 480 Star → Starred invitation; 40 frames, 4 seconds, infinite loop, about 437 KB. Linked to the repository. Inspired by the community CTA pattern in [Hypit](https://github.com/hypit-ai/hypit); no Hypit image or GitHub screenshot is reproduced. |
+| [Star frame](https://releases.open-design.ai/open-motion/media/sha256/76daac231f094b5d02997e885e9c0d25c516a54472d252f9c430e2ff4afaf478.png) / [Starred frame](https://releases.open-design.ai/open-motion/media/sha256/264d6aefd8ce3e3bebd426d226ac08dc30f0b3ceca242b19f5953a615795347b.png) | Two ImageGen frames used to reproduce the animation; illustration only, no fabricated repository counts or notification guarantees. |
+| [Editor](https://releases.open-design.ai/open-motion/media/sha256/c98d8eeff73abaa8af85d01028f3953c95cfd5b0e4821148e887b008276469e5.jpg) and [workspace](https://releases.open-design.ai/open-motion/media/sha256/98f02a127ec68acb7cde4d5278acc66ef53c0e91625aebccd1274fe1d74da0d7.jpg) | Historical Studio captures at commit `7aee372`, using an isolated demo workspace and bundled Product Promo project. Retained for provenance; the README now uses the product tour below. |
+| [Codex embedded editor](https://releases.open-design.ai/open-motion/media/sha256/1fbaaffd0c77d9f7c6eda67cd452b37735c1fce5d5c4d747db1a1db03bd8cab8.png) / [standalone workspace](https://releases.open-design.ai/open-motion/media/sha256/07882f8677e7d52c8b04b52f2fa9f85be7785cff8b7f69c193a529278e13b1c2.png) | Real Studio captures of the same Product Promo project. The Codex image is the embedded Viewer, without a Codex desktop shell. |
 | [Claude Code Skills](product-tour/claude-code-skills.png) / [CLI checks](product-tour/cli-checks.png) | Real terminal output replayed in xterm.js: the five loaded Skills and the pinned engine's info/lint/timeline results. No model conversation is fabricated. |
-| [Connect Agent](product-tour/connect-agent.png) / [template handoff](product-tour/template-to-agent.png) | Real connection dialog and Product Promo preview with its exact template ID and generated Agent instruction. |
+| [Connect Agent](https://releases.open-design.ai/open-motion/media/sha256/9655dec62e7ee41cb7c1c6f9bc94b1f6c18c419ed2e8b4f48ab2da9932d37bf5.png) / [template handoff](https://releases.open-design.ai/open-motion/media/sha256/7ed60a6f7dd91d9660de47b9d3489e9183e5091de7e7d765084ccce7c59be3af.png) | Real connection dialog and Product Promo preview with its exact template ID and generated Agent instruction. |
 | [Seven creative examples](#creative-examples) | Short GIF excerpts and stills from seven existing external catalog references. Paired with creative briefs, not presented as OpenMotion-generated work. Replaces the three small template posters in the scenario section. |
 | [18 animated catalog picks](#catalog-preview-grid) | Six groups of source-video excerpts replacing the former six static resource covers. 320 × 180, 12 fps, normal-speed continuous excerpts, silent GIF loops; exact sources and encoding live in the gallery manifest. |
 | Bundled template frames | Product Promo, NYT Graph and Decision Tree remain available through the [editable-template index](../../library/templates/README.md); their original projects, posters and [notices](../../template-library/NOTICE.md) are unchanged. |
@@ -56,13 +58,13 @@ The gallery uses the same spacing, typography and two-column card structure for 
 
 | Scenario / preview | Catalog ID | Reference attribution | Excerpt (seconds) |
 | --- | --- | --- | --- |
-| [talking-head](examples/talking-head.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](../../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4) | 10–17 |
-| [story-recut](examples/story-recut.gif) · [still](examples/story-recut.jpg) | `hf-reference-aroll-hundred-days-story` | [Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) | 1–8 |
-| [product-launch](examples/product-launch.gif) · [still](examples/product-launch.jpg) | `hf-reference-jake-figma-draw` | [@figma](media/jake-figma-draw-reference.mp4) | 5.5–12 |
-| [viral-remix](examples/viral-remix.gif) · [still](examples/viral-remix.jpg) | `hf-reference-jake-lovable` | [@lovable_dev](media/jake-lovable-reference.mp4) | 3–10 |
-| [explainer](examples/explainer.gif) · [still](examples/explainer.jpg) | `hf-reference-remix-authorize-once` | [Hyperframes catalog](media/remix-authorize-once-reference.mp4) | 2–9 |
-| [data-story](examples/data-story.gif) · [still](examples/data-story.jpg) | `hf-moment-M1128` | [@Vintage_god](https://x.com/Vintage_god/status/2106817967967056165) | 1.4–7.6 |
-| [music-visual](examples/music-visual.gif) · [still](examples/music-visual.jpg) | `hf-moment-M1139` | [@GoogleAI](https://x.com/GoogleAI/status/2024154215182926027) | 0–3.66667 |
+| [talking-head](https://releases.open-design.ai/open-motion/media/sha256/892096faf7de77bf82957b6176bb022d2d1a85359d26ddd8cc9465b7cfe9d290.gif) · [still](examples/talking-head.jpg) | `hf-reference-aroll-ali-abdaal-workflow` | [Ali Abdaal](../../library/skills/openmotion-presenter-story/assets/ali-abdaal-workflow-reference.mp4) | 10–17 |
+| [story-recut](https://releases.open-design.ai/open-motion/media/sha256/0b5abe1037fe28bd752d4c6c204c79d1cedf9cb34d10f949aafe05f6ba98f77a.gif) · [still](examples/story-recut.jpg) | `hf-reference-aroll-hundred-days-story` | [Hyperframes catalog](https://www.instagram.com/reel/Dd6vHlQgpok/) | 1–8 |
+| [product-launch](https://releases.open-design.ai/open-motion/media/sha256/611aa3be620649397ec8091b9d4af82565a7708e3ee94b627ccd83f602685631.gif) · [still](examples/product-launch.jpg) | `hf-reference-jake-figma-draw` | [@figma](media/jake-figma-draw-reference.mp4) | 5.5–12 |
+| [viral-remix](https://releases.open-design.ai/open-motion/media/sha256/f3e1244c05601809b726965da22abf555a112519d9971096cbb471f114c36115.gif) · [still](examples/viral-remix.jpg) | `hf-reference-jake-lovable` | [@lovable_dev](media/jake-lovable-reference.mp4) | 3–10 |
+| [explainer](https://releases.open-design.ai/open-motion/media/sha256/4205abde888a0cf47d786b00aaad553bec49ff8391ddacb760de918d0945bb3d.gif) · [still](examples/explainer.jpg) | `hf-reference-remix-authorize-once` | [Hyperframes catalog](media/remix-authorize-once-reference.mp4) | 2–9 |
+| [data-story](https://releases.open-design.ai/open-motion/media/sha256/5ac8b202d47c934688cc04659066b7c85df5f14102a3eee28bd802308f3e164f.gif) · [still](examples/data-story.jpg) | `hf-moment-M1128` | [@Vintage_god](https://x.com/Vintage_god/status/2106817967967056165) | 1.4–7.6 |
+| [music-visual](https://releases.open-design.ai/open-motion/media/sha256/786f690fd2ce3382f27ec0abe5d7a99b3485b47680173d781f8a23cf0e0bfa0a.gif) · [still](examples/music-visual.jpg) | `hf-moment-M1139` | [@GoogleAI](https://x.com/GoogleAI/status/2024154215182926027) | 0–3.66667 |
 
 The [manifest](examples/manifest.json) records exact video URLs, source SHA-256, excerpt start/duration, poster timestamp and GIF checksum. The original catalog and its covers are unchanged. Full downloaded videos stay outside the checkout; only the seven short excerpts, seven stills and manifest are distributed.
 
@@ -243,24 +245,24 @@ Default README images are GIFs. Existing [catalog covers](../../web/catalog/cove
 
 | Preview | Catalog ID | Credit / source | Excerpt (seconds) |
 | --- | --- | --- | --- |
-| [App Showcase](gallery/app-showcase.gif) | `hf-block-app-showcase` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json) | 0.5–4.5 |
-| [Firecrawl Free Keyless](gallery/firecrawl.gif) | `hf-reference-remix-firecrawl` | [@ericciarla](media/remix-firecrawl-reference.mp4) | 1.6–5.6 |
-| [3D UI Reveal](gallery/ui-3d-reveal.gif) | `hf-block-ui-3d-reveal` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json) | 2.4–6.4 |
+| [App Showcase](https://releases.open-design.ai/open-motion/media/sha256/2e63fa988d5a2da0c845136b47225ae72fffe8b98e5bfdc18a6eede74a25003b.gif) | `hf-block-app-showcase` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/app-showcase/registry-item.json) | 0.5–4.5 |
+| [Firecrawl Free Keyless](https://releases.open-design.ai/open-motion/media/sha256/51f649751e94299d79b8439ab7c21f5475102a5ed913bac37337c266428af1e9.gif) | `hf-reference-remix-firecrawl` | [@ericciarla](media/remix-firecrawl-reference.mp4) | 1.6–5.6 |
+| [3D UI Reveal](https://releases.open-design.ai/open-motion/media/sha256/4579e5c66d1b23cc7d4de1ccc6f287f7baa2266da0e6184e9cb2274b31ec9e85.gif) | `hf-block-ui-3d-reveal` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/ui-3d-reveal/registry-item.json) | 2.4–6.4 |
 | [Pond: a new Linux OS](gallery/pond.gif) | `hf-reference-jake-pond` | [@bflycomputer](media/jake-pond-reference.mp4) | 1–5 |
-| [Kimi K3 teaser](gallery/kimi-k3.gif) | `hf-reference-remix-kimi-k3` | [@Kimi_Moonshot](media/remix-kimi-k3-reference.mp4) | 1–5 |
-| [Reception by ElevenLabs](gallery/elevenlabs-reception.gif) | `hf-reference-remix-elevenlabs-reception` | [@ElevenLabs](media/remix-elevenlabs-reception-reference.mp4) | 5–9 |
-| [Glass Shard Title](gallery/glass-shard-title.gif) | `hf-block-glass-shard-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json) | 0.5–6 |
-| [Canopy Part Title](gallery/canopy-title.gif) | `hf-block-canopy-part-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json) | 0.3–4.3 |
-| [Wireframe Portal Title](gallery/wireframe-title.gif) | `hf-block-wireframe-portal-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json) | 0.3–4.3 |
-| [Iskra Light](gallery/iskra-light.gif) | `hf-reference-remix-iskra-light` | [@world_is_web](media/remix-iskra-light-reference.mp4) | 2.5–6.5 |
-| [Liquid Glass Widgets](gallery/liquid-glass-widgets.gif) | `hf-block-liquid-glass-widgets` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json) | 0.3–4.3 |
-| [Cyera brand video](gallery/cyera.gif) | `hf-reference-remix-cyera` | [Cyera](media/remix-cyera-reference.mp4) | 7.2–11.2 |
-| [Code 3D Extrude](gallery/code-3d.gif) | `hf-block-code-3d-extrude` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json) | 0.5–4.5 |
-| [Glyph: GPU typography for the web](gallery/glyph.gif) | `hf-reference-remix-glyph` | [@pmndrs](media/remix-glyph-reference.mp4) | 0.3–4.3 |
-| [NYC Paris Flight](gallery/flight-map.gif) | `hf-block-nyc-paris-flight` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json) | 0.2–5.5 |
-| [Aurora](gallery/aurora.gif) | `hf-block-aurora` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json) | 0–2 |
-| [Linear Loops](gallery/linear-loops.gif) | `hf-reference-remix-linear-loops` | [@linear](media/remix-linear-loops-reference.mp4) | 5–9 |
-| [Code Particle Assemble](gallery/code-particles.gif) | `hf-block-code-particle-assemble` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json) | 0.3–4.3 |
+| [Kimi K3 teaser](https://releases.open-design.ai/open-motion/media/sha256/7efe6482e818eaa61e61a3f1105bbf0f711c5719f605277f79bee2f0d3d5d354.gif) | `hf-reference-remix-kimi-k3` | [@Kimi_Moonshot](media/remix-kimi-k3-reference.mp4) | 1–5 |
+| [Reception by ElevenLabs](https://releases.open-design.ai/open-motion/media/sha256/593e5ea9029984b620b795ad16ae07ed8ebf28501134cec3dd67fa0cf2777c4f.gif) | `hf-reference-remix-elevenlabs-reception` | [@ElevenLabs](media/remix-elevenlabs-reception-reference.mp4) | 5–9 |
+| [Glass Shard Title](https://releases.open-design.ai/open-motion/media/sha256/1d4e48b21944f1b75358fd0f135eef1abb3526527236b2a72a9bffd381035876.gif) | `hf-block-glass-shard-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/glass-shard-title/registry-item.json) | 0.5–6 |
+| [Canopy Part Title](https://releases.open-design.ai/open-motion/media/sha256/bd8d924d8bae36d74cf03538462518777b0cad79a78c957b2731acc0c733d2dc.gif) | `hf-block-canopy-part-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/canopy-part-title/registry-item.json) | 0.3–4.3 |
+| [Wireframe Portal Title](https://releases.open-design.ai/open-motion/media/sha256/a04da6165a9c08a06246347fb331c7f9aadd930afd32af843dbf1cf16af7c2ca.gif) | `hf-block-wireframe-portal-title` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/wireframe-portal-title/registry-item.json) | 0.3–4.3 |
+| [Iskra Light](https://releases.open-design.ai/open-motion/media/sha256/bff72b30b77e4b2991776bab55428b8ec82fe633d9f71fbdf62b8b9c32b76ebf.gif) | `hf-reference-remix-iskra-light` | [@world_is_web](media/remix-iskra-light-reference.mp4) | 2.5–6.5 |
+| [Liquid Glass Widgets](https://releases.open-design.ai/open-motion/media/sha256/8262f097c84e4fb26ab860f5e8ba3d3585ca5f4fe4c3104a6e7f22fdc3e287b5.gif) | `hf-block-liquid-glass-widgets` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/liquid-glass-widgets/registry-item.json) | 0.3–4.3 |
+| [Cyera brand video](https://releases.open-design.ai/open-motion/media/sha256/2ae8ca04b773f2bea17e2e368680d2f84071f7ae4457f02dd3a460b952434a99.gif) | `hf-reference-remix-cyera` | [Cyera](media/remix-cyera-reference.mp4) | 7.2–11.2 |
+| [Code 3D Extrude](https://releases.open-design.ai/open-motion/media/sha256/4275833af108dabeae6629518ca089036d12e97e73f2b19f39b04de11866ccc5.gif) | `hf-block-code-3d-extrude` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-3d-extrude/registry-item.json) | 0.5–4.5 |
+| [Glyph: GPU typography for the web](https://releases.open-design.ai/open-motion/media/sha256/645600cd403b233ede34313e0eb6b1632d63298dbffa3ff4137a47f987b15316.gif) | `hf-reference-remix-glyph` | [@pmndrs](media/remix-glyph-reference.mp4) | 0.3–4.3 |
+| [NYC Paris Flight](https://releases.open-design.ai/open-motion/media/sha256/951cd2cd4a6232410990a01426c6d7c96b6be79956019194165967baff36cb7b.gif) | `hf-block-nyc-paris-flight` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/nyc-paris-flight/registry-item.json) | 0.2–5.5 |
+| [Aurora](https://releases.open-design.ai/open-motion/media/sha256/3b7fc53ee3a44365ccf66c5441c9dc1ed42c26696689fe32353bf1aca3a24c70.gif) | `hf-block-aurora` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/aurora/registry-item.json) | 0–2 |
+| [Linear Loops](https://releases.open-design.ai/open-motion/media/sha256/c4352874fdad22dbe7481e8adf706ae6671f0aaed3fa907cfb1bd413051eaca9.gif) | `hf-reference-remix-linear-loops` | [@linear](media/remix-linear-loops-reference.mp4) | 5–9 |
+| [Code Particle Assemble](https://releases.open-design.ai/open-motion/media/sha256/55437de0144c117932e1d817798b6894b533fba26885d9e10304e77d2f51a458.gif) | `hf-block-code-particle-assemble` | [Hyperframes](https://raw.githubusercontent.com/heygen-com/hyperframes/main/registry/blocks/code-particle-assemble/registry-item.json) | 0.3–4.3 |
 
 The [gallery manifest](gallery/manifest.json) records the six group labels, exact catalog IDs, source and video URLs, selected time ranges, source SHA-256, existing poster paths, GIF byte counts and GIF SHA-256. The gallery contains 8 reference films and 10 registry components; it does not add editable templates or claim OpenMotion generated the displayed work. Third-party media, brands and source notices retain their original rights. The application’s Apache-2.0 license does not relicense them.
 
@@ -356,7 +358,7 @@ For comparisons, apply `setpts=PTS-STARTPTS,fps=10,scale=288:512:force_original_
 
 ## Local resource closure and Agent slogan
 
-The current cover was edited with the built-in ImageGen tool to use **Edit videos with your agent.** The previous prompts above are historical. The selected image is [cover.png](cover.png); GIF and social preview were regenerated from this same file with the commands above.
+The current cover was edited with the built-in ImageGen tool to use **Edit videos with your agent.** The previous prompts above are historical. The selected image is [cover.png](https://releases.open-design.ai/open-motion/media/sha256/cfeb12861412bd36d34000ee1fe6d7f4e7b124ac9cad680d595c3cb44708eead.png); GIF and social preview were regenerated from this same file with the commands above.
 
 Final edit prompt:
 
@@ -365,3 +367,12 @@ Change only the bold slogan "Edit with AI." into the exact text "Edit videos wit
 ```
 
 All 38 full films used by the README, scenarios, comparisons and curated collections are now local; see the [media manifest](media/manifest.json) and [resource contract](RESOURCES.md). GIF source hashes continue to identify those same complete files. The six editable profiles include reference films and local dependencies; Presenter Story carries its three pairs. The original template demo is [local](../../library/templates/presenter-tech/preview.mp4). This supersedes earlier descriptions of temporary-only source videos and CDN-dependent rendering.
+
+
+## Current online catalog and Studio captures — 2026-11-12
+
+The README uses locally stored excerpts from the public template catalog. Each card links once to its online detail page. Source URLs and file hashes are recorded in [the template manifest](live-templates/manifest.json). Presenter references remain local and have no online-template link.
+
+The English, Simplified Chinese and Japanese screenshots show the installed OpenMotion 0.6.5 template library, template detail and recreation dialog, captured in an isolated demo workspace using the production catalog. [Capture manifest](live-product/manifest.json). These are real UI captures, without generated or composited interface elements.
+
+The full-stack workflow section also includes [a user-provided Studio screenshot](https://releases.open-design.ai/open-motion/media/sha256/f20ae0f17f9db97f1950f8fd4624e296caf014eb5f774d6cb005afa344900073.png), retained as the original PNG with its Chinese interface. It shows imported media, playback and the editing timeline. Its runtime version is unspecified; the file hash and provenance are recorded separately in the capture manifest.

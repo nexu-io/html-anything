@@ -14,6 +14,7 @@ import { studioApiFetch, studioProjectUrl } from "../../utils/studioApiFetch";
 
 export interface RenderJob {
   id: string;
+  nativeJobId?: string;
   status: "rendering" | "complete" | "failed" | "cancelled";
   progress: number;
   stage?: string;
@@ -320,7 +321,7 @@ export function useRenderQueue(
         addSessionJob(failedJob, settings);
         return;
       }
-      const { jobId } = await res.json();
+      const { jobId: nativeJobId, filename } = await res.json();
 
       const FORMAT_EXT: Record<string, string> = {
         mp4: ".mp4",
@@ -329,18 +330,20 @@ export function useRenderQueue(
         gif: ".gif",
       };
       const ext = FORMAT_EXT[format] ?? ".mp4";
+      const jobId = filename ? filename.slice(0, -ext.length) : nativeJobId;
       const job: RenderJob = {
+        nativeJobId,
         id: jobId,
         status: "rendering",
         progress: 0,
-        filename: `${jobId}${ext}`,
+        filename: filename ?? `${jobId}${ext}`,
         createdAt: startTime,
       };
       addSessionJob(job, settings);
       activeJobRef.current = jobId;
 
       // Track progress via SSE
-      const es = new EventSource(studioProjectUrl(`/api/render/${jobId}/progress`, projectId));
+      const es = new EventSource(studioProjectUrl(`/api/render/${encodeURIComponent(nativeJobId)}/progress`, projectId));
       eventSourceRef.current = es;
 
       es.addEventListener("progress", (event) => {
@@ -403,7 +406,8 @@ export function useRenderQueue(
         ),
       );
       try {
-        const res = await studioApiFetch(`/api/render/${jobId}/cancel`, { method: "POST" });
+        const nativeId = jobs.find(job => job.id === jobId)?.nativeJobId ?? jobId;
+        const res = await studioApiFetch(`/api/render/${encodeURIComponent(nativeId)}/cancel`, { method: "POST" });
         if (!res.ok && res.status !== 404) {
           setActionError("Couldn't cancel on the server. The render may still be running.");
           return;
@@ -422,7 +426,7 @@ export function useRenderQueue(
         setActionError("Couldn't reach the server to cancel. The render may still be running.");
       }
     },
-    [closeActiveEventSource, loadRenders],
+    [closeActiveEventSource, loadRenders, jobs],
   );
 
   const deleteRender = useCallback(
@@ -430,7 +434,7 @@ export function useRenderQueue(
       setActionError(null);
       closeActiveEventSource(jobId);
       try {
-        const res = await studioApiFetch(`/api/render/${jobId}`, { method: "DELETE" });
+        const res = await studioApiFetch(`/api/render/${encodeURIComponent(jobId)}`, { method: "DELETE" });
         if (!res.ok) {
           setActionError("Couldn't delete the render. It's still on disk.");
           return;

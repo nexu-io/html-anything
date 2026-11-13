@@ -1,0 +1,277 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Figma × Codex · 设计与实现交接 · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#161616;--brand-ink:#f6f6ef;--accent:#96d93c;--sample-font:Arial, sans-serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Figma <span>/</span> V273</div><div class="intro-line"><h1>Figma × Codex · 设计与实现交接</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>将选中的设计和批注交给实现代理，再用对应屏幕的运行结果完成交接。重点是让人看清“传了什么”。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 40.0, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 8, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Design to implementation&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#96d93c&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Design to implementation&quot;, &quot;accent&quot;: &quot;#96d93c&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="40.0" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 40.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Dev Mode, now in Codex.
+
+Available in the Figma plugin. https://t.co/opHvrMftNZ · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#161616}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Figma</div><div class="type-sample">Design to implementation</div><p>无衬线中粗主标题；细边框界面与小号功能文字</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#161616" style="--swatch:#161616" aria-label="复制色值 #161616"><span></span><code>#161616</code></button><button class="swatch" data-color="#f6f6ef" style="--swatch:#f6f6ef" aria-label="复制色值 #f6f6ef"><span></span><code>#F6F6EF</code></button><button class="swatch" data-color="#96d93c" style="--swatch:#96d93c" aria-label="复制色值 #96d93c"><span></span><code>#96D93C</code></button><button class="swatch" data-color="#8d56d7" style="--swatch:#8d56d7" aria-label="复制色值 #8d56d7"><span></span><code>#8D56D7</code></button><button class="swatch" data-color="#f56c3d" style="--swatch:#f56c3d" aria-label="复制色值 #f56c3d"><span></span><code>#F56C3D</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>代理入口</span><span>设计帧</span><span>批注</span><span>选择计数</span><span>实现请求</span><span>运行预览</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule has-demo" id="section-1"><div class="rule-label"><span>01</span><h2>设计与批注先准备好</h2></div><figure class="demo" id="demo-clip-1" data-demo="{&quot;id&quot;: &quot;clip-1&quot;, &quot;title&quot;: &quot;设计与批注先准备好&quot;, &quot;src&quot;: &quot;demos/clip-1.html&quot;, &quot;duration&quot;: 17, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;4–21 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>设计与批注先准备好</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="设计与批注先准备好" data-src="demos/clip-1.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="17" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 17.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>4–21 秒 · 动作示意 <a href="demos/clip-1.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Dev Mode, now in Codex.
+
+Available in the Figma plugin. https://t.co/opHvrMftNZ · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#161616}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;4&quot; data-end=&quot;21&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>从代理入口进入设计工具，展示多帧设计与批注。选中时保留清楚的外框和计数，提交按钮附近再次显示引用对象，避免选择在切镜时丢失。</p>
+
+</div></section><section class="rule text-only" id="section-2"><div class="rule-label"><span>02</span><h2>实现结果对应选中的屏幕</h2></div><div class="rule-copy">
+<p>提交请求后依次交代设计变量、组件和运行结果。预览中使用相同的页面结构与核心文本，让选择的三帧与最终结果能够逐一对应。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>把交接焦点放大</h2></div><div class="rule-copy">
+<p>深灰外层和明亮画布保持层次，绿、紫、橙用于选中、批注和界面示例。标题用中粗无衬线，计数和引用用清楚的小号字；选择数、批注和提交动作采用局部近景。</p>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>可换工具，不能丢掉上下文</h2></div><div class="rule-copy">
+<p>替换开发代理、设计帧、批注和实现结果时保持同一套页面。请求文字明确引用选中对象，联名结束页只负责说明工具关系，不替代实际交接过程。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>代理侧栏</b></button><button class="beat" data-time="4.0"><span>4.00<small>s</small></span><b>打开设计工具</b></button><button class="beat" data-time="8.0"><span>8.00<small>s</small></span><b>多帧设计</b></button><button class="beat" data-time="11.0"><span>11.00<small>s</small></span><b>批注</b></button><button class="beat" data-time="17.0"><span>17.00<small>s</small></span><b>选中三帧</b></button><button class="beat" data-time="21.0"><span>21.00<small>s</small></span><b>提交实现请求</b></button><button class="beat" data-time="25.0"><span>25.00<small>s</small></span><b>设计变量与组件</b></button><button class="beat" data-time="29.0"><span>29.00<small>s</small></span><b>运行结果</b></button><button class="beat" data-time="35.0"><span>35.00<small>s</small></span><b>品牌联名</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/4f57bd3e65d75ca094611486e8be5abcf0410b1f9fac16fa78b8d69d92aaa489" alt="8.00 秒的构图参考" loading="lazy"><figcaption>8.00s</figcaption></figure><figure><img src="https://r.open-design.ai/files/72310ec3fb4a4e7cf533b24f9ce1dfe75192475fdfb6b488a8f566b9639c0651" alt="11.00 秒的构图参考" loading="lazy"><figcaption>11.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="21.00 秒的构图参考" loading="lazy"><figcaption>21.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="25.00 秒的构图参考" loading="lazy"><figcaption>25.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="35.00 秒的构图参考" loading="lazy"><figcaption>35.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>可换开发工具；保留设计对象与实现产物一一对应。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>代理入口 / 设计帧 / 批注 / 选择计数 / 实现请求 / 运行预览</p>
+<ul><li>先带着批注选择设计帧，再把选中上下文交给实现代理；实现结果对应选中的屏幕。</li><li>近景突出选择数与引用，避免观众不知道传了什么。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Figma / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Figma × Codex · 设计与实现交接
+
+将选中的设计和批注交给实现代理，再用对应屏幕的运行结果完成交接。重点是让人看清“传了什么”。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 40.0,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 8,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Design to implementation&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#96d93c&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Design to implementation&quot;,
+        &quot;accent&quot;: &quot;#96d93c&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 设计与批注先准备好
+
+从代理入口进入设计工具，展示多帧设计与批注。选中时保留清楚的外框和计数，提交按钮附近再次显示引用对象，避免选择在切镜时丢失。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-1&quot;,
+  &quot;title&quot;: &quot;设计与批注先准备好&quot;,
+  &quot;src&quot;: &quot;demos/clip-1.html&quot;,
+  &quot;duration&quot;: 17,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;4–21 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 实现结果对应选中的屏幕
+
+提交请求后依次交代设计变量、组件和运行结果。预览中使用相同的页面结构与核心文本，让选择的三帧与最终结果能够逐一对应。
+
+| 时间 | 段落 |
+|---|---|
+| 0.00–4.00s | 代理侧栏 |
+| 4.00–8.00s | 打开设计工具 |
+| 8.00–11.00s | 多帧设计 |
+| 11.00–17.00s | 批注 |
+| 17.00–21.00s | 选中三帧 |
+| 21.00–25.00s | 提交实现请求 |
+| 25.00–29.00s | 设计变量与组件 |
+| 29.00–35.00s | 运行结果 |
+| 35.00–40.00s | 品牌联名 |
+
+## 把交接焦点放大
+
+深灰外层和明亮画布保持层次，绿、紫、橙用于选中、批注和界面示例。标题用中粗无衬线，计数和引用用清楚的小号字；选择数、批注和提交动作采用局部近景。
+
+## 可换工具，不能丢掉上下文
+
+替换开发代理、设计帧、批注和实现结果时保持同一套页面。请求文字明确引用选中对象，联名结束页只负责说明工具关系，不替代实际交接过程。
+
+## 配色与字形
+
+无衬线中粗主标题；细边框界面与小号功能文字。
+
+#161616 · #f6f6ef · #96d93c · #8d56d7 · #f56c3d
+
+## 元素与制作规则
+
+代理入口 / 设计帧 / 批注 / 选择计数 / 实现请求 / 运行预览
+
+- 先带着批注选择设计帧，再把选中上下文交给实现代理；实现结果对应选中的屏幕。
+- 近景突出选择数与引用，避免观众不知道传了什么。
+
+## 内容替换
+
+- 可换开发工具；保留设计对象与实现产物一一对应。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Figma&quot;,
+  &quot;id&quot;: &quot;V273&quot;,
+  &quot;palette&quot;: [
+    &quot;#161616&quot;,
+    &quot;#f6f6ef&quot;,
+    &quot;#96d93c&quot;,
+    &quot;#8d56d7&quot;,
+    &quot;#f56c3d&quot;
+  ],
+  &quot;typography&quot;: &quot;无衬线中粗主标题；细边框界面与小号功能文字&quot;,
+  &quot;sample&quot;: &quot;Design to implementation&quot;,
+  &quot;objects&quot;: [
+    &quot;代理入口&quot;,
+    &quot;设计帧&quot;,
+    &quot;批注&quot;,
+    &quot;选择计数&quot;,
+    &quot;实现请求&quot;,
+    &quot;运行预览&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/4f57bd3e65d75ca094611486e8be5abcf0410b1f9fac16fa78b8d69d92aaa489&quot;,
+      &quot;timeSeconds&quot;: 8.0,
+      &quot;frameId&quot;: &quot;K0027&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;https://r.open-design.ai/files/72310ec3fb4a4e7cf533b24f9ce1dfe75192475fdfb6b488a8f566b9639c0651&quot;,
+      &quot;timeSeconds&quot;: 11.0,
+      &quot;frameId&quot;: &quot;K0037&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 21.0,
+      &quot;frameId&quot;: &quot;K0071&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 25.0,
+      &quot;frameId&quot;: &quot;K0085&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 35.0,
+      &quot;frameId&quot;: &quot;K0121&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;代理侧栏&quot;,
+      &quot;end&quot;: 4,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 4,
+      &quot;label&quot;: &quot;打开设计工具&quot;,
+      &quot;end&quot;: 8,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 8,
+      &quot;label&quot;: &quot;多帧设计&quot;,
+      &quot;end&quot;: 11,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 11,
+      &quot;label&quot;: &quot;批注&quot;,
+      &quot;end&quot;: 17,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 17,
+      &quot;label&quot;: &quot;选中三帧&quot;,
+      &quot;end&quot;: 21,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 21,
+      &quot;label&quot;: &quot;提交实现请求&quot;,
+      &quot;end&quot;: 25,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 25,
+      &quot;label&quot;: &quot;设计变量与组件&quot;,
+      &quot;end&quot;: 29,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 29,
+      &quot;label&quot;: &quot;运行结果&quot;,
+      &quot;end&quot;: 35,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 35,
+      &quot;label&quot;: &quot;品牌联名&quot;,
+      &quot;end&quot;: 40.0,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 40.0,
+  &quot;fontFamily&quot;: &quot;Arial, sans-serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

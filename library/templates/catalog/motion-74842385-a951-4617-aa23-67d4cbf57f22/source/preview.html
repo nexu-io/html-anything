@@ -1,0 +1,279 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Perplexity｜Windows 本地计算 · motion.md</title><link rel="stylesheet" href="viewer/guide.css"><link rel="stylesheet" href="viewer/board.css"></head>
+<body style="--paper:#131213;--brand-ink:#f4f5ed;--accent:#4d9d9a;--sample-font:Georgia, serif">
+<header class="shell"><a class="wordmark" href="#">ııı <strong>motion</strong><span>.md</span></a><span class="shell-divider"></span><span class="shell-name">视频风格规范</span><nav><button class="tab active" data-tab="board">样式板</button><button class="tab" data-tab="source">motion.md</button><a href="motion.md" download>下载文档 ↗</a></nav></header>
+<main id="board-view"><header class="intro"><div class="kicker">Perplexity <span>/</span> V267</div><div class="intro-line"><h1>Perplexity｜Windows 本地计算</h1><button id="allPause" class="quiet">播放编排 ▷</button></div><div class="intro-copy"><p>用一次安装和一次云协作，把“在本机运行，再按需扩展”的产品路径讲清楚。</p></div></header>
+<div class="overview"><section class="hero"><div class="tile-label">构图与编排 <span>可播放 · 可替换内容</span></div><figure class="demo" id="demo-sequence" data-demo="{&quot;id&quot;: &quot;sequence&quot;, &quot;title&quot;: &quot;整体编排&quot;, &quot;src&quot;: &quot;demos/sequence.html&quot;, &quot;duration&quot;: 32.533333, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;动作与构图示意&quot;, &quot;initialTime&quot;: 7, &quot;params&quot;: [{&quot;key&quot;: &quot;title&quot;, &quot;label&quot;: &quot;示例主文案&quot;, &quot;type&quot;: &quot;text&quot;, &quot;value&quot;: &quot;Portable Computer&quot;, &quot;maxLength&quot;: 60}, {&quot;key&quot;: &quot;accent&quot;, &quot;label&quot;: &quot;强调色&quot;, &quot;type&quot;: &quot;color&quot;, &quot;value&quot;: &quot;#4d9d9a&quot;}], &quot;presets&quot;: [{&quot;label&quot;: &quot;默认内容&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;Portable Computer&quot;, &quot;accent&quot;: &quot;#4d9d9a&quot;}}, {&quot;label&quot;: &quot;OpenDesign 改编&quot;, &quot;values&quot;: {&quot;title&quot;: &quot;OpenDesign&quot;, &quot;accent&quot;: &quot;#7050da&quot;}}]}"><div class="demo-heading"><span>整体编排</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="整体编排" data-src="demos/sequence.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="32.533333" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 32.53 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>动作与构图示意 <a href="demos/sequence.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Perplexity｜Windows 本地计算 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#131213}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;sequence&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure></section><aside class="identity"><section class="type-sheet"><div class="tile-label">字形与层级 <span>字形示意</span></div><div class="type-brand">Perplexity</div><div class="type-sample">Portable Computer</div><p>衬线主张标题搭配无衬线界面文字；大留白、细边框</p><div class="type-baseline"></div></section><section class="palette"><div class="tile-label">配色 <span>点击复制色值</span></div><div class="swatches"><button class="swatch" data-color="#131213" style="--swatch:#131213" aria-label="复制色值 #131213"><span></span><code>#131213</code></button><button class="swatch" data-color="#f4f5ed" style="--swatch:#f4f5ed" aria-label="复制色值 #f4f5ed"><span></span><code>#F4F5ED</code></button><button class="swatch" data-color="#4d9d9a" style="--swatch:#4d9d9a" aria-label="复制色值 #4d9d9a"><span></span><code>#4D9D9A</code></button><button class="swatch" data-color="#254b4a" style="--swatch:#254b4a" aria-label="复制色值 #254b4a"><span></span><code>#254B4A</code></button><button class="swatch" data-color="#ffffff" style="--swatch:#ffffff" aria-label="复制色值 #ffffff"><span></span><code>#FFFFFF</code></button></div></section></aside></div>
+<div class="roles"><span class="label">画面元素</span><span>下载按钮</span><span>进度条</span><span>本地拓扑</span><span>确认弹窗</span><span>云节点</span></div>
+<div class="board-heading"><div><span class="eyebrow">MOTION LANGUAGE</span><h2>动作与构图</h2></div><p>局部动作 · 构图规则</p></div><div class="rule-grid"><section class="rule has-demo" id="section-1"><div class="rule-label"><span>01</span><h2>安装完成，工具网络才展开</h2></div><figure class="demo" id="demo-clip-1" data-demo="{&quot;id&quot;: &quot;clip-1&quot;, &quot;title&quot;: &quot;安装完成，工具网络才展开&quot;, &quot;src&quot;: &quot;demos/clip-1.html&quot;, &quot;duration&quot;: 11, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;3–14 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>安装完成，工具网络才展开</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="安装完成，工具网络才展开" data-src="demos/clip-1.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="11" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 11.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>3–14 秒 · 动作示意 <a href="demos/clip-1.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Perplexity｜Windows 本地计算 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#131213}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;3&quot; data-end=&quot;14&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>下载按钮、进度条和启动状态依次出现。进度达到终点后再展开本地节点，工具网络从设备附近长出，作为安装成功的结果。</p>
+
+</div></section><section class="rule has-demo" id="section-2"><div class="rule-label"><span>02</span><h2>确认动作连接云与本地</h2></div><figure class="demo" id="demo-clip-2" data-demo="{&quot;id&quot;: &quot;clip-2&quot;, &quot;title&quot;: &quot;确认动作连接云与本地&quot;, &quot;src&quot;: &quot;demos/clip-2.html&quot;, &quot;duration&quot;: 15, &quot;status&quot;: &quot;authored&quot;, &quot;description&quot;: &quot;14–29 秒 · 动作示意&quot;, &quot;initialTime&quot;: 0.6}"><div class="demo-heading"><span>确认动作连接云与本地</span><span class="status">规则示例</span></div><div class="demo-stage"><iframe loading="eager" sandbox="allow-scripts" title="确认动作连接云与本地" data-src="demos/clip-2.html"></iframe></div><div class="demo-controls"><button class="play" type="button" disabled>播放</button><button class="reset" type="button" disabled aria-label="从头播放">↺</button><input class="seek" type="range" min="0" max="15" step="0.0166667" value="0" aria-label="动画时间" disabled><output>0.00 / 15.00 秒</output><select class="speed" aria-label="播放速度"><option value="1">1×</option><option value="0.5">0.5×</option><option value="0.25">0.25×</option></select></div><div class="demo-params"></div><figcaption>14–29 秒 · 动作示意 <a href="demos/clip-2.html" target="_blank" rel="noopener">独立打开 ↗</a><details class="demo-source"><summary>查看 HTML 源码</summary><pre><code>&lt;!doctype html&gt;&lt;html lang=&quot;zh-CN&quot;&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width,initial-scale=1&quot;&gt;&lt;title&gt;Perplexity｜Windows 本地计算 · sequence&lt;/title&gt;&lt;style&gt;html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#131213}canvas{display:block;width:100%;height:100%;object-fit:contain}&lt;/style&gt;&lt;body data-mode=&quot;clip&quot; data-start=&quot;14&quot; data-end=&quot;29&quot;&gt;&lt;canvas width=&quot;1000&quot; height=&quot;600&quot;&gt;&lt;/canvas&gt;&lt;script src=&quot;data.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;common.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;scene.js&quot;&gt;&lt;/script&gt;&lt;script src=&quot;bridge.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</code></pre></details></figcaption></figure><div class="rule-copy">
+<p>先出现云协作主张，再展示确认弹窗。确认后云节点进入上层，连接线落回本地设备；保持上下层次和明确方向，让用户知道动作从哪里发起。</p>
+
+</div></section><section class="rule text-only" id="section-3"><div class="rule-label"><span>03</span><h2>深底界面，少量连接色</h2></div><div class="rule-copy">
+<p>深灰黑作为大背景，白色文字保留清楚的标题层级，青绿色用于节点和连接。主张标题采用衬线，安装项与弹窗采用无衬线；弹窗居于操作焦点，本地设备保持在下方参照位。</p>
+</div></section><section class="rule text-only" id="section-4"><div class="rule-label"><span>04</span><h2>迁移成其他平台安装说明</h2></div><div class="rule-copy">
+<p>可以换操作系统、设备与工具名，安装按钮和提示文案随之替换。保留“下载→完成→启动→确认协作”的必要顺序，简化片长时优先缩短等待段。</p>
+</div></section></div>
+<section class="timeline-sheet" id="timing"><div class="board-heading"><div><span class="eyebrow">SEQUENCE</span><h2>段落与节奏</h2></div><p>点击段落，定位到上方编排示意。</p></div><div class="beats"><button class="beat" data-time="0.0"><span>0.00<small>s</small></span><b>Windows 主张</b></button><button class="beat" data-time="3.0"><span>3.00<small>s</small></span><b>下载组件</b></button><button class="beat" data-time="7.0"><span>7.00<small>s</small></span><b>本地启动</b></button><button class="beat" data-time="10.0"><span>10.00<small>s</small></span><b>工具拓扑</b></button><button class="beat" data-time="14.0"><span>14.00<small>s</small></span><b>云升级主张</b></button><button class="beat" data-time="17.0"><span>17.00<small>s</small></span><b>确认提示</b></button><button class="beat" data-time="20.0"><span>20.00<small>s</small></span><b>本地设备</b></button><button class="beat" data-time="23.0"><span>23.00<small>s</small></span><b>云节点</b></button><button class="beat" data-time="26.0"><span>26.00<small>s</small></span><b>连线回本地</b></button><button class="beat" data-time="29.0"><span>29.00<small>s</small></span><b>品牌</b></button></div><div class="filmstrip"><figure><img src="assets/reference-1.webp" alt="0.00 秒的构图参考" loading="lazy"><figcaption>0.00s</figcaption></figure><figure><img src="assets/reference-2.webp" alt="7.00 秒的构图参考" loading="lazy"><figcaption>7.00s</figcaption></figure><figure><img src="assets/reference-3.webp" alt="14.00 秒的构图参考" loading="lazy"><figcaption>14.00s</figcaption></figure><figure><img src="assets/reference-4.webp" alt="17.00 秒的构图参考" loading="lazy"><figcaption>17.00s</figcaption></figure><figure><img src="assets/reference-5.webp" alt="23.00 秒的构图参考" loading="lazy"><figcaption>23.00s</figcaption></figure><figure><img src="assets/reference-6.webp" alt="29.00 秒的构图参考" loading="lazy"><figcaption>29.00s</figcaption></figure></div><p class="tiny">画面参考 · 离散静帧</p></section>
+<section class="production"><div><span class="eyebrow">KEEP THE RELATIONSHIPS</span><h2>制作其他主题</h2>
+<ul><li>换平台保留安装→运行→确认→协同的顺序。</li></ul>
+</div><div class="production-rules"><h3>制作约束</h3>
+<p>下载按钮 / 进度条 / 本地拓扑 / 确认弹窗 / 云节点</p>
+<ul><li>安装进度完成后才能出现本地工具网络；云提升先经过确认。</li><li>云与本地纵向分层，虚线明确连接关系。</li></ul>
+</div></section>
+<footer>
+<p><a href="style.json">视觉与对象</a> · <a href="timeline.json">段落时序</a> · <a href="tracks.json">位置数据</a> · <a href="manifest.json">文件清单</a></p>
+<p>此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。</p><span>Perplexity / MOTION.MD</span></footer></main>
+<section id="source-view" hidden><pre># Perplexity｜Windows 本地计算
+
+用一次安装和一次云协作，把“在本机运行，再按需扩展”的产品路径讲清楚。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;sequence&quot;,
+  &quot;title&quot;: &quot;整体编排&quot;,
+  &quot;src&quot;: &quot;demos/sequence.html&quot;,
+  &quot;duration&quot;: 32.533333,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;动作与构图示意&quot;,
+  &quot;initialTime&quot;: 7,
+  &quot;params&quot;: [
+    {
+      &quot;key&quot;: &quot;title&quot;,
+      &quot;label&quot;: &quot;示例主文案&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;value&quot;: &quot;Portable Computer&quot;,
+      &quot;maxLength&quot;: 60
+    },
+    {
+      &quot;key&quot;: &quot;accent&quot;,
+      &quot;label&quot;: &quot;强调色&quot;,
+      &quot;type&quot;: &quot;color&quot;,
+      &quot;value&quot;: &quot;#4d9d9a&quot;
+    }
+  ],
+  &quot;presets&quot;: [
+    {
+      &quot;label&quot;: &quot;默认内容&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;Portable Computer&quot;,
+        &quot;accent&quot;: &quot;#4d9d9a&quot;
+      }
+    },
+    {
+      &quot;label&quot;: &quot;OpenDesign 改编&quot;,
+      &quot;values&quot;: {
+        &quot;title&quot;: &quot;OpenDesign&quot;,
+        &quot;accent&quot;: &quot;#7050da&quot;
+      }
+    }
+  ]
+}
+```
+
+## 安装完成，工具网络才展开
+
+下载按钮、进度条和启动状态依次出现。进度达到终点后再展开本地节点，工具网络从设备附近长出，作为安装成功的结果。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-1&quot;,
+  &quot;title&quot;: &quot;安装完成，工具网络才展开&quot;,
+  &quot;src&quot;: &quot;demos/clip-1.html&quot;,
+  &quot;duration&quot;: 11,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;3–14 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 确认动作连接云与本地
+
+先出现云协作主张，再展示确认弹窗。确认后云节点进入上层，连接线落回本地设备；保持上下层次和明确方向，让用户知道动作从哪里发起。
+
+```motion-demo
+{
+  &quot;id&quot;: &quot;clip-2&quot;,
+  &quot;title&quot;: &quot;确认动作连接云与本地&quot;,
+  &quot;src&quot;: &quot;demos/clip-2.html&quot;,
+  &quot;duration&quot;: 15,
+  &quot;status&quot;: &quot;authored&quot;,
+  &quot;description&quot;: &quot;14–29 秒 · 动作示意&quot;,
+  &quot;initialTime&quot;: 0.6
+}
+```
+
+## 深底界面，少量连接色
+
+深灰黑作为大背景，白色文字保留清楚的标题层级，青绿色用于节点和连接。主张标题采用衬线，安装项与弹窗采用无衬线；弹窗居于操作焦点，本地设备保持在下方参照位。
+
+## 迁移成其他平台安装说明
+
+可以换操作系统、设备与工具名，安装按钮和提示文案随之替换。保留“下载→完成→启动→确认协作”的必要顺序，简化片长时优先缩短等待段。
+
+## 配色与字形
+
+衬线主张标题搭配无衬线界面文字；大留白、细边框。
+
+#131213 · #f4f5ed · #4d9d9a · #254b4a · #ffffff
+
+## 元素与制作规则
+
+下载按钮 / 进度条 / 本地拓扑 / 确认弹窗 / 云节点
+
+- 安装进度完成后才能出现本地工具网络；云提升先经过确认。
+- 云与本地纵向分层，虚线明确连接关系。
+
+## 内容替换
+
+- 换平台保留安装→运行→确认→协同的顺序。
+
+## 制作参数
+
+[视觉与对象](style.json) · [段落时序](timeline.json) · [位置数据](tracks.json) · [文件清单](manifest.json)
+
+此规范根据参考视频整理。HTML 为可编辑的编排示例；具体数据的来源、精度与有效区间随文件标注。
+
+```motion-board
+{
+  &quot;version&quot;: 1,
+  &quot;brand&quot;: &quot;Perplexity&quot;,
+  &quot;id&quot;: &quot;V267&quot;,
+  &quot;palette&quot;: [
+    &quot;#131213&quot;,
+    &quot;#f4f5ed&quot;,
+    &quot;#4d9d9a&quot;,
+    &quot;#254b4a&quot;,
+    &quot;#ffffff&quot;
+  ],
+  &quot;typography&quot;: &quot;衬线主张标题搭配无衬线界面文字；大留白、细边框&quot;,
+  &quot;sample&quot;: &quot;Portable Computer&quot;,
+  &quot;objects&quot;: [
+    &quot;下载按钮&quot;,
+    &quot;进度条&quot;,
+    &quot;本地拓扑&quot;,
+    &quot;确认弹窗&quot;,
+    &quot;云节点&quot;
+  ],
+  &quot;frames&quot;: [
+    {
+      &quot;path&quot;: &quot;assets/reference-1.webp&quot;,
+      &quot;timeSeconds&quot;: 0.0,
+      &quot;frameId&quot;: &quot;K0001&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-2.webp&quot;,
+      &quot;timeSeconds&quot;: 7.0,
+      &quot;frameId&quot;: &quot;K0015&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-3.webp&quot;,
+      &quot;timeSeconds&quot;: 14.0,
+      &quot;frameId&quot;: &quot;K0033&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-4.webp&quot;,
+      &quot;timeSeconds&quot;: 17.0,
+      &quot;frameId&quot;: &quot;K0038&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-5.webp&quot;,
+      &quot;timeSeconds&quot;: 23.0,
+      &quot;frameId&quot;: &quot;K0050&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    },
+    {
+      &quot;path&quot;: &quot;assets/reference-6.webp&quot;,
+      &quot;timeSeconds&quot;: 29.0,
+      &quot;frameId&quot;: &quot;K0066&quot;,
+      &quot;role&quot;: &quot;reference-evidence&quot;,
+      &quot;status&quot;: &quot;measured&quot;
+    }
+  ],
+  &quot;stages&quot;: [
+    {
+      &quot;start&quot;: 0,
+      &quot;label&quot;: &quot;Windows 主张&quot;,
+      &quot;end&quot;: 3,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 3,
+      &quot;label&quot;: &quot;下载组件&quot;,
+      &quot;end&quot;: 7,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 7,
+      &quot;label&quot;: &quot;本地启动&quot;,
+      &quot;end&quot;: 10,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 10,
+      &quot;label&quot;: &quot;工具拓扑&quot;,
+      &quot;end&quot;: 14,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 14,
+      &quot;label&quot;: &quot;云升级主张&quot;,
+      &quot;end&quot;: 17,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 17,
+      &quot;label&quot;: &quot;确认提示&quot;,
+      &quot;end&quot;: 20,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 20,
+      &quot;label&quot;: &quot;本地设备&quot;,
+      &quot;end&quot;: 23,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 23,
+      &quot;label&quot;: &quot;云节点&quot;,
+      &quot;end&quot;: 26,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 26,
+      &quot;label&quot;: &quot;连线回本地&quot;,
+      &quot;end&quot;: 29,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    },
+    {
+      &quot;start&quot;: 29,
+      &quot;label&quot;: &quot;品牌&quot;,
+      &quot;end&quot;: 32.533333,
+      &quot;status&quot;: &quot;inferred&quot;,
+      &quot;basis&quot;: &quot;Representative-frame review; approximate boundaries&quot;
+    }
+  ],
+  &quot;duration&quot;: 32.533333,
+  &quot;fontFamily&quot;: &quot;Georgia, serif&quot;
+}
+```
+</pre></section><div class="toast" role="status" aria-live="polite"></div><script src="viewer/guide.js"></script><script src="viewer/board.js"></script></body></html>

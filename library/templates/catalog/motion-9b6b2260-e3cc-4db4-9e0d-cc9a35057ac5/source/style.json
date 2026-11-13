@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#173d00",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：MONEY",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：WISE SANS",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：HEAVY",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "大字标题",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "逐行句子",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "圆角图像窗口",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "放大字形",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "字母表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "货币缩写",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#173d00",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a6ef67",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a6ef67",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#a7e4e1",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "极粗无衬线紧凑排字；深绿与荧光绿反差，字形特写、字母表与货币缩写色卡",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "开场给字体名称，接着逐行添加句子；新行推动已有文字重新分配高度。",
+      "status": "inferred"
+    },
+    {
+      "rule": "用小圆角窗口连续更换真实文字素材，再把单个字母放大到出画，说明字形来源与细节。",
+      "status": "inferred"
+    },
+    {
+      "rule": "最后从完整字母表切到多组货币缩写，不同色卡沿用相同字重和中心锚点。",
+      "status": "inferred"
+    }
+  ]
+}

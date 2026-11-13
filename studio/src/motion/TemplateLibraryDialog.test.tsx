@@ -73,6 +73,20 @@ it('replaces loading placeholders with an actionable error and preserves the emp
   expect(host.textContent).toContain(translate('zh-CN', 'No matching templates. Try another name, creator or style.'));
   expect(host.textContent).toContain('0 个模板');
 });
+it('uses published brand logos and tries the bundled logo before falling back to initials', async () => {
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => Response.json(url.endsWith('/integration') ? {} : {
+    items: [{ ...items[0], brand: 'Notion', brandLogoUrl: 'https://example.com/notion.svg' }], catalogVersion: 'logos', next: null, total: 1,
+  })));
+  await mount();
+  const brand = [...host.querySelectorAll<HTMLButtonElement>('aside button')].find(el => el.textContent?.includes('Notion'))!;
+  const image = brand.querySelector('img')!;
+  expect(image?.getAttribute('src')).toBe('https://example.com/notion.svg');
+  await act(async () => image.dispatchEvent(new Event('error')));
+  expect(image.getAttribute('src')).toMatch(/notion\.png$/);
+  await act(async () => image.dispatchEvent(new Event('error')));
+  expect(brand.querySelector('img')).toBeNull();
+  expect(brand.textContent).toContain('NNotion');
+});
 it('copies the requested remote DEV prompt and preserves editable opening', async () => {
   const onOpen = await mount();
   await act(async () => button('First').click());

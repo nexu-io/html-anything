@@ -22,6 +22,7 @@ async function fixture(run: (context: { directory: string; destination: string; 
       await mkdir(path.dirname(path.join(source, file)), { recursive: true });
       await copyFile(path.join(root, file), path.join(source, file));
     }
+    await writeFile(path.join(source, 'scripts/open-template-library.ts'), `import fs from 'node:fs'; fs.appendFileSync(process.env.MOTION_TEST_LOG, 'Template library prepared' + String.fromCharCode(10)); console.log(JSON.stringify({target:'templates',projectCreated:false,previewUrl:'http://127.0.0.1:4173/?templates=1&embed=1'}));`);
     // No remote catalog or template assets in this isolated checkout: exercise the bundled fallback.
     const commands = {
       git: 'echo "git $*" >> "$MOTION_TEST_LOG"\n[ "${MOTION_TEST_DOWNLOAD_FAIL:-0}" = 0 ] || exit 8\n[ "$1" = clone ] || exit 0\nfor destination; do :; done\nmkdir -p "$destination"\ncp -R "$MOTION_TEST_SOURCE/." "$destination/"',
@@ -51,8 +52,10 @@ test('remote entry point builds a fresh checkout before registering and checking
     assert.match(result.stdout, /OpenMotion registration and independent MCP preflight succeeded/);
     const onboarding = JSON.parse(result.stdout.slice(result.stdout.indexOf('\n{') + 1));
     assert.equal(onboarding.hostSessionVerified, false);
-    assert.match(onboarding.instructions, /OpenMotion 开源免费/);
+    assert.match(onboarding.instructions, /OpenMotion 已安装完成。/);
     assert.equal(onboarding.catalog.source, 'bundled');
+    assert.equal(onboarding.preview.status, 'ready');
+    assert.ok(commands.indexOf('MCP check') < commands.indexOf('Template library prepared'));
   });
 });
 
@@ -132,7 +135,7 @@ test('the onboarding entry runs through a symlinked checkout path', async () => 
     assert.equal(result.status, 0, result.stderr);
     const onboarding = JSON.parse(result.stdout);
     assert.equal(onboarding.hostSessionVerified, false);
-    assert.match(onboarding.instructions, /OpenMotion 开源免费/);
+    assert.match(onboarding.instructions, /OpenMotion 已安装完成。/);
     assert.equal(onboarding.catalog.source, 'bundled');
   });
 });

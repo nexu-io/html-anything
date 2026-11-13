@@ -1,0 +1,134 @@
+{
+  "background": {
+    "color": "#fbfaf9",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：USD",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-1",
+      "parent": null,
+      "role": "OCR 观测：+ Deposit",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "text-2",
+      "parent": null,
+      "role": "OCR 观测：S Convert",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "余额面板",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "构成进度条",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "转账弹窗",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "金额输入",
+      "status": "inferred"
+    },
+    {
+      "id": "role-4",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "增长图表",
+      "status": "inferred"
+    },
+    {
+      "id": "role-5",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "入金菜单",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#fbfaf9",
+      "status": "inferred"
+    },
+    {
+      "hex": "#171717",
+      "status": "inferred"
+    },
+    {
+      "hex": "#2d56ad",
+      "status": "inferred"
+    },
+    {
+      "hex": "#4fa26b",
+      "status": "inferred"
+    },
+    {
+      "hex": "#dd5037",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "无衬线界面与大金额；数字保持货币单位，强调色区分余额组成",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "一次余额转移动作改变账户构成，再用图表与入金菜单扩展产品说明。",
+      "status": "inferred"
+    },
+    {
+      "rule": "Move 打开转账表单，金额输入完成后进入核对页，再确认。前后币种和金额保持一致，确认后才更新余额条与列表。",
+      "status": "inferred"
+    },
+    {
+      "rule": "浅底面板、深色无衬线数字、蓝色本金与绿色增长建立信息层级。柱状图从短期展开到长期，轴线和图例固定，最终数字给稳定停留。",
+      "status": "inferred"
+    }
+  ]
+}

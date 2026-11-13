@@ -7,16 +7,16 @@ Start from the conversation and current project. If an existing production folde
 | Input | Ask or inspect | Decision rule |
 | --- | --- | --- |
 | Goal | Product/topic, audience, one thing to remember, CTA | Do not invent a feature, claim, metric, testimonial or offer. |
-| Material | Supplied images/video, logo, approved copy, local paths or accessible URLs | Reuse usable assets with provenance. If the user has no assets or declines to provide them, use [asset decisions](../../openmotion-director/references/production-decisions.md) to obtain or create the missing material within scope. Reference footage is not automatically final material. |
+| Material | Supplied images/video, logo, approved copy, local paths or accessible URLs | When selecting, obtaining or replacing material, apply the [shared material policy](materials.md), including the intended role of supplied references. |
 | Delivery | Destination, dimensions/aspect ratio, fps, duration, sound requirement, language | Record the native composition specification. A silent result cannot fulfill an unresolved voiceover request; identify the actual sound source. |
 | Direction | Reference, brand rules, examples to avoid, template preference | Follow the chosen route. Recommend a creative direction when needed; template choice applies only to a template task and may already be resolved or delegated. |
 | Constraints | Must-show details, protected copy, deadline or generation budget when relevant | Preserve explicit choices. Do not ask about paid APIs when this local workflow needs none. |
 
 Example first message in the user's language:
 
-> 我会沿用已有资料，补齐本次需要的信息，再确定创作方向。还缺：视频要让谁记住哪一句话；准确文案；现有素材直接复用，缺少的素材由我按本次范围生成或检索；希望多长、发在哪里、是否需要配音或音乐；喜欢的参考风格。如果你没有风格偏好，我会给出几个适合现有素材的方案。
+> 我会沿用已有资料，补齐本次需要的信息，再确定创作方向。还缺：视频要让谁记住哪一句话；准确文案；素材按已确认用途和共享规范选用、补齐；希望多长、发在哪里、是否需要配音或音乐；喜欢的参考风格。如果你没有风格偏好，我会给出几个适合现有素材的方案。
 
-Shorten this to the actual gaps. Offer sensible choices for preferences; ask factual questions without inventing answers. Missing product assets trigger scoped acquisition/creation first; only an unresolved identity, permission or unavailable capability blocks the affected shot. Do not repeatedly request uploads after the user has declined. An explicitly requested template starter can use its default text and graphics without optional asset questions; record that starter scope and distinguish it from a finished product film.
+Shorten this to the actual gaps. Offer sensible choices for preferences; ask factual questions without inventing answers. Use the shared material policy for material gaps; only an unresolved identity, permission or unavailable capability blocks the affected shot. An explicitly requested template starter can use its default text and graphics without optional asset questions; record that starter scope and distinguish it from a finished product film.
 
 ## Production folder
 

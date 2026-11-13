@@ -13,9 +13,19 @@ import linearLogo from './template-brands/linear.svg';
 import firecrawlLogo from './template-brands/firecrawl.png';
 import kimiLogo from './template-brands/kimi.png';
 import pondLogo from './template-brands/pond.svg';
-const brandLogos: Record<string, string> = {Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
+import notionLogo from './template-brands/notion.png';
+import higgsfieldLogo from './template-brands/higgsfield.png';
+const brandLogos: Record<string, string> = {Notion: notionLogo, Higgsfield: higgsfieldLogo, Figma: figmaLogo, Lovable: lovableLogo, Linear: linearLogo, Firecrawl: firecrawlLogo, Kimi: kimiLogo, Pond: pondLogo};
 
-type Props = { returnFocus?: HTMLElement | null; open: boolean; busy: boolean; error: string; onClose: () => void; onOpen: (id: string) => void };
+function BrandIcon({ name, url }: { name: string; url?: string }) {
+  const [failedUrls, setFailedUrls] = useState<string[]>([]);
+  const src = [url, brandLogos[name]].find(candidate => candidate && !failedUrls.includes(candidate));
+  return <span className={styles.brandIcon} aria-hidden="true">{src
+    ? <img src={src} alt="" loading="lazy" onError={() => setFailedUrls(previous => [...previous, src])} />
+    : name.slice(0, 1)}</span>;
+}
+
+type Props = { returnFocus?: HTMLElement | null; open: boolean; busy: boolean; openingDisabled?: boolean; error: string; onClose: () => void; onOpen: (id: string) => void };
 type Facet = 'brand' | 'uses' | 'styles' | 'industries' | 'creationModels' | 'colors' | 'ratio' | 'duration';
 const facets: [Facet, string][] = [
   ['brand', 'Reference brands'], ['uses', 'Use cases'], ['styles', 'Video types'],
@@ -142,6 +152,7 @@ export function TemplateLibraryDialog(props: Props) {
     return () => { controller.abort(); clearInterval(timer); };
   }, [props.open, attempt, locale]);
   const available = useMemo(() => facets.map(([key, label]) => ({ key, label, values: [...new Set(catalog.flatMap(item => values(item, key)))] })).filter(facet => facet.values.length), [catalog]);
+  const logos = useMemo(() => new Map(catalog.flatMap(item => item.brand && item.brandLogoUrl ? [[item.brand, item.brandLogoUrl]] : [])), [catalog]);
   const hasFilters = Boolean(query || Object.values(selected).some(items => items?.length));
   useLayoutEffect(() => {
     // Filtering adds/removes the featured section above the toolbar. Keep the active search in view.
@@ -198,7 +209,7 @@ export function TemplateLibraryDialog(props: Props) {
         </div>}
         {available.filter(facet => ['brand', 'uses', 'styles', 'industries', 'creationModels'].includes(facet.key)).map(facet => <details key={facet.key} open={facet.key === 'brand'}><summary>{t(facet.label)}</summary>
           {facet.values.slice(0, facet.key === 'brand' && !moreBrands ? 5 : undefined).map(value => <button key={value} aria-pressed={selected[facet.key]?.includes(value) ?? false} onClick={() => toggle(facet.key, value)}>
-            {facet.key === 'brand' && <span className={styles.brandIcon} aria-hidden="true">{brandLogos[value] ? <img src={brandLogos[value]} alt="" /> : value.slice(0, 1)}</span>}<span>{facet.key === 'brand' ? value : t(value)}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
+            {facet.key === 'brand' && <BrandIcon name={value} url={logos.get(value)} />}<span>{facet.key === 'brand' ? value : t(value)}</span><small>{catalog.filter(item => values(item, facet.key).includes(value)).length}</small>
           </button>)}
           {facet.key === 'brand' && facet.values.length > 5 && <button onClick={() => setMoreBrands(!moreBrands)}>{t(moreBrands ? 'Show less' : 'Show more')}</button>}
         </details>)}
@@ -253,7 +264,7 @@ export function TemplateLibraryDialog(props: Props) {
         <div className={styles.detailInfo}><small>{preview.styles?.join(' · ') || preview.subtitle}</small><h2>{preview.title}</h2><p>{preview.description}</p>
           {preview.sourceUrl ? <a href={preview.sourceUrl} target="_blank" rel="noreferrer">{preview.authorName || preview.author} ↗</a> : <p>{preview.authorName || preview.author}</p>}
           <div className={styles.actions}><button disabled={!preview.motionDocumentUrl || downloading} onClick={() => void downloadMotion()}>{t(downloading ? 'Downloading…' : 'Download motion.md')}</button><button onClick={() => void showPrompt()}>{t('Recreate template')}</button></div>
-          <div className={styles.projectActions}>{isEditableTemplate(preview) && <button disabled={props.busy} onClick={() => { detail.current?.close(); props.onOpen(preview.id); }}>{t('Open and edit')} ↗</button>}{preview.projectFileUrl && <a href={preview.projectFileUrl} target="_blank" rel="noreferrer">{t('Download OpenMotion project')} ↗</a>}</div>
+          <div className={styles.projectActions}>{isEditableTemplate(preview) && <button disabled={props.busy || props.openingDisabled} onClick={() => { detail.current?.close(); props.onOpen(preview.id); }}>{t('Open and edit')} ↗</button>}{preview.projectFileUrl && <a href={preview.projectFileUrl} target="_blank" rel="noreferrer">{t('Download OpenMotion project')} ↗</a>}</div>
           {downloadError && <p role="status">{t(downloadError)}</p>}
           <dl><dt>{t('Video types')}</dt><dd>{preview.styles?.join(' · ') || '—'}</dd><dt>{t('Creation models')}</dt><dd>{preview.creationModels?.join(' · ') || '—'}</dd><dt>{t('Duration')}</dt><dd>{preview.duration ? t('{value}s', { value: preview.duration }) : '—'}</dd></dl>
         </div></div>

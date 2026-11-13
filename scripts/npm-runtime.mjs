@@ -83,7 +83,7 @@ async function prepareComponent(native, component) {
     if (await ready(native, component)) return;
     let state = { pid: process.pid, stage: 'waiting' }, lastProgress = 0;
     const update = async change => {
-      if (change.stage === 'downloading' && state.stage === 'downloading' && change.receivedBytes !== undefined && state.receivedBytes !== undefined && Date.now() - lastProgress < 500) return;
+      if (change.stage === 'downloading' && state.stage === 'downloading' && change.receivedBytes !== undefined && state.receivedBytes > 0 && Date.now() - lastProgress < 500) return;
       lastProgress = Date.now(); state = { ...state, ...change, updatedAt: Date.now() };
       await writeJSON(destination + '.status.json', state);
     };
@@ -119,7 +119,7 @@ async function prepareComponent(native, component) {
       } finally { await rm(temporary, { recursive: true, force: true }); }
       await update({ stage: 'ready' });
     } catch (error) {
-      const errorCode = /SHA256/.test(error.message) ? 'integrity' : error.code === 'ENOSPC' ? 'disk_space' : ['EACCES', 'EPERM'].includes(error.code) ? 'permission' : /requires? (?:macOS|Windows)/i.test(error.message) ? 'platform' : state.stage === 'downloading' ? 'download' : 'checking';
+      const errorCode = /SHA256/.test(error.message) ? 'integrity' : error.code === 'ENOSPC' ? 'disk_space' : ['EACCES', 'EPERM'].includes(error.code) ? 'permission' : /requires? (?:macOS|Windows)/i.test(error.message) ? 'platform' : error.name === 'TimeoutError' ? 'timeout' : state.stage === 'downloading' ? 'download' : 'checking';
       await update({ stage: 'failed', errorCode, error: String(error.message).slice(0, 1000) });
       throw error;
     }

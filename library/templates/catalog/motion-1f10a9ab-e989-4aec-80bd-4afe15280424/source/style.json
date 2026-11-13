@@ -1,0 +1,88 @@
+{
+  "background": {
+    "color": "#16343f",
+    "status": "inferred"
+  },
+  "objects": [
+    {
+      "id": "text-0",
+      "parent": null,
+      "role": "OCR 观测：coinbase",
+      "kind": "text",
+      "anchor": "center",
+      "coordinateSpace": "canvas",
+      "appearance": {
+        "status": "unknown"
+      },
+      "motionMechanism": "OCR 采样，只解释文字与联合外框，不推断隐显或图层身份。",
+      "replaceable": [],
+      "visualGroup": null
+    },
+    {
+      "id": "role-0",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "主品牌",
+      "status": "inferred"
+    },
+    {
+      "id": "role-1",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "分隔线",
+      "status": "inferred"
+    },
+    {
+      "id": "role-2",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "coinbase 名称",
+      "status": "inferred"
+    },
+    {
+      "id": "role-3",
+      "parent": null,
+      "kind": "semantic-role",
+      "role": "流体底纹",
+      "status": "inferred"
+    }
+  ],
+  "palette": [
+    {
+      "hex": "#16343f",
+      "status": "inferred"
+    },
+    {
+      "hex": "#ffffff",
+      "status": "inferred"
+    },
+    {
+      "hex": "#53879d",
+      "status": "inferred"
+    },
+    {
+      "hex": "#507477",
+      "status": "inferred"
+    },
+    {
+      "hex": "#10212d",
+      "status": "inferred"
+    }
+  ],
+  "typography": {
+    "description": "深青蓝流体、中心白品牌与细竖线",
+    "status": "inferred",
+    "fontFiles": [],
+    "fallback": "Arial / Georgia / monospace"
+  },
+  "relationships": [
+    {
+      "rule": "标识固定不跳动，背景亮部缓慢穿过，强调合作身份。",
+      "status": "inferred"
+    },
+    {
+      "rule": "内容聚焦合作关系，以持续留读代替功能展开。",
+      "status": "inferred"
+    }
+  ]
+}
