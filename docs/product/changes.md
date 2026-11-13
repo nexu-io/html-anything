@@ -22,6 +22,13 @@
 - Consolidate the director, intake, template and execution rules rather than maintaining competing acquisition policies. No new media service, Tool, permission or release is introduced.
 - Retain the prior local Harry Potter trial as a single execution observation: one user message, original footage retrieved and used, ten excerpts totaling 20.5 seconds in a 32-second film. It is an existing example and a prior local snapshot, not a behavioral rerun of this PR head, a generalization result or a listening/visual acceptance claim. The viewing copy is attached to the PR; film media and private traces are excluded from product distributions.
 
+## 2026-11-13: Add an original repository template contribution
+
+- Add Orbit Launch, a six-second original motion recipe with an offline interactive HTML example, motion specification, small poster, preview media and all eleven catalog locale slots. It remains guidance rather than a directly copyable Studio project.
+- Validate MCP index identities against the registered repository and built-in templates, so a valid new contribution does not fail an obsolete fixed template-count assertion.
+- Let catalog inspection accept contribution videos; the existing staged policy continues to validate their LFS attributes, identities and size limits, while duplicate archives remain forbidden.
+- Preserve the existing source, publication and distribution boundaries. Technical checks and original-source rights notes do not establish human visual acceptance.
+
 ## 2026-11-12: Version motion guidance source in the product repository
 
 - Import 286 public guidance templates with stable IDs, existing eleven-locale metadata and authored text examples; preserve pending conversion state and original source attribution.

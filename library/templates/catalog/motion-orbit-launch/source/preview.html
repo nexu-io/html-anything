@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orbit Launch — motion example</title>
+  <style>
+    :root { color-scheme: dark; --accent: #d6f573; font-family: Arial, Helvetica, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-content: center; gap: 18px; padding: 32px; background: #080e11; color: #f5f4e9; }
+    header, footer { width: min(960px, calc(100vw - 64px)); display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    header h1 { font-size: 15px; margin: 0; font-weight: 600; }
+    header span, footer p { color: #9aa8a5; font-size: 12px; margin: 0; }
+    .viewport { width: min(960px, calc(100vw - 64px)); aspect-ratio: 16 / 9; position: relative; overflow: hidden; border: 1px solid #2e3c3e; }
+    #stage { width: 960px; height: 540px; position: absolute; top: 0; left: 0; overflow: hidden; transform-origin: top left; background: #101b20; }
+    .grid { position: absolute; inset: 0; background-image: linear-gradient(#f5f4e909 1px, transparent 1px), linear-gradient(90deg, #f5f4e909 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(90deg, black, transparent 80%); }
+    .topline { position: absolute; top: 46px; left: 54px; right: 54px; display: flex; justify-content: space-between; color: #9aa8a5; font-size: 11px; letter-spacing: 2px; }
+    .topline strong { color: #f5f4e9; font-weight: 500; }
+    .corner { position: absolute; right: 54px; top: 84px; width: 26px; height: 26px; border-top: 1px solid #64756e; border-right: 1px solid #64756e; }
+    #orbits { position: absolute; left: 62px; top: 112px; width: 316px; height: 316px; }
+    .ring { position: absolute; inset: 0; border: 1px solid #50605b; border-radius: 50%; }
+    .ring:nth-child(2) { inset: 40px; border-color: #3d4b48; }
+    .ring:nth-child(3) { inset: 80px; border-color: #2f3c39; }
+    .cross { position: absolute; left: 145px; top: 145px; width: 26px; height: 26px; }
+    .cross::before, .cross::after { content: ''; position: absolute; background: #8d9f94; }
+    .cross::before { top: 12px; left: 0; width: 26px; height: 1px; }
+    .cross::after { left: 12px; top: 0; width: 1px; height: 26px; }
+    #signal { position: absolute; left: 0; top: 0; width: 14px; height: 14px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 8px #d6f57312, 0 0 28px #d6f57338; }
+    #connector { position: absolute; left: 378px; top: 270px; width: 0; height: 1px; background: var(--accent); }
+    .copy { position: absolute; left: 418px; top: 184px; right: 54px; }
+    .headline { display: block; font-size: 58px; font-weight: 750; line-height: 1.04; letter-spacing: -2.4px; }
+    #headline-two { color: var(--accent); }
+    #support { margin: 24px 0 0; color: #aebdb4; font-size: 17px; line-height: 1.5; }
+    #label { position: absolute; left: 54px; right: 54px; bottom: 44px; border-top: 1px solid #40514a; padding-top: 15px; display: flex; justify-content: space-between; font-size: 11px; letter-spacing: 2px; color: #9aa8a5; }
+    #label strong { color: var(--accent); font-weight: 500; }
+    .controls { width: min(960px, calc(100vw - 64px)); display: flex; gap: 12px; align-items: center; }
+    button { border: 1px solid #40514a; background: #14221f; color: #f5f4e9; border-radius: 6px; padding: 9px 14px; cursor: pointer; font: inherit; font-size: 12px; }
+    button:hover { background: #20332c; }
+    button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    input { flex: 1; min-width: 40px; accent-color: var(--accent); }
+    output { min-width: 64px; color: #9aa8a5; font-size: 12px; font-variant-numeric: tabular-nums; }
+    a { color: #c7d8b5; }
+    @media (max-width: 600px) { body { padding: 16px; } header, footer, .viewport, .controls { width: calc(100vw - 32px); } header span { display: none; } }
+  </style>
+</head>
+<body>
+  <header><h1>Orbit Launch</h1><span>ORIGINAL MOTION RECIPE / 06 SECONDS / SILENT</span></header>
+  <div class="viewport" aria-label="Animated product launch title">
+    <div id="stage">
+      <div class="grid"></div>
+      <div class="topline"><strong>OPENMOTION / ORIGINALS</strong><span>SIGNAL SERIES — 001</span></div>
+      <div class="corner"></div>
+      <div id="orbits"><div class="ring"></div><div class="ring"></div><div class="ring"></div><div class="cross"></div></div>
+      <div id="signal"></div><div id="connector"></div>
+      <div class="copy"><span class="headline" id="headline-one">YOUR NEXT</span><span class="headline" id="headline-two">CHAPTER</span><p id="support">One clear idea. Ready for launch.</p></div>
+      <div id="label"><span>MAKE THE NEXT MOVE.</span><strong>READY TO LAUNCH ↗</strong></div>
+    </div>
+  </div>
+  <div class="controls"><button id="play" type="button">Pause</button><button id="replay" type="button">Replay</button><input id="scrub" type="range" min="0" max="6" step="0.01" value="0" aria-label="Animation time"><output id="time">0.00 / 6s</output></div>
+  <footer><p>Guidance example · not a directly copyable Studio project</p><a href="motion.md">Motion specification</a></footer>
+  <script>
+    (() => {
+      const byId = id => document.getElementById(id);
+      const stage = byId('stage'), viewport = document.querySelector('.viewport');
+      const duration = 6;
+      let time = 0, playing = !matchMedia('(prefers-reduced-motion: reduce)').matches, previous;
+      const progress = (t, start, length) => Math.max(0, Math.min(1, (t - start) / length));
+      const ease = x => 1 - (1 - x) ** 3;
+      const reveal = (id, t, start, length, distance) => {
+        const p = ease(progress(t, start, length));
+        byId(id).style.opacity = p;
+        byId(id).style.transform = `translateY(${distance * (1 - p)}px)`;
+      };
+      function draw(t) {
+        const p = ease(progress(t, 0, 0.85));
+        byId('orbits').style.opacity = p;
+        byId('orbits').style.transform = `scale(${0.94 + 0.06 * p})`;
+        const angle = (-270 + 270 * ease(progress(t, 0.2, 1.6))) * Math.PI / 180;
+        const signal = byId('signal');
+        signal.style.opacity = progress(t, 0.15, 0.3);
+        signal.style.transform = `translate(${220 + Math.cos(angle) * 158 - 7}px, ${270 + Math.sin(angle) * 158 - 7}px)`;
+        byId('connector').style.width = `${24 * ease(progress(t, 1.65, 0.45))}px`;
+        reveal('headline-one', t, 1.15, 0.75, 24);
+        reveal('headline-two', t, 1.3, 0.75, 24);
+        reveal('support', t, 2, 0.6, 10);
+        reveal('label', t, 2.05, 0.55, 10);
+        byId('scrub').value = t;
+        byId('time').textContent = `${t.toFixed(2)} / 6s`;
+        let playLabel = 'Play';
+        if (playing) playLabel = 'Pause';
+        else if (time >= duration) playLabel = 'Play again';
+        byId('play').textContent = playLabel;
+      }
+      function seek(seconds) {
+        playing = false; previous = undefined;
+        time = Math.max(0, Math.min(duration, Number(seconds) || 0));
+        draw(time);
+      }
+      byId('play').onclick = () => { if (time >= duration) time = 0; playing = !playing; previous = undefined; draw(time); };
+      byId('replay').onclick = () => { time = 0; playing = true; previous = undefined; draw(time); };
+      byId('scrub').oninput = event => seek(event.target.value);
+      new ResizeObserver(() => { stage.style.transform = `scale(${viewport.clientWidth / 960})`; }).observe(viewport);
+      window.orbitLaunch = Object.freeze({ duration, seek, get time() { return time; } });
+      function tick(now) {
+        if (playing) {
+          if (previous !== undefined) time = Math.min(duration, time + (now - previous) / 1000);
+          if (time >= duration) playing = false;
+          draw(time);
+        }
+        previous = now;
+        requestAnimationFrame(tick);
+      }
+      if (!playing) time = 3.5;
+      draw(time);
+      requestAnimationFrame(tick);
+    })();
+  </script>
+</body>
+</html>
