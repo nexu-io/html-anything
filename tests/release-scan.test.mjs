@@ -30,9 +30,17 @@ test('only the approved public community invitation is permitted in product READ
         assert(privacyFindings(name, value, kind).some(hit => hit.rule === 'internal-link'));
       }
     }
-    for (const name of ['notes.md', 'nested/README.md', 'docs/install.md']) {
+    for (const name of ['notes.md', 'nested/README.md', 'docs/install.md', 'nested/package/README.md', 'package/nested/README.md', 'package/package/README.md']) {
       assert(privacyFindings(name, invite, kind).some(hit => hit.rule === 'internal-link'));
     }
+  }
+  // The npm installer archive keeps the same product READMEs under its single `package/` root.
+  for (const name of ['package/README.md', 'package/README.zh-CN.md', 'package/docs/README.zh-CN.md', 'package/docs/README.ja.md']) {
+    assert.deepEqual(privacyFindings(name, `<a href="${invite}">Community</a>`, 'package'), []);
+    for (const value of [invite + 'x', invite + '&extra=1', invite.replace('https:', 'http:'), invite + ' ' + internal]) {
+      assert(privacyFindings(name, value, 'package').some(hit => hit.rule === 'internal-link'));
+    }
+    assert(privacyFindings(name, invite, 'source').some(hit => hit.rule === 'internal-link'));
   }
 });
 
