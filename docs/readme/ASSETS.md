@@ -10,6 +10,10 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 
 The [OpenMotion logo](openmotion-logo.svg) uses the symbol and Albert Sans wordmark from the [OpenMotion prototype](https://opendesign-motion-standard-prototype.inovixissu.chatgpt.site/). The lettering is outlined so the mark renders identically across README languages. [Font license](../../web/design-system/fonts/NOTICES.txt)
 
+## Community badges
+
+The text-only [Feishu badge](badges/feishu.svg) and [Chinese badge](badges/feishu.zh-CN.svg) match the existing 20-pixel README badge row. They link to the dedicated OpenMotion group supplied by the project owner. The Discord badge links to the dedicated OpenMotion server.
+
 ## Agent logos
 
 The local agent gallery and setup buttons use client marks from the [source icon collection](https://github.com/nexu-io/open-design/tree/07a86b1041531bfa0bec1006d9c0993985fee560/apps/web/public/agent-icons) and the [individual client artwork credits](models/README.md). Each mark identifies its respective client.
