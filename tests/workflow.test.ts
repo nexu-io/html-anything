@@ -198,7 +198,7 @@ test('phase1 resource discovery exposes all five routes and their supporting doc
     const result = stdio(directory, [{ id: 1, method: 'resources/list' }]).get(1);
     const uris = result.resources.map((resource: { uri: string }) => resource.uri);
     const expected = entries.map(({ workflow, section }) => `openmotion://workflow/${workflow}/${section}`);
-    assert.deepEqual(uris, [...expected, 'openmotion://engine/SKILL.md']);
+    assert.deepEqual(uris, [...expected, 'openmotion://engine/SKILL.md', 'ui://openmotion/inline-video/v1/player.html']);
     assert.ok(uris.includes('openmotion://workflow/video-to-template/verification'));
     const reads = stdio(directory, expected.map((uri, i) => ({ id: i, method: 'resources/read', params: { uri } })));
     for (const [i, entry] of entries.entries()) assert.equal(reads.get(i).structuredContent.documentId, entry.documentId);
