@@ -5,6 +5,8 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { I18nProvider, useI18n, type Locale } from '../i18n/I18n';
 import { TemplateLibraryDialog } from './TemplateLibraryDialog';
 import { MAX_TEMPLATE_PLAYERS } from './useTemplatePlayback';
+import { trackMotion } from './tracking';
+vi.mock('./tracking', () => ({ trackMotion: vi.fn(async () => 'queued') }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root, host: HTMLDivElement;
@@ -27,6 +29,7 @@ function fetchItems(data = items) {
   vi.stubGlobal('fetch', vi.fn(async (url: string) => Response.json(url.endsWith('/integration') ? { templateEnvironment: 'dev', transport: { env: {} } } : { items: data, catalogVersion: 'v1', next: null, total: data.length })));
 }
 beforeEach(() => {
+  vi.clearAllMocks();
   window.happyDOM.settings.enableIframePageLoading = false;
   Observer.instances = [];
   vi.stubGlobal('IntersectionObserver', Observer);
@@ -112,6 +115,9 @@ it('copies the exact DEV prompt, retains guides and gates editable-project openi
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith('使用说明：请使用 OpenMotion 插件。如未安装，请按 https://releases.open-design.ai/open-motion/dev/install.md 安装并接入后继续。\n指定模板：First（one）\n创作要求：基于模板，结合我的要求和附件创作，默认保留主要动效与风格，并交付 HTML 和 MP4。\n我的要求：\n');
   await act(async () => button('打开并编辑').click());
   expect(onOpen).toHaveBeenCalledWith('one');
+  expect(trackMotion).toHaveBeenCalledWith('ui_click', { page_name: 'studio', area: 'templates', element: 'select_template' });
+  expect(vi.mocked(trackMotion).mock.calls.filter(([name, fields]) => name === 'ui_click' && 'element' in fields && fields.element === 'copy_template')).toHaveLength(1);
+  expect(trackMotion).toHaveBeenCalledWith('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'clipboard_written' });
   await act(async () => button('预览模板 Second', host.querySelector('main')!).click());
   expect(button('打开并编辑')).toBeUndefined();
 });
@@ -255,6 +261,8 @@ it('keeps failed clipboard content selectable inline, including the contribution
   expect(host.querySelector<HTMLTextAreaElement>('textarea')?.value).toContain('pull request');
   expect(host.querySelectorAll('dialog[open]')).toHaveLength(2);
   expect(document.querySelector('[data-feedback-layer]')?.textContent).toContain('Copy failed. Select and copy the instruction below.');
+  expect(trackMotion).toHaveBeenCalledWith('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'manual_fallback_shown' });
+  expect(trackMotion).not.toHaveBeenCalledWith('template_instruction_copy_result', expect.objectContaining({ copy_status: 'clipboard_written' }));
 });
 
 it('uses the shared radio menu for sorting and industry filters inside the native dialog', async () => {

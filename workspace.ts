@@ -1,3 +1,4 @@
+import type { HostContext } from './tracking/host.ts';
 import { renderFilenameStem } from './shared/render-name.ts';
 import { createHash } from 'node:crypto';
 import { isAssetFileWithinLimit } from './shared/asset-limits.ts';
@@ -28,7 +29,7 @@ export type SourceFile = { path: string; size: number; hash: string };
 export type FileEdit = { path: string; content: string };
 export type SavedProject = { id: string; title: string; templateId?: string; createdAt?: number; openedAt?: number };
 export type ProjectCatalog = { activeId: string; projects: SavedProject[]; sessions?: CreativeSession[]; activeSessionId?: string };
-export type ExportJob = { id: string; projectId?: string; versionId?: string; requestId?: string; phase1?: boolean; stage?: string; verification?: unknown; revision: string; state: 'pending' | 'running' | 'cancelling' | 'cancelled' | 'completed' | 'failed';
+export type ExportJob = { id: string; projectId?: string; versionId?: string; requestId?: string; phase1?: boolean; stage?: string; verification?: unknown; trackingHost?: HostContext; revision: string; state: 'pending' | 'running' | 'cancelling' | 'cancelled' | 'completed' | 'failed';
   createdAt: number; expiresAt: number; token?: string; workerPid?: number; file?: string; outputName?: string; error?: string; expected?: ExportExpectation };
 export class Conflict extends Error { constructor() { super('工程已经被 Studio 或 Agent 更新，请重新读取 revision 后再修改。'); } }
 
@@ -388,14 +389,14 @@ export class WorkspaceStore {
       try { if (!(await stat(this.exportPath(job))).size) throw new Error('empty'); }
       catch { job.state = 'failed'; job.error = '导出文件已不存在，请重新导出'; delete job.file; await this.saveJob(job); }
     }
-    if (job) { delete job.token; delete job.workerPid; }
+    if (job) { delete job.token; delete job.workerPid; delete job.trackingHost; }
     const catalog = this.projectCatalog();
     // A newly opened empty conversation must not be reported as owner of the last native project.
     const sessionId = catalog.sessions!.find(item => item.artifacts.some(artifact => artifact.projectId === this.projectId))!.id;
     return { revision: current.revision, hasProject: Boolean(current.project), projectId: this.projectId, projectTitle: catalog.projects.find(item => item.id === this.projectId)!.title, sessionId, activeSessionId: catalog.activeSessionId, exportJob: job };
   }
   snapshotDirectory(id: string) { return path.join(this.directory, 'jobs', id, 'project'); }
-  async requestExport(expectedRevision: string, options: Partial<Pick<ExportJob, 'phase1' | 'versionId' | 'requestId'>> & { audio?: ExportExpectation['audio'] } = {}) {
+  async requestExport(expectedRevision: string, options: Partial<Pick<ExportJob, 'phase1' | 'versionId' | 'requestId' | 'trackingHost'>> & { audio?: ExportExpectation['audio'] } = {}) {
     return this.lock(async () => {
       const current = await this.get();
       if (current.revision !== expectedRevision) throw new Conflict();

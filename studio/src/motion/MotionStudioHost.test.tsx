@@ -8,6 +8,8 @@ import discordLogo from './community-discord.svg';
 import { GITHUB_REPOSITORY } from './githubRepository';
 import { StudioHeader } from '../components/StudioHeader';
 import { useMotionHistoryOperation } from './MotionHistoryState';
+import { trackMotion } from './tracking';
+vi.mock('./tracking', () => ({ trackMotion: vi.fn(async () => 'queued') }));
 
 const state = vi.hoisted(() => ({
   connectionError: '',
@@ -46,6 +48,7 @@ globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root;
 let container: HTMLDivElement;
 beforeEach(() => {
+  window.happyDOM.settings.enableIframePageLoading = false;
   vi.clearAllMocks();
   localStorage.clear();
   state.connectionError = '';
@@ -121,6 +124,7 @@ it('keeps project switching, templates, history actions and native export in the
   act(() => document.querySelector<HTMLButtonElement>('[data-testid="export-dialog"] [aria-label="关闭"]')!.click());
   act(() => project.click());
   expect(state.open).toHaveBeenCalledWith('projects', 'second');
+  expect(trackMotion).toHaveBeenCalledWith('ui_click', expect.objectContaining({ page_name: 'studio', area: 'workspace', element: 'open_project' }));
   act(() => button('模板库').click());
   expect(container.querySelectorAll('[role="dialog"]')).toHaveLength(1);
   expect(container.querySelector('[role="dialog"]')!.getAttribute('data-section')).toBe('templates');

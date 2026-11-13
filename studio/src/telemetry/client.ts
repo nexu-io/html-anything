@@ -1,5 +1,6 @@
+import { trackStudioUsage } from '../motion/studioTracking';
 type EventProperties = Record<string, string | number | boolean | undefined>;
 
-// Motion does not send upstream usage analytics. Keep callers source-compatible.
+// Upstream measurement stays disabled; explicit events use OpenMotion's own policy and transport.
 export function shouldTrack(): boolean { return false; }
-export function trackEvent(_event: string, _properties: EventProperties = {}): void {}
+export function trackEvent(event: string, properties: EventProperties = {}): void { trackStudioUsage(event, properties); }

@@ -99,6 +99,40 @@ Runtime and TypeScript event contracts whitelist required fields, enums, UUIDs a
 bounded counts. No prompts, messages, source files, URLs, local paths, titles, raw
 exceptions or credentials are accepted. Safe error categories are explicitly mapped.
 All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
+Bounded numeric rules also preserve fractional timings, playback rates and signed
+audio/geometry measurements; non-finite or out-of-range values are rejected.
+
+### Host Agent attribution
+
+Every event has `host_agent` and `host_agent_source`. Known declared clients map
+to `codex`, `deepseek` (DeepSeek Harness/DSH), `claude`, `cursor`, `opencode`,
+`gemini`, `workbuddy` or `chatgpt`; another declared client maps to `other`.
+Missing evidence is `unknown`, never inferred from an installed executable,
+model provider, browser user agent or the last caller of a shared backend.
+`mcp_client_name` is included only for a bounded implementation identifier;
+`mcp_client_version` is the client's declared numeric version, not a verified
+host-application version. DSH currently declares its MCP adapter version.
+
+The stdio runtime captures `initialize.params.clientInfo` per connection and also
+recognizes standard per-request `io.modelcontextprotocol/clientInfo` metadata.
+An absent declaration can fall back to `OPENMOTION_HOST_AGENT`, `CODEX_THREAD_ID`
+or `CLAUDECODE=1` in that MCP process, labeled `launch_environment`. Environment
+values and thread IDs themselves are never reported. Client metadata is
+self-declared analytics context, not authenticated identity or an entitlement.
+
+The calling context follows domain operations and is persisted on export jobs
+for the worker. Editor handoffs receive an opaque `tracking_context` query token;
+the local service associates it with that opener for at most 24 hours and 256
+live contexts, in memory only. The browser submits the token to its same-origin
+collector and cannot supply host properties in an event. Repeated handoffs retain
+their connection's token, project navigation preserves it, and another client
+cannot replace an existing association. A manually opened, expired, evicted or
+restarted page context reports `unknown`. No global last-used-host attribution is
+used. These tokens are metadata references, not authorization credentials.
+
+The research sources are the [supported MCP lifecycle](https://modelcontextprotocol.io/specification/2025-11-25/basic/lifecycle),
+[Codex's MCP client](https://github.com/openai/codex/blob/main/codex-rs/rmcp-client/src/utils.rs)
+and [DSH's client declaration](https://github.com/deepseek-ai/deepseek-harness/blob/master/packages/mcp/mcp-client/src/connection.ts).
 
 ## Implemented signals and limits
 
@@ -109,17 +143,43 @@ All retries retain the original event UUID/timestamp and PostHog `$insert_id`.
   a tool does not imply the host opened it.
 - Worker export terminal state, after render and available technical verification;
   it is distinct from queue acceptance and does not assert human content acceptance.
-- Studio home/project page readiness, editor load outcome, new/recent-session and
-  template-selection intent, plus actual instruction-copy/fallback results.
+- Studio project readiness and load outcome, project-sidebar creation/switching,
+  current-library selection and actual instruction-copy/fallback results. Generic
+  library prompts use `host_product=mcp` for the destination; this is distinct
+  from the observed opener's common `host_agent`.
+- All 78 retained Studio event names are registered in
+  [studio-events.ts](studio-events.ts) and included in the same derived browser
+  admission registry: startup/preview/render/performance, editor interaction,
+  feedback/desktop, save/error/transaction, SDK, WebMCP status and audio FX.
+  Existing `trackEvent` and `trackStudioEvent` callers use the OpenMotion transport.
+  Their [adapter](studio-properties.ts) removes private fields before queueing;
+  upstream tokens, transports and automatic experiment enrollment remain disabled.
+  Feature visibility and SDK gates do not change: hidden feedback, desktop and
+  audio-FX features emit only when their existing producer actually runs.
 
-This first integration does not implement the entire tracking specification:
-installer/integration/resource-read events, WebMCP execution, every editor save,
-timeline/history/import gesture, review/adoption and optional media events remain
-outside this change. Worker origin is `worker`; request-to-worker operation context
-is not yet persisted. Pending export cancellation has a cancel result but no worker
-completion because no worker claimed it.
+The adapter preserves fixed actions, counts, booleans and safe catalog/control
+identifiers. It drops messages/stacks, file paths, selectors, composition/block
+names, free-text feedback, breadcrumb text and arbitrary error names. Feedback
+retains `has_comment`, rating and fixed question/answer categories; resolver
+mismatches become per-kind counts, and attempt rollups retain total attempts and
+distinct-operation counts without raw JSON keys. Audio parameter numbers are
+bounded; string parameters retain only a fixed engine-catalog `value_category` and
+`value_kind=category`. Custom effect/preset/parameter identifiers become `other`.
+Unknown event names are ignored. Invalid required fields prevent the event from
+being queued; optional invalid fields are omitted. The server still rejects
+unknown fields and forged common properties rather than applying this adapter.
 
-The queue is process-local: 64 events, batches of 16, one in-flight request, a one-day
+Coverage follows the existing producers; it does not invent new product actions.
+Installer/integration/resource-read events, actual WebMCP tool-execution outcomes,
+every successful editor save/import gesture and human review/adoption results
+still need their own confirmed completion semantics. WebMCP status signals and
+save-failure/blocked signals are not those missing success/result events.
+Worker origin is `worker`; its caller's host context is persisted, while a full
+request-to-worker operation context is not. Pending cancellation has a cancel
+result but no worker completion because no worker claimed it.
+
+The compatibility adapter bounds initialization-waiting calls at 64. The queue is
+process-local: 64 events, batches of 16, one in-flight request, a one-day
 TTL and retry backoff capped at one minute. Disabling aborts and drops pending data;
 shutdown drains for at most two seconds. Crashes, queue overflow, page termination
 or permanent collector rejection may lose events. Add durable delivery if product

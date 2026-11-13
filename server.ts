@@ -30,11 +30,13 @@ import { createAppTracking, closeTracking, saveTrackingPreference, trackingPrefe
 import { studioEvents } from './tracking/events.ts';
 import { nativeRuntimeStatus, startNativePreparation, requireNativeRuntime } from './scripts/npm-runtime.mjs';
 import { nativeRouteCapability } from './shared/native-runtime.ts';
-import { validPending } from './tracking/core.ts';
+import { validPending, uuid } from './tracking/core.ts';
+import { validHostContext, unknownHost, previewTrackingContext } from './tracking/host.ts';
+import type { HostContext } from './tracking/host.ts';
 import { collectDiagnostics, diagnosticLimits, recordDiagnostic } from './scripts/diagnostics.mjs';
 
 const sharedStore = new WorkspaceStore();
-export type Service = { diagnostics?: { running: boolean; lastExport: number; events: number; window: number }; studio?: Studio; runtimeRoot?: string; nativeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
+export type Service = { trackingHosts?: Map<string, { host: HostContext; createdAt: number }>; diagnostics?: { running: boolean; lastExport: number; events: number; window: number }; studio?: Studio; runtimeRoot?: string; nativeRoot?: string; ffmpeg?: boolean; switching?: boolean; studioPort?: number; browser?: WorkspaceBrowser; editorToken?: string; ensureStudio?: (projectId?: string) => Promise<Studio>; launchStudio?: (directory: string, port: number) => Promise<Studio>; phase1?: Phase1Service; phase1Mutation?: Promise<void>; tracking?: OmTracking };
 const service: Service = {};
 const working = new Set<string>();
 const runningExports = new Map<string, AbortController>();
@@ -48,7 +50,7 @@ export async function cancelExport(store: WorkspaceStore, projectId: string, job
     await store.saveJob(job);
     if (job.state === 'cancelled') await rm(store.snapshotDirectory(job.id), { recursive: true, force: true });
     if (job.state === 'cancelling') runningExports.get(job.id)?.abort();
-    const { token, workerPid, ...safe } = job; return safe;
+    const { token, workerPid, trackingHost, ...safe } = job; return safe;
   });
 }
 
@@ -111,7 +113,7 @@ export async function renderNext(store: WorkspaceStore, runtimeRoot: string, tra
         duration_ms: Math.min(86_400_000, Math.max(0, Date.now() - final.createdAt)),
         technical_check: (final.verification as any)?.status === 'passed' ? 'passed'
           : (final.verification as any)?.status === 'failed' ? 'failed' : 'unknown',
-      }, undefined, 'worker');
+      }, undefined, 'worker', validHostContext(final.trackingHost) ? final.trackingHost : undefined);
     }
     if (job) runningExports.delete(job.id);
     if (job) await rm(store.snapshotDirectory(job.id), { recursive: true, force: true });
@@ -314,8 +316,10 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
       if (!context.tracking?.enabled()) return json(res, 200, { accepted: 0, enabled: false });
       const data = await input(req, 64 * 1024);
       if (!data || Object.keys(data).length !== 1 || !Array.isArray(data.events) || data.events.length > 16
-        || !data.events.every((event: unknown) => validPending(studioEvents, event) && event.entrypoint === 'studio')) return json(res, 400, { error: 'INVALID_TRACKING_BATCH' });
-      const statuses = data.events.map((event: unknown) => context.tracking!.ingest(event));
+        || !data.events.every((event: unknown) => validPending(studioEvents, event) && event.entrypoint === 'studio' && !Object.hasOwn(event, 'host_context'))) return json(res, 400, { error: 'INVALID_TRACKING_BATCH' });
+      const page = context.trackingHosts?.get(url.searchParams.get('context') ?? '');
+      const host = page && Date.now() - page.createdAt <= 86_400_000 ? page.host : unknownHost;
+      const statuses = data.events.map((event: object) => context.tracking!.ingest({ ...event, host_context: host }));
       return json(res, statuses.includes('full') ? 429 : 200, { accepted: statuses.filter((status: string) => status === 'queued').length });
     }
     if (motionRequest && url.pathname === '/api/phase1/call' && req.method === 'POST') {
@@ -334,7 +338,22 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
         tracking: context.tracking,
       });
       const data = await input(req);
-      try { return json(res, 200, await context.phase1.call(data.name, data.arguments ?? {})); }
+      try {
+        const host = validHostContext(data.trackingHost) ? data.trackingHost : unknownHost;
+        let result = await context.phase1.call(data.name, data.arguments ?? {}, host);
+        if (host.host_agent !== 'unknown' && context.tracking?.enabled() && (result.previewUrl || result.previewHandoff)) {
+          const hosts = context.trackingHosts ??= new Map();
+          for (const [key, value] of hosts) if (Date.now() - value.createdAt > 86_400_000) hosts.delete(key);
+          let token = uuid.test(data.trackingContext) ? data.trackingContext : crypto.randomUUID();
+          const existing = hosts.get(token);
+          if (existing && (['host_agent', 'host_agent_source', 'mcp_client_name', 'mcp_client_version'] as const)
+            .some(key => existing.host[key] !== host[key])) token = crypto.randomUUID();
+          if (!hosts.has(token) && hosts.size >= 256) hosts.delete(hosts.keys().next().value!);
+          hosts.set(token, { host, createdAt: Date.now() });
+          result = previewTrackingContext(result, new URL(editorUrl).origin, token);
+        }
+        return json(res, 200, result);
+      }
       catch (error) {
         const message = error instanceof Error ? error.message : 'Tool failed';
         return json(res, 400, { error: message, applied: message.startsWith('VERSION_NOT_RESTORABLE:') ? false : 'unknown' });

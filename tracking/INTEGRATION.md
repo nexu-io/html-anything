@@ -2,7 +2,7 @@
 
 Use this guide to ask a coding agent to add an event, implement it through the
 existing MCP/Studio tracking path, and verify its meaning and delivery. It describes
-the implementation in PR #189, not a released npm API. Check the current checkout
+the current in-repository implementation, originating in PR #189, not a released npm API. Check the current checkout
 before applying examples. `@openmotion/tracking` is private; application callers
 currently import repository sources rather than installing it from npm.
 
@@ -140,8 +140,9 @@ await delivery in a business operation. `track()` returning `queued` means local
 acceptance; `trackMotion()` resolves with a local queue/configuration status. Neither proves
 that the event is queryable in PostHog. Normal calls do not need an explicit flush.
 
-Current field rules are closed enums, booleans, UUIDv4 values, safe-code strings or
-nonnegative safe integers up to 86,400,000. Do not invent arbitrary string fields
+Current field rules are closed enums, booleans, UUIDv4 values, safe-code strings,
+nonnegative safe integers up to 86,400,000, or explicit finite numeric `{min,max}`
+bounds for fractional/signed measurements. Do not invent arbitrary string fields
 or use the safe-code rule to tunnel user content. Omit unknown optional counts;
 missing is not zero. If the measurement needs a new type, review the validator and
 its tests rather than bypassing it. Do not silently change an existing event's
@@ -155,6 +156,11 @@ installation/device identity, saved attribution, platform, locale and timezone.
 Do not place common fields inside an event's properties or copy a browser identity
 into Node. `device_id`, `installation_id` and `distinct_id` currently share one random
 installation UUID; they are not a hardware fingerprint or a unique-person count.
+Host Agent properties also belong to this trusted common context. Capture the
+declared MCP client on its connection/request and pass that immutable context to
+the domain operation and worker. An editor uses only its opening-link context;
+never copy a host name into semantic event properties or assign all pages to the
+most recently active Agent. See [attribution limits](README.md#host-agent-attribution).
 
 The current installation identity may retain `utm_source`; landing-to-installer
 `--source` propagation is separate work and an unknown source remains null. An event

@@ -17,6 +17,8 @@ import type { Selection } from './editor-runtime.ts';
 import { createAppTracking, closeTracking, trackingError, type OmTracking } from './shared/tracking.ts';
 import { uuid } from './tracking/core.ts';
 import { toolNames } from './tracking/events.ts';
+import { identifyHost, unknownHost } from './tracking/host.ts';
+import type { HostContext } from './tracking/host.ts';
 import { templateCatalogFor } from './prism-templates.ts';
 import { templateConfig } from './shared/template-config.ts';
 
@@ -25,6 +27,8 @@ export const releaseRegistry = mcpRegistry();
 export const publicTools = releaseRegistry.tools;
 const selections = new WeakMap<WorkspaceStore, { sessionId: string; projectId: string }>();
 const trackingByStore = new WeakMap<WorkspaceStore, Promise<OmTracking>>();
+const connectionHosts = new WeakMap<object, HostContext>();
+const connectionContexts = new WeakMap<object, Map<string, string>>();
 
 function trackingFor(store: WorkspaceStore) {
   let tracking = trackingByStore.get(store);
@@ -39,26 +43,39 @@ const serverIcons = ['light', 'dark'].map(theme => ({
 }));
 
 export async function rpc(message: any, store = new WorkspaceStore(), registry = releaseRegistry, connection?: { selection: Selection }) {
+  if (message?.jsonrpc === '2.0' && message.id !== undefined && message.method === 'initialize') {
+    connectionHosts.set(connection ?? store, identifyHost(message.params?.clientInfo, process.env));
+  }
+  const declared = message?.params?._meta?.['io.modelcontextprotocol/clientInfo'];
+  const host = declared ? identifyHost(declared) : connectionHosts.get(connection ?? store) ?? unknownHost;
+  let contexts = connectionContexts.get(connection ?? store);
+  if (!contexts) { contexts = new Map(); connectionContexts.set(connection ?? store, contexts); }
+  const hostKey = JSON.stringify(host);
+  if (!contexts.has(hostKey)) {
+    if (contexts.size >= 16) contexts.delete(contexts.keys().next().value!);
+    contexts.set(hostKey, crypto.randomUUID());
+  }
+  const trackingContext = contexts.get(hostKey)!;
   const name = legacyToolName(message?.params?.name);
   if (message?.jsonrpc !== '2.0' || message.id === undefined || message.method !== 'tools/call'
-    || registry.profile !== 'phase1' || !(toolNames as readonly unknown[]).includes(name)) return invokeRpc(message, store, registry, connection);
+    || registry.profile !== 'phase1' || !(toolNames as readonly unknown[]).includes(name)) return invokeRpc(message, store, registry, connection, host, trackingContext);
   const tracking = await trackingFor(store), started = performance.now(), callId = crypto.randomUUID();
   let accepted = false;
   try { validateInput(phase1Tools.find(tool => tool.name === publicToolName(name))!.inputSchema, message.params.arguments ?? {}); accepted = true; } catch {}
   const fields = { tool_name: name as typeof toolNames[number], call_id: callId, accepted,
     ...(uuid.test(message.params.arguments?.requestId) ? { operation_id: message.params.arguments.requestId } : {}) };
-  if (accepted) tracking.track('mcp_tool_started', fields);
-  const response = await invokeRpc(message, store, registry, connection);
+  if (accepted) tracking.track('mcp_tool_started', fields, undefined, undefined, host);
+  const response = await invokeRpc(message, store, registry, connection, host, trackingContext);
   const value = (response as any)?.result;
   const content = value?.structuredContent;
   const outcome = value?.isError || content?.status === 'failed' ? 'failure' : content?.status === 'partial' ? 'partial' : value ? 'success' : 'unknown';
   tracking.track('mcp_tool_finished', { ...fields, outcome, duration_ms: Math.min(86_400_000, Math.round(performance.now() - started)),
     ...(value?.isError ? { error_code: trackingError(new Error(String(content?.error?.code ?? 'TOOL_FAILED'))) } : {}),
-    ...(typeof content?.replayed === 'boolean' ? { replayed: content.replayed } : {}) });
+    ...(typeof content?.replayed === 'boolean' ? { replayed: content.replayed } : {}) }, undefined, undefined, host);
   return response;
 }
 
-async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnType<typeof mcpRegistry>, connection?: { selection: Selection }) {
+async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnType<typeof mcpRegistry>, connection?: { selection: Selection }, host: HostContext = unknownHost, trackingContext?: string) {
   if (!message || message.jsonrpc !== '2.0' || typeof message.method !== 'string') return { jsonrpc: '2.0', id: message?.id ?? null, error: { code: -32600, message: 'Invalid request' } };
   if (message.id === undefined) return null;
   const result = (value: unknown) => ({ jsonrpc: '2.0', id: message.id, result: value });
@@ -105,7 +122,8 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
         }
         const service = await ensureService(store, undefined, name), origin = new URL(service.previewUrl).origin;
         const response = await fetch(origin + '/motion-api/phase1/call', { method: 'POST', headers: await editorHeaders(store, origin),
-          body: JSON.stringify({ name: phase1TransportTool(service, name) ?? name, arguments: args }), signal: AbortSignal.timeout(600_000) });
+          body: JSON.stringify({ name: phase1TransportTool(service, name) ?? name, arguments: args,
+            trackingHost: host, trackingContext }), signal: AbortSignal.timeout(600_000) });
         const value = publicToolResult(await response.json());
         if (!response.ok) throw Object.assign(new Error(value.error || 'Tool failed'), { code: value.code, details: value.runtime });
         if (value.projectId && value.sessionId) selections.set(store, { projectId: value.projectId, sessionId: value.sessionId });

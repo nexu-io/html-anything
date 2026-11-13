@@ -14,6 +14,7 @@ import { pluginRoot } from '../hyperframes.ts';
 import { fixture } from './fixtures.ts';
 import { phase1Tools } from '../shared/phase1-tools.ts';
 import { toolNames } from '../tracking/events.ts';
+import { identifyHost } from '../tracking/host.ts';
 import { transport } from './http.ts';
 import type { PendingEvent } from '../tracking/core.ts';
 
@@ -228,7 +229,8 @@ test('default configuration reports without opt-in; saved opt-out covers runtime
 
 test('worker reports a real terminal render failure once, separately from queue acceptance', () => fixture(async store => {
   const events: PendingEvent[] = [], tracking = core(async batch => { events.push(...batch); return 'accepted'; });
-  const current = await store.get(), job = await store.requestExport(current.revision);
+  const host = identifyHost({ name: 'dsh-mcp-client', version: '0.0.1' });
+  const current = await store.get(), job = await store.requestExport(current.revision, { trackingHost: host });
   assert.equal(job.state, 'pending'); assert.equal(tracking.pending(), 0);
   await writeFile(path.join(store.snapshotDirectory(job.id), 'index.html'), '<html><body>Invalid composition for a failure test</body></html>');
   await renderNext(store, pluginRoot, tracking);
@@ -237,6 +239,7 @@ test('worker reports a real terminal render failure once, separately from queue 
   await tracking.flush();
   assert.equal(events.length, 1); assert.equal(events[0].event, 'export_result');
   assert.equal(events[0].entrypoint, 'worker'); assert.equal(events[0].properties.job_state, 'failed');
+  assert.deepEqual(events[0].host_context, host);
   assert.equal((await store.get()).revision, current.revision);
   assert.equal(events[0].properties.technical_check, 'unknown'); tracking.close();
 }));

@@ -1,3 +1,4 @@
+import { trackMotion } from './tracking';
 import { GitHubLink } from './GitHubLink';
 import { GithubLogo } from '@phosphor-icons/react';
 import { templateRepositoryUrl } from './githubRepository';
@@ -181,6 +182,7 @@ export function TemplateLibraryDialog(props: Props) {
   const reset = () => { setQuery(''); setSelected({}); setEditableOnly(false); };
   const toggle = (key: Facet, value: string) => setSelected(previous => ({ ...previous, [key]: previous[key]?.includes(value) ? previous[key]!.filter(item => item !== value) : [...(previous[key] ?? []), value] }));
   const show = useCallback((item: GalleryTemplate) => {
+    void trackMotion('ui_click', { page_name: 'studio', area: 'templates', element: 'select_template' });
     setPreview(item); setPrompt(''); setPromptError(false); setFeedback(''); setManualCopy(''); setPromptExpanded(false); setGuideOpen(false);
     if (detailInfo.current) detailInfo.current.scrollTop = 0;
     if (!detail.current?.open) detail.current?.showModal();
@@ -202,9 +204,15 @@ export function TemplateLibraryDialog(props: Props) {
   }, [preview, locale, promptAttempt]);
   async function copy(submit = false) {
     if (!prompt) return;
+    void trackMotion('ui_click', { page_name: 'studio', area: 'templates', element: 'copy_template' });
     const text = submit ? templateSubmissionPrompt(prompt) : prompt;
-    try { await navigator.clipboard.writeText(text); setManualCopy(''); setFeedback('Copied. Paste into your Agent.'); showToast('Copied. Paste into your Agent.', 'info'); }
-    catch { setManualCopy(text); setPromptExpanded(true); setFeedback(''); showToast('Copy failed. Select and copy the instruction below.', 'error', 'feedback'); }
+    try {
+      await navigator.clipboard.writeText(text); setManualCopy(''); setFeedback('Copied. Paste into your Agent.'); showToast('Copied. Paste into your Agent.', 'info');
+      void trackMotion('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'clipboard_written' });
+    } catch {
+      setManualCopy(text); setPromptExpanded(true); setFeedback(''); showToast('Copy failed. Select and copy the instruction below.', 'error', 'feedback');
+      void trackMotion('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'manual_fallback_shown' });
+    }
   }
   async function downloadMotion() {
     if (!preview?.motionDocumentUrl) return;
