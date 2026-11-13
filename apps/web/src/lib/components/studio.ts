@@ -390,18 +390,21 @@ export class Studio {
       choose: (id) => this.choose(id),
       seek: (time) => this.control("seek", time),
       retime: (id, time) => {
-        const source = this.model?.html;
+        const source = this.model?.html,
+          commit = retimeKey(this.context, this.client, id, time, source);
         this.run(async () => {
-          this.selected = await retimeKey(this.context, this.client, id, time, source);
+          this.selected = await commit();
         });
       },
       commit: (id, start, duration) => {
         const clip = clips.find((clip) => clip.id === id),
           source = this.model?.html;
-        if (clip)
+        if (clip) {
+          const commit = commitClip(this.context, this.client, clip, start, duration, source);
           this.run(async () => {
-            this.selected = await commitClip(this.context, this.client, clip, start, duration, source);
+            this.selected = await commit();
           });
+        }
       },
     });
     if (!this.transport) {

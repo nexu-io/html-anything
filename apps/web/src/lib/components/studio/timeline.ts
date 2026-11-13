@@ -21,6 +21,7 @@ export function studioTimeline(
     commit(id: string, start: number, duration: number): void;
   },
 ) {
+  const startFocus = document.activeElement?.hasAttribute("data-start-edge");
   const focus = document.activeElement?.closest("[data-keyframe-focus],[data-clip-id]");
   const focusKey = focus?.getAttribute("data-keyframe-focus"),
     focusClip = focus?.getAttribute("data-clip-id");
@@ -39,6 +40,7 @@ export function studioTimeline(
       label: c.host ? `${c.id} · ${c.host.source}` : c.text || c.tag,
       kind: c.link ? "链接媒体" : c.host ? "合成" : c.media?.kind === "audio" ? "音频" : c.media ? "图像" : "T · 文本",
       readonly: !!c.link?.reason || !!c.host?.reason || (c.media?.kind === "audio" && c.media.maximum === null),
+      minimumStart: c.media?.kind === "image" && !c.media.linkReason && !c.link && !c.animations.length ? 0 : undefined,
       maximum: c.link?.maximum ?? c.host?.maximum ?? c.media?.maximum ?? undefined,
       start: c.start ?? 0,
       duration: c.duration ?? 1,
@@ -100,14 +102,16 @@ export function studioTimeline(
     tracks.length ? axis.element : note(document, "添加文本，或为图层声明开始秒与持续秒。"),
     note(
       document,
-      "拖动移动片段，右侧手柄调整长度；方向键微调，Shift 为 1 秒，Alt 调整长度。菱形点击定位、拖动或方向键调整关键帧，Escape 取消拖动。",
+      "拖动移动片段，右侧手柄调整长度；静态独立 PNG 的左侧手柄调整起点并保留终点，聚焦手柄后可用方向键微调。方向键微调，Shift 为 1 秒，Alt 调整长度。菱形点击定位、拖动或方向键调整关键帧，Escape 取消拖动。",
     ),
   );
   const selector = focusKey ? "[data-keyframe-focus]" : "[data-clip-id]",
     value = focusKey ?? focusClip;
-  if (value)
-    [...options.root.querySelectorAll<SVGElement>(selector)]
-      .find((e) => e.getAttribute(focusKey ? "data-keyframe-focus" : "data-clip-id") === value)
-      ?.focus();
+  if (value) {
+    const target = [...options.root.querySelectorAll<SVGElement>(selector)].find(
+      (e) => e.getAttribute(focusKey ? "data-keyframe-focus" : "data-clip-id") === value,
+    );
+    (startFocus ? (target?.querySelector<SVGElement>("[data-start-edge]") ?? target) : target)?.focus();
+  }
   return axis;
 }

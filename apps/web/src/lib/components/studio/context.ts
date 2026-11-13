@@ -156,12 +156,21 @@ export class CompositionContext {
     this.revision = this.editor.project.revision;
     return this.capture(before.source);
   }
+  transaction<T extends { html: string }>(action: (source: string) => Promise<T>, source?: string) {
+    let applied: T | undefined;
+    return async () => {
+      if (!applied) {
+        const binding = await this.prepare(source);
+        const result = await action(binding.source);
+        this.apply(binding, result.html);
+        applied = result;
+      }
+      await this.editor.save();
+      return applied;
+    };
+  }
   async transform<T extends { html: string }>(action: (source: string) => Promise<T>, source?: string): Promise<T> {
-    const binding = await this.prepare(source);
-    const result = await action(binding.source);
-    this.apply(binding, result.html);
-    await this.editor.save();
-    return result;
+    return this.transaction(action, source)();
   }
   render(blocked: boolean) {
     const document = this.element.ownerDocument,

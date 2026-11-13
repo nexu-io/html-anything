@@ -7,6 +7,7 @@ export interface TimeTrack {
   kind?: string;
   readonly?: boolean;
   maximum?: number;
+  minimumStart?: number;
   lanes?: {
     id: string;
     label: string;
@@ -84,6 +85,7 @@ export function timeTracks(
     const group = document.createElementNS("http://www.w3.org/2000/svg", "g"),
       label = document.createElementNS("http://www.w3.org/2000/svg", "text"),
       bar = document.createElementNS("http://www.w3.org/2000/svg", "rect"),
+      startHandle = document.createElementNS("http://www.w3.org/2000/svg", "rect"),
       handle = document.createElementNS("http://www.w3.org/2000/svg", "rect"),
       heading = document.createElementNS("http://www.w3.org/2000/svg", "rect"),
       caption = document.createElementNS("http://www.w3.org/2000/svg", "text"),
@@ -118,7 +120,39 @@ export function timeTracks(
           Math.min(0.1, duration - track.start, track.maximum ?? Number.POSITIVE_INFINITY),
           Math.min(duration - track.start, track.maximum ?? Number.POSITIVE_INFINITY, value),
         );
-    let drag: { x: number; resize: boolean; value: number } | undefined;
+    const left =
+        !track.readonly &&
+        Number.isFinite(track.minimumStart) &&
+        (track.minimumStart ?? -1) >= 0 &&
+        (track.minimumStart ?? -1) <= track.start &&
+        Number.isFinite(track.start) &&
+        Number.isFinite(track.duration) &&
+        track.duration > 0 &&
+        track.start + track.duration <= duration + 1e-8,
+      end = track.start + track.duration,
+      limitLeft = (value: number) =>
+        Math.max(track.minimumStart ?? 0, Math.min(end - Math.min(0.1, track.duration), value));
+    if (left) {
+      startHandle.classList.add("om-time__handle");
+      startHandle.setAttribute("data-start-edge", "");
+      startHandle.setAttribute("role", "button");
+      startHandle.setAttribute("aria-label", `调整 ${track.label} 起点并保留终点`);
+      startHandle.setAttribute("tabindex", disabled ? "-1" : "0");
+      startHandle.setAttribute("y", String(y));
+      startHandle.setAttribute("width", "8");
+      startHandle.setAttribute("height", "40");
+      startHandle.addEventListener("keydown", (event) => {
+        if (!["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        if (disabled) return;
+        const begin = limitLeft(
+          Math.round((track.start + (event.key === "ArrowRight" ? 1 : -1) * (event.shiftKey ? 1 : 0.1)) * 10) / 10,
+        );
+        if (Math.abs(begin - track.start) > 1e-8) options.commit(track.id, begin, end - begin);
+      });
+    }
+    let drag: { x: number; edge: "move" | "end" | "start"; value: number } | undefined;
     heading.classList.add("om-time__heading");
     kind.classList.add("om-time__kind");
     caption.classList.add("om-time__caption");
@@ -141,6 +175,7 @@ export function timeTracks(
       caption.textContent =
         track.label.length > count ? `${track.label.slice(0, Math.max(0, count - 1))}…` : track.label;
       handle.setAttribute("x", String(coordinate(start + span) - 8));
+      startHandle.setAttribute("x", String(coordinate(start)));
     };
     const restore = () => place(track.start, track.duration);
     measurements.push(() => {
@@ -159,7 +194,7 @@ export function timeTracks(
       group.setPointerCapture(event.pointerId);
       drag = {
         x: event.clientX,
-        resize: event.target === handle,
+        edge: event.target === handle ? "end" : left && event.target === startHandle ? "start" : "move",
         value: event.target === handle ? track.duration : track.start,
       };
     });
@@ -172,10 +207,16 @@ export function timeTracks(
       if (!drag) return;
       const delta =
         ((((event.clientX - drag.x) / svg.getBoundingClientRect().width) * width) / (width - 180)) * duration;
-      drag.value = drag.resize
-        ? limitDuration(Math.round((track.duration + delta) * 10) / 10)
-        : limitStart(Math.round((track.start + delta) * 10) / 10);
-      place(drag.resize ? track.start : drag.value, drag.resize ? drag.value : track.duration);
+      drag.value =
+        drag.edge === "end"
+          ? limitDuration(Math.round((track.duration + delta) * 10) / 10)
+          : drag.edge === "start"
+            ? limitLeft(Math.round((track.start + delta) * 10) / 10)
+            : limitStart(Math.round((track.start + delta) * 10) / 10);
+      place(
+        drag.edge === "end" ? track.start : drag.value,
+        drag.edge === "end" ? drag.value : drag.edge === "start" ? end - drag.value : track.duration,
+      );
     });
     group.addEventListener("pointerup", (event) => {
       if (disabled) {
@@ -191,8 +232,8 @@ export function timeTracks(
       else
         options.commit(
           track.id,
-          chosen.resize ? track.start : chosen.value,
-          chosen.resize ? chosen.value : track.duration,
+          chosen.edge === "end" ? track.start : chosen.value,
+          chosen.edge === "end" ? chosen.value : chosen.edge === "start" ? end - chosen.value : track.duration,
         );
     });
     group.addEventListener("lostpointercapture", () => {
@@ -219,7 +260,9 @@ export function timeTracks(
         restore();
       }
     });
-    group.append(label, bar, heading, kind, caption, handle);
+    group.append(label, bar, heading, kind, caption);
+    if (left) group.append(startHandle);
+    group.append(handle);
     svg.append(group);
     for (const [laneIndex, lane] of (track.lanes ?? []).entries()) {
       const laneLabel = document.createElementNS("http://www.w3.org/2000/svg", "text");
@@ -332,7 +375,7 @@ export function timeTracks(
     disable(value: boolean) {
       disabled = value;
       element.classList.toggle("om-time--disabled", value);
-      for (const track of svg.querySelectorAll("[data-clip-id],[data-keyframe-id]")) {
+      for (const track of svg.querySelectorAll("[data-clip-id],[data-keyframe-id],[data-start-edge]")) {
         track.setAttribute("tabindex", value ? "-1" : "0");
         track.setAttribute("aria-disabled", String(value));
       }

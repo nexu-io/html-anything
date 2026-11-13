@@ -4,7 +4,7 @@ import type { Resource } from "@open-motion/workspace/contract";
 import type { Client } from "../../../api.js";
 import type { Binding, CompositionContext } from "./context.js";
 /** A gesture belongs to the exact source projection that produced its native animation identity. */
-export async function retimeKey(
+export function retimeKey(
   context: CompositionContext,
   client: Client,
   id: string,
@@ -13,7 +13,7 @@ export async function retimeKey(
 ) {
   if (!source) throw Error("时间轴投影已过期");
   const key = JSON.parse(id) as { animationId: string; percentage: number; elementId: string };
-  await context.transform(
+  const commit = context.transaction(
     (html) =>
       client.animateMotion({
         action: "retime",
@@ -25,7 +25,10 @@ export async function retimeKey(
       }),
     source,
   );
-  return key.elementId;
+  return async () => {
+    await commit();
+    return key.elementId;
+  };
 }
 
 export async function patchClip(
@@ -48,7 +51,7 @@ export async function patchClip(
   if (changed.file !== file) throw Error("宿主父文件身份不一致");
   return changed;
 }
-export async function commitClip(
+export function commitClip(
   context: CompositionContext,
   client: Client,
   clip: Clip,
@@ -57,11 +60,14 @@ export async function commitClip(
   source: string | undefined,
 ) {
   if (!source) throw Error("时间轴投影已过期");
-  await context.transform(
+  const commit = context.transaction(
     (html) => patchClip(client, context.sources, context.instance, clip, { start, duration }, html, context.file),
     source,
   );
-  return clip.id;
+  return async () => {
+    await commit();
+    return clip.id;
+  };
 }
 
 export async function applyClip(
