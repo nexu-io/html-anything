@@ -34,7 +34,7 @@ function rootVariables(css: string): Map<string, string> {
   return vars;
 }
 
-const themeSource = readFileSync(path.join(STYLES_DIR, "theme.css"), "utf8");
+const themeSource = readFileSync(path.join(STYLES_DIR, "../../../packages/design-system/studio/tokens.css"), "utf8");
 
 function declaredValue(name: string): string {
   const match = themeSource.match(new RegExp(`\\n\\s*${name}:\\s*([^;]+);`));
@@ -52,7 +52,7 @@ describe("studio theme", () => {
     const css = await build("studio.css", ["bg-accent", "text-text-2", "border-border"]);
 
     expect(rootVariables(css).get("--color-accent")).toBe(
-      "light-dark(oklch(0.536 0.114 164), oklch(0.82 0.159 164))",
+      "var(--motion-accent)",
     );
     expect(css).toContain(".bg-accent {");
     expect(css).toContain("background-color: var(--color-accent)");
@@ -85,12 +85,14 @@ describe("studio theme", () => {
     expect(css).toContain(".text-accent {");
   });
 
-  it("keeps selection, playhead and accent as three distinct colors", () => {
+  it("maps selection and playhead onto shared semantic roles", () => {
     const accent = declaredValue("--color-accent");
     const selection = declaredValue("--color-selection");
     const playhead = declaredValue("--color-playhead");
 
-    expect(new Set([accent, selection, playhead]).size).toBe(3);
+    expect(accent).toBe("var(--motion-accent)");
+    expect(selection).toBe("var(--motion-accent)");
+    expect(playhead).toBe("var(--motion-strong)");
   });
 
   it("names every micro type step in use and leaves the Tailwind sizes alone", async () => {
@@ -102,12 +104,12 @@ describe("studio theme", () => {
     const vars = rootVariables(css);
 
     for (const step of steps) {
-      expect(vars.get(`--text-step-${step}`)).toBe(`${step}px`);
+      expect(vars.get(`--text-step-${step}`)).toMatch(/^var\(--motion-text-/);
       expect(css).toContain(`.text-step-${step} {`);
     }
-    expect(vars.get("--text-xs")).toBe("0.75rem");
-    expect(vars.get("--text-sm")).toBe("0.875rem");
-    expect(vars.get("--text-lg")).toBe("1.125rem");
+    expect(vars.get("--text-xs")).toBe("var(--motion-text-sm)");
+    expect(vars.get("--text-sm")).toBe("var(--motion-text-body)");
+    expect(vars.get("--text-lg")).toBe("var(--motion-text-step-18)");
   });
 
   it("opens menus from a visible shape and closes them faster", () => {

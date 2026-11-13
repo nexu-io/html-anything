@@ -1,3 +1,4 @@
+import { brand, designSystemAsset } from "../../../packages/design-system/index.js";
 import { GitHubLink } from './GitHubLink';
 import { CommunityLink } from './CommunityLink';
 import { StudioErrorBoundary } from '../components/StudioErrorBoundary';
@@ -20,7 +21,7 @@ function WorkspaceBrand() {
   const theme = useShownStudioTheme();
   return <span className="motion-header-brand">
     <WorkspaceMenuButton />
-    <img src={`/web/design-system/opendesign-${theme === 'dark' ? 'light' : 'dark'}.svg`} alt="OpenDesign" width="104" height="18" />
+    <img src={designSystemAsset(brand.editorLogo[theme])} alt={brand.editorName} width="104" height="18" />
   </span>;
 }
 

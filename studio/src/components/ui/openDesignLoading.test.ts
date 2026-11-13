@@ -27,7 +27,7 @@ describe("OpenDesign loading", () => {
     for (const host of [first, second]) {
       expect(host.querySelector("img")?.hidden).toBe(false);
       expect(host.querySelector("canvas")?.hidden).toBe(true);
-      expect(host.querySelector("img")?.src).toContain("opendesign-wordmark.svg");
+      expect(host.querySelector("img")?.src).toContain("loading-wordmark.svg");
     }
     expect(getContext).not.toHaveBeenCalled();
   });

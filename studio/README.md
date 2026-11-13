@@ -47,7 +47,7 @@ npm test
 
 `build/` is generated and included in the plugin ZIP. After frontend edits,
 run `npm run build:studio` and refresh. The token source is
-`../web/design-system/tokens.json`; `src/motion/theme.css` adapts it to Studio's
+`../packages/design-system/tokens.json`; `src/motion/theme.css` adapts it to Studio's
 native theme preferences. UI styles never enter composition files or renders.
 
 `test:studio` runs all unit/DOM suites. Test-only adaptations cover the moved

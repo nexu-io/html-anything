@@ -5,7 +5,6 @@ import { mountConnection } from '../../../web/connect';
 import connectionPage from '../../../web/connect.html?raw';
 import { TemplateLibraryDialog } from './TemplateLibraryDialog';
 import { MotionIcon } from './icons';
-import '../../../web/design-system/controls.css';
 import '../../../web/connect.css';
 import '../../../web/template-gallery.css';
 

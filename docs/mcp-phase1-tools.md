@@ -178,3 +178,7 @@ CI不按路径过滤、不跳过渲染、无失败重试或continue-on-error；�
 **合并门禁还依赖仓库配置：** 管理员需为main开启分支保护，启用必需状态检查，并将实际CI产生的phase1-package-e2e检查上下文（以及现有assemble检查）设为必需；禁止跳过检查合并。工作流文件不能自行修改仓库权限。2026-11-05用户确认先不配置分支保护：本期先交付自动E2E与失败标红，按CI全绿才合并执行；平台暂不会强制锁住合并按钮。后续启用硬门禁仍需管理员配置，不能把CI接入等同于“服务端已禁止失败合并”。
 
 参数拒绝另有回归：顶层/嵌套的constructor、__proto__、toString等未声明字段，以及类型不正确的分页游标，必须明确失败。不能把schema中的additionalProperties=false单独当作运行时校验已完成。
+
+## Inline work rounds
+
+For video playback deliverables, `openmotion_open_preview(action=begin)` starts one persisted work round. Optional `workId` on saves/exports keeps the resulting video bound to that round; `openmotion_get_project(workId,includeVideo=true)` exposes status and component-private media. Existing eleven Tools, legacy aliases, editor-only delivery and template browsing remain compatible. See [inline progress, states and validation limits](inline-video.md).

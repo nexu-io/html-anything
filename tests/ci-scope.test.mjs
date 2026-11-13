@@ -108,6 +108,7 @@ test('parallel CI preserves common gates and builds distribution inputs in the s
     'Install locked Motion dependencies', 'Build Studio and validate tracking',
     'Validate standalone installation and packaging', 'Repository template runtime regression',
     'Built-in template playback and export regression', 'Build phase-one ZIP and exercise all public tools',
+    'Validate two-round inline rendering',
     'Build immutable standalone artifacts', 'Generate candidate installation guide', 'Retain candidate installation guide for review']) {
     assert(stepBody(distribution, name).includes("steps.scope.outputs.full == 'true'"), name);
   }
@@ -130,7 +131,14 @@ test('parallel CI preserves common gates and builds distribution inputs in the s
   const sourceStep = stepBody(checks, 'Check source and Studio types');
   assert(sourceStep.includes("steps.scope.outputs.full == 'true'"));
   assert(sourceStep.includes('npm run check'));
+  assert(sourceStep.includes('npm run design:test'));
   assert(sourceStep.includes('npm run typecheck:studio'));
+  assert(sourceStep.includes('npm run typecheck:backend'));
+  assert(!distribution.includes('npm run typecheck:backend'));
+  assert(stepBody(distribution, 'Validate standalone installation and packaging').includes('tests/inline-video.test.ts'));
+  assert(stepBody(distribution, 'Validate two-round inline rendering').includes('tests/inline-video-runtime.test.ts'));
+  assert(!distribution.includes('npm run design:test'));
+  assert(stepBody(distribution, 'Build Studio and validate tracking').includes('node --test tests/design-system.test.ts'));
   assert(studio.includes('shard: [1, 2]'));
   assert(studio.includes('fail-fast: false'));
   const studioStep = stepBody(studio, 'Studio regression');

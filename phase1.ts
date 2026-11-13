@@ -19,6 +19,7 @@ import { atomicJson, cloneFile, fileHash, jsonFile, ProjectVersions, recoverProj
 import type { ContentVersion } from './phase1-versions.ts';
 import { trackPhase1Result, type OmTracking } from './shared/tracking.ts';
 import type { HostContext } from './tracking/host.ts';
+import { WorkRounds } from './inline-video.ts';
 
 const metadataPath = 'motion-project.json', assetIndexPath = 'motion-assets.json';
 const textExtensions = new Set(['.html', '.css', '.js', '.mjs', '.json', '.svg', '.txt', '.md', '.vtt', '.srt', '.glsl', '.vert', '.frag']);
@@ -80,6 +81,7 @@ export class Phase1Service {
   readonly context: Phase1Context;
   constructor(store: WorkspaceStore, runtimeRoot: string, context: Phase1Context) { this.store = store; this.runtimeRoot = runtimeRoot; this.context = context; }
   versions(projectId: string) { return new ProjectVersions(this.store.forProject(projectId), this.runtimeRoot, this.context.nativeUrl(projectId)); }
+  get workRounds() { return new WorkRounds(this.store); }
   async call(name: string, args: any, host?: HostContext) {
     name = legacyToolName(name);
     try {
@@ -138,12 +140,14 @@ export class Phase1Service {
         if (version) {
           const versions = this.versions(args.projectId);
           const result = { projectId: args.projectId, version: await versions.withHistory(history => versions.publicVersion(version, history)), revision: version.revision, recovered: true };
+          if (args.workId) await this.workRounds.observed(name, args, result);
           await atomicJson(file, { ...previous, state: 'completed', result }); return result;
         }
         for (const id of await readdir(path.join(this.store.directory, 'jobs')).catch(e => { if (e.code === 'ENOENT') return []; throw e; })) {
           const job = await this.store.job(id).catch(() => null);
           if (job?.requestId === args.requestId && job.projectId === args.projectId) {
             const result = { projectId: args.projectId, job: await this.publicJob(job.id), recovered: true };
+            if (args.workId) await this.workRounds.observed(name, args, result);
             await atomicJson(file, { ...previous, state: 'completed', result }); return result;
           }
         }
@@ -159,9 +163,14 @@ export class Phase1Service {
     const record = { inputHash, name, state: 'pending', projectId: name === 'motion_create_project' ? crypto.randomUUID() : args.projectId,
       sessionId: args.sessionId ?? crypto.randomUUID(), createdAt: Date.now() };
     await atomicJson(file, record);
-    let result;
-    try { result = await task(record); }
+    let result, workAccepted = false;
+    try {
+      if (args.workId) { await this.workRounds.writable(name, args); workAccepted = true; }
+      result = await task(record);
+      if (args.workId) await this.workRounds.observed(name, args, result);
+    }
     catch (error) {
+      if (workAccepted) await this.workRounds.failed(args.projectId, args.workId, errorText(error));
       await atomicJson(file, { ...record, state: 'failed', error: errorText(error) }); throw error;
     }
     await atomicJson(file, { ...record, state: 'completed', result }); return result;
@@ -249,7 +258,7 @@ export class Phase1Service {
   }
   async dispatch(name: string, args: any, host?: HostContext): Promise<any> {
     if (name === 'motion_get_project' && !args.projectId) {
-      if (args.file || args.exportJobId || args.expectedRevision) throw new Error('INVALID_ARGUMENT: projectId is required for details');
+      if (args.file || args.exportJobId || args.expectedRevision || args.workId || args.includeVideo) throw new Error('INVALID_ARGUMENT: projectId is required for details');
       const scope = args.sessionId ?? 'workspace';
       const page = parseCursor(args.cursor, 'projects', scope);
       const catalog = this.store.projectCatalog();
@@ -270,6 +279,13 @@ export class Phase1Service {
     if (name === 'motion_get_project') {
       if (args.cursor) throw new Error('INVALID_ARGUMENT: cursor is for project lists');
       if (args.sessionId && !this.store.projectCatalog().sessions!.some(session => session.id === args.sessionId && session.artifacts.some(artifact => artifact.projectId === args.projectId))) throw new Error('PROJECT_SESSION_MISMATCH');
+      if (args.workId) {
+        if (args.file || args.exportJobId || args.expectedRevision) throw new Error('INVALID_ARGUMENT: workId cannot combine file or export queries');
+        this.store.forProject(args.projectId);
+        return { projectId: args.projectId, inlineWork: await this.workRounds.read(args.projectId, args.workId),
+          ...(args.includeVideo ? { _inlineMedia: await this.workRounds.media(args.projectId, args.workId) } : {}) };
+      }
+      if (args.includeVideo) throw new Error('INVALID_ARGUMENT: includeVideo requires workId');
       return this.detail(args.projectId, args);
     }
     if (name === 'motion_list_versions') {
@@ -325,6 +341,14 @@ export class Phase1Service {
         const detail = await this.detail(args.projectId);
         if (args.display.revision !== detail.revision || args.display.versionId !== detail.currentVersionId) throw new Error('VERSION_CONFLICT: preview display refers to a different content version');
         return this.writeRequest(name, args, () => this.recordDisplay(args, detail));
+      }
+      if (args.action === 'begin') {
+        if (!args.projectId || !args.mode) throw new Error('INVALID_ARGUMENT: begin requires projectId and mode');
+        return this.writeRequest(name, args, async () => {
+          const project = await this.detail(args.projectId);
+          return { projectId: project.projectId, sessionId: project.sessionId, authoringGuide: project.authoringGuide,
+            inlineWork: await this.workRounds.create(project, args.mode) };
+        });
       }
       if (args.action === 'record_review') {
         if (!args.projectId) throw new Error('INVALID_ARGUMENT: projectId is required for review');
