@@ -43,6 +43,16 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 
 <a id="start-in-codex"></a>
 
+### 在 Agent 中安装
+
+复制下面的指令，发给你的本地 Agent，即可从源码安装 OpenMotion：
+
+```text
+Read https://github.com/nexu-io/openmotion/blob/main/install.md and follow it.
+```
+
+安装完成后，Agent 会打开本地模板库并推荐一个模板，确认选择后再创建工程。[源码安装指南](install.md)
+
 ### 克隆仓库并在本地启动
 
 需要 Git、npm 和 Node.js 26.11.1：

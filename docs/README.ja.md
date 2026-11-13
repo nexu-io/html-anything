@@ -43,6 +43,16 @@ OpenMotion は、**エージェントが動画制作の全工程を担う初の�
 
 <a id="start-in-codex"></a>
 
+### エージェントでインストール
+
+次の指示をコピーしてローカルエージェントに送り、OpenMotion をソースからセットアップします：
+
+```text
+Read https://github.com/nexu-io/openmotion/blob/main/install.md and follow it.
+```
+
+セットアップ後、エージェントがローカルのテンプレートライブラリを開き、テンプレートを提案します。選択を確認してからプロジェクトを作成します。[ソースインストールガイド](../install.md)
+
 ### リポジトリをローカルで起動する
 
 Git、npm、Node.js 26.11.1 が必要です：
