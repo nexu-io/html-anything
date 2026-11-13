@@ -48,7 +48,7 @@ OpenMotion は、**エージェントが動画制作の全工程を担う初の�
 次の指示をコピーしてローカルエージェントに送り、OpenMotion をソースからセットアップします：
 
 ```text
-Read https://github.com/nexu-io/openmotion/blob/main/install.md and follow it.
+https://github.com/nexu-io/openmotion/blob/main/install.md を読み、手順に従って現在のエージェントに OpenMotion をインストールして接続してください。
 ```
 
 セットアップ後、エージェントがローカルのテンプレートライブラリを開き、テンプレートを提案します。選択を確認してからプロジェクトを作成します。[ソースインストールガイド](../install.md)

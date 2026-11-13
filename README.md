@@ -48,7 +48,7 @@ OpenMotion is **the first full-stack agentic video generator**. Upload a referen
 Copy this instruction into your local agent to set up OpenMotion from source:
 
 ```text
-Read https://github.com/nexu-io/openmotion/blob/main/install.md and follow it.
+Read https://github.com/nexu-io/openmotion/blob/main/install.md and follow the instructions to install and connect OpenMotion in the current agent.
 ```
 
 After setup, the agent opens the local template library and suggests a template. Confirm the choice before creating a project. [Source installation guide](install.md)
