@@ -49,4 +49,4 @@ Before the first content write and after the saved batch, apply the [continuing-
 
 ## Inline playback for an edit round
 
-When this edit includes a video playback deliverable, follow [the inline work-round contract](production.md#inline-video-progress-and-playback) with mode=modify before writing. Preserve previous work frames; the new round must bind its own saved version and final export.
+For an actual content edit in an MCP Apps host, follow [the inline work-round contract](production.md#inline-video-progress-and-playback) with mode=modify before writing. Explicit editor-only, review-only and existing-link requests retain their scope. Preserve previous work frames; the new round must bind its own saved version and final export.

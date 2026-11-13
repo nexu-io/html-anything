@@ -4,12 +4,12 @@ A supported MCP Apps host can show one video frame for each creation/edit round.
 
 ## Contract
 
-1. Explicitly create or read the intended project. For a video playback deliverable, call `openmotion_open_preview` with `action=begin`, `projectId`, stable `requestId` and `mode=create|modify` before authoring. This creates a work identity, not another project/version or render.
+1. Explicitly create or read the intended project. For each actual video creation/content-edit turn in an MCP Apps host, call `openmotion_open_preview` with `action=begin`, `projectId`, stable `requestId` and `mode=create|modify` before authoring. This creates a work identity, not another project/version or render.
 2. Carry `inlineWork.id` as `workId` in every `openmotion_edit_project` and the final `openmotion_export_request`. Existing revision/version guards and request deduplication apply. Intermediate saves do not complete the round or trigger exports.
 3. The component calls `openmotion_get_project({projectId,workId,includeVideo:true})`. The result contains fixed version/job identity and state; MP4 and optional cover are returned only in tool-result `_meta.inlineVideo`, outside model-visible content.
 4. A queued export freezes the round. Later edits require a new round. Old frames continue to query their own version/job after reopening the chat; they never follow the project's current version.
 
-All eleven public Tools and legacy aliases remain. Ordinary editor preview, template browsing, review recording, display recording and existing-link requests retain their scope. Video playback delivery supplements the existing editable Studio handoff and never substitutes for its visibility checks. Other clients may still use ordinary preview/export results without MCP Apps support.
+All eleven public Tools and legacy aliases remain. Explicit editor-only requests, unchanged template browsing, review recording, display recording and existing-link requests retain their scope. A final inline playback preview is part of the video turn; a separate MP4-download request is not required. Hosts without MCP Apps retain their existing workflow. Video playback delivery supplements the existing editable Studio handoff and never substitutes for its visibility checks. Other clients may still use ordinary preview/export results without MCP Apps support.
 
 ## States and limits
 
