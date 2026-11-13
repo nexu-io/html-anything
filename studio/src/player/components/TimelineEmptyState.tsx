@@ -1,7 +1,7 @@
 import { useMvpEditor } from "../../motion/StudioHost";
 import { useI18n } from "../../i18n/I18n";
 import type { DragEventHandler } from "react";
-import { CLIP_Y, GUTTER, MVP_LABEL_COL_W, RULER_H, TRACK_H, TRACKS_TOP_PAD } from "./timelineLayout";
+import { CLIP_Y, GUTTER, MVP_LABEL_COL_W, MVP_GUTTER, RULER_H, TRACK_H, TRACKS_TOP_PAD } from "./timelineLayout";
 import { useMediaGateway } from "../../motion/MediaGatewayContext";
 import { usePlayerStore } from "../store/playerStore";
 import { mediaPopoverAnchor } from "../../motion/mediaPopoverPosition";
@@ -35,7 +35,7 @@ export function TimelineEmptyState({
   const { t } = useI18n();
   const mvp = useMvpEditor();
   const gateway = useMediaGateway();
-  const emptyOrigin = mvp ? (contentOrigin ?? MVP_LABEL_COL_W + GUTTER) : GUTTER;
+  const emptyOrigin = mvp ? (contentOrigin ?? MVP_LABEL_COL_W + MVP_GUTTER) : GUTTER;
   const hideGuide = !!gateway?.generationOpen && !isDragOver;
   return (
     <div

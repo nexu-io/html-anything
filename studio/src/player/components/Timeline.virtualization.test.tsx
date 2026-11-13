@@ -438,9 +438,9 @@ describe("Timeline without row virtualization", { timeout: 30_000 }, () => {
       const scroller = host.querySelector<HTMLElement>("[data-timeline-scroll-viewport]")!;
       const layer = () => host.querySelector<HTMLElement>("[data-timeline-playhead-layer]");
       if (mvp) {
-        expect(host.querySelector<HTMLElement>('[role="rowheader"]')?.style.width).toBe("200px");
-        expect(scroller.dataset.timelineAutoScrollLeftInset).toBe("200");
-        expect(host.querySelector<HTMLElement>(".sticky.left-0")?.style.width).toBe("232px");
+        expect(host.querySelector<HTMLElement>('[role="rowheader"]')?.style.width).toBe("132px");
+        expect(scroller.dataset.timelineAutoScrollLeftInset).toBe("132");
+        expect(host.querySelector<HTMLElement>(".sticky.left-0")?.style.width).toBe("144px");
         expect(host.textContent).toContain("Clip 0");
       }
       await scrollTimelineHorizontally(scroller, 166);

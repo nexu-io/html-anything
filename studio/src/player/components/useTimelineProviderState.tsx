@@ -124,7 +124,7 @@ export function useTimelineProviderState({
   const selectedElementIds = usePlayerStore((s) => s.selectedElementIds);
   const focusedEaseSegment = usePlayerStore((s) => s.focusedEaseSegment);
   const { gsapAnimations, keyframeCache } = useTimelineKeyframeData(showKeyframes);
-  const { labelMode, contentOrigin } = useTimelineLabelColumn(gsapAnimations, timelineElements);
+  const { labelMode, contentOrigin, labelColumnWidth } = useTimelineLabelColumn(gsapAnimations, timelineElements);
   const setSelectedElementId = usePlayerStore((s) => s.setSelectedElementId);
   const currentTime = usePlayerStore((s) => s.currentTime);
   const beatDragging = usePlayerStore((s) => s.beatDragging);
@@ -546,6 +546,7 @@ export function useTimelineProviderState({
     [holdNewClipContent, renderClipContent],
   );
   const timelineMeta = buildTimelineShellMeta({
+    labelColumnWidth,
     isDragOver: assetDrop.isDragOver,
     hasFileDrop: !!onFileDrop && !readOnlyPress,
     drop: {
