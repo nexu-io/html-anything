@@ -197,12 +197,13 @@ jobs:
         run: |
           npm run check
           npm run typecheck:studio
+          npm run typecheck:backend
           npm run build:studio
           npm run build:tracking
           node --experimental-strip-types --test tests/tracking.test.ts
       - name: Validate standalone installation and packaging
         if: steps.scope.outputs.full == 'true'
-        run: node --experimental-strip-types --test tests/diagnostics.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/public-names.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/editor-urls.test.ts tests/workspace-studio.test.ts tests/sync.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/library-install.test.mjs tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
+        run: node --experimental-strip-types --test tests/diagnostics.test.ts tests/install.test.ts tests/npm-installer.test.ts tests/native-runtime.test.ts tests/npm-package.test.ts tests/test-package.test.ts tests/source-install.test.ts tests/bootstrap.test.ts tests/mcp-registry.test.ts tests/public-names.test.ts tests/mcp-runtime.test.ts tests/mcp-upgrade.test.ts tests/preview.test.ts tests/editor-urls.test.ts tests/workspace-studio.test.ts tests/sync.test.ts tests/phase1.test.ts tests/preview-handoff.test.ts tests/adapters.test.ts tests/package.test.ts tests/library-install.test.mjs tests/recreate-measure.test.ts tests/workflow.test.ts tests/catalog.test.ts tests/prism-templates.test.ts tests/inline-video.test.ts tests/extension-boundary.test.ts tests/connections.test.ts tests/install-guide.test.ts tests/readme-resources.test.ts tests/motion-design-remix.test.ts
       - name: Studio regression
         if: steps.scope.outputs.full == 'true'
         run: npm run test:studio -- --maxWorkers=2
@@ -219,6 +220,9 @@ jobs:
           node --experimental-strip-types scripts/package.ts --mcp-profile=phase1
           archive="$PWD/dist/openmotion-$(node -p "require('./package.json').version")-phase1.zip"
           node tests/phase1-package.mjs "$archive" "$PWD/.artifacts/phase1-package-e2e"
+      - name: Validate two-round inline rendering
+        if: steps.scope.outputs.full == 'true'
+        run: node --experimental-strip-types --test --test-concurrency=1 tests/inline-video-runtime.test.ts
       - name: Build immutable standalone artifacts
         if: steps.scope.outputs.full == 'true'
         env:

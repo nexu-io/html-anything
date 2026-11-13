@@ -167,6 +167,10 @@ Asset selection, acquisition and replacement use the shared [material policy](..
 
 多模态模块的对象、交互、关键取舍、故障语义和扩展准入条件详见 [素材生成设计与架构决策](media-generation-design.md)。这份设计文档解释理由，[模型网关](../model-gateway.md) 维护当前接口与运行限制，验收应按当前提交独立执行。
 
+## Inline video delivery
+
+For supported MCP Apps hosts, video playback deliverables use one persisted work round per creation/edit turn. `phase1.ts` binds that round to the actual saved content version and final export; `inline-video.ts` derives status and verifies local media identity. The self-contained `web/inline-video` component polls through the existing project Tool, receives media privately in MCP metadata and supports manual playback after verification. Old frames retain their own version/job when the chat reopens. Editor-only, template browsing and review flows keep their existing scope; inline playback does not replace editable Studio handoff. Media is embedded locally with a 32 MiB limit; failures, stale state and missing/changed media remain explicit. See [the contract and verification boundary](../inline-video.md).
+
 ## 能力与模块
 
 一期公开 MCP 已按[11 Tool 契约](../mcp-phase1-tools.md) 实现本地适配与构建过滤，默认 phase1。发布清单同时控制发现/调用、HTTP 接入元数据及各分发包，原28项内部兼容实现和 Studio 服务保留。phase1.ts 负责明确项目、请求去重、批量素材/保存、具名任务与审阅；phase1-versions.ts 复用原生 history、补稳定 vN 和原生未留存媒体及保存恢复日志。恢复历史创建新版本并保留后续历史，区别于内容哈希和单文件保存。导出继续委托原渲染器并自动完整技术验证；取消区分受理和进程退出。5个随包 Skill 与 MCP resources 指引同步新契约。此为本地实现，未据此宣布部署/平台/宿主业务验收。

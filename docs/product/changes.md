@@ -1,5 +1,13 @@
 # 公开变更记录
 
+## 2026-11-13: Show per-round inline video progress and playback
+
+- Add an MCP App frame for video playback deliverables, with real persisted work/export state, manual playback after verification and independent historical versions.
+- Preserve eleven public Tools, legacy naming aliases, template browsing, display receipts, revision guards and editable Studio handoff. Add optional work identity fields to existing calls rather than a second renderer or project store.
+- Keep MP4/cover bytes private to the component, validate media identity and declare embedded media origins. Missing, changed, oversized, failed, cancelled and disconnected results remain explicit; the inline MP4 cap is 32 MiB.
+- A prior development prototype passed user-observed Codex two-round/reopen playback. Public-main integration checks are separate evidence; this entry does not claim release, other-host acceptance or creative quality improvement.
+
+
 
 ## 2026-11-13: Share material sourcing priorities across production routes
 

@@ -17,7 +17,7 @@ export async function checkDesign() {
   const material = await readFile(new URL('web/design-system/material.css', root), 'utf8');
   const materialNames = [...material.matchAll(/(--motion-[\w-]+)\s*:/g)].map(match => match[1]);
   const names = new Set([...Object.keys(tokens.shared), ...Object.keys(tokens.themes.light)].map(name => '--motion-' + name).concat(materialNames));
-  for (const file of ['web/connect.css', 'web/template-gallery.css', 'studio/src/motion/theme.css', 'studio/src/motion/workspace.css', 'web/design-system/base.css', 'web/design-system/material.css', 'web/design-system/controls.css', 'web/design-system/catalog.css']) {
+  for (const file of ['web/connect.css', 'web/template-gallery.css', 'web/inline-video.css', 'studio/src/motion/theme.css', 'studio/src/motion/workspace.css', 'web/design-system/base.css', 'web/design-system/material.css', 'web/design-system/controls.css', 'web/design-system/catalog.css']) {
     const css = await readFile(new URL(file, root), 'utf8');
     assert.doesNotMatch(css, /#[\da-f]{3,8}\b|\brgba?\(|\bhsla?\(/i, `${file}: UI colors belong in tokens.json.`);
     for (const match of css.matchAll(/var\((--motion-[\w-]+)/g)) assert.ok(names.has(match[1]), `${file}: undefined ${match[1]}`);

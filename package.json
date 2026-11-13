@@ -16,7 +16,7 @@
     "package:phase1": "npm run build:studio && node --experimental-strip-types scripts/package.ts --mcp-profile=phase1",
     "package:test": "node scripts/test-package.mjs",
     "package:npm": "npm run build:studio && node scripts/package-npm.mjs",
-    "build:studio": "vite build --config studio/vite.config.ts",
+    "build:studio": "npm run build:inline && vite build --config studio/vite.config.ts",
     "build:tracking": "tsc -p tracking/tsconfig.json",
     "typecheck:studio": "tsc -p studio/tsconfig.json",
     "design:tokens": "node --experimental-strip-types scripts/design-tokens.ts",
@@ -34,7 +34,9 @@
     "templates:export": "node --experimental-strip-types scripts/template-library.ts export",
     "templates:manifest": "node --experimental-strip-types scripts/template-library.ts manifest",
     "media:prepare": "node --experimental-strip-types scripts/prepare-pr-media.ts",
-    "media:pull": "node --experimental-strip-types scripts/repository-media.ts"
+    "media:pull": "node --experimental-strip-types scripts/repository-media.ts",
+    "build:inline": "node scripts/build-inline-ui.mjs",
+    "typecheck:backend": "tsc --noEmit --target es2024 --module nodenext --moduleResolution nodenext --allowImportingTsExtensions --skipLibCheck --esModuleInterop mcp.ts phase1.ts inline-video.ts shared/phase1-tools.ts"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",
@@ -75,11 +77,13 @@
     "@modelcontextprotocol/server": "2.4.0"
   },
   "devDependencies": {
+    "@modelcontextprotocol/ext-apps": "2.0.4",
     "@tailwindcss/vite": "4.3.3",
     "@types/node": "22.19.1",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "4.7.0",
+    "esbuild": "0.28.2",
     "fake-indexeddb": "6.2.5",
     "happy-dom": "21.0.4",
     "jsdom": "30.1.3",
