@@ -731,7 +731,7 @@ The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
 
 [**Star OpenMotion on GitHub**](https://github.com/nexu-io/openmotion)
 
-[![Stay tuned with us · Star OpenMotion](docs/readme/community-star.gif)](https://github.com/nexu-io/openmotion)
+[![Stay tuned with us · Star OpenMotion](https://releases.open-design.ai/open-motion/media/sha256/eb32b6cd4736cbbf42a537af24ed1ab8745192efcd7f3f69ffd5f2d569fe1607.gif)](https://github.com/nexu-io/openmotion)
 
 <a id="acknowledgements"></a>
 

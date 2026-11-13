@@ -68,6 +68,12 @@
       "url": "https://releases.open-design.ai/open-motion/media/sha256/a5efa5be51936f33ecc7ef4241ce2602ebf4e7efcc8ce30e0dac5a8bd2b34957.png"
     },
     {
+      "path": "docs/readme/community-star.gif",
+      "bytes": 4511343,
+      "sha256": "eb32b6cd4736cbbf42a537af24ed1ab8745192efcd7f3f69ffd5f2d569fe1607",
+      "url": "https://releases.open-design.ai/open-motion/media/sha256/eb32b6cd4736cbbf42a537af24ed1ab8745192efcd7f3f69ffd5f2d569fe1607.gif"
+    },
+    {
       "path": "docs/readme/community.png",
       "bytes": 2315146,
       "sha256": "41d8a0cc3d4bf6796fb215c4d0c764f074aa847d9fb010fa5184d4dc1a67fceb",

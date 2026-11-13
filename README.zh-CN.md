@@ -710,7 +710,7 @@ OpenMotion 独立官网将上线于 `open-design.ai/openmotion`。
 
 [**在 GitHub 上给 OpenMotion 点个 Star**](https://github.com/nexu-io/openmotion)
 
-[![关注 OpenMotion · 在 GitHub 上加星](docs/readme/community-star.gif)](https://github.com/nexu-io/openmotion)
+[![关注 OpenMotion · 在 GitHub 上加星](https://releases.open-design.ai/open-motion/media/sha256/eb32b6cd4736cbbf42a537af24ed1ab8745192efcd7f3f69ffd5f2d569fe1607.gif)](https://github.com/nexu-io/openmotion)
 
 <a id="acknowledgements"></a>
 
