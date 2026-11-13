@@ -28,9 +28,19 @@ const CHAIN = JSON.stringify({
   nodes: [{ type: "lowpass", id: "n1", params: { frequency: 900, q: 1.2, poles: "2" } }],
 });
 
+const mountedRoots: ReturnType<typeof createRoot>[] = [];
+function createTestRoot(host: HTMLElement) {
+  const root = createRoot(host);
+  mountedRoots.push(root);
+  return root;
+}
+
 // Each mount appends its tracks to the document; without clearing, a later
 // "only one audio track" case would still find the previous test's sibling.
 afterEach(() => {
+  act(() => {
+    for (const root of mountedRoots.splice(0)) root.unmount();
+  });
   document.body.innerHTML = "";
 });
 
@@ -92,7 +102,7 @@ function mount(dataAttributes: Record<string, string>, alone = false, voices = 2
   document.body.append(host);
   const selection = audioSelection(dataAttributes, alone, voices);
   act(() => {
-    createRoot(host).render(
+    createTestRoot(host).render(
       <AudioFxGroup
         element={selection}
         onSetAttributeQuiet={onSetAttributeQuiet}
@@ -123,7 +133,7 @@ function mountGroup(memberStart: number, memberTag: "audio" | "video" = "audio")
     tagName: "hf-audio-group",
   } as unknown as DomEditSelection;
   act(() => {
-    createRoot(host).render(
+    createTestRoot(host).render(
       <AudioFxGroup
         element={selection}
         onSetAttributeQuiet={vi.fn()}
@@ -1212,7 +1222,7 @@ describe("AudioFxGroup carve visibility", () => {
       element: voice,
     } as unknown as DomEditSelection;
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={selection}
           onSetAttributeQuiet={vi.fn()}
@@ -1242,7 +1252,7 @@ describe("AudioFxGroup carve visibility", () => {
       element: bed,
     } as unknown as DomEditSelection;
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={selection}
           onSetAttributeQuiet={vi.fn()}
@@ -1370,7 +1380,7 @@ describe("AudioFxGroup carve module readouts", () => {
   };
 
   afterEach(() => {
-    usePlayerStore.setState({ currentTime: 0, isPlaying: false });
+    act(() => usePlayerStore.setState({ currentTime: 0, isPlaying: false }));
   });
 
   it("shows the envelope's value at the playhead, not the stored seed", () => {
@@ -1590,7 +1600,7 @@ describe("AudioFxGroup carve by default", () => {
     const host = document.createElement("div");
     document.body.append(host);
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={
             {
@@ -1658,7 +1668,7 @@ describe("AudioFxGroup carve source list", () => {
     const host = document.createElement("div");
     document.body.append(host);
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={
             { dataAttributes: bedAttrs, id: "bed", element: bed } as unknown as DomEditSelection
@@ -1736,7 +1746,7 @@ describe("AudioFxGroup carve source list", () => {
     const host = document.createElement("div");
     document.body.append(host);
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={
             {
@@ -1781,11 +1791,12 @@ describe("AudioFxGroup carve source list", () => {
     expect(options).toEqual(["vo-take2", "a1"]);
   });
 
-  it("reads the filename when the id says nothing", () => {
+  it("reads the filename when the id says nothing", async () => {
     const { options } = mountWith([
       { id: "a1", src: "assets/narration-final.mp3" },
       { id: "a2", src: "assets/bgm_loop.m4a" },
     ]);
+    await act(async () => {});
     expect(options).toEqual(["a1"]);
   });
 
@@ -1961,7 +1972,7 @@ describe("AudioFxGroup carve source range", () => {
     const host = document.createElement("div");
     document.body.append(host);
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={
             {
@@ -2025,7 +2036,7 @@ describe("AudioFxGroup carve across tracks", () => {
     document.body.append(host);
     const onSetAttributeQuiet = vi.fn();
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={
             {
@@ -2102,7 +2113,7 @@ describe("AudioFxGroup carve against a deleted voice", () => {
     const host = document.createElement("div");
     document.body.append(host);
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={
             {
@@ -2157,7 +2168,7 @@ describe("AudioFxGroup carve against a deleted voice", () => {
     const host = document.createElement("div");
     document.body.append(host);
     act(() => {
-      createRoot(host).render(
+      createTestRoot(host).render(
         <AudioFxGroup
           element={
             {
@@ -2241,7 +2252,7 @@ describe("AudioFxGroup while the carve is measuring", () => {
       const host = document.createElement("div");
       document.body.append(host);
       await act(async () => {
-        createRoot(host).render(
+        createTestRoot(host).render(
           <AudioFxGroup
             element={
               {

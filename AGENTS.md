@@ -10,7 +10,7 @@ Before publishing a branch, select local checks for the changed boundary. Run `n
 - Skill, contract, installer or distribution changes: run the affected deterministic and packaging/installation checks.
 - Prose-only changes that do not alter those boundaries: check links and run `git diff --check`; no dependency reinstall or Studio build is required.
 
-Local check selection does not change the full PR CI gate. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
+PR CI keeps repository policy, source scanning and release controls for every change. Only the explicit presentation-document allowlist skips Studio, rendering and package checks when installation sections and code blocks are unchanged; Skills, installation guides, examples and unknown paths retain the full gate. Maintainability analysis runs for code and configuration changes. Distinguish CI, target-machine installation, model creation and human content acceptance. This feature migration must not merge or publish packages unless separately authorized.
 
 ## Repository collaboration instructions
 
