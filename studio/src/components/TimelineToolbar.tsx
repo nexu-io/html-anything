@@ -247,7 +247,7 @@ export const TimelineToolbar = memo(function TimelineToolbar({
       <div className="flex items-center justify-between px-2 py-0.5">
         <div className="flex items-center gap-0.5">
           {showHistory && <TimelineHistoryButtons {...history} />}
-          <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} />
+          <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} splitShortcut={splitShortcut} />
           {/* Divider: tool-mode | editing-actions */}
           <div aria-hidden="true" className="mx-1 h-4 w-px bg-neutral-800" />
           {onSplitElement &&
@@ -264,11 +264,10 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               return (
                 <Tooltip
                   label={t("Split at playhead ({value0})", { value0: splitShortcut ?? keyHint("split", keys) })}
-                  description={canSplit
-                    ? t("Split the selected clip at the playhead.")
-                    : splittable
-                      ? t("Move the playhead inside the clip to split")
-                      : t("Select a clip to split")}
+                  description={[
+                    !canSplit && (splittable ? t("Move the playhead inside the clip to split") : t("Select a clip to split")),
+                    t("Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.", { blade: keyHint("razorTool", keys), split: splitShortcut ?? keyHint("split", keys), select: keyHint("selectTool", keys) }),
+                  ].filter(Boolean).join(" ")}
                 >
                   <button
                     type="button"

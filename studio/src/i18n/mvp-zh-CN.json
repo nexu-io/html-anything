@@ -1184,5 +1184,6 @@
   "Blade tool": "刀片工具",
   "Split the selected clip at the playhead.": "在播放头所在位置，将选中的片段分成两段。",
   "Split at playhead": "在播放头处分割",
-  "Split at playhead ({value0})": "在播放头处分割（{value0}）"
+  "Split at playhead ({value0})": "在播放头处分割（{value0}）",
+  "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "刀片（{blade}）：切换工具后，点击片段上的位置进行切割。分割（{split}）：立即在播放头位置切开选中的片段。选择（{select}）：返回选择和移动片段。"
 }

@@ -40,6 +40,7 @@ it("explains blade clicks and displays both blade and selection shortcuts", asyn
   await act(async () => { await new Promise(resolve => setTimeout(resolve, 0)); });
   const text = document.querySelector('[role="tooltip"]')?.textContent;
   expect(text).toContain("Blade tool (B)");
-  expect(text).toContain("Click a clip where you want to split it.");
+  expect(text).toContain("Blade (B): click a clip to cut at the pointer.");
+  expect(text).toContain("Split (S): cut the selected clip at the playhead immediately.");
   expect(text).toContain("(V)");
 });

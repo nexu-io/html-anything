@@ -301,7 +301,8 @@
     "Select another layer or ask the agent to edit this element.": "別のレイヤーを選択するか、エージェントにこの要素の編集を依頼してください。",
     "Use": "使う",
     "Blade tool": "ブレードツール",
-    "Split the selected clip at the playhead.": "選択したクリップを再生ヘッドの位置で分割します。"
+    "Split the selected clip at the playhead.": "選択したクリップを再生ヘッドの位置で分割します。",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "ブレード（{blade}）：クリップをクリックした位置でカット。分割（{split}）：選択したクリップを再生ヘッドの位置で即座に分割。選択（{select}）：クリップの選択と移動に戻ります。"
   },
   "ko": {
     "Join the OpenDesign community": "OpenDesign 커뮤니티에 참여하세요",
@@ -605,7 +606,8 @@
     "Select another layer or ask the agent to edit this element.": "다른 레이어를 선택하거나 에이전트에게 이 요소의 편집을 요청하세요.",
     "Use": "사용",
     "Blade tool": "블레이드 도구",
-    "Split the selected clip at the playhead.": "선택한 클립을 재생 헤드 위치에서 분할합니다."
+    "Split the selected clip at the playhead.": "선택한 클립을 재생 헤드 위치에서 분할합니다.",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "블레이드({blade}): 클립에서 클릭한 위치를 자릅니다. 분할({split}): 선택한 클립을 재생 헤드 위치에서 즉시 나눕니다. 선택({select}): 클립 선택 및 이동으로 돌아갑니다."
   },
   "de": {
     "Join the OpenDesign community": "Tritt der OpenDesign-Community bei",
@@ -909,7 +911,8 @@
     "Select another layer or ask the agent to edit this element.": "Wähle eine andere Ebene aus oder bitte den Agenten, dieses Element zu bearbeiten.",
     "Use": "Verwenden",
     "Blade tool": "Klingenwerkzeug",
-    "Split the selected clip at the playhead.": "Teile den ausgewählten Clip an der Abspielposition."
+    "Split the selected clip at the playhead.": "Teile den ausgewählten Clip an der Abspielposition.",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "Klinge ({blade}): Klicke auf die Schnittstelle im Clip. Teilen ({split}): Schneide den ausgewählten Clip sofort am Abspielkopf. Auswahl ({select}): Clips wieder auswählen und bewegen."
   },
   "fr": {
     "Join the OpenDesign community": "Rejoignez la communauté OpenDesign",
@@ -1213,7 +1216,8 @@
     "Select another layer or ask the agent to edit this element.": "Sélectionnez un autre calque ou demandez à l’agent de modifier cet élément.",
     "Use": "Utiliser",
     "Blade tool": "Outil lame",
-    "Split the selected clip at the playhead.": "Scindez le clip sélectionné à la position de la tête de lecture."
+    "Split the selected clip at the playhead.": "Scindez le clip sélectionné à la position de la tête de lecture.",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "Lame ({blade}) : cliquez sur le clip à couper. Scinder ({split}) : coupez immédiatement le clip sélectionné à la tête de lecture. Sélection ({select}) : revenez à la sélection et au déplacement."
   },
   "ru": {
     "Join the OpenDesign community": "Присоединяйтесь к сообществу OpenDesign",
@@ -1517,7 +1521,8 @@
     "Select another layer or ask the agent to edit this element.": "Выберите другой слой или попросите агента изменить этот элемент.",
     "Use": "Использовать",
     "Blade tool": "Инструмент «Лезвие»",
-    "Split the selected clip at the playhead.": "Разделите выбранный клип в позиции курсора воспроизведения."
+    "Split the selected clip at the playhead.": "Разделите выбранный клип в позиции курсора воспроизведения.",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "Лезвие ({blade}): нажмите на клип в месте разреза. Разделить ({split}): сразу разрежьте выбранный клип у курсора воспроизведения. Выбор ({select}): вернитесь к выбору и перемещению клипов."
   },
   "es": {
     "Join the OpenDesign community": "Únete a la comunidad de OpenDesign",
@@ -1821,7 +1826,8 @@
     "Select another layer or ask the agent to edit this element.": "Selecciona otra capa o pide al agente que edite este elemento.",
     "Use": "Usar",
     "Blade tool": "Herramienta cuchilla",
-    "Split the selected clip at the playhead.": "Divide el clip seleccionado en la posición del cabezal de reproducción."
+    "Split the selected clip at the playhead.": "Divide el clip seleccionado en la posición del cabezal de reproducción.",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "Cuchilla ({blade}): haz clic en el punto del clip que quieras cortar. Dividir ({split}): corta inmediatamente el clip seleccionado en el cabezal. Seleccionar ({select}): vuelve a seleccionar y mover clips."
   },
   "pt-BR": {
     "Join the OpenDesign community": "Junte-se à comunidade OpenDesign",
@@ -2125,7 +2131,8 @@
     "Select another layer or ask the agent to edit this element.": "Selecione outra camada ou peça ao agente para editar este elemento.",
     "Use": "Usar",
     "Blade tool": "Ferramenta lâmina",
-    "Split the selected clip at the playhead.": "Divida o clipe selecionado na posição do indicador de reprodução."
+    "Split the selected clip at the playhead.": "Divida o clipe selecionado na posição do indicador de reprodução.",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "Lâmina ({blade}): clique no ponto do clipe que deseja cortar. Dividir ({split}): corte imediatamente o clipe selecionado no indicador de reprodução. Selecionar ({select}): volte a selecionar e mover clipes."
   },
   "it": {
     "Join the OpenDesign community": "Unisciti alla community OpenDesign",
@@ -2429,7 +2436,8 @@
     "Select another layer or ask the agent to edit this element.": "Seleziona un altro livello o chiedi all’agente di modificare questo elemento.",
     "Use": "Usa",
     "Blade tool": "Strumento lama",
-    "Split the selected clip at the playhead.": "Dividi la clip selezionata nella posizione della testina di riproduzione."
+    "Split the selected clip at the playhead.": "Dividi la clip selezionata nella posizione della testina di riproduzione.",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "Lama ({blade}): fai clic sul punto della clip da tagliare. Dividi ({split}): taglia subito la clip selezionata alla testina. Seleziona ({select}): torna a selezionare e spostare le clip."
   },
   "tr": {
     "Join the OpenDesign community": "OpenDesign topluluğuna katılın",
@@ -2733,6 +2741,7 @@
     "Select another layer or ask the agent to edit this element.": "Başka bir katman seçin veya ajandan bu öğeyi düzenlemesini isteyin.",
     "Use": "Kullan",
     "Blade tool": "Bıçak aracı",
-    "Split the selected clip at the playhead.": "Seçili klibi oynatma kafasının bulunduğu konumda bölün."
+    "Split the selected clip at the playhead.": "Seçili klibi oynatma kafasının bulunduğu konumda bölün.",
+    "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "Bıçak ({blade}): klipte kesmek istediğiniz yere tıklayın. Böl ({split}): seçili klibi oynatma kafasında hemen kesin. Seç ({select}): klip seçme ve taşımaya dönün."
   }
 }

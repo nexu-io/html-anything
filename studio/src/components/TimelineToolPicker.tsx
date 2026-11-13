@@ -25,7 +25,7 @@ interface ToolRow {
 }
 
 /** The MVP exposes its two tools directly; the full editor retains the tool menu. */
-export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
+export function TimelineToolPicker({ showSelectAroundPlayhead = true, splitShortcut }: { showSelectAroundPlayhead?: boolean; splitShortcut?: string }) {
   const { t } = useI18n();
   const mvp = useMvpEditor();
   const activeTool = usePlayerStore((s) => s.activeTool);
@@ -56,7 +56,7 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
             side="bottom"
             label={`${t(row.label)} (${row.shortcut})`}
             description={row.label === "Blade tool"
-              ? `${t("Click a clip where you want to split it. Switch back to Select to move or select clips.")} (${keyHint("selectTool", keys)})`
+              ? t("Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.", { blade: row.shortcut, split: splitShortcut ?? keyHint("split", keys), select: keyHint("selectTool", keys) })
               : undefined}
           >
             <button

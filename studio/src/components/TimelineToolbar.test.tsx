@@ -653,8 +653,9 @@ describe("TimelineToolbar split hint", () => {
   }
 
   it("names S unless the host binds Split to another key", async () => {
-    expect(await splitTooltip({})).toBe("Split at playhead (S)Split the selected clip at the playhead.");
-    expect(await splitTooltip({ splitShortcut: "⌘B" })).toBe("Split at playhead (⌘B)Split the selected clip at the playhead.");
+    expect(await splitTooltip({})).toContain("Split (S): cut the selected clip at the playhead immediately.");
+    expect(await splitTooltip({})).toContain("Blade (B): click a clip to cut at the pointer.");
+    expect(await splitTooltip({ splitShortcut: "⌘B" })).toContain("Split (⌘B): cut the selected clip at the playhead immediately.");
   });
 });
 
