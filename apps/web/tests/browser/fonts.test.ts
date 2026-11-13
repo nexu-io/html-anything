@@ -228,3 +228,228 @@ it("imports an actual font through unknown receipts, paints its exact face, pres
   expect(report.phase).toBe("closed");
   expect(report.processes).toEqual([]);
 }, 90000);
+
+it("edits multiline text and visible text styles through unknown saves, inheritance, history and reopening", async () => {
+  const repo = fileURLToPath(new URL("../../../../", import.meta.url)),
+    evidence = join(repo, ".artifacts", "text-editing", randomUUID()),
+    root = join(evidence, "sidecar"),
+    manager = await serve(managerEndpoint(root), { root }),
+    factory = manager.factory({ channel: channel("dev"), namespace: namespace("text") });
+  let config: Config | undefined,
+    daemon: Awaited<ReturnType<typeof daemonServe>> | undefined,
+    capability: Awaited<ReturnType<typeof factory.issue>> | undefined,
+    driver: Awaited<ReturnType<typeof browser>> | undefined;
+  const report: Record<string, unknown> = {};
+  try {
+    const web = await source(factory, {
+      name: "web",
+      directory: join(repo, "apps/web/dist"),
+      documents: {
+        "/bootstrap.json": () => {
+          if (!config) throw Error("not ready");
+          return { type: "application/json", body: JSON.stringify(config) };
+        },
+      },
+    });
+    await factory.expose({
+      identity: { service: "daemon", generation: digest("project-text-browser") },
+      handlers: {},
+      lifecycle: {
+        initialize: async (context) => {
+          const socket = await context.allocate({ kind: "socket", name: "daemon" }),
+            port = await context.allocate({ kind: "port", name: "daemon", scheme: "http" });
+          capability = await factory.issue({ owner: `n${context.incarnation.replaceAll("-", "")}`, service: "daemon" });
+          daemon = await daemonServe({
+            data: context.roots.data,
+            origin: web.endpoint.url,
+            socket: socket.value,
+            token: capability.token,
+            endpoint: port.value,
+          });
+          await context.forward(port.value, socket.value);
+          config = {
+            daemon: port.value,
+            token: capability.token,
+            environment: {
+              schema: 1,
+              carrier: "browser-fixture",
+              system: { platform: process.platform, release: "test", arch: process.arch },
+              runtime: { name: "node", version: process.versions.node },
+            },
+          };
+        },
+        quiesce: async () => daemon?.quiesce(),
+        stop: async () => {
+          await daemon?.close();
+          if (capability) await factory.retire(capability);
+        },
+      },
+    });
+    if (!config) throw Error("missing fixture");
+    const client = new Client(config.daemon, config.token),
+      session = await client.execute("session_create", { requestId: randomUUID(), title: "Text", mode: "motion" }),
+      original =
+        '<html><body><main data-hf-id="root" data-composition-id="main" data-width="640" data-height="360" data-duration="2" style="direction:rtl;text-align:end;font-size:28px"><p id="title" data-hf-id="title" data-start="0" data-duration="2" style="white-space:pre-wrap;width:240px;font-weight:600;font-style:italic;line-height:1.4;letter-spacing:2px">Original</p></main><script>window.__timelines={main:gsap.timeline({paused:true}).to({},{duration:2})};</script></body></html>',
+      artifact = await client.execute("artifact_create", {
+        requestId: randomUUID(),
+        sessionId: session.id,
+        title: "Text styling",
+        files: [{ path: "index.html", content: original }],
+      }),
+      owner = { sessionId: session.id, artifactId: artifact.id };
+    await client.execute("artifact_open", {
+      ...owner,
+      requestId: randomUUID(),
+      expectedSelection: 0,
+      expectedCurrent: null,
+    });
+    driver = await browser({ evidence, viewport: { width: 1600, height: 1000 } });
+    const page = driver.page,
+      ready = () =>
+        page
+          .locator("[aria-live]")
+          .filter({ hasText: /^就绪$/ })
+          .waitFor(),
+      click = async (name: string) => {
+        await page.getByRole("button", { name, exact: true }).click();
+        await ready();
+      },
+      read = () => client.execute("project_read", owner),
+      editable = () =>
+        page.waitForFunction(() => !document.querySelector<HTMLTextAreaElement>('[aria-label="文本内容"]')?.readOnly),
+      facts = async () => {
+        await page.getByLabel("预览状态", { exact: true }).filter({ hasText: "预览就绪" }).waitFor();
+        return page
+          .frameLocator("iframe:not([hidden])")
+          .locator("#title")
+          .evaluate((node) => {
+            const s = getComputedStyle(node);
+            return {
+              text: (node as HTMLElement).innerText,
+              align: s.textAlign,
+              decoration: s.textDecorationLine,
+              weight: s.fontWeight,
+              slant: s.fontStyle,
+              spacing: s.letterSpacing,
+              whiteSpace: s.whiteSpace,
+            };
+          });
+      };
+    await page.goto(web.endpoint.url);
+    await ready();
+    await page.getByLabel("图层选择", { exact: true }).selectOption("title");
+    await ready();
+    await editable();
+    expect(await facts()).toMatchObject({
+      text: "Original",
+      align: "end",
+      decoration: "none",
+      weight: "600",
+      slant: "italic",
+      spacing: "2px",
+      whiteSpace: "pre-wrap",
+    });
+    const multiline = "First <line>\nSecond & line",
+      ids: string[] = [];
+    let lose = true,
+      patches = 0;
+    await page.route("**/motion/patch", async (route) => {
+      patches++;
+      await route.continue();
+    });
+    await page.route("**/api/project_save", async (route) => {
+      ids.push(route.request().postDataJSON().requestId);
+      if (lose) {
+        lose = false;
+        const response = await route.fetch();
+        expect(response.status()).toBe(200);
+        await route.abort("failed");
+      } else await route.continue();
+    });
+    const field = page.getByLabel("文本内容", { exact: true }),
+      initialField = await field.elementHandle();
+    await field.fill(multiline);
+    await page.getByLabel("文本对齐", { exact: true }).selectOption("center");
+    await page.getByLabel("文本装饰", { exact: true }).selectOption("underline");
+    const oldFrame = await page.locator("iframe:not([hidden])").elementHandle();
+    await page.getByRole("button", { name: "应用更改", exact: true }).click();
+    await expect.poll(() => page.getByRole("button", { name: "重试", exact: true }).isEnabled()).toBe(true);
+    const committed = await read();
+    expect(committed.files[0]?.content).toContain("First &lt;line&gt;<br>Second &amp; line");
+    expect(await page.locator("iframe:not([hidden])").evaluate((node, old) => node === old, oldFrame)).toBe(true);
+    await click("重试");
+    await editable();
+    expect(ids).toHaveLength(2);
+    expect(ids[0]).toBe(ids[1]);
+    expect(patches).toBe(1);
+    await page.unroute("**/api/project_save");
+    await page.unroute("**/motion/patch");
+    expect(await field.evaluate((node, old) => node === old, initialField)).toBe(true);
+    expect(await facts()).toMatchObject({
+      text: multiline,
+      align: "center",
+      decoration: "underline",
+      weight: "600",
+      slant: "italic",
+      spacing: "2px",
+      whiteSpace: "pre-wrap",
+    });
+    await driver.capture("multiline-text-styled");
+    await click("撤销");
+    expect((await read()).files[0]?.content).toBe(original);
+    expect(await facts()).toMatchObject({ text: "Original", align: "end", decoration: "none" });
+    await click("重做");
+    await editable();
+    expect(await facts()).toMatchObject({ text: multiline, align: "center", decoration: "underline" });
+    await page.getByLabel("文本对齐", { exact: true }).selectOption("");
+    await page.getByLabel("文本装饰", { exact: true }).selectOption("");
+    await click("应用更改");
+    await editable();
+    const reset = await read();
+    expect(reset.files[0]?.content).toContain("text-align:end");
+    expect(reset.files[0]?.content).not.toContain("text-decoration-line");
+    expect(await facts()).toMatchObject({
+      text: multiline,
+      align: "end",
+      decoration: "none",
+      weight: "600",
+      slant: "italic",
+      spacing: "2px",
+      whiteSpace: "pre-wrap",
+    });
+    await page.getByLabel("图层选择", { exact: true }).selectOption("root");
+    await ready();
+    expect(await page.getByLabel("文本对齐", { exact: true }).isVisible()).toBe(false);
+    expect(await page.getByLabel("文本对齐", { exact: true }).isDisabled()).toBe(true);
+    expect(await read()).toEqual(reset);
+    await page.reload();
+    await ready();
+    expect(await read()).toEqual(reset);
+    expect(await facts()).toMatchObject({ text: multiline, align: "end", decoration: "none" });
+    await driver.capture("reopened-text-inheritance");
+    expect(driver.errors).toEqual([]);
+    Object.assign(report, {
+      multiline: true,
+      sameSaveReceipt: ids[0] === ids[1],
+      nativePatches: patches,
+      history: reset.history,
+      inheritanceReset: true,
+      untouchedTypography: true,
+      stableTextField: true,
+      reload: true,
+    });
+  } catch (error) {
+    report.failure = String(error);
+    report.status = await driver?.page.locator("[aria-live]").allTextContents();
+    await driver?.capture("failure").catch(() => {});
+    throw error;
+  } finally {
+    await driver?.close();
+    await manager.close();
+    report.phase = (await readDirectory(root)).manager.phase;
+    report.processes = await observeProcesses(root);
+    await writeFile(join(evidence, "report.json"), JSON.stringify(report, null, 2));
+  }
+  expect(report.phase).toBe("closed");
+  expect(report.processes).toEqual([]);
+}, 90000);
