@@ -289,14 +289,15 @@ export function TemplateLibraryDialog(props: Props) {
     const target = instructionText.current?.querySelector('p, textarea');
     if (!props.open || !preview || !prompt || !view || !target || instructionShown.current === view.id
       || typeof IntersectionObserver === 'undefined') return;
+    const threshold = 0.01; // A positive threshold notifies again after zero-area edge contact.
     let visible = false;
     const report = () => {
       if (!visible || document.hidden || !detail.current?.open || detailView.current?.id !== view.id || instructionShown.current === view.id) return;
       instructionShown.current = view.id; tracking.reportInstructionShown(preview, view); observer.disconnect();
     };
     const observer = new IntersectionObserver(entries => {
-      visible = entries.some(entry => entry.isIntersecting && entry.intersectionRatio > 0); report();
-    }, { root: detail.current, threshold: 0 });
+      visible = entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= threshold); report();
+    }, { root: detail.current, threshold });
     observer.observe(target);
     document.addEventListener('visibilitychange', report);
     return () => { observer.disconnect(); document.removeEventListener('visibilitychange', report); };

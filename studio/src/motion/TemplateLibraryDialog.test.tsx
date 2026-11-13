@@ -489,3 +489,20 @@ it('joins repeated recreate and submit attempts to their own copy results', asyn
   await act(async () => button('Open and edit').click());
   expect(events('ui_click', { template_action: 'open_edit' })[0]).not.toHaveProperty('copy_attempt_id');
 });
+
+it('observes a positive instruction threshold so zero-area edge contact can progress to visible text', async () => {
+  await mount();
+  await act(async () => preview('First'));
+  const text = Observer.instances.find(item => !item.disconnected
+    && item.elements.some(element => element.matches('section[aria-label="Template instruction"] p')))!;
+  expect(text.options?.threshold).toBe(0.01);
+  const emit = async (intersectionRatio: number) => act(async () => text.callback([
+    { target: text.elements[0], isIntersecting: true, intersectionRatio } as IntersectionObserverEntry,
+  ], text as unknown as IntersectionObserver));
+  await emit(0);
+  await emit(0.005);
+  expect(events('surface_view', { area: 'template_instruction' })).toHaveLength(0);
+  await emit(0.01);
+  await emit(1);
+  expect(events('surface_view', { area: 'template_instruction' })).toHaveLength(1);
+});
