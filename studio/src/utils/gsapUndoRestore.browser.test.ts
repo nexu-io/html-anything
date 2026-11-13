@@ -143,3 +143,33 @@ it.each([
   },
   30_000,
 );
+
+it("keeps the dropped image in place when the project registers its timeline as an object", async () => {
+  const page = await browser.newPage();
+  try {
+    const script = (x: number) =>
+      `const tl = gsap.timeline({paused:true});tl.to("#box",{keyframes:{"0%":{x:${x}},"100%":{x:${x + 100}}},duration:2},0);window.__timelines={main:tl};`;
+    const html = (x: number) =>
+      `<script src="assets/gsap.min.js"></script><main data-composition-id="main" data-duration="2" data-width="400" data-height="200"><img id="box" width="20" height="20"></main><script>${script(x)}</script>`;
+    await showWithRuntime(page, html(10));
+    await page.evaluate(softReloadBundle);
+    const result = await page.evaluate((updated) => {
+      const win = window as unknown as {
+        gsap: { set(target: Element, values: { x: number }): void };
+        hfSoftReload: typeof import("./gsapSoftReload");
+      };
+      const target = document.querySelector("#box")!;
+      win.gsap.set(target, { x: 80 });
+      const dropped = target.getBoundingClientRect().left;
+      const iframe = { contentDocument: document, contentWindow: window } as HTMLIFrameElement;
+      const outcome = win.hfSoftReload.applySoftReload(iframe, win.hfSoftReload.extractGsapScriptText(updated)!, {
+        currentTimeOverride: 0,
+        authoredHtml: updated,
+      });
+      return { outcome, shift: target.getBoundingClientRect().left - dropped };
+    }, html(80));
+    expect(result).toEqual({ outcome: "applied", shift: 0 });
+  } finally {
+    await page.close();
+  }
+});

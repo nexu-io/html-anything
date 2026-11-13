@@ -60,7 +60,6 @@ let frame = 0;
 let restTimer: ReturnType<typeof setTimeout> | null = null;
 let anchorForCommit: TimelineZoomAnchor | null = null;
 let animation = 0;
-let easingTo: number | null = null;
 let resolveEase: ((result: TimelineZoomResult) => void) | null = null;
 const previewListeners = new Set<() => void>();
 
@@ -305,7 +304,6 @@ function dropPreview() {
 function stopEase(result: TimelineZoomResult = "cancelled") {
   cancelAnimationFrame(animation);
   animation = 0;
-  easingTo = null;
   const done = resolveEase;
   resolveEase = null;
   done?.(result);
@@ -357,16 +355,7 @@ export function currentTimelineRange(): { start: number; end: number } | null {
 export function zoomTimelineToRange(
   start: number,
   end: number,
-  options: { smooth?: boolean; signal?: AbortSignal } = {},
-): Promise<TimelineZoomResult> {
-  return easeToRange(start, end, options, false);
-}
-
-function easeToRange(
-  start: number,
-  end: number,
-  { smooth = true, signal }: { smooth?: boolean; signal?: AbortSignal },
-  byPerson: boolean,
+  { smooth = true, signal }: { smooth?: boolean; signal?: AbortSignal } = {},
 ): Promise<TimelineZoomResult> {
   const view = viewport;
   const fitPps = usePlayerStore.getState().timelineFitPps;
@@ -394,12 +383,12 @@ function easeToRange(
     stopEase("done");
   };
   if (!smooth || reducedMotion()) {
-    request(toPercent, { time: start, x }, byPerson);
+    request(toPercent, { time: start, x }, false);
     // Laid out next frame, never inside a caller's render or effect.
     animation = requestAnimationFrame(finish);
     return result;
   }
-  easeZoom(view, fitPps, toPercent, { time: start, x }, byPerson, finish);
+  easeZoom(view, fitPps, toPercent, { time: start, x }, finish);
   return result;
 }
 
@@ -409,7 +398,6 @@ function easeZoom(
   fitPps: number,
   toPercent: number,
   to: TimelineZoomAnchor,
-  byPerson: boolean,
   finish: () => void,
 ) {
   const { time: start, x } = to;
@@ -431,16 +419,15 @@ function easeZoom(
     old.start >= start && old.end <= start + (old.end - old.start) * (from.pps / toPps);
   let layoutFirst = toPps < from.pps && from.pps / toPps <= MAX_PREVIEW_SCALE && holdsOld;
   const began = performance.now();
-  easingTo = toPercent;
   const step = (now: number) => {
     if (layoutFirst) {
       layoutFirst = false;
-      request(toPercent, to, byPerson);
+      request(toPercent, to, false);
       commitPreview();
     }
     const t = Math.min(1, Math.max(0, (now - began) / SMOOTH_ZOOM_MS));
     const k = 1 - (1 - t) ** 3;
-    request(fromPercent * (toPercent / fromPercent) ** k, anchorAt(k), byPerson);
+    request(fromPercent * (toPercent / fromPercent) ** k, anchorAt(k), false);
     // Drawn in this frame, not the next: the first one would otherwise paint a laid-out zoom-out bare.
     drawPreview();
     if (t < 1) animation = requestAnimationFrame(step);
@@ -449,30 +436,20 @@ function easeZoom(
   animation = requestAnimationFrame(step);
 }
 
-/**
- * A zoom button: twice or half the scale, eased, keeping the playhead where it is on screen,
- * or centring it when it is off screen.
- */
+/** A toolbar click lays out the final scale and its playhead anchor in the same paint. */
 export function zoomTimelineStep(direction: "in" | "out"): void {
   const fitPps = usePlayerStore.getState().timelineFitPps;
-  const nextPercent = getNextTimelineZoomPercent(
+  const percent = getNextTimelineZoomPercent(
     direction,
     "manual",
-    easingTo ?? currentTimelineZoomPercent(),
+    currentTimelineZoomPercent(),
     fitPps,
   );
   const view = viewport;
-  // A collapsed timeline has no track to fit a range into, so the step still changes the percent.
-  if (!view || !(fitPps > 0) || !(view.scroll.clientWidth > view.contentOrigin)) {
-    requestTimelineZoom(nextPercent);
-    return;
-  }
-  const { x, width } = rangeBox(view);
-  const nextPps = getTimelinePixelsPerSecond(fitPps, "manual", nextPercent);
-  const now = shown(view.scroll);
-  const at = defaultAnchor(view, now.pps, now.left);
-  const start = at.time - (at.x - x) / nextPps;
-  void easeToRange(start, start + width / nextPps, {}, true);
+  const current = view && shown(view.scroll);
+  const anchor = view && current ? defaultAnchor(view, current.pps, current.left) : null;
+  cancelTimelineZoom();
+  flushSync(() => writeZoom(percent, anchor, true));
 }
 
 function selectedClipSpans(state: {

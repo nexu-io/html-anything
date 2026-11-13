@@ -22,8 +22,13 @@ export function useTimelineRazorInteraction({
     (event: MouseEvent<HTMLDivElement>) => {
       const scroll = scrollRef.current;
       if (!active || !scroll) return;
-      const rect = scroll.getBoundingClientRect();
-      setRazorGuideX(event.clientX - rect.left + scroll.scrollLeft);
+      const clip = event.target instanceof Element && event.target.closest('[data-clip="true"]');
+      if (!clip || !scroll.contains(clip)) {
+        setRazorGuideX(null);
+        return;
+      }
+      const viewport = scroll.getBoundingClientRect();
+      setRazorGuideX(event.clientX - viewport.left + scroll.scrollLeft);
     },
     [active, scrollRef],
   );
@@ -53,7 +58,8 @@ export function useTimelineRazorInteraction({
 export function TimelineRazorGuideOverlay({ x }: { x: number }) {
   return (
     <div
-      className="absolute top-0 bottom-0 pointer-events-none z-10"
+      aria-hidden="true"
+      className="absolute top-0 bottom-0 pointer-events-none z-30"
       style={{ left: x, width: 1, background: "var(--timeline-danger)" }}
     />
   );

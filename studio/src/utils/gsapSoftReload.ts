@@ -333,10 +333,15 @@ export function repaintDroppedTweenStyle(
   }
 }
 
+// Some authored projects register their only timeline with window.__timelines = { main: tl }.
+const singleTimelineAssignment = /\bwindow\s*\.\s*__timelines\s*=\s*\{\s*([A-Za-z_$][\w$]*)\s*:\s*[A-Za-z_$][\w$]*\s*,?\s*\}/g;
+
 export function timelineKeys(scriptText: string): string[] {
-  return [...scriptText.matchAll(/__timelines\s*\[\s*["'`]([^"'`]+)["'`]\s*\]/g)]
-    .map((m) => m[1]!)
-    .filter((key) => key !== "__proxied");
+  const registrations = [
+    ...scriptText.matchAll(/__timelines\s*\[\s*["'`]([^"'`]+)["'`]\s*\]/g),
+    ...scriptText.matchAll(singleTimelineAssignment),
+  ];
+  return [...new Set(registrations.map((match) => match[1]!).filter((key) => key !== "__proxied"))];
 }
 
 /** The live script elements that register one of `keys` on `window.__timelines`. */
@@ -344,12 +349,9 @@ export function scriptsRegistering(
   scripts: readonly HTMLScriptElement[],
   keys: readonly string[],
 ): HTMLScriptElement[] {
-  return scripts.filter((script) => {
-    const text = script.textContent || "";
-    return keys.some(
-      (key) => text.includes(`__timelines["${key}"]`) || text.includes(`__timelines['${key}']`),
-    );
-  });
+  return scripts.filter((script) =>
+    timelineKeys(script.textContent ?? "").some((key) => keys.includes(key)),
+  );
 }
 
 // fallow-ignore-next-line complexity
@@ -377,6 +379,14 @@ export function applySoftReload(
   // reverting its edits. Scope the teardown to the keys THIS script re-registers.
   const targetKeys = timelineKeys(scriptText);
   if (targetKeys.length === 0) return "cannot-soft-reload"; // can't scope safely → full reload
+  // Replaying a whole-registry assignment would discard another composition's live timeline.
+  const replacement = scriptText.matchAll(singleTimelineAssignment).next().value;
+  if (
+    replacement &&
+    Object.keys(win.__timelines ?? {}).some((key) => key !== "__proxied" && key !== replacement[1])
+  ) {
+    return "cannot-soft-reload";
+  }
   const gsapScripts = findGsapScriptElements(doc);
   if (gsapScripts.length === 0) return "cannot-soft-reload";
   // Remove only the stale script element(s) that registered a target key; one we
