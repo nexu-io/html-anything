@@ -36,12 +36,16 @@ let cursor = 0, done = 0;
 async function processEntry(entry: any) {
   const existing = frames.find((frame: any) => frame.id === entry.id && frame.video === entry.video);
   const source = entry.videoAvailable !== false && entry.video ? entry.video : entry.poster;
-  const name = createHash('sha256').update(entry.id + ':' + (source || '')).digest('hex').slice(0, 24) + '.webp';
+  const stem = createHash('sha256').update(entry.id + ':' + (source || '')).digest('hex').slice(0, 24);
+  const name = stem + '.jpg', compressed = stem + '.webp';
   const target = path.join(directory, name), temp = target + '.download';
-  const keep = (method: string, sourceUrl: string) => results.push({ id: entry.id, video: entry.video, source: sourceUrl, poster: '/web/catalog/covers/' + name, method });
+  const keep = (method: string, sourceUrl: string, poster = name) => results.push({ id: entry.id, video: entry.video, source: sourceUrl, poster: '/web/catalog/covers/' + poster, method });
+  if (await access(path.join(directory, compressed)).then(() => true, () => false) && await usable(path.join(directory, compressed))) {
+    const cached = prior.get(entry.id); keep(cached?.method || 'cached', cached?.source || source, compressed); return;
+  }
   if (await access(target).then(() => true, () => false) && await usable(target)) { const cached = prior.get(entry.id); keep(cached?.method || 'cached', cached?.source || source); return; }
   if (existing && await usable(path.join(root, existing.poster))) {
-    await run(['-i', path.join(root, existing.poster), '-frames:v', '1', '-c:v', 'libwebp', '-quality', '85', '-y', target]);
+    await run(['-i', path.join(root, existing.poster), '-frames:v', '1', '-q:v', '4', '-y', target]);
     keep('source-frame', entry.video); return;
   }
   if (entry.poster && entry.posterAvailable !== false && isCatalogMedia(entry.poster)) {
@@ -52,14 +56,14 @@ async function processEntry(entry: any) {
       if (bytes.length > 4 * 1024 * 1024) throw new Error('Poster too large');
       await writeFile(temp, bytes);
       if (await usable(temp)) {
-        await run(['-i', temp, '-vf', 'scale=min(640\\,iw):-2', '-frames:v', '1', '-c:v', 'libwebp', '-quality', '85', '-y', target]);
+        await run(['-i', temp, '-vf', 'scale=min(640\\,iw):-2', '-frames:v', '1', '-q:v', '4', '-y', target]);
         keep('poster', entry.poster); return;
       }
     } catch {} finally { await rm(temp, { force: true }); }
   }
   if (entry.video && entry.videoAvailable !== false && isCatalogMedia(entry.video)) {
     try {
-      await run(['-rw_timeout', '10000000', '-ss', '0.5', '-i', entry.video, '-vf', 'thumbnail=48,scale=min(640\\,iw):-2', '-frames:v', '1', '-c:v', 'libwebp', '-quality', '85', '-y', target]);
+      await run(['-rw_timeout', '10000000', '-ss', '0.5', '-i', entry.video, '-vf', 'thumbnail=48,scale=min(640\\,iw):-2', '-frames:v', '1', '-q:v', '4', '-y', target]);
       if (await usable(target)) { keep('video-frame', entry.video); return; }
     } catch {}
   }
