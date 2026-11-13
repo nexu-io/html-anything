@@ -78,7 +78,7 @@ export function buildTimelineMeta({
 }: TimelineMetaBuilderInputs): TimelineMeta {
   const { labelMode, zoomMode, contentOrigin, ...viewportProps } = viewport;
   const containerClassName = `relative border-t select-none h-full overflow-hidden ${container.isDragOver ? container.accentClass : ""} ${container.activeTool === "razor" ? "cursor-crosshair" : container.shiftHeld ? "cursor-crosshair" : "cursor-default"}`;
-  const viewportClassName = `${zoomMode === "fit" ? "overflow-x-hidden" : "overflow-x-auto"} overflow-y-auto h-full outline-hidden`;
+  const viewportClassName = `relative ${zoomMode === "fit" ? "overflow-x-hidden" : "overflow-x-auto"} overflow-y-auto h-full outline-hidden`;
   return {
     emptyState,
     containerProps: {
