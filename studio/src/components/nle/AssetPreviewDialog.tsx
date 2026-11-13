@@ -40,15 +40,15 @@ export function AssetPreviewDialog({ url, kind, name, onClose, onAdd }: {
         onKeyDown={event => event.stopPropagation()}>
         <div className="flex shrink-0 items-center justify-between gap-3 px-3 py-2">
           <Dialog.Title className="min-w-0 truncate text-step-14 font-semibold" title={name}>{name}</Dialog.Title>
-          <Dialog.Close render={<IconButton className="shrink-0" aria-label={t("Close preview")} icon={<RemixIcon name="close-line" size={16} />} />} />
+          <div className="flex shrink-0 items-center gap-2">
+            {onAdd && <Button type="button" variant="primary" loading={adding} onClick={add} icon={<RemixIcon name="add-line" size={16} />}>
+              {t(adding ? "Adding…" : "Use")}
+            </Button>}
+            <Dialog.Close render={<IconButton className="shrink-0" aria-label={t("Close preview")} icon={<RemixIcon name="close-line" size={16} />} />} />
+          </div>
         </div>
+        {addFailed && <p role="alert" className="shrink-0 px-3 pb-2 text-step-12 text-danger-ink">{t("Failed to add media")}</p>}
         <DialogMedia key={url} url={url} kind={kind} name={name} />
-        {onAdd && <div className="flex shrink-0 items-center justify-end gap-3 border-t border-border px-3 py-2">
-          {addFailed && <span role="alert" className="text-step-12 text-danger-ink">{t("Failed to add media")}</span>}
-          <Button type="button" variant="primary" loading={adding} onClick={add} icon={<RemixIcon name="add-line" size={16} />}>
-            {t(adding ? "Adding…" : "Use")}
-          </Button>
-        </div>}
       </Dialog.Popup>
     </Dialog.Portal>
   </Dialog.Root>;
