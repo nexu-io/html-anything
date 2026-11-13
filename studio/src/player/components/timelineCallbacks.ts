@@ -18,7 +18,7 @@ export interface TimelinePropertyGroupKeyframeToggle {
 }
 
 /** Where an outside drop lands; `insertRow` opens a new track at that row boundary of `trackOrder`. */
-export type TimelineDropPlacement = { start: number; track: number } & (
+export type TimelineDropPlacement = { start: number; track: number; newTrack?: "top" } & (
   | { insertRow?: null; trackOrder?: undefined }
   | { insertRow: number; trackOrder: readonly number[] }
 );

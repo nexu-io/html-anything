@@ -161,6 +161,7 @@ const localReadmeResourceFiles = [
   'examples/motion-studies/signoff.mp4',
   'docs/readme/openmotion-logo.svg',
   'docs/readme/community-star.svg', 'docs/readme/community-star.zh-CN.svg', 'docs/readme/community-star.ja.svg',
+  'docs/readme/community-star.gif',
   'docs/readme/brand-hero.ja.jpg',
   'docs/readme/brand-hero.mobile.ja.jpg',
   'docs/readme/badges/built-by-opendesign.ja.svg',
@@ -471,7 +472,6 @@ const localReadmeResourceFiles = [
 ];
 
 export const distributionDocuments = [
-  ...['brandkit', 'presenter-story', 'motion-design-remix'].flatMap(name => ['library/skills/' + name + '/SKILL.md', 'library/skills/' + name + '/agents/openai.yaml']),
   ...['openmotion-brandkit', 'openmotion-presenter-story', 'openmotion-design-remix'].map(name => 'library/skills/' + name + '/agents/openai.yaml'),
   ...localReadmeResourceFiles,
   'README.md', 'README.zh-CN.md', 'CONTRIBUTING.md', 'CONTRIBUTING.zh-CN.md', 'AGENTS.md', 'CLAUDE.md', 'docs/README.md', 'repository-media.json',

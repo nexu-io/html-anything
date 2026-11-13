@@ -6,13 +6,19 @@
     <meta name="theme-color" content="#ededed" />
     <title>OpenMotion 工作室</title>
     <script>
-      // Studio owns theme persistence; the product stylesheet maps its tokens.
-      try {
-        if (JSON.parse(localStorage.getItem("hf-studio-ui-preferences") || "{}").theme !== "dark")
-          document.documentElement.dataset.theme = "paper";
-      } catch (e) {
-        document.documentElement.dataset.theme = "paper";
+      // Embedded browsers receive the host's color scheme. Resolve it before paint;
+      // standalone Studio keeps its saved choice. main.tsx binds live host changes.
+      let theme = "light";
+      if (new URLSearchParams(location.search).get("embed") === "1") {
+        if (window.matchMedia?.("(prefers-color-scheme: dark)")?.matches) theme = "dark";
+      } else {
+        try {
+          if (JSON.parse(localStorage.getItem("hf-studio-ui-preferences") || "{}").theme === "dark")
+            theme = "dark";
+        } catch (e) {}
       }
+      if (theme === "light") document.documentElement.dataset.theme = "paper";
+      else delete document.documentElement.dataset.theme;
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/web/design-system/tokens.css" />

@@ -2,6 +2,7 @@ import zhCN from './zh-CN.json';
 import mvpZhCN from './mvp-zh-CN.json';
 import mvpUi from './mvp-ui.json';
 import errorUi from './error-ui.json';
+import templateUi from './template-ui.json';
 import ja from './ja.json';
 import ko from './ko.json';
 import de from './de.json';
@@ -32,7 +33,7 @@ export const isLocale = (value: unknown): value is Locale => languages.some(lang
 // supported language. Retained, unexposed advanced-editor strings still fall back.
 export const mvpMessages: Partial<Record<Locale, Record<string, Message>>> = { 'zh-CN': mvpZhCN, ...mvpUi };
 const effectiveDictionaries: Record<string, Record<string, Message>> = Object.fromEntries(Object.entries(dictionaries).map(([locale, messages]) =>
-  [locale, { ...messages, ...mvpMessages[locale as Locale], ...errorUi[locale as keyof typeof errorUi] }],
+  [locale, { ...messages, ...mvpMessages[locale as Locale], ...errorUi[locale as keyof typeof errorUi], ...templateUi[locale as keyof typeof templateUi] }],
 ));
 const reverse = Object.fromEntries(Object.entries(effectiveDictionaries).map(([locale, messages]) => [locale,
   new Map(Object.entries(messages).flatMap(([source, value]) => (typeof value === 'string' ? [value] : Object.values(value)).map(text => [text, source]))),

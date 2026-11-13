@@ -5,7 +5,7 @@ import { resolveNearestFreeStart } from "../player/components/timelineCollision"
 import { authoredTrackForLane } from "../player/components/timelineAuthoredTrack";
 import { isAudioTimelineElement } from "./timelineInspector";
 import type { TimelineDropPlacement } from "../player/components/timelineCallbacks";
-import { applyPatchByTarget, readAttributeByTarget } from "./sourcePatcher";
+import { applyPatchByTarget, readAttributeByTarget, readTagSnippetByTarget, readTagAttribute } from "./sourcePatcher";
 import { buildPatchTarget } from "../hooks/timelineEditingHelpers";
 import { formatTimelineAttributeNumber } from "../player/components/timelineEditing";
 
@@ -104,6 +104,31 @@ export function resolveDropTrack(input: {
   dropped: DroppedClip;
 }): { source: string; track: number; start: number } {
   const { source, elements, placement, dropped } = input;
+  if (placement.newTrack === "top") {
+    // Read tracks from the serialized source, since a previous insertion may
+    // already be saved while the iframe still shows the old row order.
+    const peers = new Map<string, TimelineElement>();
+    for (const element of [...elements, ...(input.placed ?? [])]) {
+      const target = buildPatchTarget(element);
+      const raw = target ? readAttributeByTarget(source, target, "track-index") : undefined;
+      if (raw === undefined) {
+        if (target && readTagSnippetByTarget(source, target)) throw new Error(`Cannot renumber the track of "${element.id}" in the source`);
+        continue;
+      }
+      const track = Number(raw);
+      if (!Number.isFinite(track)) throw new Error("Invalid authored track index");
+      peers.set(element.key ?? element.id, { ...element, track, authoredTrack: track });
+    }
+    const current = [...peers.values()];
+    const plan = planDropTrackInsert({
+      elements: current,
+      trackOrder: [...new Set(current.map(e => e.track))].sort((a, b) => a - b),
+      insertRow: 0,
+      dropped,
+    });
+    if (!plan) throw new Error("Cannot open a new track here: a locked clip would have to move.");
+    return { source: applyTrackRenumbers(source, plan), track: plan.track, start: dropped.start };
+  }
   if (placement.insertRow == null) {
     return { source, ...resolveRowDrop(elements, input.placed ?? [], placement.track, dropped) };
   }
@@ -111,4 +136,19 @@ export function resolveDropTrack(input: {
   const plan = planDropTrackInsert({ elements, trackOrder, insertRow, dropped });
   if (!plan) throw new Error("Cannot open a new track here: a locked clip would have to move.");
   return { source: applyTrackRenumbers(source, plan), track: plan.track, start: dropped.start };
+}
+
+/** Keep a new top visual track above both stylesheet-authored and just-saved peers. */
+export function topTrackZIndex(source: string, elements: readonly TimelineElement[]): number {
+  let max = 0;
+  for (const element of elements) {
+    if (isAudioTimelineElement(element)) continue;
+    const target = buildPatchTarget(element);
+    const tag = target ? readTagSnippetByTarget(source, target) : undefined;
+    if (!tag) continue;
+    const style = readTagAttribute(tag, "style") ?? "";
+    const inline = /(?:^|;)\s*z-index\s*:\s*(-?\d+)/i.exec(style);
+    max = Math.max(max, inline ? Number(inline[1]) : element.zIndex ?? 0);
+  }
+  return max + 1;
 }

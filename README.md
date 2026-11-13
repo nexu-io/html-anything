@@ -16,7 +16,7 @@
 <p align="center">
   <a href="https://open-design.ai/motion/"><img src="docs/readme/badges/website.svg" alt="OpenMotion website" /></a>
   <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_en"><img src="docs/readme/badges/opendesign-go.svg" alt="OpenDesign Go model subscriptions" /></a>
-  <a href="https://discord.gg/mHAjSMV6gz"><img src="docs/readme/badges/discord.svg" alt="Join the OpenDesign Discord" /></a>
+  <a href="https://discord.com/invite/M7NnHS9gNa"><img src="docs/readme/badges/discord.svg" alt="Join the OpenMotion Discord" /></a>
   <a href="https://x.com/OpenDesignHQ"><img src="docs/readme/badges/x-opendesignhq.svg" alt="OpenDesign on X (@OpenDesignHQ)" /></a>
   <a href="https://x.com/OpenDesignDevs"><img src="docs/readme/badges/x-opendesigndevs.svg" alt="OpenDesign Developers on X (@OpenDesignDevs)" /></a>
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign on YouTube" /></a>
@@ -487,7 +487,7 @@ To start from a video instead, supply your reference and use the [recreation bri
 
 ##### Skills, MCP and CLI
 
-The plugin and MCP server are named `openmotion`; Tools, Skills and resources use `openmotion_*`, `openmotion-*` and `openmotion://`. Existing names remain explicit compatibility aliases. See [naming and installation compatibility](docs/npm-installation.md#public-names-and-compatibility).
+The plugin and MCP server are named `openmotion`; Tools, Skills and resources use `openmotion_*`, `openmotion-*` and `openmotion://`. Old Tool/resource names remain compatibility aliases; retired Skill entries are removed. Use `openmotion-*` Skill names and refresh host discovery after upgrading. See [naming and installation compatibility](docs/npm-installation.md#public-names-and-compatibility).
 
 From the checkout, discover and install the five core workflows with the [Skills CLI](https://github.com/vercel-labs/skills):
 
@@ -726,11 +726,11 @@ Share a remake, a reusable template or a Motion.md that captures the rhythm of a
 
 The dedicated OpenMotion site is coming to `open-design.ai/openmotion`.
 
-[Motion showcase](https://open-design.ai/motion/) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+[Motion showcase](https://open-design.ai/motion/) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_en) · [Discord](https://discord.com/invite/M7NnHS9gNa) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
 [**Star OpenMotion on GitHub**](https://github.com/nexu-io/openmotion)
 
-[![Stay tuned with us · Star OpenMotion](docs/readme/community-star.svg)](https://github.com/nexu-io/openmotion)
+[![Stay tuned with us · Star OpenMotion](docs/readme/community-star.gif)](https://github.com/nexu-io/openmotion)
 
 <a id="acknowledgements"></a>
 

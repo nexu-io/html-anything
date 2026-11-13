@@ -5,6 +5,7 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { MotionEditorFrame, MotionStudioHost } from './MotionStudioHost';
 import { COMMUNITY_URL } from './CommunityLink';
 import discordLogo from './community-discord.svg';
+import { GITHUB_REPOSITORY } from './githubRepository';
 import { StudioHeader } from '../components/StudioHeader';
 import { useMotionHistoryOperation } from './MotionHistoryState';
 import { trackMotion } from './tracking';
@@ -19,6 +20,7 @@ const state = vi.hoisted(() => ({
   undo: vi.fn(), redo: vi.fn(), create: vi.fn(), home: vi.fn(), rename: vi.fn(),
   showToast: vi.fn(), status: { projectId: 'demo', historyRestoreError: null as { requestId: string; message: string } | null },
 }));
+vi.mock('./githubRepository', async importOriginal => ({ ...await importOriginal<typeof import('./githubRepository')>(), readRepositoryStars: vi.fn(async () => 9796) }));
 vi.mock('../contexts/StudioContext', () => ({ useStudioShellContext: () => ({
   projectId: 'demo', renderQueue: state.renderQueue, writeBlockedReason: state.writeBlockedReason, waitForPendingDomEditSaves: async () => {},
   showToast: state.showToast,
@@ -257,6 +259,7 @@ it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr']
   expect(link.href).toBe(COMMUNITY_URL);
   expect(link.target).toBe('_blank');
   expect(link.rel).toContain('noopener');
+  expect(container.querySelector<HTMLAnchorElement>(`a[href="${GITHUB_REPOSITORY}"]`)?.target).toBe('_blank');
   expect(link.querySelector('img')?.getAttribute('src')).toBe(discordLogo);
   expect(link.getAttribute('aria-label')).toBeTruthy();
   const exportButton = container.querySelector('[data-testid="header-export"]')!;

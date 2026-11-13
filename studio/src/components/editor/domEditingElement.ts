@@ -363,6 +363,17 @@ export function findElementForTimelineElement(
         : undefined);
 
   if (selector || element.domId) {
+    // A master timeline clip selects the reference authored in the parent,
+    // whereas compositionSource identifies the content mounted inside it.
+    if (compositionSource && options.isMasterView) {
+      const host = findElementForSelection(doc, {
+        id: element.domId ?? undefined,
+        selector,
+        selectorIndex: element.selectorIndex,
+        sourceFile: normalizeTimelineCompositionSource(element.sourceFile) ?? "index.html",
+      }, options.activeCompositionPath);
+      if (host) return host;
+    }
     const targetElement = findElementForSelection(
       doc,
       {

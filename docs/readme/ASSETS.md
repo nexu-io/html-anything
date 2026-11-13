@@ -12,6 +12,10 @@ The [OpenMotion Brandkit](../../library/brandkits/openmotion/BRANDKIT.md) record
 
 The [OpenMotion logo](openmotion-logo.svg) uses the symbol and Albert Sans wordmark from the [OpenMotion prototype](https://opendesign-motion-standard-prototype.inovixissu.chatgpt.site/). The lettering is outlined so the mark renders identically across README languages. [Font license](../../web/design-system/fonts/NOTICES.txt)
 
+## Community badges
+
+The [Discord badge](badges/discord.svg) matches the existing 20-pixel README badge row and links to the dedicated OpenMotion server. The tracked-source release scan rejects company Feishu links and their invite tokens, so the community badge row keeps the public Discord server as the only chat entry.
+
 ## Agent logos
 
 The local agent gallery and setup buttons use client marks from the [source icon collection](https://github.com/nexu-io/open-design/tree/07a86b1041531bfa0bec1006d9c0993985fee560/apps/web/public/agent-icons) and the [individual client artwork credits](models/README.md). Each mark identifies its respective client.
@@ -20,6 +24,7 @@ The local agent gallery and setup buttons use client marks from the [source icon
 
 | Asset | Source and use |
 | --- | --- |
+| [GitHub Star animation](community-star.gif) | User-supplied animation of the OpenMotion GitHub page, used for the closing Star invitation in all README languages. Copied without resizing or re-encoding at 426 × 240. SHA-256: `e1a7bde3786042faaa5a2fa35bcd306cedc4e9b077d92cc61fd57c35ea5b5924`. |
 | [README cover](https://releases.open-design.ai/open-motion/media/sha256/730e1d6235820d39ba8adde42810d1165377992136a3b20290ad5d504abb527b.jpg) · [简体中文](https://releases.open-design.ai/open-motion/media/sha256/45ee17734fb1315decef29c116fdd6794ee275fe83239328526b982a8ebe17ac.jpg) · [日本語](https://releases.open-design.ai/open-motion/media/sha256/1b567187bc527cc99f8ef2c91c41c9adf5fa91fa9bbc5f8e2f579ad9c7837a46.jpg) | Dan Martell’s talking-head reference and the OpenMotion caption remake with @careerwithriya, with a capture of the editable Studio timeline. The desktop and mobile covers open the [2.4-second comparison](media/presenter-caption-remake.mp4). [Footage and edit credits](reverse-engineering-cover.md) |
 | [Earlier cover](https://releases.open-design.ai/open-motion/media/sha256/cfeb12861412bd36d34000ee1fe6d7f4e7b124ac9cad680d595c3cb44708eead.png) | Previous AI-editing positioning, preserved as artwork history; no longer the main README cover. |
 | [Animated cover](https://releases.open-design.ai/open-motion/media/sha256/6f6379825bac5cc67ee2d8fdc328ec25a16eea64fdac420f358092ddae95ad47.gif) | Optional 800 × 400 camera-breath loop from the same cover; 32 frames, approximately 4 seconds, infinite loop. Brand motion, not recorded application behavior. |

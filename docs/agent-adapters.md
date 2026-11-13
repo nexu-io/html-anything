@@ -66,7 +66,7 @@ Mac 对应使用 `runtime/node/bin/node`。完整内部测试包保留原有 `mo
 | `openmotion-<host>-<version>-local.zip` | 各宿主的本机目录归档，非完整应用安装程序 |
 | `launch-spec.json` | 四家共用的 Node、参数、工作目录和工程路径 |
 
-ZIP 使用安装机器的绝对路径；跨机器、移动运行时或切换版本后重新生成，不能作为通用安装包公开分发。New plugin manifests, marketplace entries and MCP registrations use `openmotion`. Old explicit Skill invocations and Tool/resource names remain compatibility aliases; existing `motion` MCP configurations may still launch the same runtime. Refresh the host discovery after replacing an old package.
+ZIP 使用安装机器的绝对路径；跨机器、移动运行时或切换版本后重新生成，不能作为通用安装包公开分发。New plugin manifests, marketplace entries and MCP registrations use `openmotion`. Old Tool/resource names remain compatibility aliases; retired Skill entries are removed. Update explicit Skill invocations to `openmotion-*`. Existing `motion` MCP configurations may still launch the same runtime. Replace the owned package and refresh host Skill discovery; separately copied old entries require manual review. See [upgrade cleanup](npm-installation.md#public-names-and-compatibility).
 
 ## Codex / Claude Code
 

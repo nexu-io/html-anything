@@ -16,7 +16,7 @@
 <p align="center">
   <a href="https://open-design.ai/motion/"><img src="readme/badges/website.ja.svg" alt="OpenMotion 公式サイト" /></a>
   <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_ja"><img src="readme/badges/opendesign-go.svg" alt="OpenDesign Go のモデル利用プラン" /></a>
-  <a href="https://discord.gg/mHAjSMV6gz"><img src="readme/badges/discord.svg" alt="OpenDesign の Discord に参加" /></a>
+  <a href="https://discord.com/invite/M7NnHS9gNa"><img src="readme/badges/discord.svg" alt="OpenMotion の Discord コミュニティに参加" /></a>
   <a href="https://x.com/OpenDesignHQ"><img src="readme/badges/x-opendesignhq.svg" alt="OpenDesign の公式 X アカウント @OpenDesignHQ" /></a>
   <a href="https://x.com/OpenDesignDevs"><img src="readme/badges/x-opendesigndevs.svg" alt="OpenDesign 開発チームの X アカウント @OpenDesignDevs" /></a>
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign の YouTube チャンネル" /></a>
@@ -477,7 +477,7 @@ bash scripts/install-motion.command
 
 ##### Skills、MCP、CLI
 
-プラグインと MCP サーバーの名前は `openmotion` です。Tools、Skills、リソースはそれぞれ `openmotion_*`、`openmotion-*`、`openmotion://` を使います。旧名称は互換エイリアスとして残ります。[名称とインストールの互換性](npm-installation.md#public-names-and-compatibility)
+プラグインと MCP サーバーの名前は `openmotion` です。Tools、Skills、リソースはそれぞれ `openmotion_*`、`openmotion-*`、`openmotion://` を使います。旧 Tool・リソース名は互換エイリアスとして残ります。旧 Skill エントリは削除されました。`openmotion-*` を使用し、更新後にホストの Skill 一覧を再読み込みしてください。[名称とインストールの互換性](npm-installation.md#public-names-and-compatibility)
 
 チェックアウトから [Skills CLI](https://github.com/vercel-labs/skills) を使い、5 つの基本ワークフローを確認・インストールできます：
 
@@ -705,11 +705,11 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 
 OpenMotion の専用サイトは `open-design.ai/openmotion` に開設予定です。
 
-[OpenDesign の動画ギャラリー](https://open-design.ai/motion/) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_ja) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+[OpenDesign の動画ギャラリー](https://open-design.ai/motion/) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_ja) · [Discord](https://discord.com/invite/M7NnHS9gNa) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
 [**GitHub で OpenMotion にスターを付ける**](https://github.com/nexu-io/openmotion)
 
-[![OpenMotion の更新をフォローするには GitHub でスターを](readme/community-star.ja.svg)](https://github.com/nexu-io/openmotion)
+[![OpenMotion の更新をフォローするには GitHub でスターを](readme/community-star.gif)](https://github.com/nexu-io/openmotion)
 
 <a id="acknowledgements"></a>
 

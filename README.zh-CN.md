@@ -16,7 +16,7 @@
 <p align="center">
   <a href="https://open-design.ai/motion/"><img src="docs/readme/badges/website.zh-CN.svg" alt="OpenMotion 官网" /></a>
   <a href="https://go.open-design.ai/?utm_source=github&amp;utm_medium=referral&amp;utm_campaign=openmotion&amp;utm_content=readme_zh"><img src="docs/readme/badges/opendesign-go.svg" alt="OpenDesign Go 模型订阅" /></a>
-  <a href="https://discord.gg/mHAjSMV6gz"><img src="docs/readme/badges/discord.svg" alt="加入 OpenDesign Discord" /></a>
+  <a href="https://discord.com/invite/M7NnHS9gNa"><img src="docs/readme/badges/discord.svg" alt="加入 OpenMotion Discord 社区" /></a>
   <a href="https://x.com/OpenDesignHQ"><img src="docs/readme/badges/x-opendesignhq.svg" alt="OpenDesign 官方 X 账号 @OpenDesignHQ" /></a>
   <a href="https://x.com/OpenDesignDevs"><img src="docs/readme/badges/x-opendesigndevs.svg" alt="OpenDesign 开发者 X 账号 @OpenDesignDevs" /></a>
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
@@ -477,7 +477,7 @@ bash scripts/install-motion.command
 
 ##### Skills、MCP 与 CLI
 
-插件与 MCP 服务名称为 `openmotion`；Tools、Skills 与资源分别使用 `openmotion_*`、`openmotion-*` 和 `openmotion://`。旧名称仍作为兼容别名保留。[命名与安装兼容说明](docs/npm-installation.md#public-names-and-compatibility)
+插件与 MCP 服务名称为 `openmotion`；Tools、Skills 与资源分别使用 `openmotion_*`、`openmotion-*` 和 `openmotion://`。旧 Tool 和资源名称保留兼容；旧 Skill 入口已移除，请使用 `openmotion-*`，升级后刷新宿主 Skill 列表。[命名与安装兼容说明](docs/npm-installation.md#public-names-and-compatibility)
 
 在 checkout 中发现并安装五个核心工作流，使用 [Skills CLI](https://github.com/vercel-labs/skills):
 
@@ -705,11 +705,11 @@ BYOA 让 Agent 留在已有客户端，BYOK 连接受支持的模型账号。Stu
 
 OpenMotion 独立官网将上线于 `open-design.ai/openmotion`。
 
-[OpenDesign 动效展示](https://open-design.ai/motion/) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [Discord](https://discord.gg/mHAjSMV6gz) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
+[OpenDesign 动效展示](https://open-design.ai/motion/) · [OpenDesign Go](https://go.open-design.ai/?utm_source=github&utm_medium=referral&utm_campaign=openmotion&utm_content=readme_zh) · [Discord](https://discord.com/invite/M7NnHS9gNa) · [X @OpenDesignDevs](https://x.com/OpenDesignDevs) · [X @OpenDesignHQ](https://x.com/OpenDesignHQ) · [YouTube](https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg)
 
 [**在 GitHub 上给 OpenMotion 点个 Star**](https://github.com/nexu-io/openmotion)
 
-[![关注 OpenMotion · 在 GitHub 上加星](docs/readme/community-star.zh-CN.svg)](https://github.com/nexu-io/openmotion)
+[![关注 OpenMotion · 在 GitHub 上加星](docs/readme/community-star.gif)](https://github.com/nexu-io/openmotion)
 
 <a id="acknowledgements"></a>
 

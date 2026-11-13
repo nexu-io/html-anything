@@ -1,6 +1,5 @@
-// Studio's own app opens on the toggle's saved choice, else light. Light is `data-theme="paper"`
-// on the document element, the hook theme.css keys on; dark is no attribute. index.html applies
-// `savedStudioTheme` before the first paint; studioTheme.test.tsx holds the two together.
+// Standalone Studio keeps its saved choice; embed=1 follows the host browser's
+// color scheme without persisting it. index.html mirrors this before first paint.
 import { useSyncExternalStore } from "react";
 import {
   readStudioUiPreferences,
@@ -16,11 +15,29 @@ export function shownStudioTheme(): StudioTheme {
   return document.documentElement.dataset.theme === "paper" ? "light" : "dark";
 }
 
-export function setStudioTheme(theme: StudioTheme): void {
-  writeStudioUiPreferences({ theme });
+function applyStudioTheme(theme: StudioTheme): void {
   const root = document.documentElement;
   if (theme === "light") root.dataset.theme = "paper";
   else delete root.dataset.theme;
+}
+
+export function studioUsesHostTheme(): boolean {
+  return new URLSearchParams(location.search).get("embed") === "1";
+}
+
+/** Codex synchronizes its theme to the embedded browser's media preference. */
+export function bindEmbeddedStudioTheme(): () => void {
+  if (!studioUsesHostTheme() || !window.matchMedia) return () => {};
+  const preference = window.matchMedia("(prefers-color-scheme: dark)");
+  const apply = () => applyStudioTheme(preference.matches ? "dark" : "light");
+  apply();
+  preference.addEventListener("change", apply);
+  return () => preference.removeEventListener("change", apply);
+}
+
+export function setStudioTheme(theme: StudioTheme): void {
+  writeStudioUiPreferences({ theme });
+  applyStudioTheme(theme);
 }
 
 function subscribe(listener: () => void): () => void {
