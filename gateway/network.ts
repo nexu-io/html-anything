@@ -34,7 +34,7 @@ export function providerOrigin(raw: unknown): string {
   return url.origin;
 }
 /** Custom Cloud origins use pinned public DNS and never forward credentials on redirects. */
-export const publicProviderFetch: Fetcher = async (raw, init = {}) => {
+export const publicProviderFetch: Fetcher = async (raw, init: RequestInit = {}) => {
   const url = new URL(String(raw)); providerOrigin(url.origin);
   const addresses = await lookup(url.hostname, { all: true });
   if (!addresses.length || addresses.some(item => !publicAddress(item.address))) throw new Error('Provider points to a non-public address');

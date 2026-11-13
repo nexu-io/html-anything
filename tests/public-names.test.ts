@@ -13,7 +13,7 @@ test('default MCP discovery publishes only OpenMotion tool and resource names', 
   assert.ok(list.result.tools.every((tool: any) => tool.name.startsWith('openmotion_')));
   const resources: any = await rpc({ jsonrpc: '2.0', id: 2, method: 'resources/list' });
 
-  assert.ok(resources.result.resources.every((resource: any) => resource.uri.startsWith('openmotion://')));
+  assert.ok(resources.result.resources.every((resource: any) => resource.uri.startsWith('openmotion://') || resource.uri === 'ui://openmotion/inline-video/v1/player.html'));
 });
 
 test('new and legacy tool names share validation, authorization and write idempotency', () => fixture(async store => {

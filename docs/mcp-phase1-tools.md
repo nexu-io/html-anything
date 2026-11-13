@@ -183,3 +183,7 @@ CI不按路径过滤、不跳过渲染、无失败重试或continue-on-error；�
 ## BYOK media-use extension
 
 Read action=reference for the selected provider, or `openmotion://workflow/production/{fal,opendesign,atlascloud,wavespeed}`. The provider references belong to the existing production guidance; no separate media debugging Skill is distributed. `action=generate` requires provider, provider-native model ID, projectId, requestId, modality and prompt. Provider parameters use the selected model API schema; no key argument is accepted. The queued job is polled with action=status and the same projectId/jobId; completed means actual validated files were imported under assets/generated. Cancellation is local and best effort remotely, without a refund promise. Edits still require a fresh project revision/version. Saving a key in editor Media providers enables that provider. Cloud also requires its public HTTPS gateway origin. Configuration and live model discovery are not proof of paid generation success.
+
+## Inline work rounds
+
+For video playback deliverables, `openmotion_open_preview(action=begin)` starts one persisted work round. Optional `workId` on saves/exports keeps the resulting video bound to that round; `openmotion_get_project(workId,includeVideo=true)` exposes status and component-private media. Existing project Tools, legacy aliases, editor-only delivery and template browsing remain compatible. See [inline progress, states and validation limits](inline-video.md).
