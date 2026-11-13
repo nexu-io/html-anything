@@ -31,6 +31,18 @@ function fixture(t: { after: (fn: () => void) => void }, imageSize = 5) {
   return { root, catalog, id, directory, archive, image, record, sourceManifest, json, stage };
 }
 
+async function inspectCatalogAssets(root: string, ids: string[]) {
+  let images = 0, remoteImages = 0;
+  for (const id of ids) {
+    const files = await readdir(path.join(root, id, 'source'), { recursive: true });
+    assert(!files.some(file => /\.zip$/i.test(file)), `${id}: duplicate archives do not belong in template source`);
+    images += files.filter(file => /\.(?:jpg|webp)$/i.test(file)).length;
+    const record = JSON.parse(await readFile(path.join(root, id, 'template.json'), 'utf8'));
+    remoteImages += (record.remoteAssets ?? []).length;
+  }
+  return { images, remoteImages };
+}
+
 test('imported templates preserve IDs, eleven locales, filtering data and reference-only status', async () => {
   const manifest = JSON.parse(await readFile(path.join(catalogRoot, 'catalog.json'), 'utf8'));
   const publication = await exportCatalog();
@@ -41,14 +53,7 @@ test('imported templates preserve IDs, eleven locales, filtering data and refere
     assert.deepEqual(templates.map(item => item.templateId), manifest.templateIds);
     assert(templates.filter(item => item.files.length === 0 && item.projectFileUrl === null && item.conversionStatus === 'pending').length >= 286);
   }
-  let images = 0, remoteImages = 0;
-  for (const id of manifest.templateIds) {
-    const files = await readdir(path.join(catalogRoot, id, 'source'), { recursive: true });
-    assert(!files.some(file => /\.(?:mp4|zip)$/i.test(file)));
-    images += files.filter(file => /\.(?:jpg|webp)$/i.test(file)).length;
-    const record = JSON.parse(await readFile(path.join(catalogRoot, id, 'template.json'), 'utf8'));
-    remoteImages += (record.remoteAssets ?? []).length;
-  }
+  const { images, remoteImages } = await inspectCatalogAssets(catalogRoot, manifest.templateIds);
   assert(images >= 1419 && remoteImages >= 236, 'Small images are local; large originals have CMS rendition links');
 });
 test('import unpacks verified source and original images without fetching a video or keeping duplicate archives', async t => {
@@ -117,6 +122,17 @@ test('large ordinary images are rejected; valid LFS assets pass without download
   assert.deepEqual(checkTemplateLibrary(f.root, base), []);
   writeFileSync(path.join(f.root, '.gitattributes'), ''); f.stage();
   assert.match(checkTemplateLibrary(f.root).join('\n'), /staged LFS attributes/);
+});
+test('catalog inspection accepts a valid LFS MP4 contribution while rejecting duplicate archives', async t => {
+  const f = fixture(t);
+  mkdirSync(path.join(f.directory, 'source/assets/lfs'), { recursive: true });
+  writeFileSync(path.join(f.root, '.gitattributes'), `${scope}*/source/assets/lfs/** filter=lfs diff=lfs merge=lfs -text\n`);
+  writeFileSync(path.join(f.directory, 'source/assets/lfs/reference.mp4'), `version https://git-lfs.github.com/spec/v1\noid sha256:${'a'.repeat(64)}\nsize 2000000\n`);
+  await refreshManifest(f.id, f.catalog); f.stage();
+  assert.deepEqual(checkTemplateLibrary(f.root), []);
+  assert.deepEqual(await inspectCatalogAssets(f.catalog, [f.id]), { images: 1, remoteImages: 0 });
+  writeFileSync(path.join(f.directory, 'source/duplicate.zip'), 'duplicate archive');
+  await assert.rejects(inspectCatalogAssets(f.catalog, [f.id]), /duplicate archives/);
 });
 test('LFS budgets, pointer hashes and required filtering cannot be bypassed by checkout contents', async t => {
   const f = fixture(t);
