@@ -70,6 +70,43 @@ describe("script dependencies when deleting elements", () => {
     expect(() => assertSafeElementDeletion(source, [{ id: "group" }])).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
   });
 
+  it("matches REST template ordering when resolving selector targets", () => {
+    const source = composition('document.getElementById("mk-ch-box").style.color = "red";',
+      '<template><div data-composition-id="scene"><div class="group" id="tpl-group"></div></div></template><div class="group" id="outer-group"><div id="mk-ch-box"></div></div>');
+    const after = new DOMParser().parseFromString(removeElementsFromHtml(source, [{ selector: ".group", selectorIndex: 0 }]), "text/html");
+    expect(after.getElementById("outer-group")).toBeNull();
+    expect(after.querySelector("template").content.querySelector("#tpl-group")).not.toBeNull();
+    expect(() => assertSafeElementDeletion(source, [{ selector: ".group", selectorIndex: 0 }])).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+    expect(() => assertSafeElementDeletion(source, [{ selector: ".group", selectorIndex: 1 }])).not.toThrow();
+  });
+
+  it("resolves selector targets inside templates when no outer match exists", () => {
+    const source = composition('document.getElementById("tpl-box").style.color = "red";',
+      '<template><div data-composition-id="scene"><div class="group" id="tpl-group"><div id="tpl-box"></div></div></div></template>');
+    const targets = [{ selector: ".group", selectorIndex: 0 }];
+    const after = new DOMParser().parseFromString(removeElementsFromHtml(source, targets), "text/html");
+    expect(after.querySelector("template").content.querySelector("#tpl-box")).toBeNull();
+    expect(() => assertSafeElementDeletion(source, targets)).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
+  it("checks receiver-relative selectors against the lookup container", () => {
+    const source = composition('document.getElementById("container").querySelector(":scope > .word").style.color = "red";',
+      '<div id="container"><div class="word" data-hf-id="hf-word"></div></div>');
+    expect(() => assertSafeElementDeletion(source, [{ hfId: "hf-word" }])).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
+  it("allows receiver-relative selectors that resolve outside the removed subtree", () => {
+    const source = composition('document.getElementById("container").querySelector(":scope > .word");',
+      '<div id="container"></div><div id="mk-ch-center" data-hf-id="hf-center"><div id="mk-ch-box" class="word"></div></div>');
+    expect(() => assertSafeElementDeletion(source, [{ hfId: "hf-center" }])).not.toThrow();
+  });
+
+  it("refuses scoped selectors whose lookup receiver cannot be resolved", () => {
+    const source = composition('const root = document.getElementById("container"); root.querySelector(":scope > .word");',
+      '<div id="container"></div><div id="mk-ch-center" data-hf-id="hf-center"><div id="mk-ch-box" class="word"></div></div>');
+    expect(() => assertSafeElementDeletion(source, [{ hfId: "hf-center" }])).toThrow(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
   it.each(["hf-box", "hf-host/hf-box"])("refuses ambiguous or scoped handles before SDK and server resolution can disagree: %s", (hfId) => {
     const source = composition('document.getElementById("box").style.color = "red";',
       '<div data-hf-id="hf-host" data-composition-file="nested.html"><div data-hf-id="hf-box" id="nested-box"></div></div><div data-hf-id="hf-box" id="box"></div>');
