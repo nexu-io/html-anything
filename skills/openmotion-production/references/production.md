@@ -15,6 +15,10 @@ Use only the OpenMotion MCP Tools actually returned by tools/list. Read [Native 
 
 When selecting, obtaining or replacing media, apply the [shared material policy](materials.md) within the selected workflow and existing authorization.
 
+## Inline video progress and playback
+
+In a host that supports MCP Apps, default to an inline video frame for each actual video creation or content-edit turn. Begin one work round before the first content write with `openmotion_open_preview({action:"begin",projectId,requestId,mode:"create"|"modify"})`. Reuse the returned `inlineWork.id` as `workId` in each save and the final export. Render once the round is ready, not after intermediate saves. The MCP App polls that fixed work identity and enables click-to-play only after its own export passes technical verification. Keep earlier frames and their versions. Explicit editor-only requests, unchanged template opening, review-only and existing-link requests retain their current scope and do not begin or render a round. This final inline preview is part of the video turn and does not require a separate MP4-download request. Hosts without MCP Apps retain their existing workflow. Inline playback supplements the editable Studio handoff; it does not prove editor visibility or creative acceptance.
+
 ## Execution
 
 ### Tool transport and workspace readiness

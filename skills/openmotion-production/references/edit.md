@@ -46,3 +46,7 @@ Before the first content write and after the saved batch, apply the [continuing-
 更新同一份简短记录：实际改了什么、仍有效的保持项、当前工程与 revision、已完成检查及未验证部分。下一轮只恢复当前需要的信息，不照抄过期源文件或失效的旧决定。
 
 用户要求交付时，按 [验证](verification.md) 对当前确认的版本导出。若已有导出，先核对其 job/revision 是否对应当前结果；修改后的请求不能误交旧成片，仅索取既有成片链接也不能触发新导出。核验实际文件，抽查修改位置及必要的后续再现，确保最新修改进入交付。
+
+## Inline playback for an edit round
+
+For an actual content edit in an MCP Apps host, follow [the inline work-round contract](production.md#inline-video-progress-and-playback) with mode=modify before writing. Explicit editor-only, review-only and existing-link requests retain their scope. Preserve previous work frames; the new round must bind its own saved version and final export.

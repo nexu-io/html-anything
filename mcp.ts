@@ -1,3 +1,5 @@
+import { readFile } from 'node:fs/promises';
+import { inlineVideoUri } from './shared/inline-video.ts';
 import { publicToolName, legacyToolName, publicToolResult } from './shared/public-names.mjs';
 import { createInterface } from 'node:readline';
 import { readFileSync, statSync } from 'node:fs';
@@ -65,8 +67,15 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
     return result({ protocolVersion, capabilities: { tools: {}, ...(registry.profile === 'phase1' ? { resources: {} } : {}) }, serverInfo: { name: 'openmotion', title: 'OpenMotion', version: VERSION, ...(protocolVersion === '2025-11-25' ? { icons: serverIcons } : {}) }, instructions: registry.instructions ?? workflowEntryGuide + ' Load only references needed by the current task and reuse already loaded documentId/contentHash. Reuse saved decisions for small edits. OpenMotion wraps Hyperframes Studio and its renderer. Only for tasks that require working in the editor or authoring a project, call openmotion_open_preview, read its pinned authoringGuide and open previewUrl with the host built-in browser before reporting it opened. Author native HTML compositions with seekable GSAP timelines, never custom shot JSON or canvas recording. Read openmotion_get_project before source edits and pass its revision as expectedRevision; inspect lint/timeline afterwards. Only when the user scope includes export/final delivery, query any applicable existing export to avoid duplicate jobs and export the inspected revision in the background, wait for completed, then call openmotion_verify_export with that job ID/revision and the brief audio policy. Separately inspect final visuals, sound and actual player playback before claiming full verification. MCP previewUrl defaults to embed=1; preserve its query and hash. Use sessionUrl or embedded=false only for the full OpenMotion workspace. Do not restart the host Agent or ask users to start a terminal server.' });
   }
   if (message.method === 'ping') return result({});
-  if (registry.profile === 'phase1' && message.method === 'resources/list') return result({ resources: workflowResources() });
+  if (registry.profile === 'phase1' && message.method === 'resources/list') return result({ resources: [...workflowResources(), { uri: inlineVideoUri, name: 'Video progress and version playback', mimeType: 'text/html;profile=mcp-app' }] });
   if (registry.profile === 'phase1' && message.method === 'resources/read') {
+    if (message.params?.uri === inlineVideoUri) {
+      try { return result({ contents: [{ uri: inlineVideoUri, mimeType: 'text/html;profile=mcp-app',
+        text: await readFile(new URL('./web/inline-video.html', import.meta.url), 'utf8'),
+        _meta: { ui: { prefersBorder: true, csp: { connectDomains: [], resourceDomains: ['data:'] } },
+          'openai/ui': { availableDisplayModes: ['inline'], preferredDisplayMode: 'inline' } } }] }); }
+      catch { return { jsonrpc: '2.0', id: message.id, error: { code: -32603, message: 'INLINE_UI_NOT_BUILT: run npm run build:inline' } }; }
+    }
     try { return result({ contents: [await readWorkflowResource(message.params?.uri, store.directory)] }); }
     catch (error) { return { jsonrpc: '2.0', id: message.id, error: { code: -32602, message: (error as Error).message } }; }
   }
@@ -100,7 +109,9 @@ async function invokeRpc(message: any, store: WorkspaceStore, registry: ReturnTy
         const value = publicToolResult(await response.json());
         if (!response.ok) throw Object.assign(new Error(value.error || 'Tool failed'), { code: value.code, details: value.runtime });
         if (value.projectId && value.sessionId) selections.set(store, { projectId: value.projectId, sessionId: value.sessionId });
-        return result({ content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value });
+        const { _inlineMedia, ...visible } = value;
+        return result({ content: [{ type: 'text', text: JSON.stringify(visible) }], structuredContent: visible,
+          ...(_inlineMedia ? { _meta: { inlineVideo: _inlineMedia } } : {}) });
       }
       let value;
       if (connection && !['motion_get_workflow', 'motion_list_templates', 'motion_get_template'].includes(legacyToolName(name))) {
