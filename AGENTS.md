@@ -29,6 +29,17 @@ Consolidate references to other products, upstream origins, comparisons and sour
 
 Keep technical identifiers needed for setup, supported agent/model names and explicitly requested example brand names accurate; these factual labels are not invitations to add product comparisons or inspiration commentary. Before finishing a README edit, check that product-reference commentary appears only in the final acknowledgements.
 
+## UI design system and interaction feedback
+
+Follow [the shared design system](docs/design-system.md#interaction-and-feedback-contract) for all new or changed product UI. Reuse its components and semantic tokens in both light and dark themes; do not introduce page-specific palettes or native-looking replacement controls.
+
+- Transient action feedback, including copy, download, save and failure notices, must use floating Toasts through the shared feedback layer. Never insert these messages below buttons or into normal document flow: showing or dismissing feedback must not move content or consume layout space.
+- Reuse `useToast` and `StudioToastViewport`; native dialogs must not cover or make the feedback inert. Notices must not steal focus, block the page or create another modal. Coalesce repeated feedback and respect reduced motion.
+- Use anchored, non-modal dropdowns for filtering and sorting, with immediate results, individually removable selections and a clear-all action. Do not add a confirmation dialog for routine filtering or copying an Agent instruction.
+- Keep hover surfaces rounded and inset with consistent padding, align icons and chevrons, and use one focus treatment per composite control while preserving visible keyboard focus.
+- Reserve geometry for slow content with shared Skeletons and poster fallbacks. Resource errors replace their reserved content and provide recovery; do not leave indefinite loading after a known failure. Stop offscreen/background video work.
+- Verify actual opened menus, Toasts, loading/error states and narrow layouts in both themes. A component rendered in source is not evidence that it layers or behaves correctly in the browser.
+
 ## Product architecture review
 
 For every change, review the entire [product architecture](docs/product/architecture.md) and decide whether it still accurately describes the product. Consider positioning, core user flows, module responsibilities, dependencies, data and API boundaries, implemented capabilities, and current limitations together.
