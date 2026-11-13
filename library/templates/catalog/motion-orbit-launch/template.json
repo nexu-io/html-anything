@@ -198,5 +198,17 @@
   "localMedia": {
     "preview": "assets/lfs/preview.mp4",
     "poster": "assets/poster.jpg"
-  }
+  },
+  "remoteAssets": [
+    {
+      "url": "https://releases.open-design.ai/open-motion/media/sha256/a9a1423f00ece6880e542125b98f7d3d6b214f2f02e31666d6361d19e3c0d737.mp4",
+      "bytes": 62916,
+      "sha256": "a9a1423f00ece6880e542125b98f7d3d6b214f2f02e31666d6361d19e3c0d737",
+      "source": {
+        "path": "assets/lfs/preview.mp4",
+        "bytes": 62916,
+        "sha256": "a9a1423f00ece6880e542125b98f7d3d6b214f2f02e31666d6361d19e3c0d737"
+      }
+    }
+  ]
 }
