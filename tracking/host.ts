@@ -37,7 +37,7 @@ export function previewTrackingContext(value: any, origin: string, token: string
   if (Array.isArray(value)) return value.map(item => previewTrackingContext(item, origin, token));
   if (!value || typeof value !== 'object') return value;
   return Object.fromEntries(Object.entries(value).map(([key, child]) => {
-    if (['previewUrl', 'url'].includes(key) && typeof child === 'string') {
+    if (['previewUrl', 'sessionUrl', 'embeddedPreviewUrl', 'url'].includes(key) && typeof child === 'string') {
       try {
         const url = new URL(child);
         if (url.origin === origin && (url.pathname === '/' || url.pathname.startsWith('/sessions/'))) {

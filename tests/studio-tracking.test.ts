@@ -108,9 +108,11 @@ test('host identity uses declared clients, preserves unknown and scopes all hand
   assert.equal(identifyHost({ name: 'codex', version: 'PRIVATE_VERSION' }).mcp_client_version, undefined);
   assert(!validHostContext({ ...identifyHost({ name: 'codex' }), raw_name: 'PRIVATE' }));
   const url = 'http://localhost:4173/?templates=1&embed=1', token = crypto.randomUUID();
-  const value = previewTrackingContext({ previewUrl: url, previewHandoff: { previewUrl: url,
+  const value = previewTrackingContext({ previewUrl: url, sessionUrl: url, embeddedPreviewUrl: url, previewHandoff: { previewUrl: url,
     nextAction: { codex: { arguments: { target: { url } } } } }, requirements: { url } }, 'http://localhost:4173', token);
   assert.equal(new URL(value.previewUrl).searchParams.get('tracking_context'), token);
+  assert.equal(value.sessionUrl, value.previewUrl);
+  assert.equal(value.embeddedPreviewUrl, value.previewUrl);
   assert.equal(value.previewHandoff.nextAction.codex.arguments.target.url, value.previewUrl);
   assert.equal(value.requirements.url, url);
 });

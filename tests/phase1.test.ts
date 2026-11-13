@@ -216,6 +216,8 @@ test('queued export cancel is project-bound and historical jobs remain addressab
   const args = { projectId: p.projectId, requestId: 'export', expectedRevision: p.revision, versionId: p.version.versionId, audio: 'silent' };
   const host = { host_agent: 'deepseek', host_agent_source: 'mcp_client_info' } as const;
   const exported = await service.call('openmotion_export_request', args, host);
+  const status = await (await transport(store)('/api/project/status')).json();
+  assert.equal(status.exportJob.trackingHost, undefined, 'public status omits internal analytics metadata');
   assert.deepEqual((await store.job(exported.job.id))!.trackingHost, host);
   assert.equal(exported.job.trackingHost, undefined);
   assert.equal((await service.call('openmotion_export_request', args)).job.id, exported.job.id);

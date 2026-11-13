@@ -389,7 +389,7 @@ export class WorkspaceStore {
       try { if (!(await stat(this.exportPath(job))).size) throw new Error('empty'); }
       catch { job.state = 'failed'; job.error = '导出文件已不存在，请重新导出'; delete job.file; await this.saveJob(job); }
     }
-    if (job) { delete job.token; delete job.workerPid; }
+    if (job) { delete job.token; delete job.workerPid; delete job.trackingHost; }
     const catalog = this.projectCatalog();
     // A newly opened empty conversation must not be reported as owner of the last native project.
     const sessionId = catalog.sessions!.find(item => item.artifacts.some(artifact => artifact.projectId === this.projectId))!.id;
