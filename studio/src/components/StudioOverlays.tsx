@@ -1,9 +1,8 @@
-import { FeedbackLayer } from "./FeedbackLayer";
 import { useI18n } from "../i18n/I18n";
 import { memo, type ComponentProps } from "react";
 import { LintModal } from "./LintModal";
 import { AskAgentModal } from "./AskAgentModal";
-import { StudioToast } from "./StudioToast";
+import { StudioToastViewport } from "./StudioToastViewport";
 import { StudioFeedbackCard } from "./feedback/StudioFeedbackCard";
 import { useStudioHost } from "../motion/StudioHost";
 import { useArtifactViewActive } from "../motion/ArtifactViewState";
@@ -84,18 +83,7 @@ export const StudioOverlays = memo(function StudioOverlays({
         />
       )}
       {/* Center notices above the editor; gaps remain transparent to pointer input. */}
-      {toasts.length > 0 && <FeedbackLayer><div className="pointer-events-none absolute top-16 left-1/2 z-91 flex w-[min(420px,calc(100%-48px))] -translate-x-1/2 flex-col items-center gap-2">
-        {toasts.map((toast) => (
-          <StudioToast
-            key={toast.id}
-            message={toast.message}
-            tone={toast.tone}
-            presentation={toast.presentation}
-            leaving={toast.leaving}
-            onDismiss={() => dismissToast(toast.id)}
-          />
-        ))}
-      </div></FeedbackLayer>}
+      <StudioToastViewport toasts={toasts} dismissToast={dismissToast} />
       {host?.feedback !== false && (
         <div className="absolute bottom-6 right-6 z-91">
           <StudioFeedbackCard />
