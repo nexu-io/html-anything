@@ -1,6 +1,6 @@
 import { validHostContext } from './host.ts';
 import type { HostContext } from './host.ts';
-export type Rule = 'uuid' | 'code' | 'boolean' | 'integer' | readonly string[] | { readonly min: number; readonly max: number };
+export type Rule = 'uuid' | 'code' | 'slug' | 'text' | 'boolean' | 'integer' | readonly string[] | { readonly min: number; readonly max: number };
 export type Registry = Record<string, { fields: Record<string, Rule>; required: readonly string[] }>;
 export type Fields = Record<string, string | number | boolean>;
 type RuleValue<R> = R extends readonly string[] ? R[number] : R extends 'boolean' ? boolean : R extends 'integer' | { readonly min: number; readonly max: number } ? number : string;
@@ -16,12 +16,19 @@ export type PendingEvent = {
 export type Receipt = 'accepted' | 'retry' | 'drop';
 export const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 const code = /^[A-Za-z0-9_.-]{1,128}$/;
+// A catalogue resource id: letters, digits and single hyphens between them, at most 64 characters.
+// No dots, slashes, spaces or underscores, so a path, URL, file name or title cannot pass.
+export const slug = /^(?=.{1,64}$)[A-Za-z0-9]+(?:-[A-Za-z0-9]+)*$/;
+// The only free-text rule: a settled search-box value, trimmed, 1–100 characters, no control characters.
+// Register it on a field only when the product decision to collect that text is explicit.
+export const text = (value: string) => value.length >= 1 && value.length <= 100 && value === value.trim() && !/[\u0000-\u001f\u007f]/.test(value);
 export function validField(rule: Rule, value: unknown): value is string | number | boolean {
   if (Array.isArray(rule)) return typeof value === 'string' && rule.includes(value);
   if (typeof rule === 'object' && 'min' in rule) return typeof value === 'number' && Number.isFinite(value) && value >= rule.min && value <= rule.max;
   if (rule === 'boolean') return typeof value === 'boolean';
   if (rule === 'integer') return Number.isSafeInteger(value) && Number(value) >= 0 && Number(value) <= 86_400_000;
-  return typeof value === 'string' && (rule === 'uuid' ? uuid : code).test(value);
+  if (rule === 'text') return typeof value === 'string' && text(value);
+  return typeof value === 'string' && (rule === 'uuid' ? uuid : rule === 'slug' ? slug : code).test(value);
 }
 export function deviceContext() {
   return { device_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone || null,

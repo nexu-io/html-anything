@@ -4,9 +4,9 @@ import assert from 'node:assert/strict';
 import { readFile, readdir, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
-import { createTracker, deviceContext } from '../tracking/core.ts';
+import { createTracker, deviceContext, validProperties } from '../tracking/core.ts';
 import { createNodeTracking, createPosthogSender, loadIdentity } from '../tracking/node.ts';
-import { omEvents } from '../tracking/events.ts';
+import { omEvents, studioEvents } from '../tracking/events.ts';
 import { closeTracking, createAppTracking, saveTrackingPreference, trackingError } from '../shared/tracking.ts';
 import { Phase1Service } from '../phase1.ts';
 import { renderNext } from '../server.ts';
@@ -243,3 +243,24 @@ test('worker reports a real terminal render failure once, separately from queue 
   assert.equal((await store.get()).revision, current.revision);
   assert.equal(events[0].properties.technical_check, 'unknown'); tracking.close();
 }));
+
+test('template library events: the search keyword is the only free text and stays bounded', () => {
+  const id = '4f6d1c2e-8a3b-4c5d-9e7f-0a1b2c3d4e5f';
+  const search = { search_id: id, query_length: 6, result_count: 1, outcome: 'success' };
+  const ok = (event: string, properties: Record<string, unknown>) => assert.equal(validProperties(studioEvents, event, properties), true, JSON.stringify(properties));
+  const no = (event: string, properties: Record<string, unknown>) => assert.equal(validProperties(studioEvents, event, properties), false, JSON.stringify(properties));
+  ok('template_search_result', { ...search, search_keyword: 'saas 发布会 launch', page_name: 'studio', area: 'template_discovery' });
+  for (const search_keyword of ['', ' padded ', 'x'.repeat(101), 'line\nbreak', 42]) no('template_search_result', { ...search, search_keyword });
+  no('template_search_result', { query_length: 6, result_count: 1, outcome: 'success' });
+  // No other template event accepts text: an option is a slug and a title is not a field at all.
+  no('ui_click', { page_name: 'studio', area: 'template_discovery', element: 'filter_option', filter_value: 'Two Words' });
+  no('ui_click', { page_name: 'studio', area: 'template_card', element: 'open_detail', title: 'Private title' });
+  no('ui_click', { page_name: 'studio', area: 'template_discovery', element: 'category_select', search_keyword: 'x' });
+  no('ui_click', { page_name: 'studio', area: 'template_card', element: 'open_detail', template_id: 'https://example.com/a' });
+  ok('ui_click', { page_name: 'studio', area: 'template_card', element: 'open_detail', template_id: 'motion-e6ac921a-f56f-4170-a2be-938cec5d028b', placement: 'related', position: 1 });
+  ok('surface_view', { page_name: 'studio', area: 'template_detail', element: 'detail', detail_view_id: id, detail_mode: 'modal', placement: 'random' });
+  ok('surface_view', { page_name: 'studio', area: 'template_card', element: 'card', template_id: 'hf-moment-M1147', placement: 'catalog', position: 12, sort: 'duration', applied_filter_count: 0 });
+  ok('template_filter_result', { action: 'sort_change', result_count: 0, outcome: 'success', sort: 'reverse' });
+  ok('resource_download_result', { resource_kind: 'motion_guide', download_attempt_id: id, delivery_status: 'fetch_failed', error_code: 'HTTP_404' });
+  no('resource_download_result', { resource_kind: 'motion_guide', download_attempt_id: id, delivery_status: 'saved_to_disk' });
+});
