@@ -9,6 +9,12 @@
 
 
 
+## 2026-11-13: Open the template library for recommendations (OPEND-5205)
+
+- Route catalog browsing, comparisons and recommendations through the existing project-free template library handoff in both Skill and MCP-only discovery. Respect text-only requests, keep browsing separate from creation, and continue directly when a selected template is explicitly requested.
+- Require actual host presentation evidence, preserve the calling chat, retry a failed presentation once and report capability/display failures honestly. Existing chats must load refreshed Tool descriptions and Skills; backend compatibility alone does not refresh their context.
+- Validation: 66 relevant local checks, static checks and Studio typecheck/build passed. Three paired MCP-only trials did not open the library on the baseline and did on the candidate; nine candidate discovery trials reached a loaded directory in an isolated headless test browser. Native desktop browsing/playback was inspected separately with user-confirmed display; inconsistent host visibility telemetry remains unverified. No Tool schema, project-write, history or export behavior is changed, and no release is implied.
+
 ## 2026-11-13: Share material sourcing priorities across production routes
 
 - Centralize source priority, acquisition and usability checks in one shared material reference: explicit choices first, suitable existing assets next, original sources for established subjects, and generated/procedural content for original or supporting expression.
