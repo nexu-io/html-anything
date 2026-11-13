@@ -159,10 +159,10 @@ it("streams an actual 4 MiB source + 64 MiB PCM project beyond the JSON business
       path: n ? `part${n}.txt` : "index.html",
       content: "x".repeat(sourceLimits.fileCharacters),
     })),
-    resources: Array.from({ length: 11 }, (_, n) => ({
+    resources: Array.from({ length: Math.ceil(resourceBytesLimit / resourceLimit) }, (_, n) => ({
       path: `assets/sound${n}.wav`,
       name: `Sound ${n}`,
-      bytes: wave(n < 10 ? resourceLimit : 4 * 1024 ** 2),
+      bytes: wave(Math.min(resourceLimit, resourceBytesLimit - n * resourceLimit)),
     })),
   };
   expect(input.resources.reduce((sum, entry) => sum + entry.bytes.byteLength, 0)).toBe(resourceBytesLimit);

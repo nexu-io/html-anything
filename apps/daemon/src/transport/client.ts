@@ -134,32 +134,21 @@ export class Client {
     }
   }
   async uploadResource(ticket: ResourceUpload, file: Blob, signal?: AbortSignal): Promise<void> {
-    const url = new URL(ticket.url);
-    if (!Number.isSafeInteger(ticket.bytes) || ticket.bytes < 1 || ticket.bytes > resourceLimit)
-      throw new Error("resource size outside supported bounds");
     if (
-      url.origin !== this.origin ||
-      url.username ||
-      url.password ||
-      url.search ||
-      url.hash ||
-      !/^\/resources\/upload\/[a-f0-9]{64}$/.test(url.pathname)
+      !Number.isSafeInteger(ticket.bytes) ||
+      ticket.bytes < 1 ||
+      ticket.bytes > resourceLimit ||
+      file.size !== ticket.bytes
     )
-      throw new Error("resource upload must use this daemon's business grant");
-    if (file.size !== ticket.bytes) throw new Fault("invalid", "resource size changed");
-    const response = await this.transport(url.href, {
-        method: "POST",
-        body: file,
-        credentials: "omit",
-        cache: "no-store",
-        mode: "cors",
-        headers: { "content-type": "application/octet-stream" },
-        signal: AbortSignal.any([AbortSignal.timeout(resourceTransferLimits.transfer), ...(signal ? [signal] : [])]),
-      }),
-      result = await response.json();
-    if (!response.ok)
-      throw new Fault(result.error?.code ?? "integrity", result.error?.message ?? "resource upload failed");
-    if (result.id !== ticket.id || result.ready !== true) throw new Error("resource upload receipt changed");
+      throw new Fault("invalid", "resource size changed or outside supported bounds");
+    await this.uploadBytes(
+      this.businessUrl(ticket.url, "resources", "upload"),
+      ticket.id,
+      file,
+      "application/octet-stream",
+      resourceTransferLimits.transfer,
+      signal,
+    );
   }
   async readResource(input: Input<"resource_read">): Promise<{ resource: ResourceDownload["resource"]; data: Blob }> {
     const ticket = await this.execute("resource_read", input);
@@ -170,47 +159,17 @@ export class Client {
     }
   }
   async downloadResource(ticket: ResourceDownload, signal?: AbortSignal): Promise<Blob> {
-    const url = new URL(ticket.url);
     if (!Number.isSafeInteger(ticket.bytes) || ticket.bytes < 1 || ticket.bytes > resourceLimit)
       throw new Error("resource size outside supported bounds");
-    if (
-      url.origin !== this.origin ||
-      url.username ||
-      url.password ||
-      url.search ||
-      url.hash ||
-      !/^\/resources\/download\/[a-f0-9]{64}$/.test(url.pathname)
-    )
-      throw new Error("resource download must use this daemon's business grant");
-    const response = await this.transport(url.href, {
-      credentials: "omit",
-      cache: "no-store",
-      mode: "cors",
-      signal: AbortSignal.any([AbortSignal.timeout(resourceTransferLimits.transfer), ...(signal ? [signal] : [])]),
-    });
-    if (!response.ok || !response.body) throw new Error("resource download unavailable");
-    const bytes = new Uint8Array(ticket.bytes),
-      reader = response.body.getReader();
-    let size = 0;
-    try {
-      for (;;) {
-        const next = await reader.read();
-        if (next.done) break;
-        if (size + next.value.length > bytes.length) throw new Error("resource download exceeds fixed size");
-        bytes.set(next.value, size);
-        size += next.value.length;
-      }
-      const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
-        digest = `sha256:${Array.from(hash, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
-      if (size !== ticket.bytes || digest !== ticket.digest)
-        throw new Error("resource download differs from fixed bytes/digest");
-      return new Blob([bytes], { type: ticket.resource.type });
-    } finally {
-      await reader.cancel();
-      reader.releaseLock();
-    }
+    return this.readBytes(
+      this.businessUrl(ticket.url, "resources", "download"),
+      ticket,
+      ticket.resource.type,
+      resourceTransferLimits.transfer,
+      signal,
+    );
   }
-  private archiveUrl(value: string, kind: "upload" | "download") {
+  private businessUrl(value: string, namespace: "archives" | "resources", kind: "upload" | "download") {
     const url = new URL(value);
     if (
       url.origin !== this.origin ||
@@ -218,53 +177,78 @@ export class Client {
       url.password ||
       url.search ||
       url.hash ||
-      !new RegExp(`^/archives/${kind}/[a-f0-9]{64}$`).test(url.pathname)
+      !new RegExp(`^/${namespace}/${kind}/[a-f0-9]{64}$`).test(url.pathname)
     )
-      throw new Error("archive transfer must use this daemon's business grant");
+      throw new Error("binary transfer must use this daemon's business grant");
     return url.href;
   }
   async uploadArchive(ticket: ArchiveUpload, file: Blob, signal?: AbortSignal): Promise<void> {
     if (file.size !== ticket.bytes || file.size > archiveLimits.bytes) throw new Error("archive size changed");
-    const response = await this.transport(this.archiveUrl(ticket.url, "upload"), {
-      method: "POST",
-      body: file,
-      credentials: "omit",
-      cache: "no-store",
-      mode: "cors",
-      headers: { "content-type": "application/zip" },
-      signal: AbortSignal.any([AbortSignal.timeout(archiveLimits.transfer), ...(signal ? [signal] : [])]),
-    });
-    const result = await response.json();
-    if (!response.ok)
-      throw new Fault(result.error?.code ?? "integrity", result.error?.message ?? "archive upload failed");
-    if (result.id !== ticket.id || result.ready !== true) throw new Error("archive upload receipt changed");
+    await this.uploadBytes(
+      this.businessUrl(ticket.url, "archives", "upload"),
+      ticket.id,
+      file,
+      "application/zip",
+      archiveLimits.transfer,
+      signal,
+    );
   }
   async downloadArchive(ticket: ArchiveDownload, signal?: AbortSignal): Promise<Blob> {
     if (!Number.isSafeInteger(ticket.bytes) || ticket.bytes < 22 || ticket.bytes > archiveLimits.bytes)
       throw new Error("archive size outside supported bounds");
-    const response = await this.transport(this.archiveUrl(ticket.url, "download"), {
+    return this.readBytes(
+      this.businessUrl(ticket.url, "archives", "download"),
+      ticket,
+      "application/zip",
+      archiveLimits.transfer,
+      signal,
+    );
+  }
+  private async uploadBytes(url: string, id: string, file: Blob, mime: string, timeout: number, signal?: AbortSignal) {
+    const response = await this.transport(url, {
+        method: "POST",
+        body: file,
+        credentials: "omit",
+        cache: "no-store",
+        mode: "cors",
+        headers: { "content-type": mime },
+        signal: AbortSignal.any([AbortSignal.timeout(timeout), ...(signal ? [signal] : [])]),
+      }),
+      result = await response.json();
+    if (!response.ok)
+      throw new Fault(result.error?.code ?? "integrity", result.error?.message ?? "binary upload failed");
+    if (result.id !== id || result.ready !== true) throw new Error("binary upload receipt changed");
+  }
+  private async readBytes(
+    url: string,
+    ticket: { bytes: number; digest: string },
+    mime: string,
+    timeout: number,
+    signal?: AbortSignal,
+  ) {
+    const response = await this.transport(url, {
       credentials: "omit",
       cache: "no-store",
       mode: "cors",
-      signal: AbortSignal.any([AbortSignal.timeout(archiveLimits.transfer), ...(signal ? [signal] : [])]),
+      signal: AbortSignal.any([AbortSignal.timeout(timeout), ...(signal ? [signal] : [])]),
     });
-    if (!response.ok || !response.body) throw new Error("archive download unavailable");
+    if (!response.ok || !response.body) throw new Error("binary download unavailable");
     const bytes = new Uint8Array(ticket.bytes),
       reader = response.body.getReader();
-    let length = 0;
+    let size = 0;
     try {
       for (;;) {
         const next = await reader.read();
         if (next.done) break;
-        if (length + next.value.length > bytes.length) throw new Error("archive download exceeds fixed size");
-        bytes.set(next.value, length);
-        length += next.value.length;
+        if (size + next.value.length > bytes.length) throw new Error("binary download exceeds fixed size");
+        bytes.set(next.value, size);
+        size += next.value.length;
       }
-      if (length !== bytes.length) throw new Error("archive download is incomplete");
+      if (size !== bytes.length) throw new Error("binary download is incomplete");
       const hash = new Uint8Array(await crypto.subtle.digest("SHA-256", bytes)),
         digest = `sha256:${Array.from(hash, (byte) => byte.toString(16).padStart(2, "0")).join("")}`;
-      if (digest !== ticket.digest) throw new Error("archive download digest changed");
-      return new Blob([bytes], { type: "application/zip" });
+      if (digest !== ticket.digest) throw new Error("binary download digest changed");
+      return new Blob([bytes], { type: mime });
     } finally {
       await reader.cancel();
       reader.releaseLock();
