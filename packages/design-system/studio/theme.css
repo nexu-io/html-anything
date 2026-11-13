@@ -1,0 +1,36 @@
+/* Studio utilities and theme behavior; values are generated from ../tokens.json. */
+@import "../tokens.css";
+@import "./tokens.css";
+
+
+/* The colour-scheme picks each token's light or dark half: dark unless the document element
+ * has data-theme="paper". Base layer, so a host's own colour-scheme wins. */
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  :root:where([data-theme="paper"]) {
+    color-scheme: light;
+  }
+}
+:root[data-theme="paper"] {
+  --timeline-clip-label-shadow: none;
+  --timeline-clip-shadow: 0 2px 6px rgb(0 0 0 / 0.12);
+  --timeline-thumbnail-shimmer: linear-gradient(
+    90deg,
+    rgba(24, 24, 27, 0.02) 0%,
+    rgba(24, 24, 27, 0.05) 50%,
+    rgba(24, 24, 27, 0.02) 100%
+  );
+}
+
+/* Motion durations as utilities, since Tailwind has no `--duration-*`
+ * namespace. Each one zeroes itself under `prefers-reduced-motion`, so a
+ * caller cannot forget the reduced-motion case. */
+
+@utility duration-* {
+  transition-duration: --value(--duration-*);
+  @media (prefers-reduced-motion: reduce) {
+    transition-duration: 0ms;
+  }
+}

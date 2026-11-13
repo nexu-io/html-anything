@@ -1,3 +1,4 @@
+import { iconSprite } from "../packages/design-system/index.js";
 import { isEditableTemplate, collectionNames, formatTemplateViews, socialPlatform, templateCategoryLabel } from '../shared/catalog';
 import type { GalleryTemplate, TemplatePage } from '../shared/catalog';
 import { hostNames, templatePrompt } from '../shared/integration';
@@ -26,7 +27,7 @@ export function mountTemplates(root: HTMLElement, options: {
   const canCopy = () => !!options.info() && options.host() !== 'chatgpt';
   const glyph = (name: string) => {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg'), use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    svg.setAttribute('class', 'ui-icon'); svg.setAttribute('aria-hidden', 'true'); use.setAttribute('href', '/web/design-system/icons.svg#icon-' + name); svg.append(use); return svg;
+    svg.setAttribute('class', 'ui-icon'); svg.setAttribute('aria-hidden', 'true'); use.setAttribute('href', iconSprite + '#icon-' + name); svg.append(use); return svg;
   };
   const copyTemplate = (template: GalleryTemplate, button: HTMLButtonElement) => {
     const info = options.info(); if (info && canCopy()) void options.copy(templatePrompt(info, options.host(), template, language.locale), 'Template instruction', button);

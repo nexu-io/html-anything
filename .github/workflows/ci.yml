@@ -179,6 +179,7 @@ jobs:
           npm run check
           npm run typecheck:studio
           npm run build:studio
+          node --test tests/design-system.test.ts
           npm run build:tracking
           node --experimental-strip-types --test tests/tracking.test.ts
       - name: Validate standalone installation and packaging

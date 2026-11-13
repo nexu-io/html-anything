@@ -3,6 +3,9 @@
   const container = document.getElementById('swatches');
   function refresh() {
     const styles = getComputedStyle(document.documentElement);
+    document.querySelectorAll('[data-token-value]').forEach(element => {
+      element.textContent = styles.getPropertyValue(`--motion-${element.dataset.tokenValue}`).trim();
+    });
     container.replaceChildren(...colors.map(([token, label]) => {
       const swatch = document.createElement('article'); swatch.className = 'swatch';
       const color = document.createElement('div'); color.className = 'swatch-color'; color.style.setProperty('--swatch', `var(--motion-${token})`);

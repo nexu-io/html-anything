@@ -21,6 +21,19 @@ Keep persistent user instructions for repository work in this file, and keep `CL
 3. Before committing or submitting repository content, verify that it follows these English-language requirements.
 4. Branch new work from the latest `main` and target all pull requests at `main`. Merge reviewed changes directly into `main` when authorized; do not use `feature/motion` as an intermediate integration branch.
 
+## Shared design system — required for every Agent
+
+All Agents must use [packages/design-system](packages/design-system/README.md) for interface styling. Read that package's integration and change rules before creating or changing CSS, component appearance, themes, icons, fonts, loading states or brand assets. [docs/design-system.md](docs/design-system.md) describes the product integration; [brand guidance](packages/design-system/brand/BRANDKIT.md) governs public brand material.
+
+1. **One maintained source.** Define shared visual decisions in `packages/design-system`: `tokens.json` owns theme values and Studio aliases; package styles own reusable controls, materials and states; package assets own icons, fonts and brand artwork. Never create a second palette, font stack or copied component recipe inside a feature module.
+2. **Reference, do not duplicate.** Application modules consume the package's CSS entry points, semantic variables, generated utilities and asset exports. Use existing roles for colors, typography, spacing, radii, shadows and motion. If a needed reusable role or recipe is missing, extend the design system first and then reference it from consumers. Do not introduce literal interface colors, fallback palettes or arbitrary visual values to bypass it.
+3. **Keep the boundary useful.** Features retain their layout, content, interactions and measured geometry. Domain values such as timeline coordinates, user-selected artwork colors, image pixels and authored video styles are not application-theme tokens. Do not theme project iframes, templates or third-party artwork as a side effect of changing the editor.
+4. **Change the source, then generate.** Run `npm run design:tokens` after changing token values or mirrored brand assets. Do not hand-edit generated CSS or compatibility mirrors. Old entry paths may forward to the package but must not become independent implementations. Preserve upstream attribution and font licenses.
+5. **Verify propagation.** For shared visual changes, check the affected surfaces together, including both themes, startup/loading, controls and dialogs, template browsing and narrow layouts where applicable. Run `npm run design:check` and the boundary-appropriate validation above. Keep automated checks, browser inspection and human visual acceptance distinct.
+6. **Keep every Agent aligned.** `AGENTS.md` is authoritative; `CLAUDE.md` and `cloud.md` point to this section. Include this requirement in delegated task context and code reviews. A feature-local style exception must have a concrete domain reason; an older hard-coded value elsewhere is not permission to add another one.
+
+The package is a local source module within the standalone root npm application. Do not add workspace-only dependencies or publish it without separate authorization.
+
 ## README writing and acknowledgements
 
 When creating or updating any README, including alternative drafts and translations, describe OpenMotion's own capabilities, workflows and the meaning of each example. Do not introduce other products as comparisons, inspiration or source labels in the main narrative, headings, feature descriptions or showcase copy. Avoid wording such as "From MotionGit", "inspired by Hypit" or "the alternative to ...".
