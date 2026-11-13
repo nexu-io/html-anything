@@ -339,12 +339,13 @@ const impressions = () => Observer.instances.filter(item => !item.disconnected &
 const uuid = /^[0-9a-f-]{36}$/;
 it('reports the library funnel with registered fields: library, card open, detail, instruction, copy and download', async () => {
   await mount();
-  expect(events('surface_view', { area: 'template_library' })).toEqual([{ page_name: 'studio', area: 'template_library', element: 'library', result_count: 3 }]);
+  expect(events('surface_view', { area: 'template_library' })).toEqual([{ page_name: 'studio', area: 'template_library', element: 'library' }]);
   await act(async () => preview('First'));
   expect(events('ui_click', { element: 'open_detail' })).toEqual([{ page_name: 'studio', area: 'template_card', element: 'open_detail', template_id: 'one', resource_kind: 'editable_project', placement: 'catalog', position: 2, sort: 'recommended', applied_filter_count: 0 }]);
   const [shown] = events('surface_view', { area: 'template_detail' });
   expect(shown).toMatchObject({ template_id: 'one', placement: 'catalog', position: 2, detail_mode: 'modal' });
   expect(shown.detail_view_id).toMatch(uuid);
+  await act(async () => Observer.instances.find(item => item.elements.some(element => element.matches('section[aria-label="Template instruction"] p')))!.emit());
   expect(events('surface_view', { area: 'template_instruction' })).toEqual([expect.objectContaining({ template_id: 'one', instruction_kind: 'template_use', detail_view_id: shown.detail_view_id })]);
   const detail = host.querySelector('dialog[aria-label="Template preview"]')!;
   await act(async () => button('Recreate template', detail).click());
@@ -427,4 +428,64 @@ it('counts a card impression after an unbroken visible second, once per result s
     expect(seen()).toHaveLength(2);
     for (const item of tracked) expect(validProperties(studioEvents, item.event, item.properties), JSON.stringify(item)).toBe(true);
   } finally { vi.useRealTimers(); }
+});
+
+it('counts each library opening while catalog loading is pending or failed, without repeating on retry', async () => {
+  let fail!: (reason: Error) => void;
+  vi.stubGlobal('fetch', vi.fn((url: string) => url.endsWith('/integration') ? Promise.resolve(Response.json({}))
+    : new Promise<Response>((_resolve, reject) => { fail = reject; })));
+  await mount();
+  expect(events('surface_view', { area: 'template_library' })).toEqual([
+    { page_name: 'studio', area: 'template_library', element: 'library' },
+  ]);
+  await act(async () => fail(new Error('CATALOG_OFFLINE')));
+  expect(host.querySelector('[role="alert"]')?.textContent).toContain('CATALOG_OFFLINE');
+  fetchItems();
+  await act(async () => button('Retry').click());
+  expect(cards()).toHaveLength(3);
+  expect(events('surface_view', { area: 'template_library' })).toHaveLength(1);
+  const render = (open: boolean) => root.render(<I18nProvider initialLocale="en"><TemplateLibraryDialog open={open} busy={false} error="" onClose={() => {}} onOpen={() => {}} /></I18nProvider>);
+  await act(async () => render(false));
+  await act(async () => render(true));
+  expect(events('surface_view', { area: 'template_library' })).toHaveLength(2);
+});
+
+it('counts instruction text only when visible, once per detail, and ignores callbacks from an old detail', async () => {
+  await mount();
+  await act(async () => preview('First'));
+  const exposures = () => events('surface_view', { area: 'template_instruction' });
+  const textObserver = () => Observer.instances.find(item => !item.disconnected
+    && item.elements.some(element => element.matches('section[aria-label="Template instruction"] p, section[aria-label="Template instruction"] textarea')))!;
+  expect(exposures()).toHaveLength(0);
+  const first = textObserver();
+  const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(true);
+  await act(async () => first.emit());
+  expect(exposures()).toHaveLength(0);
+  hidden.mockReturnValue(false);
+  await act(async () => document.dispatchEvent(new Event('visibilitychange')));
+  expect(exposures()).toHaveLength(1);
+  await act(async () => first.emit());
+  expect(exposures()).toHaveLength(1);
+  await act(async () => button('Close template preview').click());
+  await act(async () => preview('First'));
+  await act(async () => first.emit());
+  expect(exposures()).toHaveLength(1);
+  await act(async () => textObserver().emit());
+  expect(exposures()).toHaveLength(2);
+  expect(exposures()[0].detail_view_id).not.toBe(exposures()[1].detail_view_id);
+});
+
+it('joins repeated recreate and submit attempts to their own copy results', async () => {
+  await mount();
+  await act(async () => preview('First'));
+  await act(async () => button('Recreate template').click());
+  vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('Clipboard denied'));
+  await act(async () => button('Recreate and submit').click());
+  const intents = events('ui_click', { element: 'start_use' });
+  const results = events('template_instruction_copy_result');
+  expect(intents.map(item => item.copy_attempt_id)).toEqual(results.map(item => item.copy_attempt_id));
+  expect(new Set(results.map(item => item.copy_attempt_id)).size).toBe(2);
+  expect(results.map(item => item.copy_status)).toEqual(['clipboard_written', 'manual_fallback_shown']);
+  await act(async () => button('Open and edit').click());
+  expect(events('ui_click', { template_action: 'open_edit' })[0]).not.toHaveProperty('copy_attempt_id');
 });
