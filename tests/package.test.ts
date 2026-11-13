@@ -41,16 +41,16 @@ test('ZIP stores UTF-8 names and file sizes in local and central headers', () =>
   assert.equal(archive.readUInt32LE(archive.readUInt32LE(end + 16)), 0x02014b50);
 });
 
-test('Library compatibility folders contain only forwarding entries and no duplicated payload', async () => {
-  const { readdir, readFile } = await import('node:fs/promises');
-  for (const [old, current] of Object.entries({ brandkit: 'openmotion-brandkit', 'presenter-story': 'openmotion-presenter-story', 'motion-design-remix': 'openmotion-design-remix' })) {
-    const folder = new URL('../library/skills/' + old + '/', import.meta.url);
-    assert.deepEqual((await readdir(folder)).sort(), ['SKILL.md', 'agents']);
-    assert.deepEqual(await readdir(new URL('agents/', folder)), ['openai.yaml']);
-    assert.match(await readFile(new URL('SKILL.md', folder), 'utf8'), new RegExp('../' + current + '/SKILL.md'));
-    const files = await distributionFiles('phase1');
-    assert.deepEqual(files.filter(file => file.startsWith('library/skills/' + old + '/')).sort(), [
-      'library/skills/' + old + '/SKILL.md', 'library/skills/' + old + '/agents/openai.yaml',
-    ]);
+test('source and distribution expose only canonical Skill folders', async () => {
+  const { readdir } = await import('node:fs/promises');
+  const core = ['openmotion-director', 'openmotion-production', 'openmotion-recreate', 'openmotion-reference-video', 'openmotion-template-to-video', 'openmotion-video-to-template'];
+  const library = ['openmotion-brandkit', 'openmotion-design-remix', 'openmotion-presenter-story'];
+  assert.deepEqual((await readdir(new URL('../skills/', import.meta.url))).filter(name => !name.startsWith('.')).sort(), core);
+  assert.deepEqual((await readdir(new URL('../library/skills/', import.meta.url))).sort(), library);
+  for (const profile of ['phase1', 'legacy']) {
+    const files = await distributionFiles(profile);
+    const roots = [...new Set(files.filter(file => /^(?:library\/)?skills\//.test(file)).map(file => file.split('/').at(file.startsWith('library/') ? 2 : 1)))];
+    assert(roots.length >= 8);
+    assert(roots.every(name => name?.startsWith('openmotion-')), roots.join(', '));
   }
 });

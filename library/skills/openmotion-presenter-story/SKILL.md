@@ -21,7 +21,7 @@ If the user selects the packaged [Presenter Tech template](../../templates/prese
 
 Start from the user's brief, footage, brand assets and existing captions. Preserve their topic, language, voice, approved takes and requested scope. Only ask for missing inputs needed for the selected edit. If a transcript or word timing is needed, use an available host transcription/alignment capability or provided timings; do not invent spoken words or word-level clocks from sampled frames.
 
-Map selected source ranges to the output timeline before adding graphics. Record the source file, in/out times, output start, retained speech and overlays. For a new video reference, use OpenMotion's `motion-recreate` workflow with this recipe as creative context; for an existing editable project, continue its established editing route. This library Skill adds design context, not another MCP Tool or core production route.
+Map selected source ranges to the output timeline before adding graphics. Record the source file, in/out times, output start, retained speech and overlays. For a new video reference, use OpenMotion's `openmotion-recreate` workflow with this recipe as creative context; for an existing editable project, continue its established editing route. This library Skill adds design context, not another MCP Tool or core production route.
 
 Use the creator's own or supplied presenter recording. Changing topic means rewriting the story and using matching speech, footage and supporting visuals; changing on-screen text over someone else's unrelated speech is not a finished adaptation. Keep the face, mouth, gestures and captions unobstructed. Reframe to the target aspect ratio after checking the actual face and content positions.
 
@@ -29,4 +29,4 @@ Preview at normal speed with sound. Check speech continuity after cuts, caption 
 
 ## Share the reusable result
 
-After an actual adaptation is reviewed, keep its Motion MD, input contract, editable source, original/source attribution, permitted assets and real reference/remix comparison together. Follow `motion-video-to-template` when reusable template production is requested; its `TEMPLATE.md` handoff remains in place. Do not include personal footage, voices or third-party assets in a community package merely because they appeared in a reference.
+After an actual adaptation is reviewed, keep its Motion MD, input contract, editable source, original/source attribution, permitted assets and real reference/remix comparison together. Follow `openmotion-video-to-template` when reusable template production is requested; its `TEMPLATE.md` handoff remains in place. Do not include personal footage, voices or third-party assets in a community package merely because they appeared in a reference.

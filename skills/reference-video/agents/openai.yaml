@@ -1,5 +1,0 @@
-interface:
-  display_name: "OpenMotion · reference-video compatibility alias"
-  short_description: "Compatibility entry; use openmotion-reference-video"
-policy:
-  allow_implicit_invocation: false
