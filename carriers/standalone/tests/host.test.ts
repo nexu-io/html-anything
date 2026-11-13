@@ -104,9 +104,17 @@ it("edits parent host windows without stretching shared child source and restore
     const drag = async (id: string, resize: boolean, delta: number, duration: number) => {
       const track = row(id),
         target = track.locator(resize ? ".om-time__handle" : ".om-time__bar"),
-        box = await target.boundingBox(),
-        svg = page.getByRole("group", { name: "原生时间轴轨道", exact: true }),
-        bounds = await svg.boundingBox(),
+        svg = page.getByRole("group", { name: "原生时间轴轨道", exact: true });
+      await expect.poll(() => track.getAttribute("aria-disabled")).not.toBe("true");
+      await target.hover();
+      let box = await target.boundingBox();
+      await expect
+        .poll(async () => {
+          box = await target.boundingBox();
+          return box !== null;
+        })
+        .toBe(true);
+      const bounds = await svg.boundingBox(),
         width = await svg.evaluate((element) => (element as SVGSVGElement).viewBox.baseVal.width);
       if (!box || !bounds) throw Error("missing host track bounds");
       const x = box.x + (resize ? box.width / 2 : Math.min(16, box.width / 2)),
