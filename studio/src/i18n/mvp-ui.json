@@ -294,7 +294,12 @@
     "Hide": "非表示",
     "About {seconds}s remaining": "残り約 {seconds} 秒",
     "Download attempt {attempt}/{total}": "ダウンロード試行 {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "自動再試行後もダウンロードがタイムアウトしました。接続を確認して再試行してください。"
+    "Download timed out after automatic retries. Check your connection and retry.": "自動再試行後もダウンロードがタイムアウトしました。接続を確認して再試行してください。",
+    "Composition selected": "コンポジションを選択中",
+    "No editable properties": "編集可能なプロパティはありません",
+    "Select a layer inside this composition to edit its properties.": "このコンポジション内のレイヤーを選択してプロパティを編集してください。",
+    "Select another layer or ask the agent to edit this element.": "別のレイヤーを選択するか、エージェントにこの要素の編集を依頼してください。",
+    "Use": "使う"
   },
   "ko": {
     "Join the OpenDesign community": "OpenDesign 커뮤니티에 참여하세요",
@@ -591,7 +596,12 @@
     "Hide": "숨기기",
     "About {seconds}s remaining": "약 {seconds}초 남음",
     "Download attempt {attempt}/{total}": "다운로드 시도 {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "자동 재시도 후에도 다운로드 시간이 초과되었습니다. 연결을 확인하고 다시 시도하세요."
+    "Download timed out after automatic retries. Check your connection and retry.": "자동 재시도 후에도 다운로드 시간이 초과되었습니다. 연결을 확인하고 다시 시도하세요.",
+    "Composition selected": "컴포지션 선택됨",
+    "No editable properties": "편집 가능한 속성 없음",
+    "Select a layer inside this composition to edit its properties.": "이 컴포지션 안의 레이어를 선택하여 속성을 편집하세요.",
+    "Select another layer or ask the agent to edit this element.": "다른 레이어를 선택하거나 에이전트에게 이 요소의 편집을 요청하세요.",
+    "Use": "사용"
   },
   "de": {
     "Join the OpenDesign community": "Tritt der OpenDesign-Community bei",
@@ -888,7 +898,12 @@
     "Hide": "Ausblenden",
     "About {seconds}s remaining": "Noch etwa {seconds} s",
     "Download attempt {attempt}/{total}": "Downloadversuch {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "Zeitüberschreitung nach automatischen Wiederholungen. Verbindung prüfen und erneut versuchen."
+    "Download timed out after automatic retries. Check your connection and retry.": "Zeitüberschreitung nach automatischen Wiederholungen. Verbindung prüfen und erneut versuchen.",
+    "Composition selected": "Komposition ausgewählt",
+    "No editable properties": "Keine bearbeitbaren Eigenschaften",
+    "Select a layer inside this composition to edit its properties.": "Wähle eine Ebene innerhalb dieser Komposition aus, um ihre Eigenschaften zu bearbeiten.",
+    "Select another layer or ask the agent to edit this element.": "Wähle eine andere Ebene aus oder bitte den Agenten, dieses Element zu bearbeiten.",
+    "Use": "Verwenden"
   },
   "fr": {
     "Join the OpenDesign community": "Rejoignez la communauté OpenDesign",
@@ -1185,7 +1200,12 @@
     "Hide": "Masquer",
     "About {seconds}s remaining": "Environ {seconds} s restantes",
     "Download attempt {attempt}/{total}": "Tentative de téléchargement {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "Le téléchargement a expiré après les tentatives automatiques. Vérifiez votre connexion et réessayez."
+    "Download timed out after automatic retries. Check your connection and retry.": "Le téléchargement a expiré après les tentatives automatiques. Vérifiez votre connexion et réessayez.",
+    "Composition selected": "Composition sélectionnée",
+    "No editable properties": "Aucune propriété modifiable",
+    "Select a layer inside this composition to edit its properties.": "Sélectionnez un calque dans cette composition pour modifier ses propriétés.",
+    "Select another layer or ask the agent to edit this element.": "Sélectionnez un autre calque ou demandez à l’agent de modifier cet élément.",
+    "Use": "Utiliser"
   },
   "ru": {
     "Join the OpenDesign community": "Присоединяйтесь к сообществу OpenDesign",
@@ -1482,7 +1502,12 @@
     "Hide": "Скрыть",
     "About {seconds}s remaining": "Осталось около {seconds} с",
     "Download attempt {attempt}/{total}": "Попытка загрузки {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "Время загрузки истекло после автоматических повторов. Проверьте подключение и повторите попытку."
+    "Download timed out after automatic retries. Check your connection and retry.": "Время загрузки истекло после автоматических повторов. Проверьте подключение и повторите попытку.",
+    "Composition selected": "Выбрана композиция",
+    "No editable properties": "Нет редактируемых свойств",
+    "Select a layer inside this composition to edit its properties.": "Выберите слой внутри этой композиции, чтобы изменить его свойства.",
+    "Select another layer or ask the agent to edit this element.": "Выберите другой слой или попросите агента изменить этот элемент.",
+    "Use": "Использовать"
   },
   "es": {
     "Join the OpenDesign community": "Únete a la comunidad de OpenDesign",
@@ -1779,7 +1804,12 @@
     "Hide": "Ocultar",
     "About {seconds}s remaining": "Quedan unos {seconds} s",
     "Download attempt {attempt}/{total}": "Intento de descarga {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "La descarga agotó el tiempo tras los reintentos automáticos. Comprueba la conexión y vuelve a intentarlo."
+    "Download timed out after automatic retries. Check your connection and retry.": "La descarga agotó el tiempo tras los reintentos automáticos. Comprueba la conexión y vuelve a intentarlo.",
+    "Composition selected": "Composición seleccionada",
+    "No editable properties": "No hay propiedades editables",
+    "Select a layer inside this composition to edit its properties.": "Selecciona una capa dentro de esta composición para editar sus propiedades.",
+    "Select another layer or ask the agent to edit this element.": "Selecciona otra capa o pide al agente que edite este elemento.",
+    "Use": "Usar"
   },
   "pt-BR": {
     "Join the OpenDesign community": "Junte-se à comunidade OpenDesign",
@@ -2076,7 +2106,12 @@
     "Hide": "Ocultar",
     "About {seconds}s remaining": "Cerca de {seconds} s restantes",
     "Download attempt {attempt}/{total}": "Tentativa de download {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "O download excedeu o tempo após as tentativas automáticas. Verifique a conexão e tente novamente."
+    "Download timed out after automatic retries. Check your connection and retry.": "O download excedeu o tempo após as tentativas automáticas. Verifique a conexão e tente novamente.",
+    "Composition selected": "Composição selecionada",
+    "No editable properties": "Nenhuma propriedade editável",
+    "Select a layer inside this composition to edit its properties.": "Selecione uma camada dentro desta composição para editar suas propriedades.",
+    "Select another layer or ask the agent to edit this element.": "Selecione outra camada ou peça ao agente para editar este elemento.",
+    "Use": "Usar"
   },
   "it": {
     "Join the OpenDesign community": "Unisciti alla community OpenDesign",
@@ -2373,7 +2408,12 @@
     "Hide": "Nascondi",
     "About {seconds}s remaining": "Circa {seconds} s rimanenti",
     "Download attempt {attempt}/{total}": "Tentativo di download {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "Il download è scaduto dopo i tentativi automatici. Controlla la connessione e riprova."
+    "Download timed out after automatic retries. Check your connection and retry.": "Il download è scaduto dopo i tentativi automatici. Controlla la connessione e riprova.",
+    "Composition selected": "Composizione selezionata",
+    "No editable properties": "Nessuna proprietà modificabile",
+    "Select a layer inside this composition to edit its properties.": "Seleziona un livello all’interno di questa composizione per modificarne le proprietà.",
+    "Select another layer or ask the agent to edit this element.": "Seleziona un altro livello o chiedi all’agente di modificare questo elemento.",
+    "Use": "Usa"
   },
   "tr": {
     "Join the OpenDesign community": "OpenDesign topluluğuna katılın",
@@ -2670,6 +2710,11 @@
     "Hide": "Gizle",
     "About {seconds}s remaining": "Yaklaşık {seconds} sn kaldı",
     "Download attempt {attempt}/{total}": "İndirme denemesi {attempt}/{total}",
-    "Download timed out after automatic retries. Check your connection and retry.": "Otomatik yeniden denemelerden sonra indirme zaman aşımına uğradı. Bağlantınızı kontrol edip tekrar deneyin."
+    "Download timed out after automatic retries. Check your connection and retry.": "Otomatik yeniden denemelerden sonra indirme zaman aşımına uğradı. Bağlantınızı kontrol edip tekrar deneyin.",
+    "Composition selected": "Kompozisyon seçildi",
+    "No editable properties": "Düzenlenebilir özellik yok",
+    "Select a layer inside this composition to edit its properties.": "Özelliklerini düzenlemek için bu kompozisyonun içindeki bir katmanı seçin.",
+    "Select another layer or ask the agent to edit this element.": "Başka bir katman seçin veya ajandan bu öğeyi düzenlemesini isteyin.",
+    "Use": "Kullan"
   }
 }
