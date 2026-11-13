@@ -29,7 +29,7 @@ export function beginPendingAssetDrop(
       id: drop.id, tag: getTimelineAssetKind(drop.assetPath) ?? "div",
       ...drop.placement, duration: drop.duration ?? 5,
     }).filter((element) => (element.tag === "audio") === (kind === "audio"));
-    const start = resolveNearestFreeStart(busy, placement.track, placement.start, duration ?? 5, null);
+    const start = placement.newTrack ? placement.start : resolveNearestFreeStart(busy, placement.track, placement.start, duration ?? 5, null);
     return { pendingAssetDrops: [...state.pendingAssetDrops, {
       id, assetPath, placement: { ...placement, start }, duration,
     }] };

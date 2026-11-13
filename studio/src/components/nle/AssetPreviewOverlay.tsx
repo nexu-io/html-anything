@@ -68,6 +68,7 @@ function AssetPreviewMedia({
 
 export function AssetPreviewOverlay({ modal = false, onOpen }: { modal?: boolean; onOpen?: () => void }) {
   const { t } = useI18n();
+  const previewAdd = useAssetPreviewStore((s) => s.previewAdd);
   const previewAsset = useAssetPreviewStore((s) => s.previewAsset);
   const previewProjectId = useAssetPreviewStore((s) => s.previewProjectId);
   const clearPreviewAsset = useAssetPreviewStore((s) => s.clearPreviewAsset);
@@ -118,7 +119,10 @@ export function AssetPreviewOverlay({ modal = false, onOpen }: { modal?: boolean
       ? catalogPreview.videoUrl ?? catalogPreview.posterUrl
       : previewProjectId ? resolveMediaPreviewUrl(previewAsset!, previewProjectId) : undefined;
     const kind = catalogPreview ? (catalogPreview.videoUrl ? "video" : "image") : resolveAssetKind(previewAsset!);
-    return url ? <AssetPreviewDialog url={url} kind={kind} name={name} onClose={clearPreviewAsset} /> : null;
+    return url ? <AssetPreviewDialog key={`${previewProjectId}:${url}`} url={url} kind={kind} name={name} onAdd={previewAdd} onClose={() => {
+      const current = useAssetPreviewStore.getState();
+      if (current.catalogPreview === catalogPreview && current.previewAsset === previewAsset && current.previewProjectId === previewProjectId) clearPreviewAsset();
+    }} /> : null;
   }
 
   if (!previewAsset || !previewProjectId) return null;

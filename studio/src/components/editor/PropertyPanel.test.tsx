@@ -6,6 +6,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import type { PropertyPanelProps } from "./propertyPanelHelpers";
 import type { TimelineEditCallbacks } from "../../player/components/timelineCallbacks";
 import { PropertyPanel } from "./PropertyPanel";
+import { StudioHostContext } from "../../motion/StudioHost";
 import { TimelineEditProvider } from "../../contexts/TimelineEditContext";
 import { usePlayerStore } from "../../player/store/playerStore";
 
@@ -265,6 +266,7 @@ async function renderPanel(
   elementOverride: NonNullable<PropertyPanelProps["element"]> = baseElement(),
   propsOverride: Partial<PropertyPanelProps> = {},
   options: {
+    mvp?: boolean;
     currentTime?: number;
     selectedElementId?: string;
     timelineEdit?: TimelineEditCallbacks;
@@ -301,7 +303,9 @@ async function renderPanel(
     act(() => {
       root.render(
         <TimelineEditProvider value={options.timelineEdit ?? {}}>
-          <PropertyPanel {...props} />
+          <StudioHostContext.Provider value={{ mvpEditor: options.mvp }}>
+            <PropertyPanel {...props} />
+          </StudioHostContext.Provider>
         </TimelineEditProvider>,
       );
     });
@@ -1038,6 +1042,38 @@ describe("PropertyPanel — Motion is for things that move", () => {
     expect(titles.some((t) => t.includes("Timing"))).toBe(false);
     // It is still a mixer bus: the reason to select one at all.
     expect(titles.some((t) => t.includes("Audio FX"))).toBe(true);
+    act(() => root.unmount());
+  });
+});
+
+
+describe("MVP property panel with no available controls", () => {
+  it("guides composition selection and restores controls when an internal layer is selected", async () => {
+    const base = baseElement();
+    const composition = {
+      ...base, label: "Glitch", textFields: [], textContent: "",
+      isCompositionHost: true, existsInSource: true,
+      compositionSrc: "compositions/glitch.html",
+      capabilities: { ...base.capabilities, canEditStyles: false },
+    };
+    const { host, root, render } = await renderPanel(true, composition, {}, { mvp: true });
+    expect(host.textContent).toContain("Composition selected");
+    expect(host.textContent).toContain("Select a layer inside this composition");
+    expect(host.querySelector('[data-flat-group-open="true"]')).toBeNull();
+    render(base);
+    expect(host.textContent).not.toContain("Composition selected");
+    expect(host.querySelector("textarea")).not.toBeNull();
+    act(() => root.unmount());
+  });
+
+  it("also explains a generated layer with no available controls", async () => {
+    const base = baseElement();
+    const { host, root } = await renderPanel(true, {
+      ...base, textFields: [], textContent: "", existsInSource: false,
+      capabilities: { ...base.capabilities, canEditStyles: false },
+    }, {}, { mvp: true });
+    expect(host.textContent).toContain("No editable properties");
+    expect(host.textContent).toContain("ask the agent to edit this element");
     act(() => root.unmount());
   });
 });

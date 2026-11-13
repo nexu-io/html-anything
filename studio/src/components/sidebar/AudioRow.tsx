@@ -35,7 +35,7 @@ export function AudioRow({
   copyFeedback: CopyFeedback;
   onDelete?: (path: string) => void;
   onRename?: (oldPath: string, newPath: string) => void;
-  onAddAssetToTimeline?: (path: string) => void;
+  onAddAssetToTimeline?: (path: string) => unknown;
 }) {
   const { t } = useI18n();
   const mvp = useMvpEditor();
@@ -87,7 +87,7 @@ export function AudioRow({
       }
     }
     // Not added → preview overlay (audio player)
-    setPreviewAsset(asset, projectId);
+    setPreviewAsset(asset, projectId, onAddAssetToTimeline ? () => onAddAssetToTimeline(asset) : undefined);
   }, [
     mvp,
     used,
@@ -97,6 +97,7 @@ export function AudioRow({
     setSelectedElementId,
     requestTimelineFocus,
     setPreviewAsset,
+    onAddAssetToTimeline,
     clearPreviewAsset,
   ]);
 

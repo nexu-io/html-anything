@@ -2,6 +2,7 @@
  * Block drop/add handlers for the Studio.
  * Extracted from App.tsx to keep file sizes under the 600-line limit.
  */
+import { useMvpEditor } from "../motion/StudioHost";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { TimelineElement } from "../player";
 import { usePlayerStore } from "../player";
@@ -46,7 +47,7 @@ export interface UseBlockHandlersResult {
   setActiveBlockParams: React.Dispatch<
     React.SetStateAction<UseBlockHandlersResult["activeBlockParams"]>
   >;
-  handleAddBlock: (blockName: string) => void;
+  handleAddBlock: (blockName: string) => Promise<boolean>;
   handleTimelineBlockDrop: (blockName: string, placement: { start: number; track: number }) => Promise<void>;
   handleAddMediaOverlay: (blockName: string, placement: MediaOverlayPlacement) => Promise<void>;
   handlePreviewBlockDrop: (blockName: string, position: { left: number; top: number }) => void;
@@ -59,6 +60,7 @@ export function useBlockHandlers({
   setRightCollapsed,
   setRightPanelTab,
 }: UseBlockHandlersParams): UseBlockHandlersResult {
+  const mvp = useMvpEditor();
   const [activeBlockParams, setActiveBlockParams] =
     useState<UseBlockHandlersResult["activeBlockParams"]>(null);
 
@@ -97,10 +99,10 @@ export function useBlockHandlers({
   }, [scope]);
   const { showToast } = blockCtxDeps;
   const runBlockInstall = useCallback(
-    (blockName: string, install: () => ReturnType<typeof addBlockToProject>, placement: { start: number; track?: number; duration?: number } = {
+    (blockName: string, install: () => ReturnType<typeof addBlockToProject>, placement: { start: number; track?: number; duration?: number; newTrack?: "top" } = {
       start: usePlayerStore.getState().currentTime, track: 0,
     }) => {
-      const pendingId = beginPendingAssetDrop(blockName, { start: placement.start, track: placement.track ?? 0 }, placement.duration);
+      const pendingId = beginPendingAssetDrop(blockName, { ...placement, track: placement.track ?? 0 }, placement.duration);
       const work = installQueueRef.current.then(async () => {
         if (scopeRef.current !== scope) return null;
         try {
@@ -123,35 +125,36 @@ export function useBlockHandlers({
   );
 
   const handleAddBlock = useCallback(
-    (blockName: string) => {
-      if (!projectId) return;
+    async (blockName: string) => {
+      if (!projectId) return false;
       const currentTime = usePlayerStore.getState().currentTime;
-      // fallow-ignore-next-line complexity
-      void (async () => {
-        const result = await runBlockInstall(blockName, () =>
-          addBlockToProject({
-            projectId,
-            blockName,
-            ...blockCtx,
-            previewIframe: previewIframeRef.current,
-            currentTime,
-          }),
-        );
-        if (result === null) return;
-        const params = result?.block.type === "hyperframes:block" ? result.block.params : undefined;
-        if (params?.length) {
-          setActiveBlockParams({
-            blockName: result!.block.name,
-            blockTitle: result!.block.title,
-            params,
-            compositionPath: result!.compositionPath,
-          });
-          setRightCollapsed(false);
-          setRightPanelTab("block-params");
-        }
-      })();
+      const placement = { start: currentTime, track: 0, ...(mvp ? { newTrack: "top" as const } : {}) };
+      const result = await runBlockInstall(blockName, () =>
+        addBlockToProject({
+          projectId,
+          blockName,
+          ...blockCtx,
+          previewIframe: previewIframeRef.current,
+          currentTime,
+          ...(mvp ? { placement } : {}),
+        }), placement,
+      );
+      if (result === null) return false;
+      selectAndRevealTimelineElement(result.hostKey);
+      const params = result?.block.type === "hyperframes:block" ? result.block.params : undefined;
+      if (params?.length) {
+        setActiveBlockParams({
+          blockName: result!.block.name,
+          blockTitle: result!.block.title,
+          params,
+          compositionPath: result!.compositionPath,
+        });
+        setRightCollapsed(false);
+        setRightPanelTab("block-params");
+      }
+      return true;
     },
-    [projectId, blockCtx, previewIframeRef, runBlockInstall, setRightCollapsed, setRightPanelTab],
+    [projectId, blockCtx, previewIframeRef, runBlockInstall, setRightCollapsed, setRightPanelTab, mvp],
   );
 
   const handleTimelineBlockDrop = useCallback(

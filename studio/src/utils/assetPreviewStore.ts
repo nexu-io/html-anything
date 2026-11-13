@@ -12,24 +12,29 @@
  */
 import { create } from "zustand";
 
+export type PreviewAddAction = () => unknown;
+type CatalogPreview = { videoUrl?: string; posterUrl?: string; title: string; onAdd?: PreviewAddAction };
+
 interface AssetPreviewState {
-  catalogPreview: { videoUrl?: string; posterUrl?: string; title: string } | null;
-  setCatalogPreview: (preview: { videoUrl?: string; posterUrl?: string; title: string }) => void;
+  previewAdd: PreviewAddAction | undefined;
+  catalogPreview: CatalogPreview | null;
+  setCatalogPreview: (preview: CatalogPreview) => void;
   /** Project-relative asset path currently being previewed, or null. */
   previewAsset: string | null;
   /** projectId for which the preview was opened (used to build the serve URL). */
   previewProjectId: string | null;
   /** Open a media preview for the given asset. */
-  setPreviewAsset: (asset: string, projectId: string) => void;
+  setPreviewAsset: (asset: string, projectId: string, onAdd?: PreviewAddAction) => void;
   /** Close the preview overlay. */
   clearPreviewAsset: () => void;
 }
 
 export const useAssetPreviewStore = create<AssetPreviewState>((set) => ({
+  previewAdd: undefined,
   catalogPreview: null,
-  setCatalogPreview: (catalogPreview) => set({ catalogPreview, previewAsset: null, previewProjectId: null }),
+  setCatalogPreview: (catalogPreview) => set({ catalogPreview, previewAsset: null, previewProjectId: null, previewAdd: catalogPreview.onAdd }),
   previewAsset: null,
   previewProjectId: null,
-  setPreviewAsset: (asset, projectId) => set({ previewAsset: asset, previewProjectId: projectId, catalogPreview: null }),
-  clearPreviewAsset: () => set({ previewAsset: null, previewProjectId: null, catalogPreview: null }),
+  setPreviewAsset: (asset, projectId, previewAdd) => set({ previewAsset: asset, previewProjectId: projectId, catalogPreview: null, previewAdd }),
+  clearPreviewAsset: () => set({ previewAsset: null, previewProjectId: null, catalogPreview: null, previewAdd: undefined }),
 }));
