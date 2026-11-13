@@ -53,11 +53,12 @@ try{
  const init=await rpc('initialize',{protocolVersion:'2025-11-25'});assert.equal(init.serverInfo.version,version);
  const names=(await rpc('tools/list')).tools.map(t=>t.name);assert.deepEqual(names,expected);
  await tool('openmotion_media_use',{action:'inspect'});
+ // Capture startup ownership before later Tool calls reuse the service.
+ owned=JSON.parse(await readFile(path.join(data,'preview.json')));assert.ok(owned.pid>0);
  const hidden=await rpc('tools/call',{name:'openmotion_write_files',arguments:{}});assert.equal(hidden.isError,true);assert.equal(hidden.structuredContent.error.code,'MCP_TOOL_NOT_EXPOSED');
  const prototype=await rpc('tools/call',{name:'openmotion_get_project',arguments:JSON.parse('{"__proto__":true}')});assert.equal(prototype.isError,true);assert.equal(prototype.structuredContent.error.code,'INVALID_ARGUMENT');
  const guidance=await rpc('resources/read',{uri:'openmotion://workflow/production/start'});assert.ok(guidance.contents[0].text.includes('openmotion-production'));
  const p=await tool('openmotion_create_project',{requestId:'create',projectType:'natural_language',title:'ZIP smoke',requirements:'真实原生文件、音轨、版本恢复和MP4导出'});
- owned=JSON.parse(await readFile(path.join(data,'preview.json')));assert.ok(owned.pid>0);
  assert.equal((await tool('openmotion_create_project',{requestId:'create',projectType:'natural_language',title:'ZIP smoke',requirements:'真实原生文件、音轨、版本恢复和MP4导出'})).projectId,p.projectId);
  const guide=await rpc('resources/read',{uri:'openmotion://engine/SKILL.md'});assert.ok(guide.contents[0].text.length>100);
  const runtimeKey=createHash('sha256').update(await readFile(path.join(root,'package-lock.json'))).digest('hex').slice(0,16);
