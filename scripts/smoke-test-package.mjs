@@ -105,7 +105,7 @@ export async function acceptTransport({ transport, env, data, metadata, archive,
     const hello = await rpc('initialize', { protocolVersion: '2025-11-25', capabilities: {}, clientInfo: { name: 'OpenMotion-package-smoke', version: '1' } });
     assert.equal(hello.serverInfo.version, metadata.version);
     child.stdin.write(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }) + '\n');
-    const tools = await rpc('tools/list', {}); assert.equal(tools.tools.length, 11); assert.deepEqual(tools.tools.map(item => item.name), metadata.mcp.tools);
+    const tools = await rpc('tools/list', {}); assert.deepEqual(tools.tools.map(item => item.name), metadata.mcp.tools);
     await rpc('resources/read', { uri: 'openmotion://workflow/production/start' });
     await rpc('resources/read', { uri: 'openmotion://engine/SKILL.md' });
     const hidden = await rpc('tools/call', { name: 'openmotion_write_files', arguments: {} });

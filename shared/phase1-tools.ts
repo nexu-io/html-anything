@@ -1,5 +1,6 @@
 import { inlineVideoUri } from './inline-video.ts';
 import { publicToolName, legacyToolName } from './public-names.mjs';
+import { mediaProviders } from './gateway.ts';
 import { templateDiscoveryGuide } from './workflow-entry.js';
 const id = { type: 'string', minLength: 1, maxLength: 100 };
 const projectId = { type: 'string', pattern: '^(project|[a-f0-9]{8}(-[a-f0-9]{4}){3}-[a-f0-9]{12})$' };
@@ -16,6 +17,13 @@ const display = object({ revision, versionId: id, previewUrl: { type: 'string', 
 const read = { readOnlyHint: true, openWorldHint: false };
 const write = { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: false };
 export const phase1Tools = [
+  { name: 'openmotion_media_use', title: 'OpenMotion · Media Use', description: 'Use configured BYOK providers (fal.ai, OpenDesign Cloud, Atlas Cloud and WaveSpeedAI) to generate image/video/audio files. Start with action=inspect to discover enabled providers and their reference URIs. Before model discovery or generation, call action=reference with the selected provider to read its bundled guide: model-list API, supported modality request templates, authentication/input mapping, polling, error meanings and retry limits. Reference reading needs no projectId, key or local filesystem access; the same guides are discoverable through MCP resources/list and resources/read. Then query action=models with provider and refresh=true, select the provider-native model and check its schema. Generate requires explicit projectId, stable requestId, provider, model, modality and prompt; returns queued, not media. Poll action=status with the same projectId/jobId. The local service injects credentials; never pass or read keys. Saving a key in editor Media providers enables it; OpenDesign setup is currently hidden. Only completed assets are imported; composition editing is separate. No automatic paid fallback or resubmission.',
+    inputSchema: object({ action: { enum: ['inspect', 'reference', 'models', 'generate', 'status', 'cancel'], description: 'inspect returns provider setup state and reference URIs; reference returns the selected provider guide; models discovers capabilities; generate submits a job; status reads that original job; cancel requests cancellation.' }, provider: { enum: [...mediaProviders], description: 'Required for reference and generate; optional provider filter for models. Read this provider reference before constructing model queries or generation inputs.' },
+      projectId, requestId: id, jobId: id, model: { type: 'string', minLength: 1, maxLength: 180 }, modality: { enum: ['image', 'video', 'audio'] },
+      mode: { enum: ['text-to-image', 'text-to-video', 'text-to-audio', 'text-to-speech'] }, prompt: { type: 'string', minLength: 1, maxLength: 20000 },
+      parameters: { type: 'object', additionalProperties: true }, refresh: { type: 'boolean' }, query: { type: 'string', maxLength: 200 },
+      offset: { type: 'integer', minimum: 0 }, limit: { type: 'integer', minimum: 1, maximum: 100 } }, ['action']),
+    annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true } },
   { name: 'openmotion_list_templates', title: 'OpenMotion · List Templates', description: 'Index templates from the loaded local repository; installations without a repository catalog use the configured CMS. Returns source, indexPath (local JSONL, one summary per template), total and catalogVersion, not search results. Read or grep/jq the file to select a template, then call openmotion_get_template. Repository summaries include localSource paths. No query or pagination arguments. ' + templateDiscoveryGuide, inputSchema: object({}), annotations: { ...read, openWorldHint: true } },
   { name: 'openmotion_get_template', title: 'OpenMotion · Get Template', description: 'Read one exact template ID and its TEMPLATE.md guidance. Repository entries include localSource absolute paths and the local motionDocument content. Guidance-only examples remain distinct from editable Studio projects. Use openmotion_create_project with projectType=template only when hasHtmlProject is true; otherwise apply the guidance while authoring a new project. Known IDs do not require listing first.', inputSchema: object({ templateId: id }, ['templateId']), annotations: { ...read, openWorldHint: true } },
   { name: 'openmotion_create_project', title: 'OpenMotion · Create Project', description: 'Create an independent editable native OpenMotion project from a prompt, an editable template ID or reference-video ID. The host Agent authors the film; creation does not generate a finished video. Persist requirements and source, return project/session IDs and the initial content version. A requestId is required for safe retries.',
@@ -62,7 +70,10 @@ export function validateInput(schema: any, value: any, field = 'arguments'): voi
     if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('INVALID_ARGUMENT: ' + field + ' must be an object');
     for (const key of schema.required ?? []) if (!Object.hasOwn(value, key)) throw new Error('INVALID_ARGUMENT: ' + field + '.' + key + ' is required');
     for (const [key, child] of Object.entries(value)) {
-      if (!Object.hasOwn(schema.properties, key)) throw new Error('INVALID_ARGUMENT: unknown ' + field + '.' + key);
+      if (!Object.hasOwn(schema.properties ?? {}, key)) {
+        if (schema.additionalProperties === true) continue;
+        throw new Error('INVALID_ARGUMENT: unknown ' + field + '.' + key);
+      }
       validateInput(schema.properties[key], child, field + '.' + key);
     }
   } else if (schema.type === 'array') {

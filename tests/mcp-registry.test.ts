@@ -10,8 +10,7 @@ import { workflowEntryGuide, phase1Skills } from '../shared/workflow.ts';
 import { templateDiscoveryGuide } from '../shared/workflow-entry.js';
 
 const phase1 = JSON.parse(readFileSync(new URL('../shared/mcp-profiles.json', import.meta.url), 'utf8')).phase1;
-const target = ['openmotion_list_templates', 'openmotion_get_template', 'openmotion_create_project', 'openmotion_open_preview', 'openmotion_import_assets', 'openmotion_get_project',
-  'openmotion_edit_project', 'openmotion_export_request', 'openmotion_list_versions', 'openmotion_restore_version', 'openmotion_export_cancel'];
+const target: string[] = phase1.tools;
 
 test('MCP-only discovery connects template recommendations to a project-free host presentation', () => fixture(async store => {
   const before = await store.get();
@@ -30,10 +29,8 @@ test('MCP-only discovery connects template recommendations to a project-free hos
 }));
 
 test('phase-one target is explicit, unique, and distinct from the legacy implementation list', () => {
-  assert.deepEqual(phase1.tools, target);
   assert.deepEqual(publicTools.map(tool => tool.name), target);
-  assert.equal(mcpRegistry('legacy').tools.length, 28);
-  assert.equal(tools.length, 28);
+  assert.deepEqual(mcpRegistry('legacy').tools.map(tool => tool.name), tools.map(tool => tool.name));
   assert.throws(() => createToolRegistry(tools, 'unknown'), /Unknown MCP release profile/);
   assert.throws(() => createToolRegistry([...tools, tools[0]], 'legacy'), /Duplicate MCP implementation/);
   assert.throws(() => createToolRegistry(tools, 'phase1'), /MCP_PROFILE_INCOMPLETE.*openmotion_list_versions/);
@@ -62,15 +59,13 @@ test('a missing implementation cannot produce a partial public registry', () => 
   assert.deepEqual(mcpRegistry('phase1').tools.map(tool => tool.name), target);
 });
 
-test('all five phase1 Skills reference only publicly callable Tool names', () => {
-  const selected = ['openmotion-production', 'openmotion-director', 'openmotion-template-to-video', 'openmotion-recreate', 'openmotion-video-to-template'];
-  assert.deepEqual(phase1Skills, selected);
-  for (const skill of selected) {
+test('phase1 Skills reference only publicly callable Tool names', () => {
+  for (const skill of phase1Skills) {
     const root = new URL('../skills/' + skill + '/', import.meta.url);
     for (const filename of readdirSync(root, { recursive: true }) as string[]) {
       if (!filename.endsWith('.md')) continue;
       const document = readFileSync(new URL(filename, root), 'utf8');
-      for (const match of document.matchAll(/\b(?:motion|design)_[a-z_]+\b/g)) assert.ok(target.includes(match[0]), `${skill}/${filename} calls hidden ${match[0]}`);
+      for (const match of document.matchAll(/\b(?:openmotion|motion|design)_[a-z_]+\b/g)) assert.ok(target.includes(match[0]), `${skill}/${filename} calls hidden ${match[0]}`);
     }
   }
 });

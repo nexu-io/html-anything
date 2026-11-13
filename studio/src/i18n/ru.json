@@ -1855,5 +1855,15 @@
   "Render cancelled": "Рендеринг отменён",
   "Queued": "В очереди",
   "Export blocked": "Экспорт заблокирован",
-  "Export failed": "Ошибка экспорта"
+  "Export failed": "Ошибка экспорта",
+  "Media providers": "Медиапровайдеры",
+  "Save a key to enable a provider.": "Сохраните ключ API, чтобы включить провайдера.",
+  "Loading providers…": "Загрузка провайдеров…",
+  "Configured": "Настроен",
+  "Not configured": "Не настроен",
+  "Get API key": "Получить ключ API",
+  "Usage guide": "Руководство",
+  "API origin": "Адрес API",
+  "Use the gateway address shown on your Cloud API key page.": "Используйте адрес шлюза со страницы ключа API Cloud.",
+  "Save settings": "Сохранить настройки"
 }

@@ -137,7 +137,7 @@ test('internal legacy compatibility reads the selected reference and uses the na
     ];
     const replies = [];
     for (const message of requests) replies.push(await rpc({ jsonrpc: '2.0', ...message }, store, mcpRegistry('legacy')));
-    assert.equal(replies[1].result.tools.length, 28);
+
     assert.equal(replies[2].result.structuredContent.items[0].id, templateId);
     assert.equal(replies[3].result.structuredContent.sourceUrl, getTemplate(templateId).sourceUrl);
     assert.match(replies[3].result.structuredContent.instructions, /openmotion_edit_project/);

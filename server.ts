@@ -1,3 +1,4 @@
+import { getWorkflow } from './shared/workflow.ts';
 import { isMain } from './shared/entry.ts';
 import { createServer } from 'node:http';
 import { createReadStream } from 'node:fs';
@@ -388,6 +389,11 @@ export async function handler(req: IncomingMessage, res: ServerResponse, store =
         query: url.searchParams.get('query') ?? '', refresh: url.searchParams.get('refresh') === 'true',
         offset: Number(url.searchParams.get('offset') ?? 0), limit: Number(url.searchParams.get('limit') ?? 100),
       }));
+      const reference = url.pathname.match(/^\/api\/models\/providers\/(fal|opendesign|atlascloud|wavespeed)\/reference$/);
+      if (reference && req.method === 'GET') {
+        const guide = await getWorkflow(reference[1], 'production');
+        res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end(guide.content);
+      }
       const provider = url.pathname.match(/^\/api\/models\/providers\/([a-z]+)$/);
       if (provider && req.method === 'PUT') return json(res, 200, await gateway.configureProvider(provider[1], await input(req)));
       const route = url.pathname.match(/^\/api\/models\/routes\/([a-z]+)$/);

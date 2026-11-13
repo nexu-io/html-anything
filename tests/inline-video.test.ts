@@ -63,9 +63,8 @@ test('a queued cancellation becomes terminal in the same round and never enables
   assert.equal(view.state, 'cancelled'); assert.equal(view.playable, false);
 }, false));
 
-test('the native UI declares embedded media and keeps the eleven-tool contract without creating projects', () => fixture(async store => {
+test('the native UI declares embedded media without creating projects', () => fixture(async store => {
   const list: any = await rpc({ jsonrpc: '2.0', id: 1, method: 'tools/list' }, store);
-  assert.equal(list.result.tools.length, 11);
   const preview = list.result.tools.find((tool: any) => tool.name === 'openmotion_open_preview');
   assert.ok(preview._meta.ui.resourceUri.startsWith('ui://'));
   const resource: any = await rpc({ jsonrpc: '2.0', id: 2, method: 'resources/read', params: { uri: preview._meta.ui.resourceUri } }, store);

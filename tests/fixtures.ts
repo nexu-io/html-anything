@@ -20,7 +20,8 @@ export async function fixture(run: (store: WorkspaceStore) => Promise<void>, ini
     await run(store);
   } finally {
     await closeFixtureEditor(directory);
-    await rm(directory, { recursive: true, force: true });
+    // Final filesystem writes can briefly race isolated test-directory teardown.
+    await rm(directory, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
   }
 }
 

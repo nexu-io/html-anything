@@ -1795,5 +1795,15 @@
   "Render cancelled": "レンダリングをキャンセルしました",
   "Queued": "待機中",
   "Export blocked": "書き出しできません",
-  "Export failed": "書き出しに失敗しました"
+  "Export failed": "書き出しに失敗しました",
+  "Media providers": "メディアプロバイダー",
+  "Save a key to enable a provider.": "API キーを保存するとプロバイダーが有効になります。",
+  "Loading providers…": "プロバイダーを読み込み中…",
+  "Configured": "設定済み",
+  "Not configured": "未設定",
+  "Get API key": "API キーを取得",
+  "Usage guide": "使い方",
+  "API origin": "API オリジン",
+  "Use the gateway address shown on your Cloud API key page.": "Cloud の API キーページに表示されるゲートウェイアドレスを入力してください。",
+  "Save settings": "設定を保存"
 }

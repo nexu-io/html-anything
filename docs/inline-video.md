@@ -9,7 +9,7 @@ A supported MCP Apps host can show one video frame for each creation/edit round.
 3. The component calls `openmotion_get_project({projectId,workId,includeVideo:true})`. The result contains fixed version/job identity and state; MP4 and optional cover are returned only in tool-result `_meta.inlineVideo`, outside model-visible content.
 4. A queued export freezes the round. Later edits require a new round. Old frames continue to query their own version/job after reopening the chat; they never follow the project's current version.
 
-All eleven public Tools and legacy aliases remain. Explicit editor-only requests, unchanged template browsing, review recording, display recording and existing-link requests retain their scope. A final inline playback preview is part of the video turn; a separate MP4-download request is not required. Hosts without MCP Apps retain their existing workflow. Video playback delivery supplements the existing editable Studio handoff and never substitutes for its visibility checks. Other clients may still use ordinary preview/export results without MCP Apps support.
+Existing public Tools and legacy aliases remain. Explicit editor-only requests, unchanged template browsing, review recording, display recording and existing-link requests retain their scope. A final inline playback preview is part of the video turn; a separate MP4-download request is not required. Hosts without MCP Apps retain their existing workflow. Video playback delivery supplements the existing editable Studio handoff and never substitutes for its visibility checks. Other clients may still use ordinary preview/export results without MCP Apps support.
 
 ## States and limits
 

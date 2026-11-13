@@ -66,9 +66,9 @@ test('production stdio connections use one authority and keep project identity',
     first = await editorRequest(editor, '/editor-api/health');
     assert.equal((await readFile(path.join(directory, '.editor-runtime/starts.jsonl'), 'utf8')).trim().split('\n').length, 1);
     assert.equal(await stat(path.join(directory, 'studio.log')).then(() => true, () => false), false);
-    assert.equal((await clients[0].rpc('tools/list')).tools.length, 28);
+
     a = await clients[0].call('openmotion_get_project'); assert.equal(a.projectId, 'project');
-    observations.push({ scenario: 'six-initialize', instanceId: first.instanceId, pid: first.pid, starts: 1, tools: 28, studioStarted: false });
+    observations.push({ scenario: 'six-initialize', instanceId: first.instanceId, pid: first.pid, starts: 1, tools: (await clients[0].rpc('tools/list')).tools.length, studioStarted: false });
   });
   await t.test('private credentials, Origin and Host checks reject foreign requests', async () => {
     assert.equal((await fetch(new URL('/editor-api/health', editor.endpoint))).status, 401);

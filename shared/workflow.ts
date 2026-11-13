@@ -18,6 +18,10 @@ export const workflowRegistry = {
       edit: 'skills/openmotion-production/references/edit.md',
       portable: 'skills/openmotion-production/references/portable-project.md',
       materials: 'skills/openmotion-production/references/materials.md',
+      fal: 'skills/openmotion-production/references/media-providers/fal.md',
+      opendesign: 'skills/openmotion-production/references/media-providers/opendesign.md',
+      atlascloud: 'skills/openmotion-production/references/media-providers/atlascloud.md',
+      wavespeed: 'skills/openmotion-production/references/media-providers/wavespeed.md',
     },
   },
   director: {
