@@ -48,7 +48,7 @@ OpenMotion は、**エージェントが動画制作の全工程を担う初の�
 次の指示をコピーしてローカルエージェントに送ると、インストールを開始できます：
 
 ```text
-https://releases.open-design.ai/open-motion/install.md を読み、手順に従って現在のエージェントに OpenMotion をインストールして接続してください。
+https://github.com/nexu-io/openmotion/blob/main/docs/install.md を読み、手順に従って現在のエージェントに OpenMotion をインストールして接続してください。
 ```
 
 <a id="agent-wall"></a>

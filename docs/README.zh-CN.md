@@ -48,7 +48,7 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 复制下面的指令，发给你的本地 Agent，即可开始安装：
 
 ```text
-阅读 https://releases.open-design.ai/open-motion/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
+阅读 https://github.com/nexu-io/openmotion/blob/main/docs/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
 ```
 
 <a id="agent-wall"></a>

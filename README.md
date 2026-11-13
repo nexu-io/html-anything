@@ -48,7 +48,7 @@ OpenMotion is **the first full-stack agentic video generator**. Upload a referen
 Copy this instruction into your local agent to install OpenMotion:
 
 ```text
-Read https://releases.open-design.ai/open-motion/install.md and follow the instructions to install and connect OpenMotion in the current agent.
+Read https://github.com/nexu-io/openmotion/blob/main/docs/install.md and follow the instructions to install and connect OpenMotion in the current agent.
 ```
 
 <a id="agent-wall"></a>
