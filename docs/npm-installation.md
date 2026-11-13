@@ -6,7 +6,7 @@ The npm tgz contains the installer, a prebuilt Motion application archive and it
 
 Source `package.json` is the development baseline; the published artifact can have a different version. For example, source `0.6.3` can produce `0.6.4-test.6` without a stable `0.6.4` release. Packaging changes output identities only. Manual [candidate builds](release-workflows.md#1-build) accept an empty version and automatically generate the next patch plus a short `test.N` workflow counter (with an attempt suffix on reruns); publication keeps the exact accepted version.
 
-Test/prerelease/local packages never report usage data, even with a saved opt-in or an enable flag. Stable releases collect by default and support persistent opt-out and re-enable in Studio Privacy settings. See [tracking controls](../tracking/README.md#reporting-and-user-control).
+All application environments and versions, including test/prerelease/local packages, collect usage data by default and support persistent opt-out and re-enable in Studio Privacy settings. Environment force-off and Do Not Track controls still apply. See [tracking controls](../tracking/README.md#reporting-and-user-control).
 
 ## Public names and compatibility
 
