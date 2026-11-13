@@ -106,6 +106,7 @@ export function TemplateLibraryDialog(props: Props) {
   const [promptError, setPromptError] = useState(false), [promptAttempt, retryPrompt] = useState(0);
   const [priority, setPriority] = useState<string | null>(null), [filtersOpen, setFiltersOpen] = useState(false);
   const [editableOnly, setEditableOnly] = useState(false);
+  const [brandsOnly, setBrandsOnly] = useState(false);
   const [promptExpanded, setPromptExpanded] = useState(false), [guideOpen, setGuideOpen] = useState(false);
   const lastRandom = useRef<string>(undefined);
   const info = useRef<IntegrationInfo | null>(null);
@@ -130,7 +131,7 @@ export function TemplateLibraryDialog(props: Props) {
   }, [props.open, props.returnFocus]);
   useEffect(() => {
     if (!props.open) return;
-    setCatalog([]); setSelected({}); setQuery(''); setPreview(null); detail.current?.close();
+    setCatalog([]); setSelected({}); setBrandsOnly(false); setQuery(''); setPreview(null); detail.current?.close();
     const controller = new AbortController();
     let version: string | undefined, pending = false;
     async function load() {
@@ -167,19 +168,19 @@ export function TemplateLibraryDialog(props: Props) {
   const industries = available.find(facet => facet.key === 'industries')?.values ?? [];
   const sortOptions = [['recommended', 'Recommended order'], ['name', 'Name A–Z'], ['reverse', 'Name Z–A'], ['duration', 'Duration']] as const;
   const filterLabel = (key: Facet, label: string) => t(key === 'uses' ? 'By video purpose' : key === 'industries' ? 'By industry' : label);
-  const hasFilters = Boolean(query || editableOnly || Object.values(selected).some(items => items?.length));
+  const hasFilters = Boolean(query || editableOnly || brandsOnly || Object.values(selected).some(items => items?.length));
   const visible = useMemo(() => {
     const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
     return catalog.filter(item => {
       const text = [item.id, item.title, item.description, item.authorName, item.author, ...item.tags, ...facets.flatMap(([key]) => values(item, key).flatMap(value => [value, t(value)]))].join(' ').toLocaleLowerCase();
-      return (!editableOnly || isEditableTemplate(item)) && terms.every(term => text.includes(term)) && facets.every(([key]) => !selected[key]?.length || selected[key]!.some(value => values(item, key).includes(value)));
+      return (!brandsOnly || Boolean(item.brand?.trim())) && (!editableOnly || isEditableTemplate(item)) && terms.every(term => text.includes(term)) && facets.every(([key]) => !selected[key]?.length || selected[key]!.some(value => values(item, key).includes(value)));
     }).sort((a, b) => sort === 'recommended' ? (a.sortOrder ?? Infinity) - (b.sortOrder ?? Infinity) : sort === 'duration' ? (a.duration ?? Infinity) - (b.duration ?? Infinity) : a.title.localeCompare(b.title, locale) * (sort === 'reverse' ? -1 : 1));
-  }, [catalog, query, selected, sort, locale, editableOnly]);
-  useEffect(() => { if (dialog.current) dialog.current.scrollTop = 0; }, [query, selected, sort, editableOnly]);
+  }, [catalog, query, selected, sort, locale, editableOnly, brandsOnly]);
+  useEffect(() => { if (dialog.current) dialog.current.scrollTop = 0; }, [query, selected, sort, editableOnly, brandsOnly]);
   const active = useTemplatePlayback(dialog, visible.map(item => item.id).join(','), props.open && !preview, true, priority);
   const related = useMemo(() => preview ? relatedTemplates(preview, catalog) : [], [preview, catalog]);
   const previewIndex = visible.findIndex(item => item.id === preview?.id);
-  const reset = () => { setQuery(''); setSelected({}); setEditableOnly(false); };
+  const reset = () => { setQuery(''); setSelected({}); setEditableOnly(false); setBrandsOnly(false); };
   const toggle = (key: Facet, value: string) => setSelected(previous => ({ ...previous, [key]: previous[key]?.includes(value) ? previous[key]!.filter(item => item !== value) : [...(previous[key] ?? []), value] }));
   const show = useCallback((item: GalleryTemplate) => {
     void trackMotion('ui_click', { page_name: 'studio', area: 'templates', element: 'select_template' });
@@ -226,7 +227,7 @@ export function TemplateLibraryDialog(props: Props) {
     } catch { showToast('Download failed. Please try again.', 'error', 'feedback'); }
     finally { setDownloading(false); }
   }
-  const filterBy = (key: Facet, value: string) => { setSelected({ [key]: [value] }); setQuery(''); setEditableOnly(false); detail.current?.close(); };
+  const filterBy = (key: Facet, value: string) => { setSelected({ [key]: [value] }); setQuery(''); setEditableOnly(false); setBrandsOnly(false); detail.current?.close(); };
   return <dialog ref={dialog} className={styles.library} data-motion-template-library="" aria-label={t('Template library')} onKeyDown={event => {
     event.stopPropagation();
     if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k' && !preview && !filtersOpen) { event.preventDefault(); search.current?.focus(); }
@@ -240,8 +241,9 @@ export function TemplateLibraryDialog(props: Props) {
       </header>
       <div className={styles.toolbar}>
         <div className={styles.categories} role="group" aria-label={t('Video purpose')}>
-          <button aria-pressed={!selected.uses?.length} onClick={() => setSelected(previous => ({ ...previous, uses: [] }))}>{t('All')}</button>
-          {categories.map(value => <button key={value} aria-pressed={selected.uses?.includes(value) ?? false} onClick={() => setSelected(previous => ({ ...previous, uses: previous.uses?.includes(value) ? [] : [value] }))}>{t(value)}</button>)}
+          <button aria-pressed={!brandsOnly && !selected.uses?.length} onClick={() => { setBrandsOnly(false); setSelected(previous => ({ ...previous, uses: [] })); }}>{t('All')}</button>
+          <button aria-label={t('TOP 100 brands')} aria-pressed={brandsOnly} onClick={() => { setBrandsOnly(true); setSelected(previous => ({ ...previous, uses: [] })); }}><span className="ui-collection-label" aria-hidden="true"><span className="ui-collection-label__title">TOP 100</span><span>{t('Brands')}</span></span></button>
+          {categories.map(value => <button key={value} aria-pressed={selected.uses?.includes(value) ?? false} onClick={() => { setBrandsOnly(false); setSelected(previous => ({ ...previous, uses: previous.uses?.includes(value) ? [] : [value] })); }}>{t(value)}</button>)}
         </div>
         <div className={styles.controls}>
           {industries.length > 0 && <Menu modal={false} container={null} align="start" aria-label={t('By industry')} className={styles.discoveryMenu}
@@ -268,7 +270,7 @@ export function TemplateLibraryDialog(props: Props) {
           </Menu></div>
         </div>
       </div>
-      {hasFilters && <div className={styles.chips}>{query && <button onClick={() => setQuery('')} aria-label={t('Remove filter {value}', { value: query })}><MotionIcon name="search" size={12} />{query}<MotionIcon name="close" size={12} /></button>}{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)} aria-label={t('Remove filter {value}', { value: t(value) })}>{key === 'brand' ? value : t(value)}<MotionIcon name="close" size={12} /></button>))}{editableOnly && <button onClick={() => setEditableOnly(false)}>{t('Ready to edit')}<MotionIcon name="close" size={12} /></button>}<button onClick={reset}>{t('Clear filters')}</button><span>{t('{count} templates', { count: visible.length })}</span></div>}
+      {hasFilters && <div className={styles.chips}>{brandsOnly && <button onClick={() => setBrandsOnly(false)} aria-label={t('Remove filter {value}', { value: t('TOP 100 brands') })}>{t('TOP 100 brands')}<MotionIcon name="close" size={12} /></button>}{query && <button onClick={() => setQuery('')} aria-label={t('Remove filter {value}', { value: query })}><MotionIcon name="search" size={12} />{query}<MotionIcon name="close" size={12} /></button>}{facets.flatMap(([key]) => (selected[key] ?? []).map(value => <button key={key + value} onClick={() => toggle(key, value)} aria-label={t('Remove filter {value}', { value: t(value) })}>{key === 'brand' ? value : t(value)}<MotionIcon name="close" size={12} /></button>))}{editableOnly && <button onClick={() => setEditableOnly(false)}>{t('Ready to edit')}<MotionIcon name="close" size={12} /></button>}<button onClick={reset}>{t('Clear filters')}</button><span>{t('{count} templates', { count: visible.length })}</span></div>}
     </div>
     <main className={styles.results} aria-busy={loading}>
       <div className={styles.grid}>

@@ -90,6 +90,44 @@ it('shows author avatars and falls back to initials for unavailable images', asy
   expect(card.querySelector('img[src="/ada.jpg"]')).toBeNull();
   expect(card.textContent).toContain('AFirst');
 });
+it('filters brand templates directly and preserves category, search and reset behavior', async () => {
+  fetchItems([
+    ...items,
+    { ...items[0], id: 'unbranded', brand: '', sortOrder: 4 },
+    { ...items[0], id: 'blank-brand', brand: '  ', sortOrder: 5 },
+  ]);
+  await mount();
+  const categories = host.querySelector('[role=group][aria-label="Video purpose"]')!;
+  expect(categories.children[1]).toBe(button('TOP 100 brands'));
+  expect(cards()).toHaveLength(5);
+
+  await act(async () => button('TOP 100 brands').click());
+  expect(cards()).toEqual(['two', 'one', 'three']);
+  expect(button('TOP 100 brands').getAttribute('aria-pressed')).toBe('true');
+  expect(button('All').getAttribute('aria-pressed')).toBe('false');
+  expect(host.querySelector('[role=menu]')).toBeNull();
+
+  await act(async () => button('Product launch films').click());
+  expect(cards()).toEqual(['two', 'one', 'unbranded', 'blank-brand']);
+  expect(button('TOP 100 brands').getAttribute('aria-pressed')).toBe('false');
+  await act(async () => button('TOP 100 brands').click());
+  expect(cards()).toEqual(['two', 'one', 'three']);
+  expect(button('Product launch films').getAttribute('aria-pressed')).toBe('false');
+
+  await search('Ada');
+  expect(cards()).toEqual(['one']);
+  await act(async () => button('Remove filter TOP 100 brands').click());
+  expect(cards()).toEqual(['one', 'unbranded', 'blank-brand']);
+  await act(async () => button('TOP 100 brands').click());
+  await act(async () => button('Clear filters').click());
+  expect(cards()).toHaveLength(5);
+  expect(button('All').getAttribute('aria-pressed')).toBe('true');
+
+  await act(async () => button('TOP 100 brands').click());
+  await act(async () => button('All').click());
+  expect(cards()).toHaveLength(5);
+  expect(button('Remove filter TOP 100 brands')).toBeUndefined();
+});
 it('tries the bundled brand logo after a published logo fails, then falls back to initials', async () => {
   fetchItems([{ ...items[0], brand: 'Notion', brandLogoUrl: 'https://example.com/notion.svg' } as typeof items[0]]);
   await mount();
