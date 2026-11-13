@@ -22,22 +22,12 @@ Use the actual `studioUrl` or `previewUrl` printed by startup. Keep this checkou
 
 ## Connect the current agent
 
-Configure the current host only, preserving unrelated MCP servers, Skills and credentials. Read the checkout's `AGENTS.md` before continuing.
+Read the checkout's `AGENTS.md`, then follow the existing [source plugin setup](README.md#agent-setup) for Codex or [manual MCP configuration](README.md#manual-mcp) for another local stdio client. The [agent connection guide](docs/agent-adapters.md) describes other host integrations. Connect this checkout's `mcp.ts` and the same data directory as Studio; configure only the current host and preserve unrelated MCP servers, Skills and credentials.
 
-For Codex with plugin support, run from the checkout:
-
-```sh
-bash scripts/install-motion.command
-```
-
-This registers this checkout's plugin, Skills and MCP server and performs an independent MCP preflight. It does not verify that the current chat has loaded the tools.
-
-For another local client, use its supported local stdio MCP configuration to launch this checkout's `mcp.ts` with Node and `--experimental-strip-types`. Resolve Node and the checkout to absolute paths, and use the same `MOTION_DATA_DIR` as Studio. Follow the [manual MCP configuration](README.md#manual-mcp) and [agent connection guide](docs/agent-adapters.md). MCP clients can read the production guidance through resources on the same server.
-
-Verify the real connection by discovering the OpenMotion tools and calling `openmotion_get_project` to read workspace state. Registration alone is not proof that this chat is connected. If current-chat discovery is unavailable, report that limitation and provide the working local library URL; do not claim a connection you have not verified.
+Discover the OpenMotion tools and call `openmotion_get_project` to verify the workspace. Registration alone does not prove that this chat is connected; report any actual connection limitation honestly.
 
 ## First run
 
-Open the local template library at the startup URL, or call `openmotion_open_preview` with `{"target":"templates"}` when MCP is available. Browse with `openmotion_list_templates` and inspect a candidate with `openmotion_get_template`.
+Open the startup URL and choose **Template library**, or call `openmotion_open_preview` with `{"target":"templates"}` when MCP is available.
 
-Tell the user setup is complete, provide the actual library link and suggest a template. Ask them to confirm the choice before creating a project. Browsing and installation do not authorize project creation, rendering or paid model calls.
+Reuse the [installation-success reply and template-confirmation rules](docs/install.md#installation-success-reply), using real template data from this checkout or the source installer's onboarding result. That section is the shared first-run contract; the npm setup commands and release placeholders elsewhere in that document apply to published applications. Keep the selected template and wait for confirmation before creating a project.
