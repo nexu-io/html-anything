@@ -15,7 +15,6 @@ import { useTimelineEditPinning } from "./useTimelineEditPinning";
 import { useTimelineStackingSync } from "./useTimelineStackingSync";
 import { useTimelineGeometry } from "./useTimelineGeometry";
 import { useAutoExpandKeyframedClips } from "./useAutoExpandKeyframedClips";
-import { GUTTER } from "./timelineLayout";
 import { useTimelineLabelColumn } from "./useTimelineLabelColumn";
 import { useTimelineKeyframeData } from "./useTimelineKeyframeData";
 import { useTimelineScrollViewport } from "./useTimelineScrollViewport";
@@ -455,7 +454,7 @@ export function useTimelineProviderState({
     minor,
     pps,
     contentOrigin,
-    contentGutter: labelMode ? GUTTER : 0,
+    contentGutter: labelMode ? contentOrigin - labelColumnWidth : 0,
     trackContentWidth: displayContentWidth,
     totalH: displayLayout.totalH,
     effectiveDuration,
