@@ -14,6 +14,8 @@ Inspect representative frames of the exported file at the delivered size:
 
 Compare close crops of objects whose shape carries meaning, including any detail the user reported as wrong, at corresponding reference and output times. Check silhouette and orientation as well as size, colour, label placement and motion. Keep these visual results separate from the numerical checks below: the measurer reports brightness, detail, colour and bounds, not whether a pointer, icon or logo has the correct contour. Passing global metrics or equal element heights cannot clear a visibly wrong shape.
 
+For a reconstructed visual system, inspect its defining features during holds and between observed states. Verify the visibility and action boundaries of transient elements. Use the [focused reconstruction guidance](rebuild.md#establish-a-difficult-visual-system) to locate the source of visible differences in structure, appearance or motion and judge repairs at the same moments.
+
 Verify the consequence of each meaningful interaction, not only the moving actor. Compare the affected content before, during and after the action in both videos. A drag-to-reorder check must show the dragged module following contact, the displaced module yielding and the expected final ordering persisting after release. Record a missing or incorrect state change as failed even when pointer geometry, trajectory and whole-frame metrics pass.
 
 ## 3. Measure with numbers
