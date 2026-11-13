@@ -41,7 +41,7 @@ export function AssetPreviewDialog({ url, kind, name, onClose, onAdd }: {
         <div className="flex shrink-0 items-center justify-between gap-3 px-3 py-2">
           <Dialog.Title className="min-w-0 truncate text-step-14 font-semibold" title={name}>{name}</Dialog.Title>
           <div className="flex shrink-0 items-center gap-2">
-            {onAdd && <Button type="button" variant="primary" loading={adding} onClick={add} icon={<RemixIcon name="add-line" size={16} />}>
+            {onAdd && <Button type="button" variant="primary" loading={adding} onClick={add}>
               {t(adding ? "Adding…" : "Use")}
             </Button>}
             <Dialog.Close render={<IconButton className="shrink-0" aria-label={t("Close preview")} icon={<RemixIcon name="close-line" size={16} />} />} />

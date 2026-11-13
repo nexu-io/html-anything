@@ -464,7 +464,7 @@ function BlockCard({
         </div>}
 
         {mvp && onAdd && <div className={`absolute bottom-1.5 right-1.5 transition-opacity group-hover/card:opacity-100 group-hover/card:pointer-events-auto group-focus-within/card:opacity-100 group-focus-within/card:pointer-events-auto [@media(hover:none)]:opacity-100 [@media(hover:none)]:pointer-events-auto ${addState === "idle" ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
-          <Button type="button" size="sm" className="bg-surface shadow-sm" onClick={handleAdd} loading={addState === "adding"} disabled={addState === "added"}>
+          <Button type="button" size="sm" className="border-0 bg-surface shadow-none" onClick={handleAdd} loading={addState === "adding"} disabled={addState === "added"}>
             {t(addState === "adding" ? "Adding…" : addState === "added" ? "Added!" : addState === "failed" ? "Failed" : "Use")}
           </Button>
         </div>}
