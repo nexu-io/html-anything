@@ -74,7 +74,7 @@ npm start
 复制下面的指令，发给你的本地 Agent，即可开始安装：
 
 ```text
-阅读 https://releases.open-design.ai/open-motion/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
+阅读 https://github.com/nexu-io/openmotion/blob/main/docs/install.md，按照指南在当前 Agent 中安装并连接 OpenMotion。
 ```
 
 安装完成后，Agent 会推荐一个模板供你体验，确认选择后再创建工程。[安装与首次使用指南](docs/install.md#installation-success-reply)
@@ -436,7 +436,7 @@ Brand Kit 章节记录自己的 Logo、配色、字体、语气和已确认的�
 准备 Git、npm 和 **Node.js 26.11.1**。从源码预览和导出还需要 Chrome/Chromium 和 FFmpeg/FFprobe。[运行环境配置](docs/usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/openmotion.git openmotion
+git clone --branch main https://github.com/nexu-io/openmotion.git openmotion
 cd openmotion
 npm ci
 npm run build:studio

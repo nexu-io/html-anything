@@ -74,7 +74,7 @@ npm start
 次の指示をコピーしてローカルエージェントに送ると、インストールを開始できます：
 
 ```text
-https://releases.open-design.ai/open-motion/install.md を読み、手順に従って現在のエージェントに OpenMotion をインストールして接続してください。
+https://github.com/nexu-io/openmotion/blob/main/docs/install.md を読み、手順に従って現在のエージェントに OpenMotion をインストールして接続してください。
 ```
 
 インストール後、エージェントが試せるテンプレートを提案します。選択を確認してからプロジェクトを作成します。[インストールと初回利用ガイド](install.md#installation-success-reply)
