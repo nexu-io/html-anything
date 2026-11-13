@@ -52,7 +52,7 @@ Read `openmotion_get_project({projectId})` for the directory, revision, current 
 
 ## 5. Rebuild, then change
 
-Follow [rebuild](references/rebuild.md) for understanding the video, choosing an editable representation, measuring and rebuilding. Build the user's version directly: rebuild the parts that stay faithfully and put the user's content into the rebuilt structure. Do not build a complete copy of the reference first only to change it again.
+Follow [rebuild](references/rebuild.md) for understanding the video, choosing an editable representation, measuring and rebuilding. Build the user's version directly: rebuild the parts that stay faithfully and put the user's content into the rebuilt structure. Do not build a complete copy of the reference first only to change it again. For an unfamiliar visual system or a scene that remains visibly different, use the [focused reconstruction guidance](references/rebuild.md#establish-a-difficult-visual-system) to establish its shape, motion and rendering on a representative segment before extending that approach.
 
 Import real media with `openmotion_import_assets` and use the returned paths; save text files (HTML, CSS, JS, SVG, JSON) with `openmotion_edit_project` using the latest `expectedRevision` and `expectedVersionId`. Re-read the project after a conflict instead of replaying an old batch.
 

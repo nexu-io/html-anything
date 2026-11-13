@@ -41,6 +41,15 @@ For small objects whose shape carries meaning, inspect a close crop before choos
 
 Do not pass off playback of the entire reference, a full-frame image sequence, editable content baked into a background, or an unadaptable per-frame contour transcription as a rebuild. Time-driven functions, loops, arrays, simulations and shape interpolation are valid when the content stays reasonably editable.
 
+## Establish a difficult visual system
+
+For an unfamiliar or visibly inaccurate passage, establish its defining appearance and movement on a representative interval within the requested scope. Choose the interval and observation times from the changes in the reference. Continue the requested film using the working implementation.
+
+- **Identify what makes the passage recognizable.** Describe the dominant form, composition, lettering, depth cues and characteristic action visible in the reference. Choose an editable representation capable of those features and the requested changes. Resolve uncertainty with a relevant frame, crop or motion observation before committing to an implementation.
+- **Reconstruct the change between observed states.** Track recognizable features through the movement, including their relative positions, deformation, occlusion and timing. For transient elements, establish the first and last visible reference frames and any distinct action phases. Check corresponding output frames immediately around those boundaries, including the settled scene after an element exits. If using sampled states, connect the relevant states to the renderer and inspect its output between them. Translation, rotation, deformation and opacity transitions each need evidence in the reference. When an intermediate frame gains a duplicate contour, loses a feature or changes apparent volume, revisit the correspondence or motion model responsible. Select additional observations where the behavior becomes uncertain.
+- **Calibrate appearance against the established structure.** Match local light/dark regions, edge character, material or mark size and density at output resolution. Keep independently changing text and effects addressable. When extracting assets or geometry, inspect the extraction for missing features and background contamination. Keep sharp geometry and transient blur or flash independently controllable.
+- **Repair the most consequential visible difference.** Compare actual output at corresponding times and equal scale, including movement between holds. State which visible feature differs, locate the responsible source and change that mechanism. Reinspect the same moments to judge improvement. Use the existing seekable preview or targeted captures for local iterations, then verify the final exported version through the delivery checks. Reuse successful components and measurements across the film, checking them again where their behavior changes.
+
 ## Assets, text and fonts in this package
 
 - Images, footage and sound go through `openmotion_import_assets` (PNG, JPEG, WebP, GIF, MP4, WebM, WAV, MP3, OGG, FLAC, AAC, M4A). Import does not place media on the timeline; reference the returned path.
@@ -56,5 +65,3 @@ Compare actual frames with the reference while developing. Fix concrete issues s
 Verify hard cuts against adjacent source frames. Restore a missing original hard cut unless the user requested a change; do not accept accidental smoothing or a detector's false positive as intended behaviour.
 
 When an image changes, inspect its crop, masks and coupled effects. When wording changes, inspect wrapping and reading time. When a scene's duration changes, update dependent scene starts and media timing. When a brand or named object appears several times, check all relevant appearances.
-
-For an unfamiliar or difficult visual system, a short representative segment can establish the approach before expanding to the whole film; this is advice, not a mandatory stage.
