@@ -37,4 +37,4 @@ Contributions are licensed under the repository's [Apache-2.0 license](LICENSE);
 
 ## Repository media and size
 
-Keep embedded README previews directly readable. Full videos and optional template archives use Git LFS with downloads excluded by default. Follow [storage, scoped downloads and contribution checks](docs/repository-storage.md); run `npm run storage:check` after staging. For contributed media, use the documented **Prepare PR media** Action after final review; contributors do not need upload credentials.
+Keep embedded README previews directly readable. Large existing previews use public R2 URLs registered in `repository-media.json`; small artwork, template source and browser dependencies stay local. The ordinary Git checkout budget is 180 MiB. Full videos and optional template archives use Git LFS with downloads excluded by default. Follow [storage, scoped downloads and contribution checks](docs/repository-storage.md); run `npm run storage:check` after staging. For contributed media, use the documented **Prepare PR media** Action after final review; contributors do not need upload credentials.

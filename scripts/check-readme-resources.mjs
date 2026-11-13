@@ -5,14 +5,14 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const resourceDocuments = [
-  'README.md', 'README.zh-CN.md', 'docs/README.zh-CN.md', 'docs/README.ja.md',
+  'README.md', 'README.zh-CN.md', 'README.REVERSE-ENGINEERING.md', 'docs/README.zh-CN.md', 'docs/README.ja.md',
   'docs/examples.md', 'docs/examples.zh-CN.md',
   'docs/motion-design-examples.md', 'docs/motion-design-examples.zh-CN.md',
   'docs/collections/README.md', 'docs/collections/README.zh-CN.md',
 ];
 const remote = /^(?:https?:)?\/\//i;
 
-export async function checkDocument(file, mediaURLs = new Set()) {
+export async function checkDocument(file, mediaURLs = new Set(), mediaSizes = new Map()) {
   const text = await readFile(file, 'utf8');
   const refs = [...text.matchAll(/(?:src|srcset)="([^"]+)"|!\[[^\]]*\]\(([^)]+)\)|\]\(([^)]+)\)|href="([^"]+)"/g)];
   let checked = 0;
@@ -21,9 +21,13 @@ export async function checkDocument(file, mediaURLs = new Set()) {
     const embedded = Boolean(match[1] || match[2]);
     const media = /\.(?:mp4|webm|mov|gif|png|jpe?g|svg|woff2?|ttf|mp3|wav)(?:[?#]|$)/i.test(url);
     assert(!(remote.test(url) && (embedded || media) && !mediaURLs.has(url)), `${file}: external display/media dependency: ${url}`);
+    if (embedded && remote.test(url)) {
+      assert(!(mediaSizes.get(url) > 5_000_000), `${file}: embedded image exceeds GitHub's 5 MB proxy limit; use a smaller display version and retain the original download: ${url}`);
+    }
     if (/^(?:https?:|mailto:|#|data:)/i.test(url)) continue;
     const target = path.resolve(path.dirname(file), decodeURIComponent(url.split('#')[0].split('?')[0]));
-    await stat(target).catch(() => { throw new Error(`${file}: missing local reference: ${url}`); });
+    const info = await stat(target).catch(() => { throw new Error(`${file}: missing local reference: ${url}`); });
+    if (embedded) assert(info.size <= 5_000_000, `${file}: embedded image exceeds GitHub's 5 MB proxy limit: ${url}`);
     checked++;
   }
   return checked;
@@ -33,7 +37,9 @@ export async function verifyResources(root = fileURLToPath(new URL('../', import
   let links = 0, hashes = 0;
   const { validateMediaManifest } = await import('../shared/repository-media.ts');
   const optional = validateMediaManifest(JSON.parse(await readFile(path.join(root, 'repository-media.json'), 'utf8')));
-  for (const doc of resourceDocuments) links += await checkDocument(path.join(root, doc), new Set(optional.files.map(file => file.url)));
+  const mediaURLs = new Set(optional.files.map(file => file.url));
+  const mediaSizes = new Map(optional.files.map(file => [file.url, file.bytes]));
+  for (const doc of resourceDocuments) links += await checkDocument(path.join(root, doc), mediaURLs, mediaSizes);
   const manifests = [
     ['docs/readme/live-product/manifest.json', '', 'files'],
     ['docs/readme/live-templates/manifest.json', '', 'files'],

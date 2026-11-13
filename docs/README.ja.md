@@ -3,7 +3,7 @@
 <p align="center"><strong>あらゆる動画を分析・再現</strong></p>
 
 <p align="center">
-  <picture><source media="(max-width: 600px)" srcset="readme/brand-hero.mobile.ja.jpg"><img src="readme/brand-hero.ja.jpg" width="100%" alt="Dan Martell の元動画と Riya の素材で再現した映像。白い太字字幕の間に手書きのキーワードが入り、下に Studio の字幕タイムラインが見える。"></picture>
+  <picture><source media="(max-width: 600px)" srcset="https://releases.open-design.ai/open-motion/media/sha256/1b567187bc527cc99f8ef2c91c41c9adf5fa91fa9bbc5f8e2f579ad9c7837a46.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/1b567187bc527cc99f8ef2c91c41c9adf5fa91fa9bbc5f8e2f579ad9c7837a46.jpg" width="100%" alt="Dan Martell の元動画と Riya の素材で再現した映像。白い太字字幕の間に手書きのキーワードが入り、下に Studio の字幕タイムラインが見える。"></picture>
 </p>
 
 <p align="center">
@@ -73,13 +73,13 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/many-possible-futures.jpg"><img src="readme/live-templates/many-possible-futures.gif" width="480" alt="複数の場面をひとつの物語に"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/many-possible-futures.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/f4a30a4a3b2dbc5c43df68837bebb284d204a1408394e248d7df339154914917.gif" width="480" alt="複数の場面をひとつの物語に"></picture><br>
 <strong>OpenAI · 複数の場面をひとつの物語に</strong><br>
 ひとつのテーマで場面をつなぎ、多彩なモンタージュへ展開。<br>
 <a href="https://open-design.ai/templates/many-possible-futures-motion-design/">テンプレートを見る</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/making-of-window-collage.jpg"><img src="readme/live-templates/making-of-window-collage.gif" width="480" alt="制作過程をコラージュで再編集"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/making-of-window-collage.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/dae76ee380e75eb257be035bda3697981c5cce42b53a0f61da34c46687b52e1d.gif" width="480" alt="制作過程をコラージュで再編集"></picture><br>
 <strong>Anthropic · 制作過程をコラージュで再編集</strong><br>
 クリップや画面を順に重ね、主タイトルの読みやすさを保つ。<br>
 <a href="https://open-design.ai/templates/making-of-window-collage-motion-design/">テンプレートを見る</a>
@@ -92,13 +92,13 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/notion-custom-agents.jpg"><img src="readme/live-templates/notion-custom-agents.gif" width="480" alt="課題から解決へ"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/notion-custom-agents.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/b62ffb99195f35396b6ec0b5f8f0abb8552ffd2493a5e982e5e10fd640c44a0f.gif" width="480" alt="課題から解決へ"></picture><br>
 <strong>Notion · 課題から解決へ</strong><br>
 積み重なるタスクが整理される流れを、自分の製品の機能に置き換える。<br>
 <a href="https://open-design.ai/templates/notion-custom-agents-motion-design/">テンプレートを見る</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/demand-becomes-a-desktop-release.jpg"><img src="readme/live-templates/demand-becomes-a-desktop-release.gif" width="480" alt="ユーザーの声から製品発表へ"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="https://releases.open-design.ai/open-motion/media/sha256/66bc3f14f916a58800562af5b2c8412b2f554f36a435da950faa39ef4b82da96.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/ecbb5b36bf9997451a02fbf6db8ef9083b93326eb81b5bd1c29b7ca988d008cd.gif" width="480" alt="ユーザーの声から製品発表へ"></picture><br>
 <strong>OpenAI · ユーザーの声から製品発表へ</strong><br>
 重なるリクエストで期待を高め、ひとつの明確な動きでアプリを見せる。<br>
 <a href="https://open-design.ai/templates/demand-becomes-a-desktop-release-motion-design/">テンプレートを見る</a>
@@ -111,13 +111,13 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/a-world-connected-by-computational-fragments.jpg"><img src="readme/live-templates/a-world-connected-by-computational-fragments.gif" width="480" alt="モーションで世界をつなぐ"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/a-world-connected-by-computational-fragments.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/d94806d916b9b7d9325db6901cc36b890ee0e4ff7503bfbd888b2d258b985925.gif" width="480" alt="モーションで世界をつなぐ"></picture><br>
 <strong>Kimi · モーションで世界をつなぐ</strong><br>
 コードの帯、ずれた断片、トランジションでブランドの場面をつなぐ。<br>
 <a href="https://open-design.ai/templates/a-world-connected-by-computational-fragments-motion-design/">テンプレートを見る</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/slack-slack.jpg"><img src="readme/live-templates/slack-slack.gif" width="480" alt="ブランドマークを分解・再構成"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/slack-slack.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e5f730483a177dad8cebd3f19728d04a590a075691ca2c48544c05c73490a505.gif" width="480" alt="ブランドマークを分解・再構成"></picture><br>
 <strong>Slack · ブランドマークを分解・再構成</strong><br>
 マークを単純な形に分解し、自分の色と名前で組み直す。<br>
 <a href="https://open-design.ai/templates/slack-slack-motion-design/">テンプレートを見る</a>
@@ -130,13 +130,13 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/connected-tools-evidence-chain.jpg"><img src="readme/live-templates/connected-tools-evidence-chain.gif" width="480" alt="ツールをまたぐ流れを説明"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="https://releases.open-design.ai/open-motion/media/sha256/79e74122a92470f1cfe4ce39552b1eacad81bf316514605fef8d64f0c62eea4b.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/f6372a94259356a96f71ab0be2414f2c793d4fc823a45bfba70ca53dba595f04.gif" width="480" alt="ツールをまたぐ流れを説明"></picture><br>
 <strong>Anthropic · ツールをまたぐ流れを説明</strong><br>
 ひとつの問いをデータ、操作、スライドまで追い、文脈を保つ。<br>
 <a href="https://open-design.ai/templates/connected-tools-evidence-chain-motion-design/">テンプレートを見る</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/an-agent-payment-with-human-approval.jpg"><img src="readme/live-templates/an-agent-payment-with-human-approval.gif" width="480" alt="承認の流れを順に見せる"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/an-agent-payment-with-human-approval.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/caf3c5ba8c42668634ed37bfb7bf70b08aff3897eef89cc5b62980c1402532e4.gif" width="480" alt="承認の流れを順に見せる"></picture><br>
 <strong>Stripe · 承認の流れを順に見せる</strong><br>
 同じ依頼を会話からスマートフォンの確認画面まで一貫して見せる。<br>
 <a href="https://open-design.ai/templates/an-agent-payment-with-human-approval-motion-design/">テンプレートを見る</a>
@@ -149,13 +149,13 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/mathematics-as-evolving-geometry.jpg"><img src="readme/live-templates/mathematics-as-evolving-geometry.gif" width="480" alt="複雑な概念を図で伝える"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/mathematics-as-evolving-geometry.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/a1044ff2c0fadb69adc1eb9274e40665d7b4f87cd95e951d5dcb0e0d1cbedf1b.gif" width="480" alt="複雑な概念を図で伝える"></picture><br>
 <strong>OpenAI · 複雑な概念を図で伝える</strong><br>
 共通の点と線を使い、幾何学的な図から次の図へ変形させる。<br>
 <a href="https://open-design.ai/templates/mathematics-as-evolving-geometry-motion-design/">テンプレートを見る</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/scan-to-suggested-fix.jpg"><img src="readme/live-templates/scan-to-suggested-fix.gif" width="480" alt="結果を段階的に見せる"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="https://releases.open-design.ai/open-motion/media/sha256/be5fc241ac81b90d7e7ded0bf1c90040d2823e6c659420d636722b5935c6e452.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/86184ef3b1da142db2dde7cfda80b69635e5adb9c2f6d0c0b87dc9c3e0bc7cb5.gif" width="480" alt="結果を段階的に見せる"></picture><br>
 <strong>Anthropic · 結果を段階的に見せる</strong><br>
 全体像から個々の発見へ進み、それぞれの結果に対する操作を示す。<br>
 <a href="https://open-design.ai/templates/scan-to-suggested-fix-motion-design/">テンプレートを見る</a>
@@ -168,13 +168,13 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <table width="100%">
 <tr>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/controllable-song-composition.jpg"><img src="readme/live-templates/controllable-song-composition.gif" width="480" alt="曲ができる過程を可視化"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/controllable-song-composition.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/5e5f90231e7f456d70f002694eae9f3b1605bc06240e98224f719c8e1dcbbfa0.gif" width="480" alt="曲ができる過程を可視化"></picture><br>
 <strong>ElevenLabs · 曲ができる過程を可視化</strong><br>
 プロンプト、構成、テンポを波形と完成した曲につなげる。<br>
 <a href="https://open-design.ai/templates/controllable-song-composition-motion-design/">テンプレートを見る</a>
 </td>
 <td width="50%" valign="top">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/living-waveform-poster.jpg"><img src="readme/live-templates/living-waveform-poster.gif" width="480" alt="音楽ポスターに動きを"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/live-templates/living-waveform-poster.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/1c892636aac9911c05b6aa44667d1e18c7b8813a47d55d408ba21595020cb121.gif" width="480" alt="音楽ポスターに動きを"></picture><br>
 <strong>Deezer · 音楽ポスターに動きを</strong><br>
 タイトルを固定し、周囲の流れる波形でリズムを表現する。<br>
 <a href="https://open-design.ai/templates/living-waveform-poster-motion-design/">テンプレートを見る</a>
@@ -192,19 +192,19 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <tr><th colspan="3" align="left">🎓 教える・解説する</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="readme/people/careerwithriya.gif" width="216" alt="話し手の動画参考：キャリアを変える 6 つの必須スキル"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/7716c7166bf9f098f67845d55872e08f5765eaeb1439eb5760db785fa6d2d41e.gif" width="216" alt="話し手の動画参考：キャリアを変える 6 つの必須スキル"></picture><br>
 <strong>キャリアを変える 6 つの必須スキル</strong><br>
 番号付きの要点 + 動くキーワード<br>
 <sub>参考動画 · @careerwithriya</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/dan-martell-tools.jpg"><img src="readme/people/dan-martell-tools.gif" width="216" alt="話し手の動画参考：今、最も優れた AI ツールは？"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/dan-martell-tools.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0d7e7316322a28b6ce9013beaee4208c84b12bbb5565f04fcbc175c72e6aeadc.gif" width="216" alt="話し手の動画参考：今、最も優れた AI ツールは？"></picture><br>
 <strong>今、最も優れた AI ツールは？</strong><br>
 話し手 + 浮かぶツールカード<br>
 <sub>参考動画 · Dan Martell</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/harpercarrollai.jpg"><img src="readme/people/harpercarrollai.gif" width="216" alt="話し手の動画参考：10 日間の AI 基礎・1 日目"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/harpercarrollai.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/9b4a957dc004efc4f1ddfdfed546ca3ccc6b1a1978c15d0887d0175b84caa39f.gif" width="216" alt="話し手の動画参考：10 日間の AI 基礎・1 日目"></picture><br>
 <strong>10 日間の AI 基礎・1 日目</strong><br>
 個人のレッスン + 読みやすい字幕<br>
 <sub>参考動画 · @harpercarrollai</sub>
@@ -213,19 +213,19 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <tr><th colspan="3" align="left">🖥️ ワークフローを見せる</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="readme/people/ali-abdaal-workflow.gif" width="216" alt="話し手の動画参考：毎日使う 5 つのツール"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ali-abdaal-workflow.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/03b9096a894f0572289ec31f9476854e660113852a97b4898c5b88158030b9a8.gif" width="216" alt="話し手の動画参考：毎日使う 5 つのツール"></picture><br>
 <strong>毎日使う 5 つのツール</strong><br>
 デスクでの語り + 作業画面<br>
 <sub>参考動画 · Ali Abdaal</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="readme/people/john-tagudin-capso.gif" width="216" alt="話し手の動画参考：注釈付きのツールデモ"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/a8a09b0b4837125c948bcdeff964ae7a9ff971ea0275927d045bc72f81141d72.gif" width="216" alt="話し手の動画参考：注釈付きのツールデモ"></picture><br>
 <strong>注釈付きのツールデモ</strong><br>
 話し手 + 画面 + 注釈<br>
 <sub>参考動画 · @john.tagudin</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/aiwithsachi.jpg"><img src="readme/people/aiwithsachi.gif" width="216" alt="話し手の動画参考：Claude に入れたい 5 つのプラグイン"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/aiwithsachi.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e04f9c2fdfb1bce2a2f83bbf28bde8765af58c589bb52b904694ff8113d61a7e.gif" width="216" alt="話し手の動画参考：Claude に入れたい 5 つのプラグイン"></picture><br>
 <strong>Claude に入れたい 5 つのプラグイン</strong><br>
 口頭でのリスト + 補足スクリーンショット<br>
 <sub>参考動画 · @aiwithsachi</sub>
@@ -234,19 +234,19 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 <tr><th colspan="3" align="left">🎬 物語と製品を伝える</th></tr>
 <tr>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/khris-sheer-founder.jpg"><img src="readme/people/khris-sheer-founder.gif" width="216" alt="話し手の動画参考：創業者の実験・第 1 話"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/khris-sheer-founder.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0359b48294cb978df976f9ae2ab6ca4644854bee438dca09accc1144c30259bc.gif" width="216" alt="話し手の動画参考：創業者の実験・第 1 話"></picture><br>
 <strong>創業者の実験・第 1 話</strong><br>
 創業者の日記 + 日常の B ロール<br>
 <sub>参考動画 · @khris.sheer</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ugc-rachelll.jpg"><img src="readme/people/ugc-rachelll.gif" width="216" alt="話し手の動画参考：AI クリエイターと製品"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/ugc-rachelll.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0b779052281e89a3efc44e5a4b4492e245a12a14c0c5118813e59876419ad5c5.gif" width="216" alt="話し手の動画参考：AI クリエイターと製品"></picture><br>
 <strong>AI クリエイターと製品</strong><br>
 製品の物語 + 根拠 + ピクチャーインピクチャー<br>
 <sub>参考動画 · @ugc.rachelll</sub>
 </td>
 <td width="33%" valign="top" align="center">
-<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/kevinstratvert.jpg"><img src="readme/people/kevinstratvert.gif" width="216" alt="話し手の動画参考：5 つの AI ツールへの支払いをやめよう"></picture><br>
+<picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/kevinstratvert.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/31655004df5561a835eacd093fdd7e2a247b3c5fec0a9074ce59c6d9c9c56291.gif" width="216" alt="話し手の動画参考：5 つの AI ツールへの支払いをやめよう"></picture><br>
 <strong>5 つの AI ツールへの支払いをやめよう</strong><br>
 製品チュートリアル + 実演<br>
 <sub>参考動画 · Kevin Stratvert</sub>
@@ -271,7 +271,7 @@ https://releases.open-design.ai/open-motion/install.md を読み、手順に従�
 
 <a id="studio-in-use"></a>
 
-<img src="readme/live-product/studio-in-use.png" width="100%" alt="Studio の実際の利用画面。左に読み込んだ素材、中央に動画プレビュー、下に編集可能なタイムライン。">
+<img src="https://releases.open-design.ai/open-motion/media/sha256/f20ae0f17f9db97f1950f8fd4624e296caf014eb5f774d6cb005afa344900073.png" width="100%" alt="Studio の実際の利用画面。左に読み込んだ素材、中央に動画プレビュー、下に編集可能なタイムライン。">
 
 同じ Studio ワークスペースで動画を確認し、クリップを配置して書き出せます。
 
@@ -361,7 +361,7 @@ Brand Kit セクションには、ロゴ、配色、フォント、語り口、�
 
 参考動画のみの項目は再現ワークフローで制作します。編集可能なソースが付属する項目は、そのプロジェクトを直接アレンジできます。
 
-![テンプレートを選び、自分の内容に置き換える](readme/live-product/catalog.ja.jpg)
+![テンプレートを選び、自分の内容に置き換える](https://releases.open-design.ai/open-motion/media/sha256/70d396c18c6d2e8d6c9a6d47804a8d813eaa3bdde75df000e5cfca6de8f38e1a.jpg)
 
 [オンラインテンプレート一覧](https://open-design.ai/templates/)
 
@@ -410,7 +410,7 @@ Brand Kit セクションには、ロゴ、配色、フォント、語り口、�
 Git、npm、**Node.js 26.11.1** を用意してください。ソースからのプレビューと書き出しには Chrome または Chromium と、FFmpeg・FFprobe も必要です。[実行環境の設定](usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/openmotion.git openmotion
+git clone --depth 1 https://github.com/nexu-io/openmotion.git openmotion
 cd openmotion
 npm ci
 npm run build:studio
@@ -655,7 +655,7 @@ BYOA は既存クライアントを使い、BYOK は対応するモデルアカ�
 | **各プラットフォームへの公開 — 計画中** | 画面比率別の制作と MP4 の引き渡し | 接続機能、公開確認、予約、自動リフレーム、SNS プリセット |
 | **フィードバック** | 人によるレビュー、保存したプロジェクトの版 | 版ごとの成績、定期的な制作タスク |
 
-![人とエージェントが共有タイムラインを確認する生成コンセプト画像。協働機能は計画中。](readme/collaboration-concept-v2.png)
+![人とエージェントが共有タイムラインを確認する生成コンセプト画像。協働機能は計画中。](https://releases.open-design.ai/open-motion/media/sha256/a5efa5be51936f33ecc7ef4241ce2602ebf4e7efcc8ce30e0dac5a8bd2b34957.png)
 
 *共同編集の構想。タイムラインに「このカットをもう少し長く」とコメントすると、エージェントが間合いを調整します。計画中の機能です。* [Studio の構想](product/studio-vision.md) · [知識とフィードバック](product/studio-vision.md#knowledge-and-feedback)
 
