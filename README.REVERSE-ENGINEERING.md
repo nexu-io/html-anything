@@ -553,7 +553,7 @@ For a packaged install, give your agent the [test installation guide](https://re
 Use Git, npm and **Node.js 26.11.1**. Source-based preview and export also need Chrome/Chromium and FFmpeg/FFprobe. [Runtime setup](docs/usage.md)
 
 ```sh
-git clone --branch feature/motion https://github.com/nexu-io/html-anything.git openmotion
+git clone --branch main https://github.com/nexu-io/openmotion.git openmotion
 cd openmotion
 npm ci
 npm run build:studio

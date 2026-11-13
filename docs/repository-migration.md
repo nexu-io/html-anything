@@ -1,8 +1,8 @@
 # OpenMotion standalone repository
 
-OpenMotion replaces the former HTML Anything application at the repository root on `main`. The repository name remains `nexu-io/html-anything`; existing commits, issues and pull requests remain in the same repository. The cutover preserves Git history.
+OpenMotion replaces the former HTML Anything application at the repository root on `main`. The repository is `nexu-io/openmotion`; existing commits, issues and pull requests remain in the same repository. The cutover preserves Git history.
 
-Daily Motion changes branch from the latest `feature/motion` and open PRs with that base. The previous application is preserved at [`legacy`](https://github.com/nexu-io/html-anything/tree/legacy). The default branch remains `main`. Package publication remains a separate, explicitly authorized operation.
+Daily Motion changes branch from the latest `main`, open PRs targeting `main`, and merge directly into `main` when authorized. `feature/motion` is no longer an intermediate integration branch. The previous application is preserved at [`legacy`](https://github.com/nexu-io/openmotion/tree/legacy). Package publication remains a separate, explicitly authorized operation.
 
 ## Upstream synchronization checkpoint
 
@@ -31,7 +31,7 @@ npm run package:npm
 
 The npm output in `dist/npm-local/` contains an installer `.tgz`, application `.tar.gz`, manifest and SHA256. The application runs from its selected install directory, not transient npx cache. Node, browser and media tool requirements are pinned; native tools come from public sources and are cached on first use. See [installation](npm-installation.md).
 
-`install.sh` clones this repository's `feature/motion` branch and invokes `scripts/install-motion.command` from the root. `OPENMOTION_REF` can select a reviewed commit or another existing branch. Source installation requires Node/npm; complete ZIPs include a platform runtime. None of these installers relocates existing user projects.
+`install.sh` clones this repository's `main` branch and invokes `scripts/install-motion.command` from the root. `OPENMOTION_REF` can select a reviewed commit or another existing branch. Source installation requires Node/npm; complete ZIPs include a platform runtime. None of these installers relocates existing user projects.
 
 ## Public source and package contents
 

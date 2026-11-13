@@ -26,4 +26,4 @@ OpenMotion 的模板库把视频参考、Motion.md 和复刻指令放在同一�
 
 Agent 创建工程后，打开返回的 Studio 链接。检查镜头、字幕和声音，在时间轴中调整，再导出成片。参考视频与 Motion.md 提供创作指导；只有带可编辑源码的模板才可以直接创建源码副本。
 
-[安装指南](https://releases.open-design.ai/open-motion/install.md) · [Agent 接入](agent-adapters.md)
+[安装指南](https://github.com/nexu-io/openmotion/blob/main/docs/install.md) · [Agent 接入](agent-adapters.md)

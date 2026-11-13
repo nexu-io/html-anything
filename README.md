@@ -74,7 +74,7 @@ This installs the published npm application and uses its configured online catal
 Copy this instruction into your local agent:
 
 ```text
-Read https://releases.open-design.ai/open-motion/install.md and follow the instructions to install and connect OpenMotion in the current agent.
+Read https://github.com/nexu-io/openmotion/blob/main/docs/install.md and follow the instructions to install and connect OpenMotion in the current agent.
 ```
 
 After installation, the agent offers a template to try. Confirm the choice before creating a project. [Installation and first-run guide](docs/install.md#installation-success-reply)
