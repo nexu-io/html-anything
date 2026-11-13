@@ -43,6 +43,7 @@ let stores: Map<string, Map<string, Response>>;
 
 beforeEach(() => {
   resetStoredThumbnailsForTests();
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
   localStorage.clear();
   const fake = fakeCacheStorage();
   stores = fake.stores;
@@ -50,6 +51,8 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  resetStoredThumbnailsForTests();
+  vi.useRealTimers();
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
 });
@@ -126,9 +129,10 @@ describe("stored thumbnails", () => {
     await storeFrame(v1, "cover 1x1 0", 0, jpeg(100));
     await storeFrame(v1, "cover 1x1 0", 0, jpeg(100));
 
-    await vi.waitFor(() => expect(localStorage.getItem("hf-thumbnails-index")).toContain("bytes"), {
-      timeout: 3000,
-    });
+    await vi.advanceTimersByTimeAsync(999);
+    expect(localStorage.getItem("hf-thumbnails-index")).toBeNull();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(localStorage.getItem("hf-thumbnails-index")).toContain("bytes");
     const saved = JSON.parse(localStorage.getItem("hf-thumbnails-index")!);
     expect(Object.values(saved.caches)).toMatchObject([{ bytes: 100 }]);
   });
@@ -136,9 +140,8 @@ describe("stored thumbnails", () => {
   it("keep what another tab stored when saving, but not what this tab dropped", async () => {
     await rememberVersion(v1);
     await storeFrame(v1, "cover 1x1 0", 0, jpeg());
-    await vi.waitFor(() => expect(localStorage.getItem("hf-thumbnails-index")).toContain("bytes"), {
-      timeout: 3000,
-    });
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(localStorage.getItem("hf-thumbnails-index")).toContain("bytes");
     // another tab saves its snapshot: a source of its own, and v1 as it was before this tab moved on
     const other = JSON.parse(localStorage.getItem("hf-thumbnails-index")!);
     other.caches["hf-thumbnails:other:tab"] = { usedAt: Date.now(), bytes: 7 };
@@ -147,10 +150,8 @@ describe("stored thumbnails", () => {
     await rememberVersion(v2);
     await storeFrame(v2, "cover 1x1 0", 0, jpeg());
 
-    await vi.waitFor(
-      () => expect(localStorage.getItem("hf-thumbnails-index")).not.toContain(v1Cache),
-      { timeout: 3000 },
-    );
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(localStorage.getItem("hf-thumbnails-index")).not.toContain(v1Cache);
     const saved = JSON.parse(localStorage.getItem("hf-thumbnails-index")!);
     expect(Object.keys(saved.caches)).toContain("hf-thumbnails:other:tab");
     expect(Object.keys(saved.caches)).toHaveLength(2);
@@ -160,9 +161,8 @@ describe("stored thumbnails", () => {
   it("keep a newer version another tab saw of a source this tab only read at start", async () => {
     await rememberVersion(v1);
     await storeFrame(v1, "cover 1x1 0", 0, jpeg());
-    await vi.waitFor(() => expect(localStorage.getItem("hf-thumbnails-index")).toContain("bytes"), {
-      timeout: 3000,
-    });
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(localStorage.getItem("hf-thumbnails-index")).toContain("bytes");
     resetStoredThumbnailsForTests();
     // a new session reads the index, then another tab moves the source on to v2
     await storeFrame({ source: "/other.mp4", etag: '"1"' }, "cover 1x1 0", 0, jpeg());
@@ -173,13 +173,8 @@ describe("stored thumbnails", () => {
     await storeFrame({ source: "/other.mp4", etag: '"1"' }, "cover 1x1 1", 1, jpeg());
 
     // this tab's save is the one that adds /other.mp4's cache to the index
-    await vi.waitFor(
-      () =>
-        expect(
-          Object.keys(JSON.parse(localStorage.getItem("hf-thumbnails-index")!).caches),
-        ).toHaveLength(2),
-      { timeout: 3000 },
-    );
+    await vi.advanceTimersByTimeAsync(1000);
+    expect(Object.keys(JSON.parse(localStorage.getItem("hf-thumbnails-index")!).caches)).toHaveLength(2);
     expect(JSON.parse(localStorage.getItem("hf-thumbnails-index")!).etags[key]).toBe('"two"');
   });
 });
