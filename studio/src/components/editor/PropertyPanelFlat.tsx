@@ -15,6 +15,7 @@ import { resolveAudioGroups } from "@hyperframes/core/audio-groups";
 import { usePanelHiddenToggle } from "./usePanelHiddenToggle";
 import { PropertyPanelFlatHeader } from "./PropertyPanelFlatHeader";
 import { PropertyPanelFlatFooter } from "./PropertyPanelFlatFooter";
+import { PropertyPanelUnavailableState } from "./PropertyPanelUnavailableState";
 import { closedGroupHeader, isSelectionHidden } from "./propertyPanelFlatClosedGroup";
 import { FlatGroupHeader } from "./propertyPanelFlatPrimitives";
 import { FlatTextSection } from "./propertyPanelFlatTextSection";
@@ -578,7 +579,7 @@ export function PropertyPanelFlat({
           data-flat-panel-body="true"
           className="flex min-h-0 flex-1 flex-col overflow-y-auto"
         >
-          {mvp ? groups.map((group) => (
+          {groups.length === 0 ? <PropertyPanelUnavailableState element={element} /> : mvp ? groups.map((group) => (
             <DesignPanelInputProvider key={group.id} section={slugifyDesignInput(group.title)}>
               <section data-flat-group-open="true" className="shrink-0 border-b border-panel-hairline last:border-b-0">
                 <div className="flex items-center justify-between px-4 py-3">

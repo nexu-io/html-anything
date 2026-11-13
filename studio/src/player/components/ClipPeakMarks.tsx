@@ -1,4 +1,5 @@
 import { useI18n } from "../../i18n/I18n";
+import { useMvpEditor } from "../../motion/StudioHost";
 import { useContext, useEffect, useState, type ReactNode } from "react";
 import { clipPeakRuns, type ClipSourceWindow, type PeakMap } from "./clipPeakRuns";
 import { loadPeakMap } from "./clipPeakMap";
@@ -19,9 +20,10 @@ export function ClipPeakMarks({
   children?: ReactNode;
 }) {
   const { t } = useI18n();
+  const mvp = useMvpEditor();
   const [map, setMap] = useState<PeakMap | null>(null);
   useEffect(() => {
-    if (!peaksUrl) return;
+    if (mvp || !peaksUrl) return;
     let live = true;
     void loadPeakMap(peaksUrl).then((loaded) => {
       if (live) setMap(loaded);
@@ -29,8 +31,8 @@ export function ClipPeakMarks({
     return () => {
       live = false;
     };
-  }, [peaksUrl]);
-  const { runs, peakDbfs } = map
+  }, [mvp, peaksUrl]);
+  const { runs, peakDbfs } = !mvp && map
     ? clipPeakRuns(map, sourceWindow, gain)
     : { runs: [], peakDbfs: null };
   const detail =

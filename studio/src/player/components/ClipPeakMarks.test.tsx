@@ -2,6 +2,7 @@
 import { act } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { createHappyDomRootHarness } from "./testRootHarness";
+import { StudioHostContext } from "../../motion/StudioHost";
 import { ClipPeakMarks } from "./ClipPeakMarks";
 import { TimelineClip } from "./TimelineClip";
 
@@ -82,4 +83,22 @@ describe("ClipPeakMarks", () => {
     const { host } = await render("/api/projects/p/peaks/quiet.mp4", [0.25, 0.25], 1);
     expect(host.querySelector("[data-testid=clip-peak-marks]")).toBeNull();
   });
+});
+
+it("keeps the waveform but skips peak requests and warnings in the MVP", async () => {
+  const fetch = vi.fn();
+  vi.stubGlobal("fetch", fetch);
+  const host = document.createElement("div");
+  document.body.append(host);
+  const root = harness.mount(host);
+  try {
+    await act(async () => root.render(<StudioHostContext.Provider value={{ mvpEditor: true }}>
+      <ClipPeakMarks peaksUrl="/mvp-loud.wav" sourceWindow={{ mediaStart: 0, sourceSpan: 2 }} gain={2}>
+        <span>waveform</span>
+      </ClipPeakMarks>
+    </StudioHostContext.Provider>));
+    expect(host.textContent).toBe("waveform");
+    expect(fetch).not.toHaveBeenCalled();
+    expect(host.querySelector("[data-testid=clip-peak-marks]")).toBeNull();
+  } finally { vi.unstubAllGlobals(); }
 });

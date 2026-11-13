@@ -209,8 +209,15 @@ export function getSourceFileForElement(
   el: HTMLElement,
   activeCompositionPath: string | null,
 ): { sourceFile: string; compositionPath: string } {
-  const sourceHost = findClosestByAttribute(el, ["data-composition-file", "data-composition-src"]);
-  const ownerRoot = findClosestByAttribute(el, ["data-composition-id"]);
+  // A composition reference is authored in its parent file. Its source link
+  // describes the children, not the host itself. Preview scene hosts retain
+  // data-hf-scene after the compiler replaces data-composition-src with -file.
+  // Do not skip every -file node: inlined inner roots also carry that marker.
+  const scope = el.hasAttribute("data-composition-src") || el.hasAttribute("data-hf-scene")
+    ? el.parentElement
+    : el;
+  const sourceHost = scope && findClosestByAttribute(scope, ["data-composition-file", "data-composition-src"]);
+  const ownerRoot = scope && findClosestByAttribute(scope, ["data-composition-id"]);
   const sourceFile =
     sourceHost?.getAttribute("data-composition-file") ??
     sourceHost?.getAttribute("data-composition-src") ??

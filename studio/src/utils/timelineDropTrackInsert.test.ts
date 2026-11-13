@@ -191,3 +191,37 @@ describe("resolveDropTrack", () => {
     ).toThrow(/locked/);
   });
 });
+
+describe("one-click top-track placement", () => {
+  const placement = { start: 1, track: 0, newTrack: "top" as const };
+  it("opens a separate top track without moving the requested playhead time", () => {
+    const result = resolveDropTrack({ source, elements, placement, dropped: { ...dropped, start: 1 } });
+    expect(result.track).toBe(0);
+    expect(result.start).toBe(1);
+    expect(result.source).toContain('id="a" data-start="0" data-track-index="1"');
+  });
+
+  it("reads saved tracks when a second insertion overtakes the preview reload", () => {
+    const first = resolveDropTrack({ source, elements, placement, dropped });
+    const firstClip = clip("new", 0, 5);
+    const saved = first.source + '<div data-hf-id="hf-new" id="new" data-start="5" data-track-index="0"></div>';
+    const second = resolveDropTrack({ source: saved, elements, placed: [firstClip], placement, dropped: { ...dropped, id: "next" } });
+    expect(second.track).toBe(0);
+    expect(second.source).toContain('id="new" data-start="5" data-track-index="1"');
+    expect(second.source).toContain('id="a" data-start="0" data-track-index="2"');
+    expect(second.source).toContain('id="c" data-start="0" data-track-index="4"');
+  });
+
+  it("inserts audio at the top of the audio section without renumbering visuals", () => {
+    const music = { ...clip("music", 3, 0), tag: "audio", authoredTrack: 0 };
+    const audioSource = source + '<audio data-hf-id="hf-music" id="music" data-start="0" data-track-index="0"></audio>';
+    const result = resolveDropTrack({ source: audioSource, elements: [...elements, music], placement, dropped: { ...dropped, tag: "audio" } });
+    expect(result.track).toBe(0);
+    expect(result.source).toContain(source);
+    expect(result.source).toContain('id="music" data-start="0" data-track-index="1"');
+  });
+
+  it("refuses to move a locked peer", () => {
+    expect(() => resolveDropTrack({ source, elements: elements.map(e => ({ ...e, timelineLocked: true })), placement, dropped })).toThrow(/locked/);
+  });
+});
