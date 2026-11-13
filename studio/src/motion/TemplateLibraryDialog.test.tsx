@@ -556,26 +556,19 @@ it('joins repeated recreate and submit attempts to their own copy results', asyn
   expect(events('ui_click', { template_action: 'open_edit' })[0]).not.toHaveProperty('copy_attempt_id');
 });
 
-
-it('reports instruction exposure when edge contact moves into the viewport', async () => {
+it('observes a positive instruction threshold so zero-area edge contact can progress to visible text', async () => {
   await mount();
   await act(async () => preview('First'));
-  const observer = Observer.instances.find(item => !item.disconnected
+  const text = Observer.instances.find(item => !item.disconnected
     && item.elements.some(element => element.matches('section[aria-label="Template instruction"] p')))!;
-  const thresholds = [observer.options?.threshold ?? 0].flat();
-  let previousBucket: number | undefined;
-  const move = async (ratio: number) => {
-    const bucket = thresholds.filter(threshold => threshold <= ratio).length;
-    // Native observers do not repeat edge-contact entries until a threshold is crossed.
-    if (previousBucket !== bucket) await act(async () => observer.callback([
-      { target: observer.elements[0]!, isIntersecting: true, intersectionRatio: ratio } as IntersectionObserverEntry,
-    ], observer as unknown as IntersectionObserver));
-    previousBucket = bucket;
-  };
-  await move(0);
+  expect(text.options?.threshold).toBe(0.01);
+  const emit = async (intersectionRatio: number) => act(async () => text.callback([
+    { target: text.elements[0], isIntersecting: true, intersectionRatio } as IntersectionObserverEntry,
+  ], text as unknown as IntersectionObserver));
+  await emit(0);
+  await emit(0.005);
   expect(events('surface_view', { area: 'template_instruction' })).toHaveLength(0);
-  await move(1);
-  expect(events('surface_view', { area: 'template_instruction' })).toHaveLength(1);
-  await move(0.5);
+  await emit(0.01);
+  await emit(1);
   expect(events('surface_view', { area: 'template_instruction' })).toHaveLength(1);
 });

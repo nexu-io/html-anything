@@ -183,7 +183,7 @@ and [DSH's client declaration](https://github.com/deepseek-ai/deepseek-harness/b
   Library exposure records the actual dialog opening, including pending or failed
   catalog loads; it omits `result_count` because that count is not known at opening.
   Loading retries and locale changes do not create another opening. Instruction
-  exposure waits until at least 1% of its text is inside the viewport in a visible tab, once per
+  exposure waits until at least 1% of its text enters the viewport in a visible tab, once per
   detail view. Recreate and Recreate-and-submit carry the same `copy_attempt_id`
   on their `start_use` click and copy result; Open-and-edit has no copy attempt.
 
