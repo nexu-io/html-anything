@@ -62,13 +62,50 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 
 | Template | Brand | Source ID |
 | --- | --- | --- |
-| [Figma — Q1 2026](motion-f4b325fd-64ba-42da-9f7e-6a6b77cfafd2/TEMPLATE.md) | Figma | V101 |
+| [Figma — Figma Motion](motion-e6ac921a-f56f-4170-a2be-938cec5d028b/TEMPLATE.md) | Figma | V100 |
+| [Notion — Custom Agents](motion-c74e1725-6fd2-4885-be7f-f1f705e9af66/TEMPLATE.md) | Notion | V085 |
+| [A product launch connected by blue light](motion-5805e419-651f-45b7-90be-302c93f79b21/TEMPLATE.md) | Framer | V301 |
+| [Aesthetic design partner](motion-46f34492-8ba1-4ba5-ac6e-4b4a13c80373/TEMPLATE.md) | Lovable | V039 |
+| [IBM — watsonx](motion-d151cc2c-40bc-4765-a767-3957bdee6ec2/TEMPLATE.md) | IBM | V369 |
+| [Enterprise agent workflows](motion-f6f244d1-c549-4081-8a5d-f0e1e3660044/TEMPLATE.md) | Glean | V379 |
+| [Linear — Orbit](motion-3b955ba8-2f6f-47ef-910c-79115843bd6b/TEMPLATE.md) | Linear | V111 |
+| [Xiaomi — HyperOS](motion-d8eea6d9-b25b-4727-823d-d102070ea694/TEMPLATE.md) | Xiaomi | V227 |
 | [Figma — Draw inspiration](motion-dfb1a35a-a70e-489f-8e02-b74068fc0b8c/TEMPLATE.md) | Figma | V099 |
+| [An information field focuses into research](motion-2d4e10c0-c178-4f7c-a365-e51b5e30b455/TEMPLATE.md) | Harvey | V336 |
+| [Prompt-to-website launch](motion-8605acf7-c0e9-465b-858a-114c49764c3d/TEMPLATE.md) | Bolt | V372 |
+| [Collaboration across devices](motion-1e48dea5-903d-48f6-b10e-99a70f1c183d/TEMPLATE.md) | Lark | V366 |
+| [Material-shifting model mark](motion-38b9c70f-cf58-4555-a50e-30c17479ba1e/TEMPLATE.md) | Alibaba | V174 |
+| [Butterfly — Pond](motion-a653c6bb-3e85-420c-8b4a-3353b8fd8fbf/TEMPLATE.md) | Butterfly | V375 |
+| [Linear — At your command](motion-b3e82855-5bf8-48c5-8153-fd43d09b30ed/TEMPLATE.md) | Linear | V240 |
+| [Cyera — Secure the unknown](motion-f9bf74bb-fb65-4430-97b9-71ae5d7b3397/TEMPLATE.md) | Cyera | V377 |
+| [Layered interface journey](motion-b31d078a-4e5e-461e-8b43-3101ee0a2f93/TEMPLATE.md) | Webflow | V352 |
+| [Connected customer worlds](motion-9c62b31c-d5e8-4027-8057-e8f1c3949f6c/TEMPLATE.md) | Twilio | V395 |
+| [Several creative formats in one editor](motion-b4a2bd67-b577-4e6a-8475-966edd41d474/TEMPLATE.md) | Canva | V146 |
+| [Extruded manifesto loop](motion-5ec91ccc-4243-445b-8bf3-d7d85e65a309/TEMPLATE.md) | Comfy | V364 |
+| [Radial identity burst](motion-343ccb64-5c8e-4101-b65e-463aec3a7c35/TEMPLATE.md) | GitHub | V348 |
+| [Cashback offer mechanics](motion-a6f31f7b-f6af-44be-8bf4-881e70057f63/TEMPLATE.md) | Higgsfield | V322 |
+| [Figma — Q2 Highlights](motion-6b58e785-aace-4d84-9229-7d68d6ed247b/TEMPLATE.md) | Figma | V102 |
+| [Cash App — Make Money Moves](motion-d4e8028e-fa9e-439f-8072-690f9b36845b/TEMPLATE.md) | Cash App | V359 |
+| [Domain dot transformations](motion-b8332d8d-385e-4199-b6f3-e0cc340bc41f/TEMPLATE.md) | Identity Digital | V381 |
+| [Zapier — OFF → ON](motion-e0faf135-a425-4c7a-a795-2d5c59b90ab3/TEMPLATE.md) | Zapier | V392 |
+| [Creative Cloud](motion-e62d4e85-ccf4-4e3e-8388-ae70143cb3dc/TEMPLATE.md) | Adobe | V343 |
+| [Kinetic manifesto 15s](motion-cfd6f6b6-2f3f-4e53-957d-1e87cfebe777/TEMPLATE.md) | TIDAL | V390 |
+| [A paper geometry system for knowledge work](motion-4cab572a-4d2a-4058-8a06-84cf3fda0df0/TEMPLATE.md) | Harvey | V149 |
+| [Ink becomes networks and knowledge](motion-0c10d4de-a147-4a1b-8938-4c2d4a94a207/TEMPLATE.md) | Kimi | V033 |
+| [Wonderful — $550M](motion-7b279560-81df-4c31-988d-473d35536c28/TEMPLATE.md) | Wonderful | V391 |
+| [Focusable planet carousel](motion-fbb00c6a-6153-4a88-b8fe-fc15ad81d15b/TEMPLATE.md) | Perplexity | V077 |
+| [Sound-wave heart](motion-24e46588-504b-4efd-ac28-6ffc407fc33a/TEMPLATE.md) | Deezer | V396 |
+| [A world connected by computational fragments](motion-a3fec53a-a603-4486-9ec0-f7a6f926ab8d/TEMPLATE.md) | Kimi | V032 |
+| [A frontier horizon](motion-a1c471ae-a235-40ba-b24e-9a502a00cb33/TEMPLATE.md) | OpenAI | V327 |
+| [From constrained to open creation](motion-e3ad4095-8f2e-4c03-b834-d2525b73e257/TEMPLATE.md) | Webflow | V353 |
+| [Cloudera — Your journey to enterprise AI](motion-c6e0520b-c6a6-47c6-9905-23ba6d04cc86/TEMPLATE.md) | Cloudera | V376 |
+| [Five components in one viewport](motion-2208d0c1-6565-4b69-89cb-581e7206ac12/TEMPLATE.md) | Framer | V339 |
+| [An evolving web network](motion-3ac3bd45-8732-4ce3-8331-ca6e96e2aed2/TEMPLATE.md) | Parallel Web Systems | V199 |
+| [A flight through sun and moon](motion-3237a979-1718-4b54-9581-4cd639377cd8/TEMPLATE.md) | OpenAI | V010 |
+| [Figma — Q1 2026](motion-f4b325fd-64ba-42da-9f7e-6a6b77cfafd2/TEMPLATE.md) | Figma | V101 |
 | [Figma — Make-a-thon](motion-f878182e-c863-45eb-ac54-2e472890987b/TEMPLATE.md) | Figma | V103 |
 | [Figma — Bring code to the canvas](motion-c9623fa3-6ecd-4045-9c6e-7ad574562563/TEMPLATE.md) | Figma | V276 |
 | [Figma — Agents on the canvas](motion-80640920-4ab0-4ac0-b66e-3b64726e7960/TEMPLATE.md) | Figma | V248 |
-| [Figma — Figma Motion](motion-e6ac921a-f56f-4170-a2be-938cec5d028b/TEMPLATE.md) | Figma | V100 |
-| [Figma — Q2 Highlights](motion-6b58e785-aace-4d84-9229-7d68d6ed247b/TEMPLATE.md) | Figma | V102 |
 | [Figma — CONFIG](motion-d9465c0d-9d09-43d3-a1e7-c5617022db9d/TEMPLATE.md) | Figma | V104 |
 | [Figma — Roundtrip between code and canvas](motion-b35abe81-509c-424a-9acf-347a8831b857/TEMPLATE.md) | Figma | V105 |
 | [Figma — MAKEATHON](motion-92cf4fa2-b65b-4ca2-a6ac-40d4bed47bdd/TEMPLATE.md) | Figma | V106 |
@@ -78,10 +115,8 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Figma — Specs](motion-e558c471-28db-4353-a1c8-9ce5089838b1/TEMPLATE.md) | Figma | V277 |
 | [Figma — Generate, edit, animate](motion-c2ff6df1-76b3-4045-878b-bc91f1962464/TEMPLATE.md) | Figma | V282 |
 | [Figma — Image editing](motion-d214ebc1-b1cd-4615-8d40-d580632e8f29/TEMPLATE.md) | Figma | V285 |
-| [Linear — Orbit](motion-3b955ba8-2f6f-47ef-910c-79115843bd6b/TEMPLATE.md) | Linear | V111 |
 | [Linear — Loops](motion-b852576e-fa72-453e-aae4-209a7a24a42d/TEMPLATE.md) | Linear | V109 |
 | [Linear — Product development system](motion-ea3e966c-24ae-4313-b870-cd6a464935ca/TEMPLATE.md) | Linear | V244 |
-| [Linear — At your command](motion-b3e82855-5bf8-48c5-8153-fd43d09b30ed/TEMPLATE.md) | Linear | V240 |
 | [Linear — Loops](motion-27b3a44f-5c17-4bea-83f0-5e92e0ad20d9/TEMPLATE.md) | Linear | V110 |
 | [Linear — Custom environments](motion-81c409d2-46e9-4c90-bcde-a0de2106f81e/TEMPLATE.md) | Linear | V112 |
 | [Linear — Engineering meeting prep](motion-b8ec3aa1-bed2-43d9-894f-e081667dcc1c/TEMPLATE.md) | Linear | V113 |
@@ -90,11 +125,9 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Linear — Coding sessions on mobile](motion-5f387971-3508-4a22-9c5a-63c05cbdb37f/TEMPLATE.md) | Linear | V255 |
 | [Collaborative chat building](motion-d96e83db-9460-4d75-8e13-0a899f647087/TEMPLATE.md) | Lovable | V041 |
 | [Connector-to-app cases](motion-bc7b69f5-1816-4961-9501-754feba2e5b2/TEMPLATE.md) | Lovable | V299 |
-| [Aesthetic design partner](motion-46f34492-8ba1-4ba5-ac6e-4b4a13c80373/TEMPLATE.md) | Lovable | V039 |
 | [Question-to-proof reveal](motion-228c2d11-8827-416f-9f9f-aacf002cb7e0/TEMPLATE.md) | Lovable | V042 |
 | [Import source carousel](motion-85d291f5-d569-4b9e-8143-0df9e7783fd0/TEMPLATE.md) | Lovable | V043 |
 | [Orbiting brand shapes](motion-be2a4af0-0183-4979-ab05-2a68413c0890/TEMPLATE.md) | Lovable | V044 |
-| [Notion — Custom Agents](motion-c74e1725-6fd2-4885-be7f-f1f705e9af66/TEMPLATE.md) | Notion | V085 |
 | [Notion — Your agents. Now doing more.](motion-a325ecf0-23a5-4f4b-a888-c5a8f4517126/TEMPLATE.md) | Notion | V084 |
 | [Notion — External Agents](motion-bb9fab32-b108-42a9-bb6d-f391b8d9f286/TEMPLATE.md) | Notion | V087 |
 | [Notion — Turn your best work into a skill](motion-fb18104a-3399-4531-adf1-88e48414c7dc/TEMPLATE.md) | Notion | V307 |
@@ -104,7 +137,6 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Notion — Any tool. Any agent.](motion-e56bae66-988c-438c-b258-adfbe1e52857/TEMPLATE.md) | Notion | V091 |
 | [Notion — Notion as code](motion-56ab9744-78aa-4841-bdb1-697c2df915e0/TEMPLATE.md) | Notion | V303 |
 | [Business growth milestones](motion-730d0690-8a79-483e-aa72-28452f10dcca/TEMPLATE.md) | Higgsfield | V051 |
-| [Cashback offer mechanics](motion-a6f31f7b-f6af-44be-8bf4-881e70057f63/TEMPLATE.md) | Higgsfield | V322 |
 | [Motion design workspace](motion-90713ad1-ac50-4d2d-ba9e-ddf718959fe2/TEMPLATE.md) | Higgsfield | V052 |
 | [Creative plugin workflow](motion-b18272fd-07c8-4ab9-b7dc-26311fa5a29a/TEMPLATE.md) | Higgsfield | V305 |
 | [Multi-model API network](motion-0c91857e-f630-4d75-85ab-1feec5566c46/TEMPLATE.md) | Higgsfield | V319 |
@@ -112,12 +144,10 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Legal work across connected tools](motion-a01301cc-7413-48d0-90ff-bbb173acc167/TEMPLATE.md) | OpenAI | V320 |
 | [Demand becomes a desktop release](motion-98e8aea3-0e9a-45f2-9ff8-d8a323204378/TEMPLATE.md) | OpenAI | V012 |
 | [Review before sending](motion-b39e4df1-4bdb-4c7b-8b33-803f53238bb5/TEMPLATE.md) | OpenAI | V009 |
-| [A flight through sun and moon](motion-3237a979-1718-4b54-9581-4cd639377cd8/TEMPLATE.md) | OpenAI | V010 |
 | [A cast of voices](motion-16e994b2-cdba-45e1-b328-2af68af74985/TEMPLATE.md) | OpenAI | V014 |
 | [Many possible futures](motion-6a60a781-d223-4c03-96ba-88bcaafd62d3/TEMPLATE.md) | OpenAI | V015 |
 | [Code becomes a shared document](motion-c7d359a2-443b-4ee8-9f6a-f9c65d780f6d/TEMPLATE.md) | OpenAI | V304 |
 | [Animated media and iterative editing](motion-7427c442-35ee-408f-9c33-4280ad2d3465/TEMPLATE.md) | OpenAI | V326 |
-| [A frontier horizon](motion-a1c471ae-a235-40ba-b24e-9a502a00cb33/TEMPLATE.md) | OpenAI | V327 |
 | [Slide creation and variety](motion-4f6f4723-0010-4efd-b13d-d2dabf899e88/TEMPLATE.md) | Manus | V231 |
 | [Reusable skill library](motion-6169c2d0-a372-445e-96a3-e5eb43b00656/TEMPLATE.md) | Manus | V233 |
 | [Conversation branching](motion-c70c9db2-6726-4aa0-81a2-bcef85c19402/TEMPLATE.md) | Manus | V234 |
@@ -168,9 +198,7 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Project memory across sessions](motion-e5959798-9c70-4f6e-b16b-4375a87adfc2/TEMPLATE.md) | xAI / Grok | V318 |
 | [From prompt to a published app](motion-3016ace9-aa52-4cc7-acc3-042e2a81088c/TEMPLATE.md) | xAI / Grok | V328 |
 | [One task across phone and desktop](motion-3845bb3e-dafb-4af2-9507-d32400b5aa54/TEMPLATE.md) | Kimi | V029 |
-| [Ink becomes networks and knowledge](motion-0c10d4de-a147-4a1b-8938-4c2d4a94a207/TEMPLATE.md) | Kimi | V033 |
 | [Browser actions beside agent feedback](motion-60f0411c-316e-4b1c-8c15-c1c56527e53a/TEMPLATE.md) | Kimi | V246 |
-| [A world connected by computational fragments](motion-a3fec53a-a603-4486-9ec0-f7a6f926ab8d/TEMPLATE.md) | Kimi | V032 |
 | [Prompt-to-result capability reel](motion-7b4b6492-416e-4c84-8be0-5dcade56adb6/TEMPLATE.md) | Mistral | V230 |
 | [Code is tested by a visible simulation](motion-82aab926-a9a1-4f08-835f-4e9089877ef9/TEMPLATE.md) | Mistral | V036 |
 | [A release told in product chapters](motion-db8581fb-3dc8-426e-8cc4-fd60debb5ced/TEMPLATE.md) | Mistral | V035 |
@@ -203,7 +231,6 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Phone-to-desktop agent sync](motion-4946d023-cd88-41c1-9178-5742e92d2427/TEMPLATE.md) | Cursor | V274 |
 | [Live app publishing](motion-a55bd50a-ab7b-4f47-9cff-8b6faddfadf7/TEMPLATE.md) | Cursor | V284 |
 | [Perplexity — Explore your answers visually](motion-2b0dd9d6-eea1-46a7-9c02-bcbef4782e18/TEMPLATE.md) | Perplexity | V080 |
-| [Focusable planet carousel](motion-fbb00c6a-6153-4a88-b8fe-fc15ad81d15b/TEMPLATE.md) | Perplexity | V077 |
 | [Perplexity — Automate anything](motion-aa9742de-5366-4283-953d-e692a2fbce12/TEMPLATE.md) | Perplexity | V079 |
 | [Perplexity — Projects in Computer](motion-d17c7cfb-5ccf-4c2d-be92-e485a181671d/TEMPLATE.md) | Perplexity | V256 |
 | [Perplexity — Comet](motion-71db3b43-bf59-43a1-b8ad-85354a44e78b/TEMPLATE.md) | Perplexity | V078 |
@@ -224,9 +251,7 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Two glowing windows](motion-4fdfd64a-8fb2-43ee-96f6-7755f8b7b11e/TEMPLATE.md) | Framer | V153 |
 | [Teach the agent a reusable style](motion-d4b9bf2f-fae1-4311-b063-ca942de2254a/TEMPLATE.md) | Framer | V272 |
 | [A focused template carousel](motion-ab741f6c-6d55-4fac-9862-0a0914806c2b/TEMPLATE.md) | Framer | V280 |
-| [A product launch connected by blue light](motion-5805e419-651f-45b7-90be-302c93f79b21/TEMPLATE.md) | Framer | V301 |
 | [A sentence drawn by glass light](motion-dbb8ef9c-613d-4725-9328-a0c3700baa9e/TEMPLATE.md) | Framer | V338 |
-| [Five components in one viewport](motion-2208d0c1-6565-4b69-89cb-581e7206ac12/TEMPLATE.md) | Framer | V339 |
 | [An agent payment with human approval](motion-80dceb1d-5219-4e1f-9394-6baacf5d0166/TEMPLATE.md) | Stripe | V297 |
 | [A treasury workflow in floating panels](motion-c1bd6fc5-060a-4807-82e3-d3b059a82f53/TEMPLATE.md) | Stripe | V298 |
 | [A serif typeface as an engineering specimen](motion-12b62792-b531-40ce-858b-599564a602ac/TEMPLATE.md) | Vercel | V154 |
@@ -254,11 +279,8 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [A large version reveal becomes a toggle](motion-23671bf9-0ae8-49d4-be77-62949eaef616/TEMPLATE.md) | Suno | V340 |
 | [One conversation produces several formats](motion-315c1cab-71b0-4bec-a20c-b57f2418e88c/TEMPLATE.md) | Replit | V144 |
 | [Connections become a large tool ecosystem](motion-1994f1f9-b8ea-4083-8846-1e96e3f05fff/TEMPLATE.md) | Replit | V145 |
-| [Several creative formats in one editor](motion-b4a2bd67-b577-4e6a-8475-966edd41d474/TEMPLATE.md) | Canva | V146 |
 | [A prompt becomes a branded presentation](motion-cf8b2e64-684d-4839-a468-64519c92be20/TEMPLATE.md) | Wix（Base44） | V147 |
-| [A paper geometry system for knowledge work](motion-4cab572a-4d2a-4058-8a06-84cf3fda0df0/TEMPLATE.md) | Harvey | V149 |
 | [A cube opens to reveal a letter](motion-0dbe4710-8f5a-4cd2-9f05-530371fa899d/TEMPLATE.md) | Harvey | V334 |
-| [An information field focuses into research](motion-2d4e10c0-c178-4f7c-a365-e51b5e30b455/TEMPLATE.md) | Harvey | V336 |
 | [Information fragments resolve into intelligence](motion-5aff0bef-38fd-465c-b8d0-3b0c964d8149/TEMPLATE.md) | Harvey | V337 |
 | [A desktop tool shown through focused actions](motion-342251b9-26fe-45a6-a4fa-697f234c9755/TEMPLATE.md) | Cognition | V150 |
 | [Search, assess and hire one candidate](motion-788325cf-3104-4912-904d-ada6ea4615b9/TEMPLATE.md) | Mercor | V151 |
@@ -268,11 +290,7 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Payment-to-reporting montage](motion-81a64f50-815d-4e91-846d-9f018e2326be/TEMPLATE.md) | Ramp | V170 |
 | [Model availability announcement](motion-b929be12-85e8-4c21-aae1-740250454e39/TEMPLATE.md) | Databricks | V172 |
 | [Kinetic manifesto 60s](motion-2fd3fc6b-eec2-4bfb-9a49-6eb04acc5fae/TEMPLATE.md) | TIDAL | V389 |
-| [Kinetic manifesto 15s](motion-cfd6f6b6-2f3f-4e53-957d-1e87cfebe777/TEMPLATE.md) | TIDAL | V390 |
-| [Domain dot transformations](motion-b8332d8d-385e-4199-b6f3-e0cc340bc41f/TEMPLATE.md) | Identity Digital | V381 |
-| [Enterprise agent workflows](motion-f6f244d1-c549-4081-8a5d-f0e1e3660044/TEMPLATE.md) | Glean | V379 |
 | [Personal-to-enterprise intelligence](motion-e8b823ee-4201-4eda-a07b-e615407eb80e/TEMPLATE.md) | Glean | V380 |
-| [Prompt-to-website launch](motion-8605acf7-c0e9-465b-858a-114c49764c3d/TEMPLATE.md) | Bolt | V372 |
 | [Template browsing and remixing](motion-7d2376c5-2148-44ae-9720-330bc5f64ca9/TEMPLATE.md) | Bolt | V373 |
 | [Reusable skills in a builder](motion-664184d9-593e-4984-b473-701248b69cfe/TEMPLATE.md) | Bolt | V374 |
 | [Agent-assisted motion editing](motion-f53dad52-9f20-42c5-b5c3-00743ea475b3/TEMPLATE.md) | Jitter | V382 |
@@ -280,15 +298,10 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Outlined effect modules](motion-d887324f-64c4-4394-a9f7-1504dbfed419/TEMPLATE.md) | Modyfi | V361 |
 | [Continuous symbol morphing](motion-68d80741-c336-41ca-848e-7e6103e021e6/TEMPLATE.md) | Modyfi | V362 |
 | [Countdown numeral system](motion-36220499-8ac9-4a39-afb9-35bfba462abb/TEMPLATE.md) | Modyfi | V363 |
-| [Layered interface journey](motion-b31d078a-4e5e-461e-8b43-3101ee0a2f93/TEMPLATE.md) | Webflow | V352 |
-| [From constrained to open creation](motion-e3ad4095-8f2e-4c03-b834-d2525b73e257/TEMPLATE.md) | Webflow | V353 |
-| [Material-shifting model mark](motion-38b9c70f-cf58-4555-a50e-30c17479ba1e/TEMPLATE.md) | Alibaba | V174 |
-| [Creative Cloud](motion-e62d4e85-ccf4-4e3e-8388-ae70143cb3dc/TEMPLATE.md) | Adobe | V343 |
 | [Organic Cloud](motion-d1af6c0e-6066-4444-9b25-8773ad6cf2f8/TEMPLATE.md) | Adobe | V344 |
 | [Graphic Cloud](motion-441b7b32-6bcf-43d4-8259-1b292a84e0ec/TEMPLATE.md) | Adobe | V345 |
 | [Creative Variations](motion-d9149cb4-6919-4873-aecc-c71b57e848aa/TEMPLATE.md) | Adobe | V346 |
 | [Playful Cloud](motion-4950dcca-547a-4ae7-8697-3d86f73eab62/TEMPLATE.md) | Adobe | V347 |
-| [Radial identity burst](motion-343ccb64-5c8e-4101-b65e-463aec3a7c35/TEMPLATE.md) | GitHub | V348 |
 | [Three-form orbital loop](motion-9e426bb2-2a58-41bb-9619-5f700d5228ed/TEMPLATE.md) | GitHub | V349 |
 | [Full-frame pattern cycles](motion-e3fe6179-acf0-4e3f-a8fe-27efd50a6d1d/TEMPLATE.md) | Miro | V350 |
 | [Product acceleration workflow](motion-4aaa2afc-a75f-4ce4-a3c5-eb620ed706e5/TEMPLATE.md) | Miro | V351 |
@@ -297,14 +310,11 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Appointment chat loop](motion-887d2d40-3cf1-4a2c-8e38-c5162a0d1598/TEMPLATE.md) | EliseAI | V183 |
 | [Search integration demo](motion-4bd122ac-c538-4fc6-a9b4-bfc1357a3f10/TEMPLATE.md) | Exa | V329 |
 | [Software factory overview](motion-478a2c75-2a13-435a-9b44-d730aca6c67c/TEMPLATE.md) | Factory | V185 |
-| [Extruded manifesto loop](motion-5ec91ccc-4243-445b-8bf3-d7d85e65a309/TEMPLATE.md) | Comfy | V364 |
 | [Material-to-wordmark reveal](motion-250d244e-c34b-42b9-9da9-22d9983c48f5/TEMPLATE.md) | Comfy | V365 |
 | [Model inspection workflow](motion-c3a91b2d-1618-4d3c-9446-4f316797dcd9/TEMPLATE.md) | Goodfire | V189 |
 | [From individuals to interactions](motion-13ba3942-fd15-40ee-9638-03d1376514db/TEMPLATE.md) | Humans& | V190 |
-| [Collaboration across devices](motion-1e48dea5-903d-48f6-b10e-99a70f1c183d/TEMPLATE.md) | Lark | V366 |
 | [Agent service marketplace](motion-13466eb7-e76a-4f7c-8c4a-cdaa1bac24d8/TEMPLATE.md) | OKX | V196 |
 | [Research to decision table](motion-c8db7c7c-819c-486f-b807-a56864837620/TEMPLATE.md) | Parallel Web Systems | V198 |
-| [An evolving web network](motion-3ac3bd45-8732-4ce3-8331-ca6e96e2aed2/TEMPLATE.md) | Parallel Web Systems | V199 |
 | [The web as living memory](motion-f8941c74-b760-411c-b92f-6d838250ecc9/TEMPLATE.md) | Parallel Web Systems | V335 |
 | [Parallel Web Systems — Agents and context](motion-b954c1dc-91c2-4d5b-bc28-8cfbf156b220/TEMPLATE.md) | Parallel Web Systems | V341 |
 | [Slack — slack](motion-d3b9d255-d01d-4f27-a62e-6b68189721a1/TEMPLATE.md) | Slack | V367 |
@@ -315,21 +325,15 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Airtable — Custom interfaces](motion-3b1813cf-f2fe-4d8a-add4-8f3a49d06982/TEMPLATE.md) | Airtable | V355 |
 | [Goodnotes — Goodnotes](motion-3ce7f525-08cd-4ccb-b3f6-92dc168c28ce/TEMPLATE.md) | Goodnotes | V357 |
 | [Cash App — Bank on Cash App.](motion-55c5fe84-fe5f-4be0-aadf-42fbb1c9b9db/TEMPLATE.md) | Cash App | V358 |
-| [Cash App — Make Money Moves](motion-d4e8028e-fa9e-439f-8072-690f9b36845b/TEMPLATE.md) | Cash App | V359 |
 | [Telegram — Create your agent](motion-f8c4cf8e-4934-46ac-9185-e43b68be4f50/TEMPLATE.md) | Telegram | V215 |
 | [IBM — think](motion-5071dcd7-d5f0-456a-ac4c-37b2b442eb1c/TEMPLATE.md) | IBM | V368 |
-| [IBM — watsonx](motion-d151cc2c-40bc-4765-a767-3957bdee6ec2/TEMPLATE.md) | IBM | V369 |
 | [Uber — PLAN ON A GOOD TIME](motion-d16d6118-7d1f-4450-91b0-c7d48b041162/TEMPLATE.md) | Uber | V219 |
 | [Uber — Refill your wallet](motion-4fdcf514-f8fe-4bcc-a037-60482375769c/TEMPLATE.md) | Uber | V332 |
 | [Wabi — A new kind of messenger](motion-c6cf01ea-4262-4297-9f62-00f975cba4df/TEMPLATE.md) | Wabi | V222 |
 | [Whop — Move your balance](motion-82eeddc5-21ae-40f6-8a68-a7fd352ce92b/TEMPLATE.md) | Whop | V223 |
-| [Xiaomi — HyperOS](motion-d8eea6d9-b25b-4727-823d-d102070ea694/TEMPLATE.md) | Xiaomi | V227 |
 | [Z.ai — Sketch = Code](motion-65aa721c-db2c-49e1-a84f-1917cd0d1c1e/TEMPLATE.md) | Z.ai | V228 |
 | [Beautiful.ai — Build your presentation](motion-9cb4728d-4bb7-4b85-bcf9-9abd33006649/TEMPLATE.md) | Beautiful.ai | V370 |
 | [Bluevine — bluevine](motion-45cca1f4-13dd-44f1-a782-552f2d4469fd/TEMPLATE.md) | Bluevine | V371 |
-| [Butterfly — Pond](motion-a653c6bb-3e85-420c-8b4a-3353b8fd8fbf/TEMPLATE.md) | Butterfly | V375 |
-| [Cloudera — Your journey to enterprise AI](motion-c6e0520b-c6a6-47c6-9905-23ba6d04cc86/TEMPLATE.md) | Cloudera | V376 |
-| [Cyera — Secure the unknown](motion-f9bf74bb-fb65-4430-97b9-71ae5d7b3397/TEMPLATE.md) | Cyera | V377 |
 | [Descript — Create social clips](motion-74408712-50e0-43ac-a167-1a11297cdae0/TEMPLATE.md) | Descript | V378 |
 | [QuiverAI — Arrow 2.0](motion-71722e89-6acc-44eb-95fd-2e7cb5f2df08/TEMPLATE.md) | QuiverAI | V383 |
 | [Rive — Interactive motion](motion-594cffdc-980f-4c79-a85b-3d01b60e871e/TEMPLATE.md) | Rive | V384 |
@@ -337,12 +341,8 @@ See [the contribution and publication workflow](../../../docs/template-repositor
 | [Supabase — Explorer & Notebooks](motion-2ca7c87b-23e8-4517-b197-cb5178e8fa76/TEMPLATE.md) | Supabase | V386 |
 | [Supabase — Supabase × Gemini](motion-713872a8-8a62-4e4f-abc1-867d74c642e3/TEMPLATE.md) | Supabase | V387 |
 | [Supabase — Supabase Pipelines](motion-b7699fbd-9519-4fa6-8d45-f42141378d93/TEMPLATE.md) | Supabase | V388 |
-| [Wonderful — $550M](motion-7b279560-81df-4c31-988d-473d35536c28/TEMPLATE.md) | Wonderful | V391 |
-| [Zapier — OFF → ON](motion-e0faf135-a425-4c7a-a795-2d5c59b90ab3/TEMPLATE.md) | Zapier | V392 |
 | [Dub — Partner referrals](motion-56a6a8d9-48b7-42b7-8293-5533a0ee633f/TEMPLATE.md) | Dub | V393 |
 | [Embedded assistant](motion-be0354b4-c4d9-4c81-bb67-ac16dc065184/TEMPLATE.md) | Mintlify | V394 |
-| [Connected customer worlds](motion-9c62b31c-d5e8-4027-8057-e8f1c3949f6c/TEMPLATE.md) | Twilio | V395 |
-| [Sound-wave heart](motion-24e46588-504b-4efd-ac28-6ffc407fc33a/TEMPLATE.md) | Deezer | V396 |
 | [Living waveform poster](motion-cbe77bbc-94d8-4035-9507-103deaa025bc/TEMPLATE.md) | Deezer | V397 |
 | [Gradient brand statements](motion-9e5e7ea7-05f9-4ad0-9007-692af38ccc55/TEMPLATE.md) | Faculty | V398 |
 | [One grid, changing worlds](motion-fe6852d3-cd2e-43f1-924e-c130b1935937/TEMPLATE.md) | Uniqode | V399 |
