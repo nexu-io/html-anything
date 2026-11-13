@@ -46,7 +46,7 @@ export function AssetPreviewDialog({ url, kind, name, onClose, onAdd }: {
         {onAdd && <div className="flex shrink-0 items-center justify-end gap-3 border-t border-border px-3 py-2">
           {addFailed && <span role="alert" className="text-step-12 text-danger-ink">{t("Failed to add media")}</span>}
           <Button type="button" variant="primary" loading={adding} onClick={add} icon={<RemixIcon name="add-line" size={16} />}>
-            {t(adding ? "Adding…" : "Add to timeline")}
+            {t(adding ? "Adding…" : "Use")}
           </Button>
         </div>}
       </Dialog.Popup>

@@ -137,7 +137,7 @@ describe("explicit preview insertion", () => {
     act(() => root!.render(<AssetPreviewOverlay modal />));
   }
   const addButton = () => [...document.querySelectorAll<HTMLButtonElement>('[role="dialog"] button')]
-    .find(button => /Add to timeline|Adding/.test(button.textContent ?? ""))!;
+    .find(button => /Use|Adding/.test(button.textContent ?? ""))!;
 
   it("waits for the save, prevents duplicate requests, and keeps failures open for retry", async () => {
     mountModal();

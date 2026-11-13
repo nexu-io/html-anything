@@ -463,6 +463,12 @@ function BlockCard({
           </Tooltip>}
         </div>}
 
+        {mvp && onAdd && <div className={`absolute bottom-1.5 right-1.5 transition-opacity group-hover/card:opacity-100 group-hover/card:pointer-events-auto group-focus-within/card:opacity-100 group-focus-within/card:pointer-events-auto [@media(hover:none)]:opacity-100 [@media(hover:none)]:pointer-events-auto ${addState === "idle" ? "opacity-0 pointer-events-none" : "opacity-100"}`}>
+          <Button type="button" size="sm" className="bg-surface shadow-sm" onClick={handleAdd} loading={addState === "adding"} disabled={addState === "added"}>
+            {t(addState === "adding" ? "Adding…" : addState === "added" ? "Added!" : addState === "failed" ? "Failed" : "Use")}
+          </Button>
+        </div>}
+
         {/* Badges */}
         <div className="absolute top-1 right-1 flex items-center gap-0.5 pointer-events-none">
           {needsWebGL && (
@@ -474,12 +480,6 @@ function BlockCard({
         </div>
       </div>
 
-      {mvp && onAdd && <div className="px-1.5 pt-1.5">
-        <Button type="button" size="sm" className="w-full" onClick={handleAdd} loading={addState === "adding"} disabled={addState === "added"}
-          icon={<RemixIcon name="add-line" size={14} />}>
-          {t(addState === "adding" ? "Adding…" : addState === "added" ? "Added!" : addState === "failed" ? "Failed" : "Add to timeline")}
-        </Button>
-      </div>}
       {/* Info */}
       <div className="px-1.5 py-1.5">
         <div className="text-[10px] font-medium text-neutral-200 truncate leading-tight">

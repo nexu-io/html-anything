@@ -50,7 +50,7 @@ it("offers caption insertion on the card and in its preview without conflating t
     expect(add).not.toHaveBeenCalled();
     expect(useAssetPreviewStore.getState().catalogPreview?.onAdd).toBeTypeOf("function");
     useAssetPreviewStore.getState().clearPreviewAsset();
-    const button = [...host.querySelectorAll("button")].find(b => b.textContent?.includes("Add to timeline"))!;
+    const button = [...host.querySelectorAll("button")].find(b => b.textContent?.includes("Use"))!;
     act(() => { button.click(); button.click(); });
     expect(add).toHaveBeenCalledExactlyOnceWith("caption");
     expect(button.disabled).toBe(true);
