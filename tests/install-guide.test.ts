@@ -23,7 +23,7 @@ test('installation URLs separate the moving channel entry from the exact immutab
 async function fixture(t: any, candidate = false, declaration = manifest) {
   const root = await mkdtemp(path.join(os.tmpdir(), 'motion-guide-test-')); t.after(() => rm(root, { recursive: true, force: true }));
   await mkdir(path.join(root, 'package/payload'), { recursive: true });
-  await writeFile(path.join(root, 'package/package.json'), JSON.stringify(pkg));
+  await writeFile(path.join(root, 'package/package.json'), JSON.stringify({ ...pkg, version: declaration.version }));
   await writeFile(path.join(root, 'package/payload/release-npm.json'), JSON.stringify(declaration));
   const tgz = path.join(root, 'candidate.tgz');
   await runFile('tar', ['-czf', tgz, '-C', root, 'package']);
@@ -204,4 +204,56 @@ test('moving guides use channel tags while immutable guides and current version 
   assert(movingGuide(exact, { ...record, channel: 'stable' }).includes('@openmotion/app@latest'));
   const count = store.writes.length;
   await publishGuide(directory, config, store); assert.equal(store.writes.length, count);
+});
+
+test('stable defaults migrate exact or latest npm instructions to source without changing versioned guides', async t => {
+  const { directory, record } = await fixture(t, false, { ...manifest, version: '0.6.4', templateEnvironment: 'prod' });
+  const exact = await readFile(path.join(directory, 'install.md'), 'utf8');
+  const source = (await readFile(new URL('../install.md', import.meta.url), 'utf8')).trimEnd();
+  const expected = `${source}\n\n<!-- Stable npm publication: ${record.version} -->\n`;
+  for (const previous of [exact, movingGuide(exact, record)]) {
+    const store = storage(directory, record, previous);
+    const result = await publishGuide(directory, config, store);
+    assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), expected);
+    assert.equal(store.objects.get(store.plan.versionKey)!.toString(), exact);
+    assert(exact.includes('@openmotion/app@0.6.4'));
+    assert(!expected.includes('npx --yes --package'));
+    assert.equal(await readFile(path.join(directory, 'default-install.md'), 'utf8'), expected);
+    assert.equal(await readFile(path.join(directory, 'previous-install.md'), 'utf8'), previous);
+    assert.equal(result.phase, 'verified');
+    assert.deepEqual(store.writes.map(write => write.key), [store.plan.versionKey, store.plan.fixedKey]);
+    assert(store.writes.at(-1).args.includes('--if-match'));
+    const count = store.writes.length;
+    await publishGuide(directory, config, store);
+    assert.equal(store.writes.length, count, 'The source entry is idempotent');
+  }
+  const native = JSON.parse(source.match(/```json\n([\s\S]*?)```/)![1]).mcpServers.openmotion;
+  assert(native.command.endsWith('/node.exe'));
+  assert(native.args[1].endsWith('/mcp.ts'));
+  for (const key of ['MOTION_DATA_DIR', 'HYPERFRAMES_BROWSER_PATH', 'HYPERFRAMES_FFMPEG_PATH', 'HYPERFRAMES_FFPROBE_PATH']) assert(native.env[key]);
+});
+
+test('stable source entries retain supersession, same-version refusal, readback and archive-only safeguards', async t => {
+  const { directory, record } = await fixture(t, false, { ...manifest, version: '0.6.4', templateEnvironment: 'prod' });
+  const newer = '# Install OpenMotion from source\n\n<!-- Stable npm publication: 0.6.5 -->\n';
+  const store = storage(directory, record, newer);
+  assert.equal((await publishGuide(directory, config, store)).phase, 'superseded');
+  assert.equal(store.objects.get(store.plan.fixedKey)!.toString(), newer);
+  assert.deepEqual(store.writes.map(write => write.key), [store.plan.versionKey]);
+  const changed = newer.replace('0.6.5', record.version);
+  const conflict = storage(directory, record, changed);
+  await assert.rejects(publishGuide(directory, config, conflict), /Same-version/);
+  assert.equal(conflict.objects.get(conflict.plan.fixedKey)!.toString(), changed);
+  const archive = storage(directory, record, newer);
+  await publishGuide(directory, config, { ...archive, promote: false, run: async (command: string, args: string[]) => {
+    assert.notEqual(args[args.indexOf('--key') + 1], archive.plan.fixedKey);
+    return archive.run(command, args);
+  } });
+  assert.equal(archive.objects.get(archive.plan.fixedKey)!.toString(), newer);
+  const previous = '# Install OpenMotion 0.6.3\n', failing = storage(directory, record, previous);
+  await assert.rejects(publishGuide(directory, config, { ...failing,
+    fetcher: (url: URL) => url.pathname.slice(1) === failing.plan.fixedKey ? new Response('stale source entry') : failing.fetcher(url),
+  }), /bytes differ/);
+  assert.equal(JSON.parse(await readFile(path.join(directory, 'publication.json'), 'utf8')).phase, 'fixed-written-public-unverified');
+  assert.equal(await readFile(path.join(directory, 'previous-install.md'), 'utf8'), previous);
 });

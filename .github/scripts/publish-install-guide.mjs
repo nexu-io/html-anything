@@ -33,7 +33,6 @@ export async function publishGuide(directory, config, { run = runFile, fetcher =
   assert.equal(record.candidate, false, 'Build previews cannot be published');
   assert.equal(await sha256(file), record.guideSHA256, 'Generated guide changed after validation');
   const plan = storagePlan(record, config), expected = await readFile(file);
-  const current = Buffer.from(movingGuide(expected.toString('utf8'), record));
   const args = ['--endpoint-url', plan.endpoint, '--region', 'auto', 's3api'];
   const aws = async (operation, rest) => JSON.parse(await run('aws', [...args, operation, '--bucket', plan.bucket, ...rest]) || '{}');
   const work = await mkdtemp(path.join(os.tmpdir(), 'motion-install-publish-'));
@@ -48,8 +47,7 @@ export async function publishGuide(directory, config, { run = runFile, fetcher =
       assert(response.ok, `Public installation guide returned HTTP ${response.status}`);
       assert(Buffer.from(await response.arrayBuffer()).equals(bytes), 'Public installation guide bytes differ');
     };
-    const currentFile = path.join(work, 'current-install.md');
-    await writeFile(currentFile, current);
+    const currentFile = path.join(directory, 'default-install.md');
     const put = (key, condition, cache, body = file) => aws('put-object', ['--key', key, '--body', body, '--content-type', 'text/markdown; charset=utf-8', '--cache-control', cache, ...condition]);
     const existing = await get(plan.versionKey, path.join(work, 'version.md'));
     const legacy = await get(plan.legacyVersionKey, path.join(work, 'legacy-version.md'));
@@ -62,19 +60,26 @@ export async function publishGuide(directory, config, { run = runFile, fetcher =
       await writeJSON(path.join(directory, 'publication.json'), publication);
       return publication;
     }
+    const current = Buffer.from(record.channel === 'stable'
+      ? (await readFile(new URL('../../install.md', import.meta.url), 'utf8')).trimEnd() + `\n\n<!-- Stable npm publication: ${record.version} -->\n`
+      : movingGuide(expected.toString('utf8'), record));
     const previous = await get(plan.fixedKey, path.join(work, 'previous.md'));
     if (previous) {
       assert(previous.etag, 'Existing guide requires an ETag for conditional promotion');
       await writeFile(path.join(directory, 'previous-install.md'), previous.bytes);
-      const version = previous.bytes.toString('utf8').match(/^# Install OpenMotion (\S+)\s*$/m)?.[1];
+      const text = previous.bytes.toString('utf8');
+      const version = (record.channel === 'stable' ? text.match(/^<!-- Stable npm publication: (\S+) -->$/m)?.[1] : undefined)
+        || text.match(/^# Install OpenMotion (\S+)\s*$/m)?.[1];
       assert(version, 'Existing default guide has no recognizable version; inspect it before promotion');
       if (compareReleaseVersions(version, record.version) > 0) {
         const publication = { ...record, ...plan, phase: 'superseded', promoted: false, currentVersion: version };
         await writeJSON(path.join(directory, 'publication.json'), publication);
         return publication;
       }
-      if (version === record.version) assert(previous.bytes.equals(expected) || previous.bytes.equals(current), 'Same-version default guide has different bytes');
+      if (version === record.version) assert(previous.bytes.equals(expected) || previous.bytes.equals(current)
+        || previous.bytes.equals(Buffer.from(movingGuide(expected.toString('utf8'), record))), 'Same-version default guide has different bytes');
     }
+    await writeFile(currentFile, current);
     const publication = { ...record, ...plan, movingGuideSHA256: createHash('sha256').update(current).digest('hex'), previousSHA256: previous ? createHash('sha256').update(previous.bytes).digest('hex') : null,
       previousETag: previous?.etag ?? null, phase: 'before-fixed-promotion' };
     await writeJSON(path.join(directory, 'publication.json'), publication);
