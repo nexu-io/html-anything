@@ -2,6 +2,8 @@
 
 Source, template guides, small assets and browser dependencies remain in ordinary Git. README artwork and optional Library previews above 100 KB are served from immutable public R2 URLs and recorded in `repository-media.json`. Full reference/demo videos and the optional Presenter Tech `.motion` archive still use Git LFS. Original media bytes, source credits and integrity manifests are unchanged.
 
+Embedded documentation images must fit GitHub's 5 MB image-proxy limit. Three larger GIFs use smaller display versions while their unchanged originals remain publicly downloadable; see [display encoding and original links](readme/RESOURCES.md#retained-local-collection).
+
 ## Clone and run
 
 ```sh

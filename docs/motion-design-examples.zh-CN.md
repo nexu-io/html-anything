@@ -19,7 +19,7 @@
 
 <table>
 <tr><th width="50%">参考原片 · @careerwithriya</th><th width="50%">上游改编 · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e37ea339df778c47b4cc7f436cd90feb6adfbbc6f66cf2b70d6ad7e6775ce687.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/68fae88f1bd057ca91fd02b0de88c8112d675bf0d140bed14481cac14af9521e.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
 </table>
 
 **复用：** 编号观点、真人表达与辅助证据卡片。 **换成你的：** 创作者、口播主题、关键词与佐证素材。
@@ -45,7 +45,7 @@
 
 <table>
 <tr><th width="50%">参考原片 · @john.tagudin</th><th width="50%">上游改编 · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/4857036ea4186885cc756ed983102af3edf84db74c212e9b7bd84af8285b9ae2.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/b4690ff3537552b1237c2b16bdb83c439447e5ca9f288ff27a775c525e9b5c23.gif" width="576" alt="真人原片与不同人物内容的上游改编"></picture></td></tr>
 </table>
 
 **复用：** 开场、画中画、重点标注与结果展示。 **换成你的：** 产品、人物、实际操作与结尾表达。
@@ -59,7 +59,7 @@
 
 <table>
 <tr><th width="50%">参考 · 原始内容</th><th width="50%">Remix · Skill 包改编</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a.gif" width="100%" alt="线框空间标题: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4.gif" width="100%" alt="线框空间标题: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **保留：portal 节奏、立体字与镜头推进.** **替换：标题、副标题和立体短句.**

@@ -428,6 +428,12 @@
       "url": "https://releases.open-design.ai/open-motion/media/sha256/e37ea339df778c47b4cc7f436cd90feb6adfbbc6f66cf2b70d6ad7e6775ce687.gif"
     },
     {
+      "path": "docs/readme/people/careerwithriya-comparison.github.gif",
+      "bytes": 2331985,
+      "sha256": "68fae88f1bd057ca91fd02b0de88c8112d675bf0d140bed14481cac14af9521e",
+      "url": "https://releases.open-design.ai/open-motion/media/sha256/68fae88f1bd057ca91fd02b0de88c8112d675bf0d140bed14481cac14af9521e.gif"
+    },
+    {
       "path": "docs/readme/people/careerwithriya.gif",
       "bytes": 1985416,
       "sha256": "7716c7166bf9f098f67845d55872e08f5765eaeb1439eb5760db785fa6d2d41e",
@@ -450,6 +456,12 @@
       "bytes": 5861721,
       "sha256": "4857036ea4186885cc756ed983102af3edf84db74c212e9b7bd84af8285b9ae2",
       "url": "https://releases.open-design.ai/open-motion/media/sha256/4857036ea4186885cc756ed983102af3edf84db74c212e9b7bd84af8285b9ae2.gif"
+    },
+    {
+      "path": "docs/readme/people/john-tagudin-capso-comparison.github.gif",
+      "bytes": 2046836,
+      "sha256": "b4690ff3537552b1237c2b16bdb83c439447e5ca9f288ff27a775c525e9b5c23",
+      "url": "https://releases.open-design.ai/open-motion/media/sha256/b4690ff3537552b1237c2b16bdb83c439447e5ca9f288ff27a775c525e9b5c23.gif"
     },
     {
       "path": "docs/readme/people/john-tagudin-capso.gif",
@@ -570,6 +582,12 @@
       "bytes": 7014953,
       "sha256": "0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a",
       "url": "https://releases.open-design.ai/open-motion/media/sha256/0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a.gif"
+    },
+    {
+      "path": "library/skills/openmotion-design-remix/previews/wireframe-portal-title.github.gif",
+      "bytes": 836877,
+      "sha256": "d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4",
+      "url": "https://releases.open-design.ai/open-motion/media/sha256/d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4.gif"
     }
   ]
 }

@@ -19,7 +19,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · @careerwithriya</th><th width="50%">Upstream remix · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/e37ea339df778c47b4cc7f436cd90feb6adfbbc6f66cf2b70d6ad7e6775ce687.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/careerwithriya-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/68fae88f1bd057ca91fd02b0de88c8112d675bf0d140bed14481cac14af9521e.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
 </table>
 
 **Reuse:** Numbered ideas, presenter-led delivery and proof cards. **Make it yours:** Creator, spoken topic, keywords and supporting examples.
@@ -45,7 +45,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · @john.tagudin</th><th width="50%">Upstream remix · Hyperframes</th></tr>
-<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/4857036ea4186885cc756ed983102af3edf84db74c212e9b7bd84af8285b9ae2.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
+<tr><td colspan="2" align="center"><picture><source media="(prefers-reduced-motion: reduce)" srcset="readme/people/john-tagudin-capso-comparison.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/b4690ff3537552b1237c2b16bdb83c439447e5ca9f288ff27a775c525e9b5c23.gif" width="576" alt="Original presenter video and upstream remix with different presenter and content"></picture></td></tr>
 </table>
 
 **Reuse:** Hook, picture-in-picture, callouts and a visible result. **Make it yours:** Product, presenter, demonstration and closing message.
@@ -59,7 +59,7 @@ These three pairs are **reference / upstream-remix demonstrations from the exist
 
 <table>
 <tr><th width="50%">Reference · original content</th><th width="50%">Remix · Skill package adaptation</th></tr>
-<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
+<tr><td colspan="2"><a href="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="../library/skills/openmotion-design-remix/previews/wireframe-portal-title.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/d6cd62a5cf75aa06e6091ec56a94ebf6cb3dfe6faade022aded21092d00b9fd4.gif" width="100%" alt="Wireframe portal: synchronized original on the left and changed content on the right"></picture></a></td></tr>
 </table>
 
 **Keep: Portal timing, dimensional lettering and camera push.** **Replace: Title, subtitle and the 3D phrase.**

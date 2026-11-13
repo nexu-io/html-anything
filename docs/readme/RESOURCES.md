@@ -6,6 +6,16 @@ Full reference videos and the optional template archive use Git LFS at the same 
 
 ## Retained local collection
 
+GitHub's image proxy rejects images above 5 MB. Three original GIFs therefore have separate display versions (maximum width 360 px, 8 fps, 96 colors, Bayer dither scale 3, infinite loop). The display versions retain the full excerpt and playback speed. Both versions have independent size/SHA-256 records in `repository-media.json`; the original provenance manifests remain unchanged.
+
+| GIF | Public original download | Display size |
+| --- | --- | --- |
+| Career advice comparison | [Original GIF](https://releases.open-design.ai/open-motion/media/sha256/e37ea339df778c47b4cc7f436cd90feb6adfbbc6f66cf2b70d6ad7e6775ce687.gif) | 2,331,985 bytes |
+| Video editor comparison | [Original GIF](https://releases.open-design.ai/open-motion/media/sha256/4857036ea4186885cc756ed983102af3edf84db74c212e9b7bd84af8285b9ae2.gif) | 2,046,836 bytes |
+| Wireframe portal comparison | [Original GIF](https://releases.open-design.ai/open-motion/media/sha256/0796256eb0309ea3127e3603bd85cd1c9a378a647ac61ab951ce296a522ed34a.gif) | 836,877 bytes |
+
+`npm run media:pull` restores originals at their existing paths and display versions at the corresponding `.github.gif` paths. Resource checks reject embedded images above 5 MB while allowing download links to larger originals.
+
 | Resource | Local entry | Integrity and reuse |
 | --- | --- | --- |
 | 38 full reference/demo videos | [Media manifest](media/manifest.json) | Original URLs, authors where available, file paths, sizes and SHA-256 values. Includes the three presenter reference/remix pairs. Videos retain their original rights; viewing is not a license to reuse a person's likeness, voice or brand. |

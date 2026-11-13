@@ -74,3 +74,22 @@ test('README displays registered public media without requiring its optional loc
   await writeFile(file, `<img src="${url.replace('a'.repeat(64), 'b'.repeat(64))}">`);
   await assert.rejects(checkDocument(file, new Set([url])), /external display/);
 });
+
+test('README rejects oversized embedded images but keeps original download links valid', async t => {
+  const dir = await mkdtemp(path.join(tmpdir(), 'motion-readme-proxy-'));
+  t.after(() => rm(dir, { recursive: true, force: true }));
+  const file = path.join(dir, 'README.md');
+  const url = `https://releases.open-design.ai/open-motion/media/sha256/${'a'.repeat(64)}.gif`;
+  const registered = new Set([url]);
+  const sizes = new Map([[url, 5_000_001]]);
+  for (const embedded of [`<img src="${url}">`, `![Preview](${url})`]) {
+    await writeFile(file, embedded);
+    await assert.rejects(checkDocument(file, registered, sizes), /5 MB proxy limit/);
+    assert.equal(await checkDocument(file, registered, new Map([[url, 4_000_000]])), 0);
+  }
+  await writeFile(file, `[Download original](${url})`);
+  assert.equal(await checkDocument(file, registered, sizes), 0);
+  await writeFile(path.join(dir, 'large.gif'), Buffer.alloc(5_000_001));
+  await writeFile(file, '![Preview](large.gif)');
+  await assert.rejects(checkDocument(file), /5 MB proxy limit/);
+});
