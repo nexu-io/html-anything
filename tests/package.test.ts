@@ -4,6 +4,25 @@ import { zip } from '../scripts/package.ts';
 import { distributionFiles } from '../scripts/distribution.ts';
 import { getWorkflow, workflowRegistry } from '../shared/workflow.ts';
 import { designSystemDocuments, designSystemRuntimeFiles } from '../packages/design-system/index.js';
+import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+
+test('plugin onboarding entry and its shared contract resolve inside every distribution', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../.codex-plugin/plugin.json', import.meta.url), 'utf8'));
+  const entry = manifest.extensions['com.openai'].onboardingSkill.replace(/^\.\//, '');
+  assert(!path.posix.isAbsolute(entry) && !entry.split('/').includes('..'));
+  assert(!entry.startsWith('skills/'), 'Onboarding must not alter production Skill discovery');
+  const skill = await readFile(new URL('../' + entry, import.meta.url), 'utf8');
+  const reference = skill.match(/\]\(([^)]+#installation-success-reply)\)/)?.[1];
+  assert(reference, 'Onboarding must reach the canonical installation-success contract');
+  const contract = path.posix.normalize(path.posix.join(path.posix.dirname(entry), reference.split('#')[0]));
+  assert.equal(contract, 'docs/install.md');
+  for (const profile of ['phase1', 'legacy']) {
+    const files = new Set(await distributionFiles(profile));
+    assert(files.has(entry), 'The declared onboarding entry must ship');
+    assert(files.has(contract), 'Its relative contract must ship');
+  }
+});
 
 test('every distribution preserves public workflow dependencies and licenses while excluding development material', async () => {
   for (const profile of ['phase1', 'legacy']) {

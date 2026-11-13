@@ -58,13 +58,23 @@ test('successful setup hands the current Agent a project-free template library b
   assert.equal(installed.onboarding.hostSessionVerified, false);
   assert.deepEqual(installed.onboarding.directAccess.toolsArgs, [path.join(installed.appRoot, 'scripts/npm-installer.mjs'), 'tools', '--home', installed.launcher.replace(/[/\\]run-mcp.mjs$/, ''), '--host', 'codex', '--codex', options.codex]);
   const examples = [...installed.onboarding.instructions.matchAll(/```text\n([\s\S]*?)```/g)].map(([, text]) => text);
-  assert.equal(examples.length, 1);
-  const [example] = examples;
-  assert(example.startsWith('OpenMotion 已安装完成。\n\n'));
-  assert.doesNotMatch(example, /MCP|Skills?|prod|DEV|刷新|连接|新聊天|后台|开源免费/);
-  assert.match(example, /模板库已打开/);
-  assert.match(example, /打开并编辑/);
-  assert.doesNotMatch(example, /要用这个模板|回复编号/);
+  assert.equal(examples.length, 2);
+  const [cards, library] = examples;
+  for (const raw of examples) {
+    const example = raw.replaceAll('**', '');
+    assert(example.startsWith('🎉 OpenMotion 安装好啦，右侧就是模板库！\n\n'));
+    assert.doesNotMatch(example, /MCP|Skills?|prod|DEV|刷新|连接|新聊天|后台|开源免费/);
+    assert.match(example, /我是你的开源视频创作搭档/);
+    assert.doesNotMatch(example, /Motion.md|回复 1、2 或 3/);
+    assert.doesNotMatch(example, /打开并编辑|要用这个模板/);
+  }
+  assert.doesNotMatch(cards, /1\. \*\*产品宣传片|2\. \*\*动态图表|3\. \*\*决策树动画/);
+  assert.match(installed.onboarding.instructions, /onboarding: true/);
+  assert.match(installed.onboarding.instructions, /end without an additional text reply/);
+  assert.match(cards, /不想自己找？先看看我挑的这 3 个/);
+  assert.match(cards, /你可以点击下方卡片上的「复刻模板」，然后补充/);
+  assert.match(cards, /补充「我的要求」或添加附件，发送后就开始创作/);
+  assert.doesNotMatch(library, /卡片|3 个推荐|填入输入框|回复.*[123]/);
   assert(Array.isArray(installed.onboarding.catalog.templates));
   assert.equal(installed.onboarding.preview.status, 'ready', installed.onboarding.preview.warning);
   assert.equal(installed.onboarding.preview.projectCreated, false);
