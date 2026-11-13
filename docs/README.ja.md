@@ -477,7 +477,7 @@ bash scripts/install-motion.command
 
 ##### Skills、MCP、CLI
 
-プラグインと MCP サーバーの名前は `openmotion` です。Tools、Skills、リソースはそれぞれ `openmotion_*`、`openmotion-*`、`openmotion://` を使います。旧名称は互換エイリアスとして残ります。[名称とインストールの互換性](npm-installation.md#public-names-and-compatibility)
+プラグインと MCP サーバーの名前は `openmotion` です。Tools、Skills、リソースはそれぞれ `openmotion_*`、`openmotion-*`、`openmotion://` を使います。旧 Tool・リソース名は互換エイリアスとして残ります。旧 Skill エントリは削除されました。`openmotion-*` を使用し、更新後にホストの Skill 一覧を再読み込みしてください。[名称とインストールの互換性](npm-installation.md#public-names-and-compatibility)
 
 チェックアウトから [Skills CLI](https://github.com/vercel-labs/skills) を使い、5 つの基本ワークフローを確認・インストールできます：
 

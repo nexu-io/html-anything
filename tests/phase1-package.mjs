@@ -16,18 +16,12 @@ assert.equal(extraction.status,0,extraction.error?.message??extraction.stderr);
 const root=path.join(extracted,'openmotion'),data=path.join(work,'user-data');
 const expected=['openmotion_list_templates','openmotion_get_template','openmotion_create_project','openmotion_open_preview','openmotion_import_assets','openmotion_get_project','openmotion_edit_project','openmotion_export_request','openmotion_list_versions','openmotion_restore_version','openmotion_export_cancel'];
 const canonicalSkills=['openmotion-director','openmotion-production','openmotion-recreate','openmotion-template-to-video','openmotion-video-to-template'];
-const legacySkills=canonicalSkills.map(name=>name.replace(/^openmotion-/,'motion-'));
-assert.deepEqual((await readdir(path.join(root,'skills'))).sort(),[...canonicalSkills,...legacySkills].sort());
-for(const [index,name] of legacySkills.entries()){
- const alias=await readFile(path.join(root,'skills',name,'SKILL.md'),'utf8');
- assert.match(alias,/disable-model-invocation: true/);
- assert.ok(alias.includes('../'+canonicalSkills[index]+'/SKILL.md'));
- assert.match(await readFile(path.join(root,'skills',name,'agents/openai.yaml'),'utf8'),/allow_implicit_invocation: false/);
-}
+assert.deepEqual((await readdir(path.join(root,'skills'))).sort(),canonicalSkills);
 const standaloneLibrary=path.join(work,'standalone-library');
-for(const [old,canonical] of Object.entries({brandkit:'openmotion-brandkit','presenter-story':'openmotion-presenter-story','motion-design-remix':'openmotion-design-remix'})){
- assert.deepEqual((await readdir(path.join(root,'library/skills',old))).sort(),['SKILL.md','agents']);
- const installed=spawnSync(process.execPath,[path.join(root,'scripts/install-library-skill.mjs'),old,standaloneLibrary],{encoding:'utf8',cwd:tmpdir()});
+const librarySkills=['openmotion-brandkit','openmotion-presenter-story','openmotion-design-remix'];
+assert.deepEqual((await readdir(path.join(root,'library/skills'))).sort(),[...librarySkills].sort());
+for(const canonical of librarySkills){
+ const installed=spawnSync(process.execPath,[path.join(root,'scripts/install-library-skill.mjs'),canonical,standaloneLibrary],{encoding:'utf8',cwd:tmpdir()});
  assert.equal(installed.status,0,installed.stderr);
  assert.equal(await readFile(path.join(standaloneLibrary,canonical,'SKILL.md'),'utf8'),await readFile(path.join(root,'library/skills',canonical,'SKILL.md'),'utf8'));
 }
