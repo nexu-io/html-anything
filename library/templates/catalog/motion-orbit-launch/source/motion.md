@@ -11,7 +11,7 @@ The reference implementation is `preview.html`; the canvas is 960 × 540 at 30 f
 - Background: deep blue-black `#101b20`, subtle 48 px grid, fine off-white rules.
 - Accent: lime `#d6f573`; body text: warm white `#f5f4e9`; secondary text: muted gray-green.
 - Left: three thin concentric orbits centered at (220, 270), with a moving signal that becomes a fixed marker.
-- Right: a two-line uppercase headline anchored at (402, 202); supporting line below it; all text stays inside 60 px canvas margins.
+- Right: a two-line uppercase headline anchored at (418, 184); supporting line below it. Keep at least 44 px of canvas margin around the text.
 - Typography: system sans-serif. Use weight 650–750 for the headline and generous leading for support text. Never require an external font download.
 
 ## Timing
