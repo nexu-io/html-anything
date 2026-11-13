@@ -31,6 +31,7 @@ If OpenMotion tools are unavailable or fail, disclose the connection status and 
 
 | 本次范围 | 必需参考（可复用已读正文） |
 | --- | --- |
+| 需要选择、获取或替换素材，含原创、模板适配、复刻与局部修改 | [素材选择与来源优先级](materials.md)；沿用所选路线的能力和保持项；仅查看、预览或导出既有内容不触发 |
 | 原创新片／大幅重编 | [动作脚本](../../openmotion-director/references/action-script.md)、[动态表现](../../openmotion-director/references/motion-craft.md)、[动作短句](../../openmotion-director/references/motion-phrases.md)、[审片](../../openmotion-director/references/motion-review.md) |
 | 新设计声音叙事或工程音轨调整，含画面锁定 | [声音叙事](../../openmotion-director/references/sound-narrative.md)、[动作脚本的声画锚点](../../openmotion-director/references/action-script.md)、审片；只应用声音相关内容，不启动原创流程 |
 | 原样使用模板、不做修改 | Follow openmotion-template-to-video: the [editable preview handoff](native.md#editable-preview-handoff) is the delivery; load no authoring/export dependencies. An edited project cannot reuse the original template preview. |

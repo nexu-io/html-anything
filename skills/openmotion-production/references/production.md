@@ -13,7 +13,7 @@ Use only the OpenMotion MCP Tools actually returned by tools/list. Read [Native 
 | Export | openmotion_export_request: immutable snapshot, background MP4, automatic lint and technical verification |
 | Cancel | openmotion_export_cancel: explicit owned job, distinguish cancelling/cancelled/completed |
 
-For missing or inadequate media, use [asset decisions](../../openmotion-director/references/production-decisions.md) to choose generation, retrieval or a suitable graphic medium within the current task. Use available host tools or Studio and existing authorization; do not invent tool names or silently add paid dependencies. Inspect completed media at its actual largest framing before composing. A queued generation or imported file does not establish visual quality.
+When selecting, obtaining or replacing media, apply the [shared material policy](materials.md) within the selected workflow and existing authorization.
 
 ## Execution
 

@@ -1,5 +1,13 @@
 # 公开变更记录
 
+
+## 2026-11-13: Share material sourcing priorities across production routes
+
+- Centralize source priority, acquisition and usability checks in one shared material reference: explicit choices first, suitable existing assets next, original sources for established subjects, and generated/procedural content for original or supporting expression.
+- Link all five canonical Skills conditionally, retain compatibility forwarding entries, and expose the reference through the canonical workflow resource and legacy URI alias. Existing media support, reference fidelity and preview/export-only scope remain unchanged.
+- Consolidate the director, intake, template and execution rules rather than maintaining competing acquisition policies. No new media service, Tool, permission or release is introduced.
+- Retain the prior local Harry Potter trial as a single execution observation: one user message, original footage retrieved and used, ten excerpts totaling 20.5 seconds in a 32-second film. It is an existing example and a prior local snapshot, not a behavioral rerun of this PR head, a generalization result or a listening/visual acceptance claim. The viewing copy is attached to the PR; film media and private traces are excluded from product distributions.
+
 ## 2026-11-12: Version motion guidance source in the product repository
 
 - Import 286 public guidance templates with stable IDs, existing eleven-locale metadata and authored text examples; preserve pending conversion state and original source attribution.

@@ -137,6 +137,8 @@ README 参考 OpenDesign 的产品导览和 HTML Anything 的贡献、来源表�
 
 后续需求应注明改变了哪一步、影响哪些角色，以及用户能观察到的完成条件。
 
+Asset selection, acquisition and replacement use the shared [material policy](../../skills/openmotion-production/references/materials.md) across all five production routes. Source priority is a host-Agent decision within existing workflow scope and user constraints; this does not add a search/generation backend or trigger acquisition for preview/export-only work.
+
 ## 职责分层与依赖方向
 
 产品由“创作决策、素材执行、原生编辑、成片交付”串成完整流程。Agent 和人都可以提出修改，但媒体模型、编辑器与渲染器各自只承担本层工作。新增能力应先明确落在哪一层，再确定入口；不能因增加一个按钮就建立另一套工程或任务状态。
@@ -195,7 +197,7 @@ Preview/export preflight and the bundled OpenMotion lint command use the pinned 
 | 产品服务与代理 | `server.ts`、`editor-server.ts` | 通用会话 API `/design-api/`、兼容 `/motion-api/`，原生 API `/api/` |
 | 引擎与生命周期 | `hyperframes.ts`、`preview.ts`、`editor-runtime.ts`、`shared/owned-studio.mjs` | 锁定 Hyperframes；macOS 共享后台与 Studio 守卫，校验身份/版本/目录并管理崩溃清理 |
 | 导出与质量验证 | `server.ts`、`scripts/verify-export.ts`、制作 skills | 独立快照、后台渲染、技术验证；视觉审阅另行完成 |
-| Skill 路由与文档读取 | `skills/`、`shared/workflow.ts`、`mcp.ts` | production 通用工程入口 + 可直达 director + openmotion-template-to-video + openmotion-recreate 实际流程 + openmotion-video-to-template（五个入口均分发）；26 份唯一文档含共享 edit（27 个 workflow/section 地址，portable 共享），具有 canonical ID/哈希/引用映射，按需读取，不自动执行或强制编排；见 [调用契约](../skills.md) |
+| Skill 路由与文档读取 | `skills/`、`shared/workflow.ts`、`mcp.ts` | production 通用工程入口 + 可直达 director + openmotion-template-to-video + openmotion-recreate 实际流程 + openmotion-video-to-template（五个入口均分发）；27 份唯一文档含共享 edit/materials（28 个 workflow/section 地址，portable 共享），具有 canonical ID/哈希/引用映射，按需读取，不自动执行或强制编排；见 [调用契约](../skills.md) |
 | 动态叙事指导 | `skills/openmotion-director/` | v1.5.5 guides concrete visual events, material/motion design, representative prototypes and actual audiovisual phases; shared edit/verification preserve locked content and evidence scope. Five routes, eleven public Tools and editor-first handoff remain unchanged. Cross-task reliability and native model audiovisual review remain unverified; see [director guidance](../openmotion-director.md). |
 
 源码位置的详细映射见 [编辑器开发指南](../editor-fork.md)，引擎适配见 [Hyperframes 集成](../hyperframes.md)。

@@ -11,7 +11,7 @@ import { getWorkflow, workflowReferences, workflowRegistry, workflowSections } f
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const workflows = ['production', 'director', 'template', 'recreate', 'video-to-template'];
-const productionSections = ['start', 'intake', 'templates', 'production', 'verification', 'context', 'native', 'edit', 'portable'];
+const productionSections = ['start', 'intake', 'templates', 'production', 'verification', 'context', 'native', 'edit', 'portable', 'materials'];
 const entries = Object.entries(workflowRegistry).filter(([name]) => workflows.includes(name)).flatMap(([workflow, definition]) =>
   Object.entries(definition.sections).map(([section, documentId]) => ({ workflow, section, documentId, status: definition.status })));
 
@@ -34,15 +34,20 @@ function workflowCall(id: number, args?: any) {
 test('MCP-only client discovers and reads the packaged workflow without starting a preview', async () => {
   const directory = await mkdtemp(path.join(tmpdir(), 'motion-workflow-mcp-'));
   try {
-    const sections = productionSections.slice(0, 5);
+    const sections = [...productionSections.slice(0, 5), 'materials'];
     const responses = stdio(directory, [
       { id: 1, method: 'initialize', params: { protocolVersion: '2025-11-25' } },
       { id: 2, method: 'tools/list' }, workflowCall(3),
+      { id: 20, method: 'resources/list' },
+      { id: 21, method: 'resources/read', params: { uri: 'motion://workflow/production/materials' } },
       ...sections.map((section, index) => workflowCall(index + 4, { section })),
     ]);
     assert.match(responses.get(1).instructions, /resources\/read/);
     assert.ok(!responses.get(2).tools.some((tool: any) => tool.name === 'openmotion_get_workflow'));
+    assert.ok(responses.get(20).resources.some((resource: { uri: string }) => resource.uri === 'openmotion://workflow/production/materials'));
     assert.equal(responses.get(3).structuredContent.documentId, 'skills/openmotion-production/SKILL.md');
+    assert.equal(responses.get(21).structuredContent.documentId, 'skills/openmotion-production/references/materials.md');
+    assert.equal(responses.get(21).structuredContent.contentHash, (await getWorkflow('materials')).contentHash);
     for (const [index, section] of sections.entries()) {
       const result = responses.get(index + 4).structuredContent;
       assert.equal(result.workflow, 'production');
@@ -100,6 +105,8 @@ test('every workflow document and linked reference is reachable over MCP with ca
     for (const route of workflows) {
       assert.ok(returned.get(workflowRegistry[route as keyof typeof workflowRegistry].sections.start).references.some((reference: { documentId: string }) =>
         reference.documentId === 'skills/openmotion-production/references/edit.md'), `${route} must expose the shared edit workflow`);
+      assert.ok(returned.get(workflowRegistry[route as keyof typeof workflowRegistry].sections.start).references.some((reference: { documentId: string }) =>
+        reference.documentId === 'skills/openmotion-production/references/materials.md'), `${route} must expose the shared material policy`);
     }
     assert.deepEqual(await store.get(), before);
     assert.deepEqual(await readdir(directory, { recursive: true }), filesBefore);

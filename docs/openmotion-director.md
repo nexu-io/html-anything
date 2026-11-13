@@ -5,7 +5,7 @@
 This update integrates the creative guidance developed after v1.4.5. The existing five Skill routes, eleven public Tools, MCP Resources, editable-preview handoff and requested-export boundary remain unchanged.
 
 - Describe a concrete visual event and its recognizable result, then design materials, subject motion, framing and timing together. Reference analysis transfers the viewing mechanism rather than copying a color palette or transition name.
-- Select or acquire materials within the task's permissions; inspect identity, structure, quality and controllability at the largest intended framing. Programmatic graphics remain valid final materials when they fit the film.
+- Use the [shared material policy](../skills/openmotion-production/references/materials.md) for source priorities, acquisition and usability checks. Director decisions retain the relationship between materials, subject motion, framing, time and state.
 - Keep the subject's important change legible when framing, occlusion and camera motion also change. Test difficult views and geometry before expanding the film.
 - Prototype the representative creative risk, including middle or ending sections when relevant. Preserve accepted implementations and timing while adding context; a successful opening does not validate the remaining film.
 - Choose sound materials and timing order for the task, then cross-check actual visible action phases against real audio events. Shared edit and verification guidance invalidates affected timing evidence after changes and separates technical integrity, player operation, event timing and normal-speed perception.
