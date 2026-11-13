@@ -49,7 +49,7 @@
 
 先建立项目容器，再进入代理输入和回答。斜视构图保持一致方向，镜头靠近当前操作区时仍保留项目标题或一部分侧栏，说明对话属于同一工作区。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 追问之后展示依据
 
@@ -138,42 +138,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 13.0,
       "frameId": "K0023",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 25.0,
       "frameId": "K0056",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 30.0,
       "frameId": "K0076",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 43.0,
       "frameId": "K0113",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 52.0,
       "frameId": "K0127",
       "role": "reference-evidence",

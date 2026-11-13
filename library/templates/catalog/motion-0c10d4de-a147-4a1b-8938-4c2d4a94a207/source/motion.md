@@ -49,7 +49,7 @@
 
 浅灰纸感底承托书写笔触，黑墨与细点线形成粗细对照。主字居中，少量索引退到边角；收尾短句可用稳重衬线，和技术小字区分。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 笔画散开后，保留数量关系
 
@@ -71,7 +71,7 @@
 
 多个网络先形成独立对象，再加入球体与科学图版。镜头拉远，给越来越多的图形腾出位置，保留统一细线和纸面材质。
 
-![10.00s · 构图参考](assets/reference-5.jpg)
+![10.00s · 构图参考](assets/reference-5.webp)
 
 ## 铺满以后，清场给产品说明
 
@@ -131,42 +131,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 3.0,
       "frameId": "K0012",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 5.566666666666666,
       "frameId": "K0022",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 7.0,
       "frameId": "K0028",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 10.0,
       "frameId": "K0040",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 13.266666666666667,
       "frameId": "K0051",
       "role": "reference-evidence",

@@ -73,7 +73,7 @@
 
 输入目标后先浏览页面，再出现生成后的页面。末段滚动查看主要区块，终端用对应条目总结结果，让观众知道任务落在哪里。
 
-![45.00s · 构图参考](assets/reference-5.jpg)
+![45.00s · 构图参考](assets/reference-5.webp)
 
 ## 三组任务，各自有开头和结束
 
@@ -145,14 +145,14 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 13.0,
       "frameId": "K0032",
       "role": "reference-evidence",
@@ -166,14 +166,14 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 40.0,
       "frameId": "K0113",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 45.0,
       "frameId": "K0130",
       "role": "reference-evidence",

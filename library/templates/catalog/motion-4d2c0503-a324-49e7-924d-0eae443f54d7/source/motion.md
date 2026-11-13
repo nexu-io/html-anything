@@ -49,7 +49,7 @@
 
 从应用场景进入复制设计，用过渡把熟悉的设计帧带到节点画布。源节点保留设计缩略图或名称，避免观众以为它变成了另一份素材。
 
-![3.00s · 构图参考](assets/reference-2.jpg)
+![3.00s · 构图参考](assets/reference-2.webp)
 
 ## 输入与输出朝向明确
 
@@ -128,28 +128,28 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 3.0,
       "frameId": "K0013",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 11.0,
       "frameId": "K0045",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 14.0,
       "frameId": "K0057",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 22.0,
       "frameId": "K0086",
       "role": "reference-evidence",

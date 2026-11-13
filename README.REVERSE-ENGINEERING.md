@@ -181,13 +181,13 @@ The remake keeps Stripe’s flip and reveals an illustrated film frame.<br>
 <tr><th colspan="2" align="left">Original films</th></tr>
 <tr>
 <td width="50%" valign="top">
-<a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/7efe6482e818eaa61e61a3f1105bbf0f711c5719f605277f79bee2f0d3d5d354.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
+<a href="docs/readme/media/remix-kimi-k3-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/ac6e14a0fadb5893534e6438.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/7efe6482e818eaa61e61a3f1105bbf0f711c5719f605277f79bee2f0d3d5d354.gif" width="440" alt="Kimi K3 teaser reference film"></picture></a><br>
 <strong>Kimi · K3 teaser</strong><br>
 Your next release, distilled into a short, memorable teaser.<br>
 <sub>Reference · @Kimi_Moonshot</sub>
 </td>
 <td width="50%" valign="top">
-<a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/593e5ea9029984b620b795ad16ae07ed8ebf28501134cec3dd67fa0cf2777c4f.gif" width="440" alt="Reception by ElevenLabs reference film"></picture></a><br>
+<a href="docs/readme/media/remix-elevenlabs-reception-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/bc4b8b4398d66159acd35890.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/593e5ea9029984b620b795ad16ae07ed8ebf28501134cec3dd67fa0cf2777c4f.gif" width="440" alt="Reception by ElevenLabs reference film"></picture></a><br>
 <strong>ElevenLabs · Reception</strong><br>
 Introduce a new product with a focused launch story.<br>
 <sub>Reference · @ElevenLabs</sub>
@@ -453,17 +453,17 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <tr><th colspan="3" align="left">Reusable motion components</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="docs/readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/2e63fa988d5a2da0c845136b47225ae72fffe8b98e5bfdc18a6eede74a25003b.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
+<a href="docs/readme/media/app-showcase.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/51a2d141e18e608cc11b9256.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/2e63fa988d5a2da0c845136b47225ae72fffe8b98e5bfdc18a6eede74a25003b.gif" width="300" alt="Animated catalog preview: App Showcase"></picture></a><br>
 <strong>App Showcase</strong><br>
 <sub>Component · <a href="library/components/showcase/app-showcase/index.html">View component</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/1d4e48b21944f1b75358fd0f135eef1abb3526527236b2a72a9bffd381035876.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
+<a href="docs/readme/media/glass-shard-title.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/10cceacc02d415247d58f562.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/1d4e48b21944f1b75358fd0f135eef1abb3526527236b2a72a9bffd381035876.gif" width="300" alt="Animated catalog preview: Glass Shard Title"></picture></a><br>
 <strong>Glass Shard Title</strong><br>
 <sub>Component · <a href="library/components/showcase/glass-shard-title/index.html">View component</a></sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/951cd2cd4a6232410990a01426c6d7c96b6be79956019194165967baff36cb7b.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
+<a href="docs/readme/media/nyc-paris-flight.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/aeafb2433c37f2f7d8c87619.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/951cd2cd4a6232410990a01426c6d7c96b6be79956019194165967baff36cb7b.gif" width="300" alt="Animated catalog preview: NYC Paris Flight"></picture></a><br>
 <strong>NYC Paris Flight</strong><br>
 <sub>Component · <a href="library/components/showcase/nyc-paris-flight/index.html">View component</a></sub>
 </td>
@@ -471,17 +471,17 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <tr><th colspan="3" align="left">Product and brand films</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="docs/readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.jpg"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
+<a href="docs/readme/media/jake-pond-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/66ac2f8b58e55670971ae70c.webp"><img src="docs/readme/gallery/pond.gif" width="300" alt="Animated catalog preview: Pond: a new Linux OS"></picture></a><br>
 <strong>Pond: a new Linux OS</strong><br>
 <sub>Reference · @bflycomputer</sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/2ae8ca04b773f2bea17e2e368680d2f84071f7ae4457f02dd3a460b952434a99.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
+<a href="docs/readme/media/remix-cyera-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/8884a707a92d0cc52d3363b7.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/2ae8ca04b773f2bea17e2e368680d2f84071f7ae4457f02dd3a460b952434a99.gif" width="300" alt="Animated catalog preview: Cyera brand video"></picture></a><br>
 <strong>Cyera brand video</strong><br>
 <sub>Reference · Cyera</sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/645600cd403b233ede34313e0eb6b1632d63298dbffa3ff4137a47f987b15316.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
+<a href="docs/readme/media/remix-glyph-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/4bfe08db4d486970494eff3b.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/645600cd403b233ede34313e0eb6b1632d63298dbffa3ff4137a47f987b15316.gif" width="300" alt="Animated catalog preview: Glyph: GPU typography for the web"></picture></a><br>
 <strong>Glyph: GPU typography for the web</strong><br>
 <sub>Reference · @pmndrs</sub>
 </td>
@@ -489,17 +489,17 @@ Select a preview to watch the clip. Entries marked “View component” also lin
 <tr><th colspan="3" align="left">Light and loops</th></tr>
 <tr>
 <td width="33%" valign="top">
-<a href="docs/readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/bff72b30b77e4b2991776bab55428b8ec82fe633d9f71fbdf62b8b9c32b76ebf.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
+<a href="docs/readme/media/remix-iskra-light-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/75cfbe06267768838d145fa4.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/bff72b30b77e4b2991776bab55428b8ec82fe633d9f71fbdf62b8b9c32b76ebf.gif" width="300" alt="Animated catalog preview: Iskra Light"></picture></a><br>
 <strong>Iskra Light</strong><br>
 <sub>Reference · @world_is_web</sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/c4352874fdad22dbe7481e8adf706ae6671f0aaed3fa907cfb1bd413051eaca9.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
+<a href="docs/readme/media/remix-linear-loops-reference.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/17cf5075b3f4b49c7d3e9201.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/c4352874fdad22dbe7481e8adf706ae6671f0aaed3fa907cfb1bd413051eaca9.gif" width="300" alt="Animated catalog preview: Linear Loops"></picture></a><br>
 <strong>Linear Loops</strong><br>
 <sub>Reference · @linear</sub>
 </td>
 <td width="33%" valign="top">
-<a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.jpg"><img src="https://releases.open-design.ai/open-motion/media/sha256/3b7fc53ee3a44365ccf66c5441c9dc1ed42c26696689fe32353bf1aca3a24c70.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
+<a href="docs/readme/media/aurora.mp4"><picture><source media="(prefers-reduced-motion: reduce)" srcset="web/catalog/covers/5aefe7c9a916a38777443b36.webp"><img src="https://releases.open-design.ai/open-motion/media/sha256/3b7fc53ee3a44365ccf66c5441c9dc1ed42c26696689fe32353bf1aca3a24c70.gif" width="300" alt="Animated catalog preview: Aurora"></picture></a><br>
 <strong>Aurora</strong><br>
 <sub>Component · <a href="library/components/showcase/aurora/index.html">View component</a></sub>
 </td>

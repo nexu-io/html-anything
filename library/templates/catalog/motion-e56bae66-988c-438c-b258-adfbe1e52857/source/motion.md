@@ -127,21 +127,21 @@ Dock 容器 / 核心品牌图标 / 周边应用 / 背景素材
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 11.0,
       "frameId": "K0070",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 13.0,
       "frameId": "K0079",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 16.0,
       "frameId": "K0082",
       "role": "reference-evidence",

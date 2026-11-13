@@ -49,7 +49,7 @@
 
 邮箱先建立使用场景，再打开新邮件。请求文字与附件同时可见，发送按钮靠近当前焦点；邮件主题和附件名要能直接解释任务。
 
-![8.01s · 构图参考](assets/reference-2.jpg)
+![8.01s · 构图参考](assets/reference-2.webp)
 
 ## 发送后让出处理时间
 
@@ -139,42 +139,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 8.008000000000001,
       "frameId": "K0016",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 15.015,
       "frameId": "K0029",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 18.018,
       "frameId": "K0035",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 29.029,
       "frameId": "K0054",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 37.037,
       "frameId": "K0074",
       "role": "reference-evidence",

@@ -64,7 +64,7 @@
 
 团队消息之后回到项目总览，让观众再次看到文件、任务和成果。总览使用较宽构图，详情使用局部近景；收放变化服务于归属关系。
 
-![50.00s · 构图参考](assets/reference-5.jpg)
+![50.00s · 构图参考](assets/reference-5.webp)
 
 ## 让项目边界轻于内容
 
@@ -121,7 +121,7 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
@@ -135,28 +135,28 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 23.0,
       "frameId": "K0050",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 39.0,
       "frameId": "K0090",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 50.0,
       "frameId": "K0106",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 61.0,
       "frameId": "K0136",
       "role": "reference-evidence",

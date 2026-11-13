@@ -49,7 +49,7 @@
 
 产品图、主标题和主题色贯穿全部成果。暖白界面作为容器，深青设计稿承担视觉重点；说明文字用衬线，编辑控件用清楚的无衬线。
 
-![17.00s · 构图参考](assets/reference-2.jpg)
+![17.00s · 构图参考](assets/reference-2.webp)
 
 ## 从资料走到第一份幻灯片
 
@@ -87,7 +87,7 @@
 
 进入文档时降低画面装饰，增加正文和数据图的篇幅。图表承接前面的产品内容，分享入口放在成果完整之后。
 
-![59.00s · 构图参考](assets/reference-5.jpg)
+![59.00s · 构图参考](assets/reference-5.webp)
 
 ## 整条片子的格式递进
 
@@ -158,42 +158,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 17.0,
       "frameId": "K0036",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 21.0,
       "frameId": "K0050",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 46.0,
       "frameId": "K0147",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 59.0,
       "frameId": "K0202",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 82.0,
       "frameId": "K0267",
       "role": "reference-evidence",

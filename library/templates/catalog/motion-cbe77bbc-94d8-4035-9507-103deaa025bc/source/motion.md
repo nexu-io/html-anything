@@ -67,7 +67,7 @@
 
 外围波形可以出画，中央阅读区保持完整。
 
-![2.28s · 构图参考](assets/reference-2.jpg)
+![2.28s · 构图参考](assets/reference-2.webp)
 
 ## 把循环用于不同画幅
 
@@ -127,7 +127,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 2.28,
       "frameId": "K0010",
       "role": "reference-evidence",
@@ -141,14 +141,14 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 7.56,
       "frameId": "K0031",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 9.56,
       "frameId": "K0039",
       "role": "reference-evidence",

@@ -49,7 +49,7 @@
 
 菜单与首次调用后打开技能文档，让名称和内容成为后续操作的共同参照。共享弹窗覆盖在文档上方，关闭后仍回到原内容。
 
-![13.00s · 构图参考](assets/reference-3.jpg)
+![13.00s · 构图参考](assets/reference-3.webp)
 
 ## 共享与下载各讲清一个动作
 
@@ -126,42 +126,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 7.000041335978836,
       "frameId": "K0011",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 13.000076766817838,
       "frameId": "K0025",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 16.00009448223734,
       "frameId": "K0029",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 26.000153533635675,
       "frameId": "K0049",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 35.00020667989418,
       "frameId": "K0067",
       "role": "reference-evidence",

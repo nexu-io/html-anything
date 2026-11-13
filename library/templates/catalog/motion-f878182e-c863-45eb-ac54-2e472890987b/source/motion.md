@@ -49,7 +49,7 @@
 
 品牌位于中心，彩色指针与短气泡从周边进入。多人回应可以交错，但不覆盖主标题；黑底、浅色字和绿紫橙参与者标记形成清楚分工。品牌与活动名使用中粗无衬线，气泡使用较小常规字重。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 回应聚成活动预告
 
@@ -105,28 +105,28 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 1.0,
       "frameId": "K0002",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 5.0,
       "frameId": "K0012",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 8.0,
       "frameId": "K0020",
       "role": "reference-evidence",
@@ -140,7 +140,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 13.0,
       "frameId": "K0043",
       "role": "reference-evidence",

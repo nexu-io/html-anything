@@ -25,35 +25,35 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 11,
       "frameId": "K0037",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 17,
       "frameId": "K0053",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 32,
       "frameId": "K0086",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 43,
       "frameId": "K0116",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 55,
       "frameId": "K0158",
       "role": "reference-evidence",
@@ -83,7 +83,8 @@
     "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
     "originalProductionModel": "unknown",
     "extraction": "Codex visual reasoning + local algorithms",
-    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged. Large reference images use existing CMS WebP renditions; original image identities are retained in template.json and originals remain in the CMS archive."
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged. Large reference images use existing CMS WebP renditions; original image identities are retained in template.json and originals remain in the CMS archive.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
   },
   "files": [
     {
@@ -92,29 +93,29 @@
       "sha256": "965922143533fc014d35dbd7f3486f8168e7fedf68294d59ca864d0c9b6d7b31"
     },
     {
-      "path": "assets/reference-2.jpg",
-      "bytes": 39957,
-      "sha256": "65c5240f885d103fa53b0e08e71229ba027c1d8ae75c22366bb371e62290b399"
+      "path": "assets/reference-2.webp",
+      "bytes": 9816,
+      "sha256": "2d83bc14c41a337be68a2c91c7da490cfd50f5e0dad3b1aa54fb8d34ff2d63de"
     },
     {
-      "path": "assets/reference-3.jpg",
-      "bytes": 35145,
-      "sha256": "65269902d65fdfbacc148c88f9702b791ce3903a0c305b7a02cdf1e84b39c308"
+      "path": "assets/reference-3.webp",
+      "bytes": 7868,
+      "sha256": "ab73a4759a25d212b8f29b6d18c86f27c9ae20d4926c4ef2a77e61fb95effca1"
     },
     {
-      "path": "assets/reference-4.jpg",
-      "bytes": 47759,
-      "sha256": "81b7348ac2bada69883f3b0ab9d4f0c121902ee4f0bf0d6e1ff89305063b7d5d"
+      "path": "assets/reference-4.webp",
+      "bytes": 7776,
+      "sha256": "5acf1a1c8dbec1bc5d76d70f74fcafa2b53337c0698f6d29e017f4d8e7f3c7f7"
     },
     {
-      "path": "assets/reference-5.jpg",
-      "bytes": 37673,
-      "sha256": "8eb4fb3c0466ad23a1734fc574aeb8f36263e2c4b06a353f1ff12018b67acb78"
+      "path": "assets/reference-5.webp",
+      "bytes": 9062,
+      "sha256": "4124f4ffc4ee20d206a767f2bab65cfda1bb496ce76782d419d1a9d32ed11557"
     },
     {
-      "path": "assets/reference-6.jpg",
-      "bytes": 10915,
-      "sha256": "f7e2514fe1181587cec7ff355a810e12e334d7dd0f8618620bcc64daed7b2d31"
+      "path": "assets/reference-6.webp",
+      "bytes": 1834,
+      "sha256": "4e827563957f1d6cbf507c0bf4c21d72520760b153cc2c68d62115f0a5718973"
     },
     {
       "path": "demos/bridge.js",
@@ -148,13 +149,13 @@
     },
     {
       "path": "motion.md",
-      "bytes": 7356,
-      "sha256": "a1a9f144fd351e056a6fff8aa0a3e4e381af98e52644dfb75afdddfd63e3b7b7"
+      "bytes": 7361,
+      "sha256": "b68f3e9d016c785a01e8972769320b7a78ae3427da51967e8e53418c85911a24"
     },
     {
       "path": "preview.html",
-      "bytes": 22953,
-      "sha256": "af5f545c797dcf8d9b1fc0319b98471ddc7abc114367e6c0fcd8bbb8354ee3dc"
+      "bytes": 22963,
+      "sha256": "2f5d2f9bf7a69a20635d28c68a25a5a7410d3ed3045c5491649765a9197fcbae"
     },
     {
       "path": "style.json",

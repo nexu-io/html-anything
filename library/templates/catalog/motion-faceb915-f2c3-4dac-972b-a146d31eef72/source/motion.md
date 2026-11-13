@@ -49,7 +49,7 @@
 
 开场先给本地选项和设备状态，使用深色界面与青色细线强调当前选择。标题使用衬线字，设置与文件信息用无衬线字；把设备标识放在输入附近，后续仍可找到。
 
-![14.00s · 构图参考](assets/reference-2.jpg)
+![14.00s · 构图参考](assets/reference-2.webp)
 
 ## 用不同产物推进演示
 
@@ -136,42 +136,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 14.0,
       "frameId": "K0037",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 28.0,
       "frameId": "K0065",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 42.0,
       "frameId": "K0094",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 53.0,
       "frameId": "K0120",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 64.0,
       "frameId": "K0146",
       "role": "reference-evidence",

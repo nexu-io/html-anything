@@ -49,7 +49,7 @@
 
 开场用旅行画面和一个具体问题建立目标。生活镜头铺满画面；转入工具后用暖白底、聊天气泡和衬线说明，形成场景与论证的分工。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 账户连接是计划的前提
 
@@ -147,42 +147,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 14.0,
       "frameId": "K0048",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 32.0,
       "frameId": "K0087",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 39.0,
       "frameId": "K0096",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 55.0,
       "frameId": "K0143",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 79.0,
       "frameId": "K0199",
       "role": "reference-evidence",

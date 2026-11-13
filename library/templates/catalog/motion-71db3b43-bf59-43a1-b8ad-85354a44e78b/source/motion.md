@@ -53,7 +53,7 @@
 
 使用浅暖底色、深色细字和低饱和紫蓝影像。标题可用衬线字体，导航用轻量无衬线；文字不跟随影像缩放。内部素材需覆盖最大窗口，放大过程中保持连续，避免露出边缘。
 
-![3.27s · 构图参考](assets/reference-3.jpg)
+![3.27s · 构图参考](assets/reference-3.webp)
 
 ## 展开、停留、收回
 
@@ -114,35 +114,35 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 1.5,
       "frameId": "K0003",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 3.2666666666666666,
       "frameId": "K0010",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 8.533333333333333,
       "frameId": "K0030",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 10.533333333333333,
       "frameId": "K0038",
       "role": "reference-evidence",

@@ -69,7 +69,7 @@
 
 用像素符号和短句打开深色段，随后给手机与波形。生活镜头铺满背景，输入框和少量文字浮在前面，每个场景只讲一种用途。
 
-![57.00s · 构图参考](assets/reference-4.jpg)
+![57.00s · 构图参考](assets/reference-4.webp)
 
 ## 修改图片时保留同一主体
 
@@ -147,42 +147,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 13.0,
       "frameId": "K0039",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 29.0,
       "frameId": "K0074",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 57.0,
       "frameId": "K0124",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 80.0,
       "frameId": "K0189",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 104.0,
       "frameId": "K0264",
       "role": "reference-evidence",

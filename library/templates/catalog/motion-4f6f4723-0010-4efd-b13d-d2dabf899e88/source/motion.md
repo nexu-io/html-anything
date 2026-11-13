@@ -55,7 +55,7 @@
 
 浅色课程页、深色展示页与摄影页可以形成不同设计方向；每套内部的背景、强调色和标题层级要一致。
 
-![9.00s · 构图参考](assets/reference-3.jpg)
+![9.00s · 构图参考](assets/reference-3.webp)
 
 ## 翻页、推近和合集各有用途
 
@@ -125,7 +125,7 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
@@ -139,7 +139,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 9.0,
       "frameId": "K0031",
       "role": "reference-evidence",
@@ -160,7 +160,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 36.0,
       "frameId": "K0116",
       "role": "reference-evidence",

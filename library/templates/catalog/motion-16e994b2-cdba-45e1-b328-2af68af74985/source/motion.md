@@ -49,7 +49,7 @@
 
 暖色台面上成对摆放手机，顶部和底部用舞台色块框住画面。不同语音球采用独立颜色，字幕用小号无衬线，固定在下方。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 每次横移只介绍一组
 
@@ -123,42 +123,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 4.0,
       "frameId": "K0005",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 10.0,
       "frameId": "K0021",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 23.0,
       "frameId": "K0068",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 30.0,
       "frameId": "K0090",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 35.0,
       "frameId": "K0109",
       "role": "reference-evidence",

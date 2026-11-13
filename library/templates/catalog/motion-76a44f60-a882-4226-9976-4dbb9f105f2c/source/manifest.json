@@ -18,7 +18,7 @@
   ],
   "assets": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0,
       "frameId": "K0001",
       "role": "reference-evidence",
@@ -46,7 +46,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 19,
       "frameId": "K0044",
       "role": "reference-evidence",
@@ -82,13 +82,14 @@
     "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
     "originalProductionModel": "unknown",
     "extraction": "Codex visual reasoning + local algorithms",
-    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged. Large reference images use existing CMS WebP renditions; original image identities are retained in template.json and originals remain in the CMS archive."
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged. Large reference images use existing CMS WebP renditions; original image identities are retained in template.json and originals remain in the CMS archive.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
   },
   "files": [
     {
-      "path": "assets/reference-1.jpg",
-      "bytes": 48397,
-      "sha256": "d799d4490c8184b21cfc7047b9ae65e3bc9aa5bc7b88324e190072e17cb93d14"
+      "path": "assets/reference-1.webp",
+      "bytes": 9664,
+      "sha256": "f8d1e65111c9c8fbf295cb3ad3ea7d2088d1671116410ded8bd49abee1c1374e"
     },
     {
       "path": "assets/reference-2.jpg",
@@ -106,9 +107,9 @@
       "sha256": "c16270134f67ccad9362c1275e70e743062d7bb1e7a920e20ac799b94a7ba919"
     },
     {
-      "path": "assets/reference-5.jpg",
-      "bytes": 92740,
-      "sha256": "ec7c605ebc0c9679b41a00948e25f3809be9a8c6b3de8c6e39b29610f5e3defb"
+      "path": "assets/reference-5.webp",
+      "bytes": 22488,
+      "sha256": "9b4b20f7d34a076d2bb03441f61373dd3d5ad5fc30051f21d0f9b5481b132507"
     },
     {
       "path": "assets/reference-6.jpg",
@@ -147,13 +148,13 @@
     },
     {
       "path": "motion.md",
-      "bytes": 7007,
-      "sha256": "b4bd128f37e6d6e61f51f50a6b2ca667b526830dca23ade8ce7d532f5cbd997e"
+      "bytes": 7009,
+      "sha256": "78a02373492bf4ab6107d116154861c897624b55f5a9b0c251bf6c42661ce94d"
     },
     {
       "path": "preview.html",
-      "bytes": 22752,
-      "sha256": "9037c76e2bf10be7b7aaa0330b2d145b8879fe32b2d66a3624721bd9fa564ba8"
+      "bytes": 22756,
+      "sha256": "33e986b27d08592505adddc9291cda290d147cebb244f90e995d1da76f998388"
     },
     {
       "path": "style.json",

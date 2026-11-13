@@ -67,11 +67,11 @@ test('checkout budget counts every path even when Git deduplicates their blobs',
   f.write('shared.bin', Buffer.alloc(1024 * 1024, 42)); f.stage();
   const oid = git(f.root, ['rev-parse', ':shared.bin']);
   // Reuse one blob in the index without allocating a large working directory.
-  for (let index = 0; index < 180; index++)
+  for (let index = 0; index < 128; index++)
     git(f.root, ['update-index', '--add', '--cacheinfo', '100644', oid, `copy-${index}.bin`]);
   const result = checkRepositoryStorage(f.root);
-  assert(result.gitBytes > 180 * 1024 * 1024);
-  assert.match(result.errors.join('\n'), /checkout exceeds 180 MiB/);
+  assert(result.gitBytes > 128 * 1024 * 1024);
+  assert.match(result.errors.join('\n'), /checkout exceeds 128 MiB/);
 });
 
 test('repository LFS defaults keep a normal clone small and a scoped pull restores exact media', {

@@ -64,7 +64,7 @@
 
 技能名称和文件身份在编辑页、仓库和代理窗口中持续可见。转场改变容器而保留关键词，观众不用通过漂浮箭头也能判断这是同一份内容。
 
-![8.00s · 构图参考](assets/reference-3.jpg)
+![8.00s · 构图参考](assets/reference-3.webp)
 
 ## 让内容比应用装饰更突出
 
@@ -119,42 +119,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 2.000010226741468,
       "frameId": "K0005",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 8.000040906965872,
       "frameId": "K0019",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 12.000061360448807,
       "frameId": "K0029",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 18.000092040673213,
       "frameId": "K0045",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 21.000107380785416,
       "frameId": "K0051",
       "role": "reference-evidence",

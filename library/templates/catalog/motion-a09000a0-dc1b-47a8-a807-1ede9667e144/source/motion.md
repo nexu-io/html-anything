@@ -49,7 +49,7 @@
 
 先建立主设计帧，再通过侧栏输入带来源的需求。画布、输入和引用可以轮流放大，但设计标题与关键轮廓持续可辨，避免切换成另一份作品。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 来源先于修改出现
 
@@ -138,14 +138,14 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 9.008999999999999,
       "frameId": "K0017",
       "role": "reference-evidence",
@@ -166,14 +166,14 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 28.028,
       "frameId": "K0073",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 39.038999999999994,
       "frameId": "K0101",
       "role": "reference-evidence",

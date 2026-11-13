@@ -67,7 +67,7 @@
 
 先建立人物，再让相关手机、购物或服务物件进入。物件围绕人物形成关系，下一镜从其中一个物件继续。
 
-![24.98s · 构图参考](assets/reference-3.jpg)
+![24.98s · 构图参考](assets/reference-3.webp)
 
 ## 镜头通过共享对象交接
 
@@ -151,42 +151,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 9.99340151765094,
       "frameId": "K0037",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 24.983503794127348,
       "frameId": "K0093",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 34.97690531177829,
       "frameId": "K0135",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 65.9564500164962,
       "frameId": "K0259",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 95.93665456944902,
       "frameId": "K0380",
       "role": "reference-evidence",

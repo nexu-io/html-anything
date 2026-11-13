@@ -49,7 +49,7 @@
 
 绿、橙、蓝紫分别承载一句话。渐变亮部缓慢移动，细横纹贯穿背景；避免使用互不相关的装饰图形。
 
-![4.36s · 构图参考](assets/reference-3.jpg)
+![4.36s · 构图参考](assets/reference-3.webp)
 
 ## 切片只用于句子交接
 
@@ -127,42 +127,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 4.0,
       "frameId": "K0007",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 4.36,
       "frameId": "K0008",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 8.6,
       "frameId": "K0014",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 9.0,
       "frameId": "K0015",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 14.0,
       "frameId": "K0027",
       "role": "reference-evidence",

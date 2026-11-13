@@ -51,7 +51,7 @@
 
 以业务问题贯穿多工具调用：数据说明发生什么，流程说明为何，幻灯片负责分享。
 
-![20.00s · 构图参考](assets/reference-3.jpg)
+![20.00s · 构图参考](assets/reference-3.webp)
 
 ## 卡片展开查看，再回到对话
 
@@ -144,42 +144,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 8.0,
       "frameId": "K0027",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 20.0,
       "frameId": "K0060",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 27.0,
       "frameId": "K0079",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 38.0,
       "frameId": "K0109",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 46.0,
       "frameId": "K0133",
       "role": "reference-evidence",

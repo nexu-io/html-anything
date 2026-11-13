@@ -51,7 +51,7 @@
 
 前段建立图册语境，中段让不同媒介共享数字 5 轮廓；观众识别依赖稳定外形而非固定纹理。
 
-![9.00s · 构图参考](assets/reference-3.jpg)
+![9.00s · 构图参考](assets/reference-3.webp)
 
 ## 用切镜更换材质
 
@@ -154,28 +154,28 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 9.0,
       "frameId": "K0057",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 13.0,
       "frameId": "K0083",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 16.5,
       "frameId": "K0100",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 19.0,
       "frameId": "K0107",
       "role": "reference-evidence",

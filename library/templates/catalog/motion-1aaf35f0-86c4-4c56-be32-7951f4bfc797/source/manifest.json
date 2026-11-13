@@ -18,14 +18,14 @@
   ],
   "assets": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 4,
       "frameId": "K0013",
       "role": "reference-evidence",
@@ -39,7 +39,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 11,
       "frameId": "K0036",
       "role": "reference-evidence",
@@ -53,7 +53,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 23,
       "frameId": "K0074",
       "role": "reference-evidence",
@@ -82,18 +82,19 @@
     "referenceImplementation": "authored mechanism illustration, not full visual reconstruction",
     "originalProductionModel": "unknown",
     "extraction": "Codex visual reasoning + local algorithms",
-    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged. Large reference images use existing CMS WebP renditions; original image identities are retained in template.json and originals remain in the CMS archive."
+    "repositoryImport": "Text whitespace normalized; workstation paths in reference-screen OCR replaced with /reference-workspace. Original CMS archive unchanged. Large reference images use existing CMS WebP renditions; original image identities are retained in template.json and originals remain in the CMS archive.",
+    "repositoryImageEncoding": "Local reference JPEGs were re-encoded as WebP at original dimensions (cwebp quality 85, method 6, sharp YUV). Original source archive and its identity remain unchanged."
   },
   "files": [
     {
-      "path": "assets/reference-1.jpg",
-      "bytes": 90040,
-      "sha256": "13feea7c3911750ae9feabdb0ab47531f5400ac4bab8a87e0c2f5c34f9cf27c5"
+      "path": "assets/reference-1.webp",
+      "bytes": 19810,
+      "sha256": "04a85149d133e85ee4d0114512c586f923d6152e1dbdce9cc016526ee18d2e3a"
     },
     {
-      "path": "assets/reference-2.jpg",
-      "bytes": 86394,
-      "sha256": "c002f159669483d89dce0a5c5330d419c541d7e9f84d87dfbac8e9c3a51cd412"
+      "path": "assets/reference-2.webp",
+      "bytes": 23294,
+      "sha256": "4d0798421edd3f238fa386430b1a1e52f8f7b5955dd27854be2f2120332ff3b9"
     },
     {
       "path": "assets/reference-3.jpg",
@@ -101,9 +102,9 @@
       "sha256": "5d8b54c396f9cba07e8ba3fcd5cb4b0582bb2a4d3bef1ad07c07c7c939e01c8d"
     },
     {
-      "path": "assets/reference-4.jpg",
-      "bytes": 97609,
-      "sha256": "edbd46407318417565f80e37bdf8c3d2da71de30c239f4fdde06c4be07d04ff7"
+      "path": "assets/reference-4.webp",
+      "bytes": 14896,
+      "sha256": "903b85eb1823c9a9a241b1075a464ed0ba8fb8d6e23ab60735da09309b6db464"
     },
     {
       "path": "assets/reference-5.jpg",
@@ -111,9 +112,9 @@
       "sha256": "3c014502c7a147da4c4223f6a76601c4bea73df7988698b452156f67e4767f23"
     },
     {
-      "path": "assets/reference-6.jpg",
-      "bytes": 96456,
-      "sha256": "b5bb4f808b39d3f5846b55b4abc7c3f1791f9a71f300148fb16b02d63ca9f955"
+      "path": "assets/reference-6.webp",
+      "bytes": 12988,
+      "sha256": "21f0503bb7009be2553dfe80fb0e7e3157670eaf360580ad7672b41769e14d38"
     },
     {
       "path": "demos/bridge.js",
@@ -142,13 +143,13 @@
     },
     {
       "path": "motion.md",
-      "bytes": 6149,
-      "sha256": "b31a9a35a01acb3fd0fbfc514e895143dc1d298dd64d9db26c2e37303ee7b8d0"
+      "bytes": 6153,
+      "sha256": "8262cc42dc9093ecbe3e63ac8bb9c6d8ee62277dbe0844f8c878156b11a558b5"
     },
     {
       "path": "preview.html",
-      "bytes": 18795,
-      "sha256": "83af84e5328faeeaa57debf5f0d22532bc380fc4903c8b4040752dd3c69b3924"
+      "bytes": 18803,
+      "sha256": "379f307c18950e18a2848588610430145b9a1483af958dfaeb60f03fb27050ab"
     },
     {
       "path": "style.json",

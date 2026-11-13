@@ -65,7 +65,7 @@
 
 素材窗口保持同一位置与圆角，内部文字快速切换。随后放大单个字母，让边缘超出画布，再收回完整字母表。
 
-![9.00s · 构图参考](assets/reference-4.jpg)
+![9.00s · 构图参考](assets/reference-4.webp)
 
 ## 用应用色卡验证同一种字
 
@@ -147,14 +147,14 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 0.9333333333333333,
       "frameId": "K0002",
       "role": "reference-evidence",
@@ -168,21 +168,21 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 9.0,
       "frameId": "K0042",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 13.733333333333333,
       "frameId": "K0065",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 17.0,
       "frameId": "K0087",
       "role": "reference-evidence",

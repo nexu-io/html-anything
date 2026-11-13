@@ -51,7 +51,7 @@
 
 入口→扫描→问题→修复→PR 顺序必须完整，结果层级随深入而展开。
 
-![35.00s · 构图参考](assets/reference-5.jpg)
+![35.00s · 构图参考](assets/reference-5.webp)
 
 ## 详情展开后，再触发修复
 
@@ -146,42 +146,42 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 10.0,
       "frameId": "K0024",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 15.266666666666667,
       "frameId": "K0039",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 27.0,
       "frameId": "K0068",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 35.0,
       "frameId": "K0083",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 41.0,
       "frameId": "K0102",
       "role": "reference-evidence",

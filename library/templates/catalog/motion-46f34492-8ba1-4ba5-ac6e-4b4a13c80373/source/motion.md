@@ -69,7 +69,7 @@
 
 材质特写可铺满画面；作品卡片保留完整边缘；输入与批注尺寸更小，但必须落在清晰的前景层。
 
-![10.01s · 构图参考](assets/reference-2.jpg)
+![10.01s · 构图参考](assets/reference-2.webp)
 
 ## 方向选择必须带来不同设计
 
@@ -142,21 +142,21 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 10.01,
       "frameId": "K0054",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 17.017,
       "frameId": "K0090",
       "role": "reference-evidence",
@@ -177,7 +177,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 49.049,
       "frameId": "K0235",
       "role": "reference-evidence",

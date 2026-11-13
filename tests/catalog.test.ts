@@ -17,6 +17,13 @@ import { WorkspaceStore } from '../workspace.ts';
 import { transport } from './http.ts';
 import { mockPrism } from './prism-fixture.ts';
 
+function assertCatalogImage(bytes: Buffer, poster: string): void {
+  if (poster.endsWith('.webp')) {
+    assert.equal(bytes.toString('ascii', 0, 4), 'RIFF');
+    assert.equal(bytes.toString('ascii', 8, 12), 'WEBP');
+  } else assert.equal(bytes.readUInt16BE(), 0xffd8);
+}
+
 test('the complete source snapshot, every original ID and matched poster survive the import', async () => {
   const raw = await readFile(new URL('../web/catalog/hyperframes.json', import.meta.url));
   const snapshot = JSON.parse(raw.toString());
@@ -33,10 +40,12 @@ test('the complete source snapshot, every original ID and matched poster survive
   }
   const frames = JSON.parse(await readFile(new URL('../web/catalog/template-frames.json', import.meta.url), 'utf8')).frames;
   assert.equal(frames.length, 38);
+  const framedTemplates = catalogTemplates(snapshot.entries, frames);
   for (const frame of frames) {
     assert.equal(frame.video, snapshot.entries.find(entry => entry.id === frame.id).video);
+    assert.equal(framedTemplates.find(template => template.id === frame.id)?.posterUrl, frame.poster);
     const bytes = await readFile(new URL('..' + frame.poster, import.meta.url));
-    assert.equal(bytes.readUInt16BE(), 0xffd8);
+    assertCatalogImage(bytes, frame.poster);
   }
   const noMedia = getTemplate('hf-component-agent-cursor');
   assert.equal(noMedia.previewUrl, undefined); assert.equal(noMedia.posterUrl, undefined);
@@ -80,8 +89,9 @@ test('HTTP catalog, local posters and copied guides resolve the exact selected t
     assert.equal((await request('/motion-api/template-catalog?limit=999')).status, 400);
     for (const template of libraryTemplates.filter(item => item.posterUrl?.startsWith('/web/'))) {
       const response = await request(template.posterUrl!);
-      assert.equal(response.status, 200); assert.equal(response.headers.get('Content-Type'), 'image/jpeg');
-      assert.equal(Buffer.from(await response.arrayBuffer()).readUInt16BE(), 0xffd8);
+      assert.equal(response.status, 200);
+      assert.equal(response.headers.get('Content-Type'), template.posterUrl!.endsWith('.webp') ? 'image/webp' : 'image/jpeg');
+      assertCatalogImage(Buffer.from(await response.arrayBuffer()), template.posterUrl!);
     }
     const info = await (await request('/api/integration')).json();
     for (const id of ['nyt-graph', 'decision-tree', 'product-promo']) {
@@ -148,7 +158,8 @@ test('the visual gallery only includes verified local covers and keeps coverless
   for (const cover of covers.entries) {
     assert.equal(getTemplate(cover.id).posterUrl, cover.poster);
     const bytes = await readFile(new URL('..' + cover.poster, import.meta.url));
-    assert.equal(bytes.readUInt16BE(), 0xffd8); assert.ok(bytes.length > 500);
+    assertCatalogImage(bytes, cover.poster);
+    assert.ok(bytes.length > 500);
   }
   const page = listTemplates({ covered: true, limit: 60 });
   assert.equal(page.catalogTotal, 894); assert.equal(page.galleryTotal, covers.entries.length + 3);

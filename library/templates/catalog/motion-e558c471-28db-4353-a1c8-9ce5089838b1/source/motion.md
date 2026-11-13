@@ -49,7 +49,7 @@
 
 先展示需求文档，再引入数据、规则表、代码块和评论。每种材料保留自己的排版：表格便于比较，代码便于定位，评论附着在被讨论的位置。
 
-![8.00s · 构图参考](assets/reference-2.jpg)
+![8.00s · 构图参考](assets/reference-2.webp)
 
 ## 协作修订改变组织方式
 
@@ -140,14 +140,14 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 8.0,
       "frameId": "K0026",
       "role": "reference-evidence",
@@ -168,14 +168,14 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-5.jpg",
+      "path": "assets/reference-5.webp",
       "timeSeconds": 32.0,
       "frameId": "K0114",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 39.0,
       "frameId": "K0141",
       "role": "reference-evidence",

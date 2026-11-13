@@ -36,13 +36,13 @@ The checker reads staged contents. The base SHA also enables checks of new Git h
 | Code, documentation and measurements | Ordinary Git, at most 1 MiB per file |
 | Small images/fonts | Ordinary Git under `source/assets/`, at most 100 KB (100,000 bytes) per asset |
 | Images/fonts over 100 KB | Git LFS under `source/assets/lfs/`; existing imported CMS links retain their recorded identities |
-| Complete catalog in ordinary Git | At most 128 MiB; initial import is about 104 MB |
+| Complete catalog in ordinary Git | At most 128 MiB; about 58 MB after reference-image optimization |
 | Video and audio | Git LFS under `source/assets/lfs/`; existing imported references retain CMS links |
 | LFS media budgets | At most 50 MiB per file and 150 MiB total local media per template |
 | Original ZIP downloads | Existing links only; archives are not contribution source |
 | Exports, dependencies and generated output | Outside catalog source; use ignored `.artifacts/` for local output |
 
-The import keeps 1,419 small images (65.2 MB) in Git and links 236 larger originals (32.5 MB) through existing CMS WebP renditions. These renditions are 12.6 MB in total and load when viewing affected guides; the original JPGs remain in the published packages. New LFS media needs Git LFS and a scoped pull before preview; contributors do not need a CMS account. See [the download and contribution steps](../../../docs/template-repository.md#contribute-media-without-cms-access).
+The import keeps 1,419 small reference images locally, optimized from 65.2 MB of JPEGs to WebP at their original dimensions. Local guides and manifest hashes use the optimized files; each template records the encoding in its provenance. Original JPGs remain in the unchanged published packages. Another 236 larger originals (32.5 MB) use existing CMS WebP renditions, which total 12.6 MB and load when viewing affected guides. New LFS media needs Git LFS and a scoped pull before preview; contributors do not need a CMS account. See [the download and contribution steps](../../../docs/template-repository.md#contribute-media-without-cms-access).
 
 Submit PRs against `main`. CI runs **Template library policy** without CMS publishing credentials or media downloads. Repository branch protection must separately require the job to prevent merging a failed check.
 

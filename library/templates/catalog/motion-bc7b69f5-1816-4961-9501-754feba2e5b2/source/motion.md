@@ -51,7 +51,7 @@
 
 深色背景与渐变柔光形成统一舞台，工具保持各自的品牌色。产品标题用无衬线粗体，输入、选项与界面数据用常规字重。
 
-![0.00s · 构图参考](assets/reference-1.jpg)
+![0.00s · 构图参考](assets/reference-1.webp)
 
 ## 每种工具，给一种对应成果
 
@@ -130,28 +130,28 @@
   ],
   "frames": [
     {
-      "path": "assets/reference-1.jpg",
+      "path": "assets/reference-1.webp",
       "timeSeconds": 0.0,
       "frameId": "K0001",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 6.0,
       "frameId": "K0026",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-3.jpg",
+      "path": "assets/reference-3.webp",
       "timeSeconds": 15.0,
       "frameId": "K0071",
       "role": "reference-evidence",
       "status": "measured"
     },
     {
-      "path": "assets/reference-4.jpg",
+      "path": "assets/reference-4.webp",
       "timeSeconds": 27.0,
       "frameId": "K0128",
       "role": "reference-evidence",
@@ -165,7 +165,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 45.0,
       "frameId": "K0200",
       "role": "reference-evidence",

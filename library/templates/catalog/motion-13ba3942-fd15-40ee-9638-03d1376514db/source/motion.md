@@ -124,7 +124,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-2.jpg",
+      "path": "assets/reference-2.webp",
       "timeSeconds": 2.866969273743017,
       "frameId": "K0009",
       "role": "reference-evidence",
@@ -152,7 +152,7 @@
       "status": "measured"
     },
     {
-      "path": "assets/reference-6.jpg",
+      "path": "assets/reference-6.webp",
       "timeSeconds": 12.96368715083799,
       "frameId": "K0043",
       "role": "reference-evidence",
