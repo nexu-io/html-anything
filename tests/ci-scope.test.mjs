@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, spawnSync } from 'node:child_process';
 import { mkdtemp, readFile, rm, writeFile, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
@@ -94,22 +94,80 @@ test('Git selection covers all push commits, renames, missing history and manual
   assert.equal((await select(beforeInstructions)).full, true, 'README command changes keep the full gate');
 });
 
-test('CI preserves common gates and reuses only the build from the same job', async () => {
-  const ci = await readFile(new URL('../.github/workflows/ci.yml', import.meta.url), 'utf8');
-  const standalone = ci.split('  standalone:\n')[1];
-  for (const name of ['Scan tracked source and test release controls without publication credentials', 'Validate manual package selection']) {
-    const step = standalone.split(`      - name: ${name}\n`)[1].split('      - name:')[0];
-    assert(!step.includes('        if:'), `${name} must run for presentation docs too`);
+const ciPath = new URL('../.github/workflows/ci.yml', import.meta.url);
+const jobBody = (ci, job) => ci.split(`  ${job}:\n`)[1].split(/\n  [\w-]+:\n/)[0];
+const stepBody = (job, name) => job.split(`      - name: ${name}\n`)[1].split('      - name:')[0];
+
+test('parallel CI preserves common gates and builds distribution inputs in the same job', async () => {
+  const ci = await readFile(ciPath, 'utf8');
+  const distribution = jobBody(ci, 'distribution');
+  for (const name of ['Scan tracked source without publication credentials', 'Validate manual package selection']) {
+    assert(!stepBody(distribution, name).includes('        if:'), `${name} must run for presentation docs too`);
   }
   for (const name of ['Download full-bundle media explicitly', 'Install rendering test tools',
-    'Install locked Motion dependencies', 'Check and build Studio', 'Studio regression',
-    'Validate standalone installation and packaging', 'Build phase-one ZIP and exercise all public tools',
+    'Install locked Motion dependencies', 'Build Studio and validate tracking',
+    'Validate standalone installation and packaging', 'Repository template runtime regression',
+    'Built-in template playback and export regression', 'Build phase-one ZIP and exercise all public tools',
     'Build immutable standalone artifacts', 'Generate candidate installation guide', 'Retain candidate installation guide for review']) {
-    const step = standalone.split(`      - name: ${name}\n`)[1].split('      - name:')[0];
-    assert(step.includes("steps.scope.outputs.full == 'true'"), name);
+    assert(stepBody(distribution, name).includes("steps.scope.outputs.full == 'true'"), name);
   }
-  assert(standalone.indexOf('npm run build:studio') < standalone.indexOf('scripts/package.ts --mcp-profile=phase1'));
-  assert(!standalone.includes('npm run package:phase1'));
+  assert(distribution.indexOf('npm run build:studio') < distribution.indexOf('scripts/package.ts --mcp-profile=phase1'));
+  assert(!distribution.includes('npm run package:phase1'));
+  assert(!distribution.includes('npm run test:studio'));
+  assert(stepBody(distribution, 'Check presentation documentation').includes('ci-scope.mjs --check-docs'));
+  const checks = jobBody(ci, 'checks');
+  const studio = jobBody(ci, 'studio');
+  const releaseControls = stepBody(checks, 'Test release controls without publication credentials');
+  assert(!releaseControls.includes('        if:'), 'Release controls must run for presentation docs too');
+  for (const file of ['release-workflows.test.mjs', 'release-scan.test.mjs', 'registry-download.test.mjs', 'stable-release.test.mjs']) {
+    assert(releaseControls.includes(file));
+  }
+  for (const lane of [checks, studio]) {
+    assert(!lane.includes('    needs:'), 'Independent lanes start without waiting for scope detection');
+    assert(lane.includes('run: node .github/scripts/ci-scope.mjs'));
+    assert(stepBody(lane, 'Install locked Motion dependencies').includes("steps.scope.outputs.full == 'true'"));
+  }
+  const sourceStep = stepBody(checks, 'Check source and Studio types');
+  assert(sourceStep.includes("steps.scope.outputs.full == 'true'"));
+  assert(sourceStep.includes('npm run check'));
+  assert(sourceStep.includes('npm run typecheck:studio'));
+  assert(studio.includes('shard: [1, 2]'));
+  assert(studio.includes('fail-fast: false'));
+  const studioStep = stepBody(studio, 'Studio regression');
+  assert(studioStep.includes("steps.scope.outputs.full == 'true'"));
+  assert(studioStep.includes('npm run test:studio -- --maxWorkers=2 --shard=${{ matrix.shard }}/2'));
+  assert(!studio.includes('lfs pull'));
+  assert(!studio.includes('apt-get'));
   const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
   assert(pkg.scripts['package:phase1'].startsWith('npm run build:studio &&'), 'The public packaging command still builds its input');
+});
+
+test('the existing standalone gate rejects failed, cancelled, skipped and missing lanes', async () => {
+  const gate = jobBody(await readFile(ciPath, 'utf8'), 'standalone');
+  const jobs = ['template-library', 'maintainability', 'checks', 'studio', 'distribution'];
+  assert(gate.includes('if: ${{ always() }}'));
+  assert(gate.includes(`needs: [${jobs.join(', ')}]`));
+  assert(gate.includes('VALIDATION_RESULTS: ${{ toJSON(needs) }}'));
+  assert(gate.includes("ALLOW_SKIPPED_MAINTAINABILITY: ${{ github.event_name != 'pull_request' || github.base_ref != 'main' }}"));
+  const script = gate.split("node --input-type=module <<'NODE'\n")[1].split('          NODE')[0];
+  const success = Object.fromEntries(jobs.map(job => [job, { result: 'success' }]));
+  const run = (results, allowSkipped = false) => spawnSync(process.execPath, ['--input-type=module'], {
+    input: script, encoding: 'utf8',
+    env: { ...process.env, VALIDATION_RESULTS: JSON.stringify(results), ALLOW_SKIPPED_MAINTAINABILITY: String(allowSkipped) },
+  });
+  assert.equal(run(success).status, 0);
+  for (const job of jobs) {
+    for (const result of ['failure', 'cancelled', 'skipped', undefined]) {
+      const results = { ...success, [job]: result === undefined ? undefined : { result } };
+      const rejected = run(results);
+      assert.equal(rejected.status, 1, `${job}: ${result}`);
+      assert(rejected.stderr.includes(job));
+    }
+  }
+  const manual = { ...success, maintainability: { result: 'skipped' } };
+  assert.equal(run(manual, true).status, 0, 'Non-main-PR events intentionally skip maintainability');
+  for (const result of ['failure', 'cancelled', undefined]) {
+    assert.equal(run({ ...manual, maintainability: { result } }, true).status, 1);
+  }
+  assert.equal(run({ ...manual, studio: { result: 'skipped' } }, true).status, 1);
 });
