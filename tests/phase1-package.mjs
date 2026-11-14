@@ -49,7 +49,7 @@ try{
  await tool('openmotion_media_use',{action:'inspect'});
  // Capture startup ownership before later Tool calls reuse the service.
  owned=JSON.parse(await readFile(path.join(data,'preview.json')));assert.ok(owned.pid>0);
- const inline=await rpc('resources/read',{uri:'ui://openmotion/inline-video/v1/player.html'});assert.deepEqual(inline.contents[0]._meta.ui.csp.resourceDomains,['data:']);assert.ok(inline.contents[0].text.includes('openmotion_get_project'));
+ const inline=await rpc('resources/read',{uri:'ui://openmotion/inline-video/v1/player.html'});assert.deepEqual(inline.contents[0]._meta.ui.csp.resourceDomains,['data:','blob:']);assert.ok(inline.contents[0].text.includes('openmotion_get_project'));
  const hidden=await rpc('tools/call',{name:'openmotion_write_files',arguments:{}});assert.equal(hidden.isError,true);assert.equal(hidden.structuredContent.error.code,'MCP_TOOL_NOT_EXPOSED');
  const prototype=await rpc('tools/call',{name:'openmotion_get_project',arguments:JSON.parse('{"__proto__":true}')});assert.equal(prototype.isError,true);assert.equal(prototype.structuredContent.error.code,'INVALID_ARGUMENT');
  const guidance=await rpc('resources/read',{uri:'openmotion://workflow/production/start'});assert.ok(guidance.contents[0].text.includes('openmotion-production'));
