@@ -1,0 +1,36 @@
+name: Native device identity
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/device-identity-check.yml'
+      - 'tracking/**'
+      - 'shared/tracking.ts'
+      - 'tests/tracking-device*.test.ts'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: device-identity-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  native:
+    name: Device identity (${{ matrix.runner }})
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [ubuntu-24.04, windows-2025, macos-26]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6.0.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '26.11.1'
+      - name: Verify native reads and identity stability without external ingestion
+        run: node --experimental-strip-types --test tests/tracking-device-platform.test.ts
