@@ -265,8 +265,11 @@ it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr']
   expect(link.getAttribute('aria-label')).toBeTruthy();
   const historyActions = container.querySelector('.motion-header-history-actions')!;
   const exportButton = container.querySelector('[data-testid="header-export"]')!;
-  // Right-side order: Community, GitHub, divider, Undo, Redo, History, Export.
+  // Right-side order: Community, GitHub, Undo, Redo, History, Export.
+  expect(link.compareDocumentPosition(github) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(github.nextElementSibling).toBe(historyActions);
+  // The grouped actions are Undo, Redo and the Version history trigger.
+  expect(historyActions.querySelectorAll('button')).toHaveLength(3);
   expect(historyActions.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(link.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 });
