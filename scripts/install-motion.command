@@ -45,4 +45,4 @@ codex plugin list --marketplace openmotion-local
 node "$openmotion_root/scripts/check-installed-mcp.mjs"
 
 openmotion_onboarding="$(node --experimental-strip-types "$openmotion_root/scripts/install-onboarding.mjs" "$openmotion_root")"
-printf '%s\n' 'OpenMotion registration and independent MCP preflight succeeded; current-chat loading is not verified.' "$openmotion_onboarding"
+printf '%s\n' 'OpenMotion registration and independent MCP preflight succeeded. Check hostHandoff before reporting current-chat connection or onboarding success.' "$openmotion_onboarding"

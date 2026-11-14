@@ -21,6 +21,7 @@ test('plugin onboarding entry and its shared contract resolve inside every distr
     const files = new Set(await distributionFiles(profile));
     assert(files.has(entry), 'The declared onboarding entry must ship');
     assert(files.has(contract), 'Its relative contract must ship');
+    assert(files.has('scripts/codex-host-handoff.mjs'), 'CLI host handoff must ship with its onboarding caller');
   }
 });
 
