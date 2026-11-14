@@ -154,8 +154,14 @@ Business callers provide only registered semantic properties. The package/server
 adds event UUID/time, schema and app version, environment, entrypoint/runtime,
 installation/device identity, saved attribution, platform, locale and timezone.
 Do not place common fields inside an event's properties or copy a browser identity
-into Node. `device_id`, `installation_id` and `distinct_id` currently share one random
-installation UUID; they are not a hardware fingerprint or a unique-person count.
+into Node. `installation_id` is a random UUID per data directory. `device_id` is an
+OpenMotion-scoped HMAC of a validated OS device identifier, independent of directories,
+versions and hosts; raw OS identifiers are never stored or sent. Known devices use
+that hash as `distinct_id`. Unavailable devices retain an installation `distinct_id`
+for delivery with `device_id=unknown`, not a substitute device ID. Device charts,
+funnels and retention must filter `device_id_source=platform`; historical events
+without that marker are directory identities and cannot be backfilled as devices.
+Neither measure is a count of people. See [identity limits](README.md#identity-properties-and-privacy).
 Host Agent properties also belong to this trusted common context. Capture the
 declared MCP client on its connection/request and pass that immutable context to
 the domain operation and worker. An editor uses only its opening-link context;

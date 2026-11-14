@@ -69,10 +69,31 @@ see [diagnostics and retry semantics](INTEGRATION.md#diagnose-without-logging-ev
 
 ## Identity, properties and privacy
 
-One random UUID is persisted atomically in `tracking/identity.json` under the owned
-data directory, outside projects and versioned application caches. `device_id`,
-`installation_id` and PostHog `distinct_id` share that UUID. Different data directories
-are separate installations. No hardware ID or fingerprint is used. The package can
+One random `installation_id` UUID is persisted atomically in `tracking/identity.json`
+under each owned data directory, outside projects and versioned application caches.
+Different data directories remain separate installations.
+
+Device-level analytics uses an OS-provided stable identifier: IOPlatformUUID on macOS,
+the 64-bit MachineGuid registry value on Windows, and machine-id on Linux. A bounded,
+lazy read runs only when enabled tracking sends a batch. The identifier is never
+persisted, logged or transmitted: HMAC-SHA256 uses it as the key with the fixed
+OpenMotion-specific `openmotion:device:v1` namespace and platform. Only the resulting
+`omd_` hash is sent as `device_id`, with `device_id_source=platform`. It is independent
+of project, data directory, app version and host. PostHog `distinct_id` uses that same
+hash, so new MCP, Studio and worker events on one device share an analytics identity.
+
+Unreadable, invalid or unsupported platform identifiers produce `device_id=unknown`
+and `device_id_source=unavailable`; event delivery retains the installation UUID as
+`distinct_id`, never as a fake device ID. Device-count, device-retention and device-funnel
+queries must filter `device_id_source=platform`. Unknown events are a separate coverage
+measure, not one device. Historical events without this source marker used data-directory
+identities and cannot be retroactively counted as devices; do not mix the two identity
+eras or alias old installation persons into the new device identity.
+
+This measures OS-device identities, not people or immutable physical hardware. Shared
+machines count once, a person on two machines counts twice, cloned OS identifiers can
+collide, and an OS reinstall can change Windows/Linux identifiers. No account identity,
+MAC address, raw platform identifier or probabilistic fingerprint is sent. The package can
 initialize an identity with a validated source label; existing identities retain
 their first source. Landing-page attribution and installer `--source` plumbing are
 a separate change. Unknown source remains null.

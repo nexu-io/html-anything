@@ -16,9 +16,9 @@ test('real stdio connections sharing an installation retain independent declared
   await new Promise<void>(resolve => collector.listen(0, '127.0.0.1', resolve));
   const address = collector.address(); assert(address && typeof address !== 'string');
   try {
-    async function run(name: string) {
+    async function run(name: string, directory = store.directory) {
       const child = spawn(process.execPath, ['--experimental-strip-types', 'mcp.ts'], { cwd: pluginRoot,
-        env: { ...process.env, MOTION_DATA_DIR: store.directory, OPENMOTION_TELEMETRY: '1', DO_NOT_TRACK: '0',
+        env: { ...process.env, MOTION_DATA_DIR: directory, OPENMOTION_TELEMETRY: '1', DO_NOT_TRACK: '0',
           OPENMOTION_TRACKING_ENV: 'test', OPENMOTION_TRACKING_TEST_RUN_ID: crypto.randomUUID(),
           OPENMOTION_POSTHOG_HOST: `http://127.0.0.1:${address.port}`, OPENMOTION_POSTHOG_KEY: 'phc_test' },
         stdio: ['pipe', 'pipe', 'pipe'] });
@@ -50,5 +50,15 @@ test('real stdio connections sharing an installation retain independent declared
     assert.deepEqual(events.map(e => e.properties.mcp_client_name).sort(), ['codex-mcp-client', 'codex-mcp-client', 'dsh-mcp-client', 'dsh-mcp-client']);
     assert(events.every(e => e.properties.mcp_client_version === '1.2.3' && e.properties.host_agent_source === 'mcp_client_info'));
     assert.equal(new Set(events.map(e => e.properties.installation_id)).size, 1);
+    await fixture(other => run('codex-mcp-client', other.directory), false);
+    assert.equal(events.length, 6);
+    assert.equal(new Set(events.map(e => e.properties.installation_id)).size, 2);
+    assert.equal(new Set(events.map(e => e.properties.device_id)).size, 1);
+    if (events[0].properties.device_id_source === 'platform') {
+      assert.equal(new Set(events.map(e => e.properties.distinct_id)).size, 1);
+      assert(events.every(e => e.properties.distinct_id === e.properties.device_id));
+    } else assert(events.every(e => e.properties.device_id === 'unknown' && e.properties.device_id_source === 'unavailable'));
+    console.log(JSON.stringify({ scenario: 'device-across-two-data-directories', deviceRecognized: events[0].properties.device_id_source === 'platform',
+      installations: 2, devices: events[0].properties.device_id_source === 'platform' ? 1 : 0 }));
   } finally { await new Promise<void>(resolve => collector.close(() => resolve())); }
 }, false));

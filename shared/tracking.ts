@@ -4,6 +4,7 @@ import { mkdir, rename, rm, writeFile } from 'node:fs/promises';
 import { createTracker, uuid } from '../tracking/core.ts';
 import type { Entry } from '../tracking/core.ts';
 import { createNodeTracking, loadIdentity } from '../tracking/node.ts';
+import { loadDeviceIdentity } from '../tracking/device.ts';
 import { omEvents } from '../tracking/events.ts';
 import { VERSION } from '../preview.ts';
 import type { HostContext } from '../tracking/host.ts';
@@ -41,7 +42,7 @@ export async function createAppTracking(directory: string, entrypoint: Entry): P
       geoip: process.env.OPENMOTION_GEOIP === '1' } : JSON.parse(readFileSync(new URL('./tracking-config.json', import.meta.url), 'utf8'));
     if (!config.host || !config.token) return disabled();
     const tracking = createNodeTracking({ registry: omEvents, entrypoint, enabled: true,
-      identity: await loadIdentity(path.join(directory, 'tracking')), appVersion: VERSION,
+      identity: await loadIdentity(path.join(directory, 'tracking')), appVersion: VERSION, device: loadDeviceIdentity,
       host: config.host, token: config.token, geoip: config.geoip,
       isEnabled: () => !trackingLocked() && trackingPreference(directory),
       env: env as 'development' | 'test' | 'production', testRunId: process.env.OPENMOTION_TRACKING_TEST_RUN_ID });

@@ -4,6 +4,8 @@ import os from 'node:os';
 import { createTracker, uuid } from './core.ts';
 import type { Entry, Registry, PendingEvent, Receipt } from './core.ts';
 import { unknownHost } from './host.ts';
+import { unknownDevice } from './device.ts';
+import type { DeviceIdentity } from './device.ts';
 
 export type Identity = { installation_id: string; utm_source: string | null; created_at: string };
 const sourcePattern = /^[A-Za-z0-9_.-]{1,64}$/;
@@ -32,7 +34,7 @@ export async function loadIdentity(directory: string, source?: string): Promise<
 }
 
 export function createPosthogSender(options: {
-  host: string; token: string; identity: Identity; appVersion: string;
+  host: string; token: string; identity: Identity; appVersion: string; device?: () => Promise<DeviceIdentity>;
   env: 'development' | 'test' | 'production'; testRunId?: string; timeoutMs?: number; fetch?: typeof fetch; geoip?: boolean;
 }) {
   const url = new URL(options.host);
@@ -41,14 +43,17 @@ export function createPosthogSender(options: {
   if (!/^phc_[A-Za-z0-9_]+$/.test(options.token)) throw new Error('PUBLIC_PROJECT_TOKEN_REQUIRED');
   if (options.testRunId && (!uuid.test(options.testRunId) || options.env !== 'test')) throw new Error('INVALID_TEST_RUN');
   return async (events: readonly PendingEvent[], signal: AbortSignal): Promise<Receipt> => {
+    const device = options.device ? await options.device() : unknownDevice;
+    if (signal.aborted) return 'drop';
     const batch = events.map(event => ({ event: event.event, uuid: event.event_id, timestamp: event.occurred_at,
       properties: { ...event.properties, event_schema_version: 1, schema_version: 1, product: 'openmotion',
         ...(event.host_context ?? unknownHost),
         app_version: options.appVersion, env: options.env, channel: 'standalone',
         ...(options.testRunId ? { test_run_id: options.testRunId } : {}),
         event_id: event.event_id, $insert_id: event.event_id, occurred_at: event.occurred_at,
-        installation_id: options.identity.installation_id, device_id: options.identity.installation_id,
-        distinct_id: options.identity.installation_id, utm_source: options.identity.utm_source,
+        installation_id: options.identity.installation_id, ...device,
+        distinct_id: device.device_id_source === 'platform' ? device.device_id : options.identity.installation_id,
+        utm_source: options.identity.utm_source,
         entrypoint: event.entrypoint, runtime: event.entrypoint === 'studio' ? 'browser' : 'node',
         capture_source: 'explicit', client_type: event.entrypoint === 'studio' ? 'web' : 'local',
         platform: os.platform(), arch: os.arch(), $os: os.type(), $os_version: os.release(),
@@ -74,7 +79,7 @@ export function createPosthogSender(options: {
 }
 
 export function createNodeTracking<const R extends Registry>(options: {
-  registry: R; identity: Identity; host: string; token?: string; appVersion: string;
+  registry: R; identity: Identity; host: string; token?: string; appVersion: string; device?: () => Promise<DeviceIdentity>;
   env: 'development' | 'test' | 'production'; testRunId?: string; entrypoint: Entry;
   enabled: boolean; timeoutMs?: number; flushIntervalMs?: number; maxQueue?: number; geoip?: boolean; isEnabled?: () => boolean;
 }) {
