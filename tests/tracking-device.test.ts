@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { deviceIdentity, unknownDevice } from '../tracking/device.ts';
 import { createPosthogSender, createNodeTracking, loadIdentity } from '../tracking/node.ts';
 import { deviceContext } from '../tracking/core.ts';
@@ -24,7 +25,7 @@ test('device identity normalizes valid OS identifiers and rejects missing or pla
   }
 });
 
-test('known devices share PostHog identity across directories and app versions', () => fixture(async store => {
+test('device IDs deduplicate directories while PostHog identities remain installation-scoped', () => fixture(async store => {
   const raw = '123456781234567890ab1234567890ab', device = deviceIdentity('darwin', raw);
   const first = await loadIdentity(path.join(store.directory, 'first')), second = await loadIdentity(path.join(store.directory, 'second'));
   assert.notEqual(first.installation_id, second.installation_id);
@@ -38,13 +39,34 @@ test('known devices share PostHog identity across directories and app versions',
   }
   const properties = bodies.map(body => body.batch[0].properties);
   assert.equal(new Set(properties.map(value => value.installation_id)).size, 2);
-  assert(properties.every(value => value.device_id === device.device_id && value.distinct_id === device.device_id
+  assert(properties.every(value => value.device_id === device.device_id && value.distinct_id === value.installation_id
     && value.device_id_source === 'platform'));
+  assert.equal(new Set(properties.map(value => value.distinct_id)).size, 2);
   assert(!JSON.stringify(bodies).includes(raw));
   await createPosthogSender({ ...options, identity: first, appVersion: '0.6.7', device: async () => unknownDevice })([event], new AbortController().signal);
   const unknown = bodies[2].batch[0].properties;
   assert.equal(unknown.device_id, 'unknown'); assert.equal(unknown.device_id_source, 'unavailable');
   assert.equal(unknown.distinct_id, first.installation_id);
+}, false));
+
+test('an existing installation retains its historical analytics identity across upgrade and device availability', () => fixture(async store => {
+  const directory = path.join(store.directory, 'tracking');
+  const saved = JSON.stringify({ installation_id: '11111111-1111-4111-8111-111111111111', utm_source: null, created_at: '2026-11-01T00:00:00.000Z' });
+  await mkdir(directory); await writeFile(path.join(directory, 'identity.json'), saved);
+  const identity = await loadIdentity(directory), before = { distinct_id: identity.installation_id };
+  const properties: any[] = [];
+  for (const device of [deviceIdentity('darwin', '123456781234567890ab1234567890ab'), unknownDevice]) {
+    const sender = createPosthogSender({ identity, appVersion: '0.6.8', env: 'test', device: async () => device,
+      host: 'https://us.i.posthog.com', token: 'phc_test', fetch: async (_url, init) => {
+        properties.push(JSON.parse(String(init?.body)).batch[0].properties); return Response.json({ status: 1 });
+      } });
+    await sender([{ event: 'page_view', event_id: crypto.randomUUID(), occurred_at: new Date().toISOString(), entrypoint: 'studio',
+      ...deviceContext(), properties: { page_name: 'studio', view_id: crypto.randomUUID(), embedded: true, has_project: true } }], new AbortController().signal);
+  }
+  assert.equal(new Set([before.distinct_id, ...properties.map(value => value.distinct_id)]).size, 1);
+  assert(properties.every(value => value.distinct_id === identity.installation_id));
+  assert.deepEqual(properties.map(value => value.device_id_source), ['platform', 'unavailable']);
+  assert.equal(await readFile(path.join(directory, 'identity.json'), 'utf8'), saved);
 }, false));
 
 test('disabled or opted-out tracking does not read platform identity', async () => {

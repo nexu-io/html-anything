@@ -79,16 +79,31 @@ lazy read runs only when enabled tracking sends a batch. The identifier is never
 persisted, logged or transmitted: HMAC-SHA256 uses it as the key with the fixed
 OpenMotion-specific `openmotion:device:v1` namespace and platform. Only the resulting
 `omd_` hash is sent as `device_id`, with `device_id_source=platform`. It is independent
-of project, data directory, app version and host. PostHog `distinct_id` uses that same
-hash, so new MCP, Studio and worker events on one device share an analytics identity.
+of project, data directory, app version and host. MCP, Studio and worker events on
+one OS device share this device hash. PostHog `distinct_id` continues to use the
+persisted `installation_id`, preserving each installation's historical analytics
+identity across upgrade. Different data directories remain separate analytics
+identities even when their device hash is the same. No identify/alias or person-profile
+migration is performed.
 
 Unreadable, invalid or unsupported platform identifiers produce `device_id=unknown`
-and `device_id_source=unavailable`; event delivery retains the installation UUID as
-`distinct_id`, never as a fake device ID. Device-count, device-retention and device-funnel
-queries must filter `device_id_source=platform`. Unknown events are a separate coverage
-measure, not one device. Historical events without this source marker used data-directory
-identities and cannot be retroactively counted as devices; do not mix the two identity
-eras or alias old installation persons into the new device identity.
+and `device_id_source=unavailable`, never an installation UUID presented as a device.
+Device counts must filter `device_id_source=platform` and count distinct `device_id`,
+not `distinct_id` or person IDs. Unknown events are a separate coverage measure,
+not one device. Historical events without this marker used directory UUIDs in the
+device field; this change does not backfill them as measured devices.
+
+Native PostHog unique-user charts and person-based funnels/retention continue to
+measure installations. Filtering by device source alone does not turn them into
+device-level analyses; those need explicit aggregation by `device_id`. For example:
+
+```sql
+SELECT uniqExact(properties.device_id) AS active_devices
+FROM events
+WHERE timestamp >= now() - INTERVAL 2 DAY
+  AND properties.product = 'openmotion'
+  AND properties.device_id_source = 'platform'
+```
 
 This measures OS-device identities, not people or immutable physical hardware. Shared
 machines count once, a person on two machines counts twice, cloned OS identifiers can

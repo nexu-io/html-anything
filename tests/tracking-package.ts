@@ -50,8 +50,9 @@ try {
   }
   assert.equal(new Set(bodies.flatMap(body => body.batch.map((event: any) => event.properties.installation_id))).size, 1);
   const properties = bodies.flatMap(body => body.batch.map((event: any) => event.properties));
+  assert(properties.every((value: any) => value.distinct_id === value.installation_id));
   assert(properties.every((value: any) => value.device_id_source === 'platform'
-    ? /^omd_[0-9a-f]{64}$/.test(value.device_id) && value.distinct_id === value.device_id
+    ? /^omd_[0-9a-f]{64}$/.test(value.device_id)
     : value.device_id_source === 'unavailable' && value.device_id === 'unknown'));
 
   if (process.getuid) {

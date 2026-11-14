@@ -34,14 +34,16 @@ test('native device identity survives process, project, data-directory and local
   try {
     const a = path.join(directory, 'a'), b = path.join(directory, 'b');
     const first = await observe(a, path.join(directory, 'project-one'), '0.6.7');
+    const returning = await observe(a, path.join(directory, 'project-returning'), '0.6.8');
     const other = await observe(b, path.join(directory, 'project-two'), '0.6.8');
     await rm(a, { recursive: true });
     const recreated = await observe(a, path.join(directory, 'project-three'), '0.6.9');
-    assert([first, other, recreated].every(value => value.source === 'platform'), 'Native system ID must be readable on the test host');
-    assert([first, other, recreated].every(value => /^omd_[0-9a-f]{64}$/.test(value.device) && value.distinct === value.device), 'Known devices must define the PostHog identity');
-    assert(new Set([first.device, other.device, recreated.device]).size === 1, 'Device identity must stay stable');
+    assert([first, returning, other, recreated].every(value => value.source === 'platform'), 'Native system ID must be readable on the test host');
+    assert([first, returning, other, recreated].every(value => /^omd_[0-9a-f]{64}$/.test(value.device) && value.distinct === value.installation), 'Device identity must remain separate from installation analytics');
+    assert(first.distinct === returning.distinct, 'Upgrading an existing installation must retain its analytics identity');
+    assert(new Set([first.device, returning.device, other.device, recreated.device]).size === 1, 'Device identity must stay stable');
     assert(new Set([first.installation, other.installation, recreated.installation]).size === 3, 'Installation identities must remain directory-local');
     // Print coverage only, never real machine identifiers or their hashes.
-    console.log(JSON.stringify({ platform: process.platform, recognized: true, processes: 3, installations: 3, devices: 1, network_requests: 0 }));
+    console.log(JSON.stringify({ platform: process.platform, recognized: true, processes: 4, installations: 3, devices: 1, returning_identity_preserved: true, network_requests: 0 }));
   } finally { await rm(directory, { recursive: true, force: true }); }
 });

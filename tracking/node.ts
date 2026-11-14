@@ -52,7 +52,7 @@ export function createPosthogSender(options: {
         ...(options.testRunId ? { test_run_id: options.testRunId } : {}),
         event_id: event.event_id, $insert_id: event.event_id, occurred_at: event.occurred_at,
         installation_id: options.identity.installation_id, ...device,
-        distinct_id: device.device_id_source === 'platform' ? device.device_id : options.identity.installation_id,
+        distinct_id: options.identity.installation_id,
         utm_source: options.identity.utm_source,
         entrypoint: event.entrypoint, runtime: event.entrypoint === 'studio' ? 'browser' : 'node',
         capture_source: 'explicit', client_type: event.entrypoint === 'studio' ? 'web' : 'local',

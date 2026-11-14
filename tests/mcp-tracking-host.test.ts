@@ -53,10 +53,11 @@ test('real stdio connections sharing an installation retain independent declared
     await fixture(other => run('codex-mcp-client', other.directory), false);
     assert.equal(events.length, 6);
     assert.equal(new Set(events.map(e => e.properties.installation_id)).size, 2);
+    assert.equal(new Set(events.map(e => e.properties.distinct_id)).size, 2);
+    assert(events.every(e => e.properties.distinct_id === e.properties.installation_id));
     assert.equal(new Set(events.map(e => e.properties.device_id)).size, 1);
     if (events[0].properties.device_id_source === 'platform') {
-      assert.equal(new Set(events.map(e => e.properties.distinct_id)).size, 1);
-      assert(events.every(e => e.properties.distinct_id === e.properties.device_id));
+      assert(events.every(e => e.properties.device_id_source === 'platform'));
     } else assert(events.every(e => e.properties.device_id === 'unknown' && e.properties.device_id_source === 'unavailable'));
     console.log(JSON.stringify({ scenario: 'device-across-two-data-directories', deviceRecognized: events[0].properties.device_id_source === 'platform',
       installations: 2, devices: events[0].properties.device_id_source === 'platform' ? 1 : 0 }));

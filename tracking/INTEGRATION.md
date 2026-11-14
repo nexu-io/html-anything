@@ -156,11 +156,15 @@ installation/device identity, saved attribution, platform, locale and timezone.
 Do not place common fields inside an event's properties or copy a browser identity
 into Node. `installation_id` is a random UUID per data directory. `device_id` is an
 OpenMotion-scoped HMAC of a validated OS device identifier, independent of directories,
-versions and hosts; raw OS identifiers are never stored or sent. Known devices use
-that hash as `distinct_id`. Unavailable devices retain an installation `distinct_id`
-for delivery with `device_id=unknown`, not a substitute device ID. Device charts,
-funnels and retention must filter `device_id_source=platform`; historical events
-without that marker are directory identities and cannot be backfilled as devices.
+versions and hosts; raw OS identifiers are never stored or sent. `distinct_id`
+continues to equal `installation_id`, including for existing installations after
+upgrade, so the new device field does not create another analytics identity.
+Unavailable devices use `device_id=unknown`, not a substitute device ID.
+Device counts must filter `device_id_source=platform` and explicitly deduplicate
+`device_id`. Native unique-user charts and person-based funnels/retention remain
+installation-level; device-level analyses need their own device aggregation.
+Historical events without the source marker were not measured by this device scheme;
+this change does not backfill them or merge person profiles.
 Neither measure is a count of people. See [identity limits](README.md#identity-properties-and-privacy).
 Host Agent properties also belong to this trusted common context. Capture the
 declared MCP client on its connection/request and pass that immutable context to
