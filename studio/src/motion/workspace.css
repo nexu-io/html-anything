@@ -28,7 +28,7 @@
 .motion-sidebar-footer { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; padding: 14px 6px 0; }
 .motion-sidebar-identity { display: flex; align-items: center; gap: 10px; width: 100%; }
 .motion-sidebar-identity > span { flex: 1; min-width: 0; }
-.motion-sidebar-settings { display: flex; align-items: center; gap: 8px; width: 100%; }
+.motion-sidebar-settings { display: flex; align-items: center; gap: 8px; width: 100%; border-top: 1px solid var(--motion-border); padding-top: var(--motion-space-12); }
 .motion-sidebar-settings .motion-language-button { margin-left: auto; }
 .motion-sidebar-footer strong, .motion-sidebar-footer small { display: block; font-size: var(--motion-text-sm); font-weight: var(--motion-weight-medium); }
 .motion-sidebar-footer small { font-size: var(--motion-text-step-10); margin-top: 4px; color: var(--motion-dim); }
@@ -222,4 +222,5 @@
   .motion-sidebar-brand { padding-inline: 0; }
 }
 
-.motion-sidebar-footer .motion-byok-entry { justify-content: flex-start; margin-bottom: 0; }
+.motion-sidebar-footer .motion-byok-entry { justify-content: flex-start; padding-inline: var(--motion-space-5); margin-bottom: 0; text-align: left; white-space: normal; height: auto; min-height: var(--motion-control-sm); }
+.motion-sidebar-footer .motion-byok-entry > svg { flex-shrink: 0; }

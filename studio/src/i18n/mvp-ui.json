@@ -310,7 +310,7 @@
     "Exit immersive preview": "没入型プレビューを終了",
     "Focus on a larger preview. Press Esc to return to editing.": "プレビューを大きく表示します。Esc で編集に戻ります。",
     "Snapping": "スナップ",
-    "AI service settings": "AI サービス設定",
+    "Media generation settings": "メディア生成設定",
     "Split ({value0})": "分割 ({value0})",
     "Snapping ({value0})": "スナップ ({value0})"
   },
@@ -625,7 +625,7 @@
     "Exit immersive preview": "몰입형 미리보기 종료",
     "Focus on a larger preview. Press Esc to return to editing.": "미리보기를 크게 표시합니다. Esc를 눌러 편집으로 돌아갑니다.",
     "Snapping": "스냅",
-    "AI service settings": "AI 서비스 설정",
+    "Media generation settings": "미디어 생성 설정",
     "Split ({value0})": "분할 ({value0})",
     "Snapping ({value0})": "스냅 ({value0})"
   },
@@ -940,7 +940,7 @@
     "Exit immersive preview": "Immersive Vorschau beenden",
     "Focus on a larger preview. Press Esc to return to editing.": "Größere Vorschau anzeigen. Mit Esc zur Bearbeitung zurückkehren.",
     "Snapping": "Einrasten",
-    "AI service settings": "KI-Diensteinstellungen",
+    "Media generation settings": "Einstellungen zur Mediengenerierung",
     "Split ({value0})": "Teilen ({value0})",
     "Snapping ({value0})": "Einrasten ({value0})"
   },
@@ -1255,7 +1255,7 @@
     "Exit immersive preview": "Quitter l’aperçu immersif",
     "Focus on a larger preview. Press Esc to return to editing.": "Agrandissez l’aperçu. Appuyez sur Échap pour revenir au montage.",
     "Snapping": "Magnétisme",
-    "AI service settings": "Paramètres des services IA",
+    "Media generation settings": "Paramètres de génération de médias",
     "Split ({value0})": "Scinder ({value0})",
     "Snapping ({value0})": "Magnétisme ({value0})"
   },
@@ -1570,7 +1570,7 @@
     "Exit immersive preview": "Выйти из режима просмотра",
     "Focus on a larger preview. Press Esc to return to editing.": "Увеличенный предпросмотр. Нажмите Esc, чтобы вернуться к монтажу.",
     "Snapping": "Привязка",
-    "AI service settings": "Настройки ИИ-сервисов",
+    "Media generation settings": "Настройки генерации медиа",
     "Split ({value0})": "Разделить ({value0})",
     "Snapping ({value0})": "Привязка ({value0})"
   },
@@ -1885,7 +1885,7 @@
     "Exit immersive preview": "Salir de la vista previa inmersiva",
     "Focus on a larger preview. Press Esc to return to editing.": "Amplía la vista previa. Pulsa Esc para volver a editar.",
     "Snapping": "Ajuste magnético",
-    "AI service settings": "Ajustes de servicios de IA",
+    "Media generation settings": "Ajustes de generación multimedia",
     "Split ({value0})": "Dividir ({value0})",
     "Snapping ({value0})": "Ajuste magnético ({value0})"
   },
@@ -2200,7 +2200,7 @@
     "Exit immersive preview": "Sair da prévia imersiva",
     "Focus on a larger preview. Press Esc to return to editing.": "Amplie a prévia. Pressione Esc para voltar à edição.",
     "Snapping": "Encaixe",
-    "AI service settings": "Configurações de serviços de IA",
+    "Media generation settings": "Configurações de geração de mídia",
     "Split ({value0})": "Dividir ({value0})",
     "Snapping ({value0})": "Encaixe ({value0})"
   },
@@ -2515,7 +2515,7 @@
     "Exit immersive preview": "Esci dall’anteprima immersiva",
     "Focus on a larger preview. Press Esc to return to editing.": "Ingrandisci l’anteprima. Premi Esc per tornare al montaggio.",
     "Snapping": "Aggancio",
-    "AI service settings": "Impostazioni dei servizi IA",
+    "Media generation settings": "Impostazioni di generazione multimediale",
     "Split ({value0})": "Dividi ({value0})",
     "Snapping ({value0})": "Aggancio ({value0})"
   },
@@ -2830,7 +2830,7 @@
     "Exit immersive preview": "Sürükleyici önizlemeden çık",
     "Focus on a larger preview. Press Esc to return to editing.": "Önizlemeyi büyütün. Düzenlemeye dönmek için Esc tuşuna basın.",
     "Snapping": "Yapışma",
-    "AI service settings": "Yapay zekâ hizmet ayarları",
+    "Media generation settings": "Medya oluşturma ayarları",
     "Split ({value0})": "Böl ({value0})",
     "Snapping ({value0})": "Yapışma ({value0})"
   }

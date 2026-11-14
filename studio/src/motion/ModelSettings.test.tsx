@@ -31,7 +31,7 @@ it('shows the three visible BYOK providers; saving a key enables it and clears t
     return Response.json({ models: [], nextOffset: null });
   }));
   await mount();
-  expect(document.body.textContent).toContain('AI service settings');
+  expect(document.body.textContent).toContain('Media generation settings');
   expect(document.body.textContent).toContain('Atlas Cloud'); expect(document.body.textContent).toContain('WaveSpeedAI'); expect(document.body.textContent).not.toContain('Codex');
   expect(document.querySelectorAll('.motion-provider-card')).toHaveLength(3);
   expect(document.body.textContent).not.toContain('OpenDesign Cloud');

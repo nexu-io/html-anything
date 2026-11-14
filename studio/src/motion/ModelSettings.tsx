@@ -23,7 +23,7 @@ export function ModelSettings({ onClose }: { onClose: () => void }) {
     finally { setBusy(false); }
   }
   return <dialog ref={dialog} className="motion-model-dialog motion-byok-dialog motion-media-surface" aria-labelledby="model-settings-title" onKeyDown={event => event.stopPropagation()} onCancel={event => { event.preventDefault(); onClose(); }}>
-    <header><h2 id="model-settings-title">{t('AI service settings')}</h2><button className="motion-media-close" onClick={onClose} aria-label={t('Close model settings')}>×</button></header>
+    <header><h2 id="model-settings-title">{t('Media generation settings')}</h2><button className="motion-media-close" onClick={onClose} aria-label={t('Close model settings')}>×</button></header>
     <p className="motion-media-muted">{t('Save a key to enable a provider.')}</p>
     {error && <p role="alert" className="motion-media-error">{t(error)}</p>}
     {!data && !error && <p role="status">{t('Loading providers…')}</p>}
