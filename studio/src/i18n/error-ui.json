@@ -1,5 +1,6 @@
 {
   "zh-CN": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "脚本仍在使用这个元素。请让 Agent 同步修改脚本，或删除整个合成。",
     "Reconnecting…": "重连中…",
     "Connection lost.": "连接已断开",
     "The project changed elsewhere. Resolve the changes before continuing.": "项目已在其他地方修改，请先处理版本冲突。",
@@ -48,6 +49,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "暂时无法确认此元素能否编辑。请重新选择，或刷新预览重试。"
   },
   "ja": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "この要素はスクリプトで使用されています。Agent にスクリプトの更新を依頼するか、コンポジション全体を削除してください。",
     "Reconnecting…": "再接続中…",
     "Connection lost.": "接続が切れました",
     "The project changed elsewhere. Resolve the changes before continuing.": "プロジェクトが別の場所で変更されました。競合を解決してから続行してください。",
@@ -96,6 +98,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "この要素を編集できるか確認できませんでした。選択し直すか、プレビューを更新してください。"
   },
   "ko": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "스크립트에서 이 요소를 사용하고 있습니다. Agent에게 스크립트 수정을 요청하거나 전체 컴포지션을 삭제하세요.",
     "Reconnecting…": "다시 연결 중…",
     "Connection lost.": "연결이 끊겼습니다",
     "The project changed elsewhere. Resolve the changes before continuing.": "프로젝트가 다른 곳에서 변경되었습니다. 충돌을 해결한 후 계속하세요.",
@@ -144,6 +147,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "이 요소의 편집 가능 여부를 확인할 수 없습니다. 다시 선택하거나 미리보기를 새로고침하세요."
   },
   "de": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "Dieses Element wird von einem Skript verwendet. Bitte deinen Agent, das Skript anzupassen, oder lösche die gesamte Komposition.",
     "Reconnecting…": "Verbindung wird hergestellt…",
     "Connection lost.": "Verbindung unterbrochen",
     "The project changed elsewhere. Resolve the changes before continuing.": "Das Projekt wurde andernorts geändert. Lösen Sie den Konflikt, bevor Sie fortfahren.",
@@ -192,6 +196,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "Es konnte nicht geprüft werden, ob dieses Element bearbeitbar ist. Wähle es erneut aus oder aktualisiere die Vorschau."
   },
   "fr": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "Cet élément est utilisé par un script. Demandez à votre Agent de modifier le script ou supprimez toute la composition.",
     "Reconnecting…": "Reconnexion…",
     "Connection lost.": "Connexion interrompue",
     "The project changed elsewhere. Resolve the changes before continuing.": "Le projet a été modifié ailleurs. Résolvez le conflit avant de continuer.",
@@ -240,6 +245,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "Impossible de vérifier si cet élément est modifiable. Sélectionnez-le à nouveau ou actualisez l’aperçu."
   },
   "es": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "Un script utiliza este elemento. Pide a tu Agent que actualice el script o elimina toda la composición.",
     "Reconnecting…": "Reconectando…",
     "Connection lost.": "Conexión perdida",
     "The project changed elsewhere. Resolve the changes before continuing.": "El proyecto se modificó en otro lugar. Resuelve el conflicto antes de continuar.",
@@ -288,6 +294,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "No se pudo comprobar si este elemento se puede editar. Vuelve a seleccionarlo o actualiza la vista previa."
   },
   "pt-BR": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "Este elemento é usado por um script. Peça ao seu Agent para atualizar o script ou exclua toda a composição.",
     "Reconnecting…": "Reconectando…",
     "Connection lost.": "Conexão perdida",
     "The project changed elsewhere. Resolve the changes before continuing.": "O projeto foi alterado em outro local. Resolva o conflito antes de continuar.",
@@ -336,6 +343,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "Não foi possível verificar se este elemento pode ser editado. Selecione-o novamente ou atualize a prévia."
   },
   "it": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "Questo elemento è usato da uno script. Chiedi al tuo Agent di aggiornare lo script oppure elimina l’intera composizione.",
     "Reconnecting…": "Riconnessione…",
     "Connection lost.": "Connessione interrotta",
     "The project changed elsewhere. Resolve the changes before continuing.": "Il progetto è stato modificato altrove. Risolvi il conflitto prima di continuare.",
@@ -384,6 +392,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "Impossibile verificare se questo elemento è modificabile. Selezionalo di nuovo o aggiorna l’anteprima."
   },
   "ru": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "Этот элемент используется скриптом. Попросите Agent обновить скрипт или удалите всю композицию.",
     "Reconnecting…": "Переподключение…",
     "Connection lost.": "Соединение потеряно",
     "The project changed elsewhere. Resolve the changes before continuing.": "Проект изменён в другом месте. Разрешите конфликт, прежде чем продолжить.",
@@ -432,6 +441,7 @@
     "Could not check whether this element can be edited. Select it again or refresh the preview.": "Не удалось проверить, можно ли редактировать элемент. Выберите его снова или обновите предпросмотр."
   },
   "tr": {
+    "This element is used by a script. Ask your Agent to update the script, or delete the whole composition.": "Bu öğe bir betik tarafından kullanılıyor. Agent’tan betiği güncellemesini isteyin veya kompozisyonun tamamını silin.",
     "Reconnecting…": "Yeniden bağlanılıyor…",
     "Connection lost.": "Bağlantı kesildi",
     "The project changed elsewhere. Resolve the changes before continuing.": "Proje başka bir yerde değiştirildi. Devam etmeden önce çakışmayı giderin.",

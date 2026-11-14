@@ -5,6 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useElementLifecycleOps } from "./useElementLifecycleOps";
 import { makeLifecycleOpsParams } from "./elementLifecycleOpsTestUtils";
 import { mountReactHarness, makeSelection } from "./domSelectionTestHarness";
+import { SCRIPT_DEPENDENCY_DELETE_MESSAGE } from "../utils/deleteScriptDependencies";
 
 Reflect.set(globalThis, "IS_REACT_ACT_ENVIRONMENT", true);
 
@@ -36,12 +37,14 @@ describe("useElementLifecycleOps — deleting a canvas multi-selection", () => {
   const requests: string[] = [];
   let changes = true;
   let removeOk = true;
+  let sourceContent = "<html></html>";
 
   beforeEach(() => {
     removed.length = 0;
     requests.length = 0;
     changes = true;
     removeOk = true;
+    sourceContent = "<html></html>";
     vi.stubGlobal(
       "fetch",
       vi.fn(async (url: string, init?: RequestInit) => {
@@ -60,7 +63,7 @@ describe("useElementLifecycleOps — deleting a canvas multi-selection", () => {
           ok: status === 200,
           status,
           text: async () => (status === 200 ? "" : "server said no"),
-          json: async () => ({ changed: changes, content: "<html></html>" }),
+          json: async () => ({ changed: changes, content: sourceContent }),
         } as unknown as Response;
       }),
     );
@@ -121,6 +124,68 @@ describe("useElementLifecycleOps — deleting a canvas multi-selection", () => {
       reason: "no-selection",
     });
     expect(requests).toEqual([]);
+  });
+
+  it.each([false, true])("preserves a whole selection with script dependencies before deleting through SDK=%s", async (sdk) => {
+    sourceContent = `<html><body><div id="a" data-hf-id="hf-a"></div>
+      <div id="b" data-hf-id="hf-b"><div id="mk-ch-box"></div></div>
+      <script>const box = document.getElementById('mk-ch-box'); box.style.fontSize = '60px';</script></body></html>`;
+    const onTrySdkDelete = vi.fn(async () => ({ status: "committed", version: "v", before: sourceContent, after: "" }) as const);
+    const recordEdit = vi.fn();
+    const writeProjectFile = vi.fn();
+    const reloadPreview = vi.fn();
+    const showToast = vi.fn();
+    const ops = mountDeleteOps({ projectIdRef: { current: "p1" }, showToast, writeProjectFile,
+      reloadPreview, editHistory: { recordEdit }, ...(sdk ? { onTrySdkDelete } : {}) });
+    const selections = ["a", "b"].map((id) => ({ ...selectionFor(id), hfId: `hf-${id}` }));
+
+    await act(async () => {
+      expect(await ops.handleDomEditElementsDelete(selections)).toEqual({ ok: false, reason: "persist-failed" });
+    });
+
+    expect(onTrySdkDelete).not.toHaveBeenCalled();
+    expect(requests.some((url) => url.includes("remove-elements"))).toBe(false);
+    expect(writeProjectFile).not.toHaveBeenCalled();
+    expect(recordEdit).not.toHaveBeenCalled();
+    expect(reloadPreview).not.toHaveBeenCalled();
+    expect(showToast).toHaveBeenLastCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
+  it("checks individually committed SDK members before deleting any selection member", async () => {
+    sourceContent = `<html><body><div id="a" data-hf-id="hf-a"></div>
+      <div id="b" data-hf-id="hf-b"><div id="mk-ch-box"></div></div>
+      <div id="c" data-hf-id="hf-c"><script>document.getElementById('mk-ch-box').style.color = 'red';</script></div></body></html>`;
+    const onTrySdkDelete = vi.fn();
+    const showToast = vi.fn();
+    const ops = mountDeleteOps({ projectIdRef: { current: "p1" }, showToast, onTrySdkDelete });
+    const selections = ["a", "b", "c"].map((id) => ({ ...selectionFor(id), hfId: `hf-${id}` }));
+    await act(async () => {
+      expect(await ops.handleDomEditElementsDelete(selections)).toEqual({ ok: false, reason: "persist-failed" });
+    });
+    expect(onTrySdkDelete).not.toHaveBeenCalled();
+    expect(requests.some((url) => url.includes("remove-elements"))).toBe(false);
+    expect(showToast).toHaveBeenLastCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
+  it("refuses a batch whose shifted selector would delete a script dependency", async () => {
+    sourceContent = '<div class="item">A</div><div class="item">B</div><div class="item" id="c">C</div><script>document.getElementById("c").style.color="red";</script>';
+    const recordEdit = vi.fn();
+    const writeProjectFile = vi.fn();
+    const reloadPreview = vi.fn();
+    const showToast = vi.fn();
+    const ops = mountDeleteOps({ projectIdRef: { current: "p1" }, showToast, writeProjectFile,
+      reloadPreview, editHistory: { recordEdit } });
+    const selections = [0, 1].map((selectorIndex) => ({
+      ...selectionFor(String(selectorIndex)), id: undefined, selector: ".item", selectorIndex,
+    }));
+    await act(async () => {
+      expect(await ops.handleDomEditElementsDelete(selections)).toEqual({ ok: false, reason: "persist-failed" });
+    });
+    expect(requests.some((url) => url.includes("remove-elements"))).toBe(false);
+    expect(writeProjectFile).not.toHaveBeenCalled();
+    expect(recordEdit).not.toHaveBeenCalled();
+    expect(reloadPreview).not.toHaveBeenCalled();
+    expect(showToast).toHaveBeenLastCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
   });
 
   it("reports an HTTP write failure instead of only toasting", async () => {

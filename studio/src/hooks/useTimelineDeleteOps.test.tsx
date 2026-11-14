@@ -7,6 +7,7 @@ import { applyRippleShifts, useTimelineDeleteOps } from "./useTimelineDeleteOps"
 import { installReactActEnvironment, mountReactHarness } from "./domSelectionTestHarness";
 import { useTrackPendingTimelineEdit } from "./useTrackPendingTimelineEdit";
 import { flushStudioPendingEdits } from "../utils/studioPendingEdits";
+import { SCRIPT_DEPENDENCY_DELETE_MESSAGE } from "../utils/deleteScriptDependencies";
 
 installReactActEnvironment();
 
@@ -103,6 +104,46 @@ describe("useTimelineDeleteOps: ripple undo label", () => {
       finishRipple();
       await deleting;
     });
+  });
+
+  it("preserves the callout and history when timeline deletion has script dependencies", async () => {
+    const source = `<html><body><div data-hf-id="hf-b" id="mk-ch-center"><div id="mk-ch-box"></div></div>
+      <script>const box = document.getElementById("mk-ch-box"); box.style.fontSize = "60px";</script></body></html>`;
+    stubRemoveElementsFetch(source, "<html></html>");
+    const showToast = vi.fn();
+    const recordEdit = vi.fn();
+    const handleTimelineGroupMove = vi.fn();
+    const { elements, b, getHook } = mountDeleteHarness({ showToast, recordEdit, handleTimelineGroupMove });
+    b.hfId = "hf-b";
+    b.domId = "mk-ch-center";
+    usePlayerStore.getState().setElements(elements);
+
+    await act(async () => { await getHook().handleTimelineElementDelete(b); });
+
+    expect(vi.mocked(fetch).mock.calls.some(([url]) => String(url).includes("remove-elements"))).toBe(false);
+    expect(recordEdit).not.toHaveBeenCalled();
+    expect(handleTimelineGroupMove).not.toHaveBeenCalled();
+    expect(usePlayerStore.getState().elements).toEqual(elements);
+    expect(showToast).toHaveBeenCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
+  });
+
+  it("preserves a selector batch before shifted indices delete a script dependency", async () => {
+    const source = '<div class="item">A</div><div class="item">B</div><div class="item" id="c">C</div><script>document.getElementById("c").style.color="red";</script>';
+    stubRemoveElementsFetch(source, "<html></html>");
+    const showToast = vi.fn();
+    const recordEdit = vi.fn();
+    const handleTimelineGroupMove = vi.fn();
+    const { elements, getHook } = mountDeleteHarness({ showToast, recordEdit, handleTimelineGroupMove });
+    const selected = elements.slice(0, 2).map((element, selectorIndex) => ({
+      ...element, domId: undefined, selector: ".item", selectorIndex,
+    }));
+    usePlayerStore.getState().setElements(elements);
+    await act(async () => { await getHook().handleTimelineElementsDelete(selected); });
+    expect(vi.mocked(fetch).mock.calls.some(([url]) => String(url).includes("remove-elements"))).toBe(false);
+    expect(recordEdit).not.toHaveBeenCalled();
+    expect(handleTimelineGroupMove).not.toHaveBeenCalled();
+    expect(usePlayerStore.getState().elements).toEqual(elements);
+    expect(showToast).toHaveBeenCalledWith(SCRIPT_DEPENDENCY_DELETE_MESSAGE);
   });
 
   // editHistory.ts's coalescing keeps the LAST recordEdit call's label, so the

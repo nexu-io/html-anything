@@ -25,6 +25,7 @@ import type {
   TimelineGroupMoveChange,
 } from "./useTimelineGroupEditing";
 import { studioApiFetch } from "../utils/studioApiFetch";
+import { assertSafeElementDeletion } from "../utils/deleteScriptDependencies";
 
 /** Apply already-resolved ripple changes to the surviving elements for the
  *  optimistic store update after a delete. Pure — no IO. */
@@ -127,6 +128,7 @@ export function useTimelineDeleteOps({
                 }
                 return patchTarget;
               });
+              assertSafeElementDeletion(originalContent, patchTargets);
               const removeResponse = await studioApiFetch(
                 buildProjectApiPath(
                   pid,

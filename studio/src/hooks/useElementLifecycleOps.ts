@@ -1,5 +1,6 @@
 import { buildProjectApiPath } from "../utils/projectRouting";
 import { useCallback } from "react";
+import { assertSafeElementDeletion } from "../utils/deleteScriptDependencies";
 import { usePlayerStore } from "../player";
 import {
   readProjectFileContent,
@@ -125,6 +126,8 @@ export function useElementLifecycleOps({
           .filter((hfId): hfId is string => Boolean(hfId));
         if (onTrySdkDelete && hfIds.length === sameFile.length) {
           const originalContent = await readProjectFileContent(pid, targetPath);
+          // SDK members commit separately; validate each before the first write.
+          for (const target of patchTargets) assertSafeElementDeletion(originalContent, [target]);
           let allHandled = true;
           for (const hfId of hfIds) {
             // The SDK owns the document it edits, so every member is removed
@@ -157,6 +160,7 @@ export function useElementLifecycleOps({
           writeFile: writeProjectFile,
           recordEdit: editHistory.recordEdit,
           rewrite: async (originalContent) => {
+            assertSafeElementDeletion(originalContent, patchTargets);
             const removeResponse = await studioApiFetch(
               buildProjectApiPath(
                 pid,
