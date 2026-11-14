@@ -10,11 +10,42 @@ const owner = '@openmotion/installer';
 const bundleName = 'dsh-plugin-openmotion-local';
 const equalTransport = (actual, expected) => actual?.command === expected.command && JSON.stringify(actual.args) === JSON.stringify(expected.args);
 
+export async function resolveHostCommand(command, platform = process.platform) {
+  if (/\.[cm]?js$/i.test(command)) return { command: process.execPath, args: [command] };
+  if (platform !== 'win32') return { command, args: [] };
+  const directories = /[/\\]/.test(command) ? [''] : (process.env.PATH || '').split(path.delimiter).filter(Boolean);
+  const suffixes = path.extname(command) ? [''] : ['.exe', '.com', '.cmd', '.ps1'];
+  for (const directory of directories) for (const suffix of suffixes) {
+    const file = path.resolve(directory.replace(/^"|"$/g, ''), command + suffix);
+    try { await access(file); } catch (error) { if (error.code === 'ENOENT') continue; throw error; }
+    if (!/\.(cmd|ps1)$/i.test(file)) return { command: file, args: [] };
+    // shortcut: unwrap npm's quoted JS/native entries only; extend when another host shim format is needed.
+    const shim = await readFile(file, 'utf8');
+    const target = [...shim.matchAll(/["'](?:%dp0%|\$basedir)[\\/]([^"'\r\n]+\.(?:[cm]?js|exe))["']/gi)].at(-1)?.[1];
+    assert(target, 'HOST_CLI_UNSUPPORTED_SHIM: Use the host .exe or JavaScript CLI entry instead of ' + file);
+    const entry = path.resolve(path.dirname(file), target.replaceAll('\\', '/'));
+    await access(entry);
+    return /\.[cm]?js$/i.test(entry) ? { command: process.execPath, args: [entry] } : { command: entry, args: [] };
+  }
+  throw new Error('HOST_CLI_NOT_FOUND: ' + command + '. Install the host CLI or pass its executable/JavaScript entry path.');
+}
+
+async function runHostCli(command, args) {
+  const resolved = await resolveHostCommand(command);
+  return runFile(resolved.command, [...resolved.args, ...args]);
+}
+
 export async function hostPlan(options, home, launcher, previous) {
   const host = options.host || 'codex';
-  assert(hosts.includes(host), 'Supported hosts: ' + hosts.join(', '));
+  assert(/^[a-z][a-z0-9-]{0,63}$/.test(host) && !['__proto__', 'constructor', 'prototype'].includes(host), 'Use a simple lowercase Agent host name');
   const transport = { type: 'stdio', command: process.execPath, args: [launcher] };
   const saved = previous?.hosts?.[host] || (host === 'codex' && previous?.skillsDirectory ? { skillsDirectory: previous.skillsDirectory } : null);
+  if (!hosts.includes(host)) {
+    const selectedSkills = options.skillsDirectory || saved?.skillsDirectory;
+    const skillsDirectory = selectedSkills && await canonical(selectedSkills);
+    const metadata = { registration: 'manual', layout: skillsDirectory ? 'flat' : 'manual', ...(skillsDirectory ? { skillsDirectory } : {}) };
+    return { host, ...metadata, metadata, connection: { transport }, register: async () => {} };
+  }
   const defaultSkills = host === 'claude' ? path.join(process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude'), 'skills')
     : host === 'workbuddy' ? path.join(process.env.WORKBUDDY_CONFIG_DIR || path.join(os.homedir(), '.workbuddy'), 'skills')
       : path.join(os.homedir(), '.agents/skills');
@@ -22,7 +53,7 @@ export async function hostPlan(options, home, launcher, previous) {
   const metadata = { skillsDirectory, layout: host === 'codex' ? 'bundle' : 'flat' };
   if (host === 'codex') {
     const codex = options.codex || 'codex';
-    const cli = args => /\.[cm]?js$/i.test(codex) ? runFile(process.execPath, [codex, ...args]) : runFile(codex, args);
+    const cli = args => runHostCli(codex, args);
     let current;
     try { current = JSON.parse(await cli(['mcp', 'get', 'openmotion', '--json'])); }
     catch (error) { if (!/No MCP server named ['"]openmotion['"] found/.test(error.message)) throw error; }
@@ -39,7 +70,7 @@ export async function hostPlan(options, home, launcher, previous) {
     assert(!current || (saved?.configFile === configFile && equalTransport(current, transport)), 'Existing Claude openmotion MCP is not owned by this installation');
     metadata.configFile = configFile;
     return { host, ...metadata, metadata, connection: current && { transport: current }, register: async () => {
-      if (!current) await runFile(claude, ['mcp', 'add-json', '-s', 'user', 'openmotion', JSON.stringify(transport)]);
+      if (!current) await runHostCli(claude, ['mcp', 'add-json', '-s', 'user', 'openmotion', JSON.stringify(transport)]);
     } };
   }
   if (host === 'workbuddy') {
@@ -95,6 +126,7 @@ export async function hostPlan(options, home, launcher, previous) {
 }
 
 export async function skillTargets(plan, appRoot) {
+  if (plan.layout === 'manual') return [];
   if (plan.layout === 'bundle') return [path.join(plan.skillsDirectory, 'openmotion')];
   if (plan.layout === 'deepseek') return [plan.metadata.bundleDirectory];
   return (await readdir(path.join(appRoot, 'skills'), { withFileTypes: true })).filter(entry => entry.isDirectory() && !entry.name.startsWith('.')).map(entry => path.join(plan.skillsDirectory, entry.name));

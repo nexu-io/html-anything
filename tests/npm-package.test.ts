@@ -137,6 +137,12 @@ test('test npm artifacts contain their application, locked manifest and no bundl
     assert.equal((await runFile(process.execPath, [cli, '--version'])).trim(), version);
     const help = await runFile(process.execPath, [cli, 'setup', '--help']);
     for (const host of ['codex', 'claude', 'deepseek', 'workbuddy']) assert(help.includes(host), host);
+    assert.match(help, /Other names return manual stdio MCP configuration/);
+    const { hostPlan, resolveHostCommand } = await import(pathToFileURL(path.join(installer, 'package/scripts/npm-hosts.mjs')).href);
+    const manual = await hostPlan({ host: 'opencode' }, path.join(directory, 'home'), path.join(directory, 'home/run-mcp.mjs'));
+    assert.equal(manual.metadata.registration, 'manual');
+    assert.deepEqual(manual.connection.transport.args, [path.join(directory, 'home/run-mcp.mjs')]);
+    assert.deepEqual(await resolveHostCommand(cli, 'win32'), { command: process.execPath, args: [cli] });
     await readFile(path.join(installer, 'package/LICENSE'));
     assert.deepEqual((await readdir(path.join(application, 'skills'))).sort(), [...packagedSkills].sort());
     assert.equal(release.skills.length, 5);

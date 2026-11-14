@@ -6,7 +6,7 @@ Codex、Claude Code、DeepSeek Harness（DSH）与 WorkBuddy 从同一份已安�
 
 各宿主分别启动 stdio MCP 进程，业务能力仍由同一份 `mcp.ts`、会话/工程、Model Gateway、Hyperframes 编辑器和渲染器提供。它们可以使用相同或不同的 `MOTION_DATA_DIR`；共用代码不代表共用一个 MCP 进程。macOS 同一数据目录的连接现在复用完整编辑器后台，各自保留工程绑定，Studio 仍只有一个活动工程；协议、版本或代码不兼容时拒绝复用，见 [共享编辑器](shared-editor.md)。Windows / Linux 保留原预览服务复用。Agent 仍需按最新工具契约读取会话、选择产物和校验 revision。
 
-本地也可以使用 [npm 轻量安装器](npm-installation.md) 的 `setup --host codex|claude|deepseek|workbuddy`，自动安装对应入口与 Skills，并共用一份应用和原生依赖缓存。下文的导出方式保留，生成配置与自动注册是不同操作。
+The [npm installer](npm-installation.md) accepts the current Agent name through `setup --host HOST`. Codex, Claude Code, DeepSeek Harness and WorkBuddy retain automatic registration; other local stdio clients receive the managed launcher transport for [manual registration](npm-installation.md#manual-stdio-hosts), without borrowing another host. Skills installation for manual hosts requires their actual `--skills-dir`. All hosts share the managed application/native cache for the selected installation home.下文的导出方式保留，生成配置与自动注册是不同操作。
 
 ## 两种入口，共用同一工程
 

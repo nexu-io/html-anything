@@ -5,8 +5,8 @@ import path from 'node:path';
 import { tmpdir } from 'node:os';
 import { pathToFileURL } from 'node:url';
 import { fileURLToPath } from 'node:url';
-import { diagnose, localManifest, setup } from '../scripts/npm-installer.mjs';
-import { hosts } from '../scripts/npm-hosts.mjs';
+import { callInstalled, diagnose, localManifest, setup } from '../scripts/npm-installer.mjs';
+import { hosts, hostPlan, resolveHostCommand } from '../scripts/npm-hosts.mjs';
 import { configureNativeEnvironment, ensureNativeRuntime, nativeConfiguration } from '../scripts/npm-runtime.mjs';
 import { canonical, obtainAsset, relativePath, runFile, sha256, withLock, writeJSON } from '../scripts/runtime-assets.mjs';
 
@@ -51,6 +51,55 @@ async function setupFixture(t: any) {
   await chmod(codex, 0o755);
   return { directory, application, home, skillsDirectory, manifest, codex, config };
 }
+
+test('manual hosts install independently and return the managed launcher without modifying another host', async t => {
+  const options = await setupFixture(t);
+  const before = await readFile(options.config, 'utf8');
+  const installed = await setup({ ...options, host: 'opencode', skillsDirectory: undefined, codex: '/missing-codex', claude: '/missing-claude' });
+  assert.equal(installed.hostInstallation.registration, 'manual');
+  assert.deepEqual(installed.manualConnection.transport, { type: 'stdio', command: process.execPath, args: [installed.launcher] });
+  assert.equal(installed.manualConnection.skillsSource, path.join(installed.appRoot, 'skills'));
+  assert.equal(installed.onboarding.hostSessionVerified, false);
+  assert.equal(installed.onboarding.directAccess, undefined, 'manual host permissions must not be bypassed by installed CLI access');
+  await assert.rejects(callInstalled({ home: options.home, host: 'opencode' }, 'openmotion_get_project'), /MANUAL_HOST_CONFIGURATION/);
+  assert.match(await readFile(installed.launcher, 'utf8'), /configureNativeEnvironment/);
+  assert.equal(await readFile(options.config, 'utf8'), before);
+  await assert.rejects(readdir(options.skillsDirectory), { code: 'ENOENT' });
+  const withSkills = await setup({ ...options, host: 'opencode' });
+  assert.equal(withSkills.hostInstallation.layout, 'flat');
+  const marker = JSON.parse(await readFile(path.join(options.skillsDirectory, 'openmotion-production/openmotion-install.json'), 'utf8'));
+  assert.equal(marker.host, 'opencode');
+  const repeated = await setup({ ...options, host: 'opencode', skillsDirectory: undefined });
+  assert.equal(repeated.hostInstallation.skillsDirectory, withSkills.hostInstallation.skillsDirectory);
+  const unowned = path.join(options.directory, 'unowned/openmotion-production');
+  await mkdir(unowned, { recursive: true }); await writeFile(path.join(unowned, 'SKILL.md'), 'keep');
+  await assert.rejects(setup({ ...options, host: 'opencode', skillsDirectory: path.dirname(unowned) }), /not owned/);
+  assert.equal(await readFile(path.join(unowned, 'SKILL.md'), 'utf8'), 'keep');
+  for (const host of ['cursor', 'cline', 'manual']) assert.equal((await hostPlan({ host }, installed.launcher.replace(/[/\\]run-mcp.mjs$/, ''), installed.launcher, installed)).metadata.registration, 'manual');
+  for (const host of ['../bad', 'constructor']) await assert.rejects(hostPlan({ host }, options.home, installed.launcher, installed), /simple lowercase/);
+});
+
+test('Windows host resolution unwraps npm cmd and PowerShell shims and preserves every argument', async t => {
+  const directory = await fixture(t), bin = path.join(directory, 'npm bin with spaces');
+  const entry = path.join(bin, 'node_modules/claude/cli.mjs');
+  await mkdir(path.dirname(entry), { recursive: true });
+  await writeFile(entry, 'console.log(JSON.stringify(process.argv.slice(2)))');
+  const args = ['mcp', 'add-json', '-s', 'user', 'openmotion', JSON.stringify({ command: 'D:\\Node Path\\node.exe', args: ['D:\\OpenMotion & video\\run-mcp.mjs'], literal: '%PATH% & echo unsafe | <> ^ !' })];
+  for (const [suffix, content] of [['cmd', '@ECHO off\r\nIF EXIST "%dp0%\\node.exe" (SET "_prog=%dp0%\\node.exe")\r\n"%_prog%" "%dp0%\\node_modules\\claude\\cli.mjs" %*\r\n'], ['ps1', 'if (Test-Path "$basedir/node.exe") { & "$basedir/node.exe" "$basedir/node_modules/claude/cli.mjs" $args } else { & "node" "$basedir/node_modules/claude/cli.mjs" $args }']]) {
+    const shim = path.join(bin, 'claude.' + suffix); await writeFile(shim, content);
+    const resolved = await resolveHostCommand(shim, 'win32');
+    assert.deepEqual(resolved, { command: process.execPath, args: [entry] });
+    assert.deepEqual(JSON.parse(await runFile(resolved.command, [...resolved.args, ...args])), args);
+  }
+  const previousPath = process.env.PATH; process.env.PATH = bin;
+  t.after(() => { if (previousPath === undefined) delete process.env.PATH; else process.env.PATH = previousPath; });
+  assert.deepEqual(await resolveHostCommand('claude', 'win32'), { command: process.execPath, args: [entry] });
+  const executable = path.join(bin, 'claude.exe'); await writeFile(executable, 'fixture');
+  assert.deepEqual(await resolveHostCommand('claude', 'win32'), { command: executable, args: [] });
+  const custom = path.join(bin, 'custom.cmd'); await writeFile(custom, '@echo off\r\necho unsupported');
+  await assert.rejects(resolveHostCommand(custom, 'win32'), /HOST_CLI_UNSUPPORTED_SHIM/);
+  await assert.rejects(resolveHostCommand('absent-cli', 'win32'), /HOST_CLI_NOT_FOUND/);
+});
 
 test('successful setup hands the current Agent a project-free template library before any MCP use', async t => {
   const options = await setupFixture(t);
