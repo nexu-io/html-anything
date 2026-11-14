@@ -23,7 +23,7 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign の YouTube チャンネル" /></a>
 </p>
 
-<p align="center"><a href="#quick-start">インストール</a> · <a href="#agent-wall">対応エージェント</a> · <a href="#showcase">用途と再現例</a> · <a href="#features">OpenMotion の特長</a> · <a href="#technical-guide">セットアップと技術資料</a> · <a href="#community">コミュニティ・貢献</a></p>
+<p align="center"><a href="https://chatgpt.com/plugins/plugins_6a742d13e88481919b42002864b1bb26">ChatGPT Marketplace</a> · <a href="#quick-start">インストール</a> · <a href="#agent-wall">対応エージェント</a> · <a href="#showcase">用途と再現例</a> · <a href="#features">OpenMotion の特長</a> · <a href="#technical-guide">セットアップと技術資料</a> · <a href="#community">コミュニティ・貢献</a></p>
 
 <div align="center">
 
@@ -41,6 +41,14 @@ OpenMotion は、**エージェントが動画制作の全工程を担う初の�
 - 🎛️ **画像・動画・音楽・音声。** Nano Banana 2 で画像を、Seedance 2.0 で追加カットを作り、Suno v4 の音楽と Kokoro のナレーションを同じタイムラインに配置できます。[内蔵の全 7 モデル](#model-wall)
 
 <a id="快速开始"></a> <a id="quick-start"></a>
+
+### ChatGPT Marketplace からインストール
+
+ゼロからモーション動画を作成したり、参考動画を再現したり、テンプレートを使って制作を始めたりできます。
+
+**[ChatGPT に OpenMotion をインストール →](https://chatgpt.com/plugins/plugins_6a742d13e88481919b42002864b1bb26)**
+
+ローカル実行に対応したクライアントが必要です。OpenMotion は必要に応じてローカル実行環境をセットアップします。
 
 <a id="start-in-codex"></a>
 

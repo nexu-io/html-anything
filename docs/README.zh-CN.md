@@ -23,7 +23,7 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="readme/badges/youtube.svg" alt="OpenDesign 的 YouTube 频道" /></a>
 </p>
 
-<p align="center"><a href="#quick-start">立即安装</a> · <a href="#agent-wall">支持的 Agent</a> · <a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
+<p align="center"><a href="https://chatgpt.com/plugins/plugins_6a742d13e88481919b42002864b1bb26">ChatGPT 插件市场</a> · <a href="#quick-start">立即安装</a> · <a href="#agent-wall">支持的 Agent</a> · <a href="#showcase">使用场景与复刻效果示例</a> · <a href="#features">为什么选择 OpenMotion</a> · <a href="#technical-guide">安装与技术文档</a> · <a href="#community">社区与贡献</a></p>
 
 <div align="center">
 
@@ -41,6 +41,14 @@ OpenMotion 是 **首个全栈 Agentic 视频生成器**。上传参考视频或�
 - 🎛️ **图片、视频、音乐和语音。** 用 Nano Banana 2 生成图片、Seedance 2.0 补镜头、Suno v4 配乐、Kokoro 加旁白，再放进同一条时间轴。[查看 7 个内置模型](#model-wall)
 
 <a id="快速开始"></a> <a id="quick-start"></a>
+
+### 从 ChatGPT 插件市场安装
+
+从零创作动效视频、复刻参考视频，或使用模板开始创作。
+
+**[在 ChatGPT 中安装 OpenMotion →](https://chatgpt.com/plugins/plugins_6a742d13e88481919b42002864b1bb26)**
+
+需要使用支持本地执行的客户端。OpenMotion 会在需要时配置本地运行环境。
 
 <a id="start-in-codex"></a>
 

@@ -23,7 +23,7 @@
   <a href="https://www.youtube.com/channel/UChtshixMhvtgBWzoD9R_Qfg"><img src="docs/readme/badges/youtube.svg" alt="OpenDesign on YouTube" /></a>
 </p>
 
-<p align="center"><a href="#quick-start">Install</a> · <a href="#agent-wall">Agents</a> · <a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a> · <a href="#community">Community</a></p>
+<p align="center"><a href="https://chatgpt.com/plugins/plugins_6a742d13e88481919b42002864b1bb26">ChatGPT Marketplace</a> · <a href="#quick-start">Install</a> · <a href="#agent-wall">Agents</a> · <a href="#showcase">Use cases &amp; remakes</a> · <a href="#features">Why OpenMotion</a> · <a href="#technical-guide">Setup & architecture</a> · <a href="#community">Community</a></p>
 
 <div align="center">
 
@@ -41,6 +41,14 @@ OpenMotion is **the first full-stack agentic video generator**. Upload a referen
 - 🎛️ **Images, video, music and voice.** Generate artwork with Nano Banana 2, add a shot with Seedance 2.0, score it with Suno v4 and narrate it with Kokoro. [Explore all seven built-in models](#model-wall).
 
 <a id="快速开始"></a> <a id="quick-start"></a>
+
+### Install from ChatGPT Marketplace
+
+Create a motion video from scratch, recreate a reference, or start from a template.
+
+**[Install OpenMotion in ChatGPT →](https://chatgpt.com/plugins/plugins_6a742d13e88481919b42002864b1bb26)**
+
+Requires a client with local execution support. OpenMotion sets up its local runtime when needed.
 
 <a id="start-in-codex"></a>
 
