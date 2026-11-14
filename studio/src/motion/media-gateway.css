@@ -98,7 +98,11 @@
 .motion-media-notice { position: fixed; right: 20px; bottom: 24px; z-index: 210; padding: 12px; border-radius: var(--motion-radius-md); color: var(--motion-danger); background: var(--motion-danger-soft); }
 @media (max-width: 780px) { .motion-provider-grid { grid-template-columns: 1fr; } .motion-empty-media-actions { margin-left: 0; flex-direction: column; } .motion-timeline-media-actions button:last-child { display: none; } .motion-model-dialog { padding: 16px; } }
 
-.motion-byok-dialog { width: min(840px, calc(100vw - 32px)); }
+.motion-byok-dialog { width: min(840px, calc(100vw - 32px)); overflow: hidden; }
+.motion-byok-dialog[open] { display: flex; flex-direction: column; }
+.motion-byok-dialog > header { flex-shrink: 0; align-items: flex-start; }
+.motion-byok-dialog .motion-media-close { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.motion-byok-content { min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
 .motion-byok-dialog .motion-provider-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .motion-byok-dialog .motion-provider-card { min-width: 0; }
 .motion-byok-dialog .motion-capability-badge { margin-top: 0; }

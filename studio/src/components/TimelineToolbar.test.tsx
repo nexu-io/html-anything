@@ -37,12 +37,13 @@ afterEach(() => {
 function renderToolbar(
   domEditSession?: React.ComponentProps<typeof TimelineToolbar>["domEditSession"],
   props: Partial<React.ComponentProps<typeof TimelineToolbar>> = {},
+  mvp = false,
 ) {
   const host = document.createElement("div");
   document.body.append(host);
   const root = createRoot(host);
   act(() => {
-    root.render(<TimelineToolbar domEditSession={domEditSession} {...props} />);
+    root.render(<StudioHostContext.Provider value={{ mvpEditor: mvp }}><TimelineToolbar domEditSession={domEditSession} {...props} /></StudioHostContext.Provider>);
   });
   return { host, root };
 }
@@ -536,14 +537,14 @@ describe("TimelineToolbar tool menu", () => {
   it("lists Select, Split, Select leftward and Select rightward by default", async () => {
     expect(await openMenuRows({})).toEqual([
       "Select",
-      "Split",
+      "Blade tool",
       "Select leftward",
       "Select rightward",
     ]);
   });
 
   it("lists only Select and Split when the host hides select around the playhead", async () => {
-    expect(await openMenuRows({ showSelectAroundPlayhead: false })).toEqual(["Select", "Split"]);
+    expect(await openMenuRows({ showSelectAroundPlayhead: false })).toEqual(["Select", "Blade tool"]);
   });
 
   it.each([true, false])("[ and ] select around the playhead with the rows shown: %s", (shown) => {
@@ -593,7 +594,7 @@ describe("TimelineToolbar Linked Selection", () => {
     const { host } = renderToolbar();
     const button = host.querySelector<HTMLButtonElement>('button[aria-label="Linked Selection"]');
     expect(button?.getAttribute("aria-pressed")).toBe("true");
-    const snapping = host.querySelector('button[aria-label="Toggle timeline snapping"]');
+    const snapping = host.querySelector('button[aria-label="Snapping"]');
     expect(snapping && button?.compareDocumentPosition(snapping)).toBe(
       Node.DOCUMENT_POSITION_FOLLOWING,
     );
@@ -639,8 +640,8 @@ describe("TimelineToolbar split hint", () => {
       selectedElementId: "a",
       currentTime: 2,
     });
-    const { host, root } = renderToolbar(undefined, { onSplitElement: vi.fn(), ...props });
-    const button = host.querySelector<HTMLButtonElement>('button[aria-label="Split at playhead"]');
+    const { host, root } = renderToolbar(undefined, { onSplitAtPlayhead: vi.fn(), ...props });
+    const button = host.querySelector<HTMLButtonElement>('button[aria-label="Split"]');
     act(() => button?.focus());
     await act(async () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
@@ -652,8 +653,9 @@ describe("TimelineToolbar split hint", () => {
   }
 
   it("names S unless the host binds Split to another key", async () => {
-    expect(await splitTooltip({})).toBe("Split at playhead (S)");
-    expect(await splitTooltip({ splitShortcut: "⌘B" })).toBe("Split at playhead (⌘B)");
+    expect(await splitTooltip({})).toContain("Split (S)");
+    expect(await splitTooltip({})).toBe("Split (S)");
+    expect(await splitTooltip({ splitShortcut: "⌘B" })).toContain("Split (⌘B)");
   });
 });
 
@@ -693,4 +695,60 @@ it("disables empty MVP zoom and restores it when a clip arrives", () => {
     act(() => root.unmount());
     usePlayerStore.getState().reset();
   }
+});
+
+
+describe("MVP split actions", () => {
+  afterEach(() => usePlayerStore.setState({ elements: [], selectedElementId: null, selectedElementIds: new Set(), currentTime: 0, activeTool: "select" }));
+
+  it("uses the same immediate command for button and S, without exposing blade mode", () => {
+    const clip = { id: "clip", domId: "clip", tag: "div", start: 1, duration: 4, track: 0 };
+    usePlayerStore.setState({ elements: [clip], selectedElementId: null, selectedElementIds: new Set(), currentTime: 3, activeTool: "select" });
+    const split = vi.fn();
+    const { host, root } = renderToolbar(undefined, { onSplitAtPlayhead: split }, true);
+    try {
+      const button = host.querySelector<HTMLButtonElement>('[aria-label="Split"]')!;
+      expect(button.disabled).toBe(false);
+      expect(host.querySelector('[aria-label="Blade tool"]')).toBeNull();
+      expect(host.querySelector('[aria-label="Timeline tools"]')).toBeNull();
+      act(() => button.click());
+      expect(split).toHaveBeenCalledExactlyOnceWith(3);
+      const cb = { readOnlyPreview: false, disableRazorTool: true, handleSplitAtPlayhead: split } as unknown as HotkeyCallbacks;
+      act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "s" }), "s", cb));
+      expect(split).toHaveBeenCalledTimes(2);
+      expect(split).toHaveBeenLastCalledWith(3);
+      act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "s", repeat: true }), "s", cb));
+      act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "s" }), "s", { ...cb, readOnlyPreview: true }));
+      expect(split).toHaveBeenCalledTimes(2);
+      act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "b" }), "b", cb));
+      expect(usePlayerStore.getState().activeTool).toBe("select");
+      act(() => dispatchPlainKey(new KeyboardEvent("keydown", { key: "v" }), "v", cb));
+      expect(usePlayerStore.getState().activeTool).toBe("select");
+    } finally { act(() => root.unmount()); }
+  });
+
+  it("enables all-track cuts with no selection and keeps ineligible selections disabled", () => {
+    const clip = { id: "clip", domId: "clip", tag: "div", start: 1, duration: 4, track: 0 };
+    const other = { ...clip, id: "other", domId: "other", track: 1 };
+    usePlayerStore.setState({ elements: [clip, other], selectedElementId: "clip", selectedElementIds: new Set(), currentTime: 0 });
+    const split = vi.fn();
+    const { host, root } = renderToolbar(undefined, { onSplitAtPlayhead: split }, true);
+    try {
+      const button = host.querySelector<HTMLButtonElement>('[aria-label="Split"]')!;
+      for (const currentTime of [0, 1, 5, 6]) {
+        act(() => usePlayerStore.setState({ currentTime }));
+        expect(button.disabled).toBe(true);
+        act(() => button.click());
+      }
+      act(() => usePlayerStore.setState({ currentTime: 3, selectedElementId: null }));
+      expect(button.disabled).toBe(false);
+      act(() => usePlayerStore.setState({ selectedElementId: "clip", elements: [{ ...clip, timelineLocked: true }, other] }));
+      expect(button.disabled).toBe(true);
+      act(() => usePlayerStore.setState({ selectedElementId: null, selectedElementIds: new Set(["missing"]) }));
+      expect(button.disabled).toBe(true);
+      expect(split).not.toHaveBeenCalled();
+      act(() => usePlayerStore.setState({ selectedElementIds: new Set(["other"]) }));
+      expect(button.disabled).toBe(false);
+    } finally { act(() => root.unmount()); }
+  });
 });

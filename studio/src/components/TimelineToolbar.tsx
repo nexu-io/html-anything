@@ -37,7 +37,7 @@ import { TimelineHistoryButtons, type TimelineHistoryButtonsProps } from "./Time
 import { TimelineToolPicker } from "./TimelineToolPicker";
 import type { GsapAnimation } from "@hyperframes/core/gsap-parser";
 import type { DomEditSelection } from "./editor/domEditingTypes";
-import { canSplitElement } from "../utils/timelineElementSplit";
+import { canSplitElementAt, selectPlayheadSplitElements } from "../utils/timelineElementSplit";
 import { useAudioMetersVisible } from "../utils/audioMeterVisibility";
 import { LinkedSelectionToggle } from "./LinkedSelectionToggle";
 import { useLinkedClipPreferences } from "../utils/linkedClipPreferences";
@@ -54,6 +54,7 @@ interface DomEditSessionSlice extends EnableKeyframesSession {
 
 export interface TimelineToolbarProps {
   domEditSession?: DomEditSessionSlice;
+  onSplitAtPlayhead?: (splitTime: number) => void;
   onSplitElement?: (element: TimelineElement, splitTime: number) => void;
   splitShortcut?: TimelineProps["splitShortcut"];
   history?: TimelineHistoryButtonsProps;
@@ -156,6 +157,7 @@ function useKeyframeToggle(session?: DomEditSessionSlice) {
 export const TimelineToolbar = memo(function TimelineToolbar({
   domEditSession,
   onSplitElement,
+  onSplitAtPlayhead,
   splitShortcut,
   history,
   showHistory = true,
@@ -247,23 +249,45 @@ export const TimelineToolbar = memo(function TimelineToolbar({
       <div className="flex items-center justify-between px-2 py-0.5">
         <div className="flex items-center gap-0.5">
           {showHistory && <TimelineHistoryButtons {...history} />}
-          <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} />
+          <TimelineToolPicker showSelectAroundPlayhead={showSelectAroundPlayhead} splitShortcut={splitShortcut} />
           {/* Divider: tool-mode | editing-actions */}
           <div aria-hidden="true" className="mx-1 h-4 w-px bg-neutral-800" />
+          {(onSplitAtPlayhead || onSplitElement) &&
+            (() => {
+              const el = elements.find((element) => (element.key ?? element.id) === selectedElementId);
+              const targets = onSplitAtPlayhead
+                ? selectPlayheadSplitElements({ elements, selectedElementId, selectedElementIds }, currentTime)
+                : el && canSplitElementAt(el, currentTime) ? [el] : [];
+              const canSplit = targets.length > 0;
+              return (
+                <Tooltip
+                  label={t("Split ({value0})", { value0: splitShortcut ?? keyHint("split", keys) })}
+                >
+                  <button
+                    type="button"
+                    disabled={!canSplit}
+                    aria-label={t("Split")}
+                    onClick={() => {
+                      if (!canSplit) return;
+                      if (onSplitAtPlayhead) onSplitAtPlayhead(currentTime);
+                      else if (el) onSplitElement?.(el, currentTime);
+                    }}
+                    className={canSplit ? flatIdle : flatDisabled}
+                  >
+                    <RemixIcon name="scissors-cut-line" size={16} />
+                  </button>
+                </Tooltip>
+              );
+            })()}
           {!mvp && <LinkedSelectionToggle />}
           <Tooltip
             side="bottom"
-            label={
-              timelineSnapEnabled
-                ? t("Snapping on ({value0})", { value0: keyHint("timelineSnap", keys) })
-                : t("Snapping off ({value0})", { value0: keyHint("timelineSnap", keys) })
-            }
-            description={t("When enabled, dragged clips snap to nearby clip edges and the playhead for easier alignment.")}
+            label={t("Snapping ({value0})", { value0: keyHint("timelineSnap", keys) })}
           >
             <button
               type="button"
               onClick={() => setTimelineSnapEnabled(!timelineSnapEnabled)}
-              aria-label={t("Toggle timeline snapping")}
+              aria-label={t("Snapping")}
               aria-pressed={timelineSnapEnabled}
               className={timelineSnapEnabled ? flatActive : flatIdle}
             >
@@ -404,42 +428,6 @@ export const TimelineToolbar = memo(function TimelineToolbar({
               </Tooltip>
             </>
           )}
-          {!mvp && onSplitElement &&
-            (() => {
-              // Render the button unconditionally (disabled when unusable):
-              // mounting/unmounting mid-task shifts the neighboring controls.
-              // Mirrors the S-key gate: selected clip + playhead strictly inside it.
-              const el = selectedElementId
-                ? elements.find((e) => (e.key ?? e.id) === selectedElementId)
-                : null;
-              const splittable = el != null && canSplitElement(el);
-              const canSplit =
-                splittable && currentTime > el.start && currentTime < el.start + el.duration;
-              return (
-                <Tooltip
-                  label={
-                    canSplit
-                      ? t("Split at playhead ({value0})", { value0: splitShortcut ?? keyHint("split", keys) })
-                      : splittable
-                        ? t("Move the playhead inside the clip to split")
-                        : t("Select a clip to split")
-                  }
-                >
-                  <button
-                    type="button"
-                    disabled={!canSplit}
-                    aria-label={t("Split at playhead")}
-                    onClick={() => {
-                      if (canSplit && el) onSplitElement(el, currentTime);
-                    }}
-                    className={canSplit ? flatIdle : flatDisabled}
-                  >
-                    {/* "][" split glyph: two outward-facing brackets with a center gap */}
-                    <RemixIcon name="scissors-cut-line" size={16} />
-                  </button>
-                </Tooltip>
-              );
-            })()}
           {(() => {
             if (!showAddBeat) return null;
             // Rendered whenever shown (CapCut-style): before beat analysis loads (or when

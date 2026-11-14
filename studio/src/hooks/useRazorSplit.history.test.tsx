@@ -208,7 +208,7 @@ interface SplitAllHarness {
   root: ReturnType<typeof mountProbe>;
 }
 
-function mountRazorSplitAll(failOnSplit?: number): SplitAllHarness {
+function mountRazorSplitAll(failOnSplit?: number, atPlayhead = false): SplitAllHarness {
   const disk: Record<string, string> = { ...BATCH_ORIGINALS };
   const records: RecordEditInput[] = [];
   let splitCount = 0;
@@ -223,7 +223,7 @@ function mountRazorSplitAll(failOnSplit?: number): SplitAllHarness {
 
   const splitAllRef: { current: SplitAll | undefined } = { current: undefined };
   function Component() {
-    const { handleRazorSplitAll } = useRazorSplit({
+    const { handleRazorSplitAll, handleSplitAtPlayhead } = useRazorSplit({
       projectId: "p1",
       activeCompPath: "index.html",
       showToast: () => {},
@@ -235,12 +235,12 @@ function mountRazorSplitAll(failOnSplit?: number): SplitAllHarness {
       },
       reloadPreview: () => {},
     });
-    splitAllRef.current = handleRazorSplitAll;
+    splitAllRef.current = atPlayhead ? handleSplitAtPlayhead : handleRazorSplitAll;
     return null;
   }
 
   const root = mountProbe(Component);
-  usePlayerStore.setState({ elements: batchElements });
+  usePlayerStore.setState({ elements: batchElements, selectedElementId: null, selectedElementIds: new Set() });
   return { disk, records, splitAllRef, root };
 }
 
@@ -275,6 +275,38 @@ describe("useRazorSplit — split-all batch history", () => {
 
     expect(harness.disk).toEqual(BATCH_ORIGINALS);
     expect(harness.records).toHaveLength(0);
+    act(() => harness.root.unmount());
+  });
+});
+
+describe("playhead split scope and history", () => {
+  afterEach(() => usePlayerStore.setState({ elements: [], selectedElementId: null, selectedElementIds: new Set() }));
+
+  it.each([false, true])("cuts all or selected tracks in one undo entry (selected: %s)", async (selected) => {
+    const harness = mountRazorSplitAll(undefined, true);
+    if (selected) usePlayerStore.setState({ selectedElementIds: new Set(["clip2"]) });
+    await act(async () => { await harness.splitAllRef.current!(2); });
+    expect(harness.records).toHaveLength(1);
+    const paths = Object.keys(harness.records[0].files).sort();
+    expect(paths).toEqual(selected ? ["scenes/two.html"] : Object.keys(BATCH_ORIGINALS).sort());
+    if (selected) expect(harness.disk["index.html"]).toBe(BATCH_ORIGINALS["index.html"]);
+    act(() => harness.root.unmount());
+  });
+
+  it("coalesces overlapping commands into one cut and history entry", async () => {
+    const harness = mountRazorSplitAll(undefined, true);
+    await act(async () => {
+      await Promise.all([harness.splitAllRef.current!(2), harness.splitAllRef.current!(2)]);
+    });
+    expect(harness.records).toHaveLength(1);
+    act(() => harness.root.unmount());
+  });
+
+  it("leaves all files and history unchanged on batch failure", async () => {
+    const harness = mountRazorSplitAll(2, true);
+    await act(async () => { await harness.splitAllRef.current!(2); });
+    expect(harness.records).toHaveLength(0);
+    expect(harness.disk).toEqual(BATCH_ORIGINALS);
     act(() => harness.root.unmount());
   });
 });

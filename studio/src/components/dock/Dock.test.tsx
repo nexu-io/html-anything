@@ -526,18 +526,18 @@ it("expands only the MVP preview and restores layout without remounting the play
   Object.defineProperty(api.getPanel("preview")!.view.content.element, "animate", { value: animate, configurable: true });
   const click = (label: string) => act(() => host.querySelector<HTMLButtonElement>(`[aria-label="${label}"]`)!
     .dispatchEvent(new MouseEvent("click", { bubbles: true, detail: 1 })));
-  click("Expand preview");
+  click("Immersive preview");
   expect(animate).toHaveBeenCalledWith(expect.any(Array), { duration: 180, easing: "cubic-bezier(0.22, 1, 0.36, 1)" });
   expect(api.getPanel("preview")!.group.api.isMaximized()).toBe(true);
   expect(host.querySelector("iframe")).toBe(player);
   expect(document.fullscreenElement).toBeFalsy();
   act(() => vi.advanceTimersByTime(1000));
   expect(readStudioUiPreferences(undefined, "p1", "motion.mvp.dock.v1").dockLayout?.grid).toEqual(grid);
-  click("Restore preview");
+  click("Exit immersive preview");
   expect(api.hasMaximizedGroup()).toBe(false);
   expect(api.toJSON().grid).toEqual(grid);
   expect(host.querySelector("iframe")).toBe(player);
-  click("Expand preview");
+  click("Immersive preview");
   const exitComposition = vi.fn();
   window.addEventListener("keydown", exitComposition);
   act(() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true, cancelable: true })));
@@ -546,15 +546,15 @@ it("expands only the MVP preview and restores layout without remounting the play
   expect(api.hasMaximizedGroup()).toBe(false);
   expect(api.toJSON().grid).toEqual(grid);
   expect(host.querySelector("iframe")).toBe(player);
-  expect(document.activeElement).toBe(host.querySelector('[aria-label="Expand preview"]'));
+  expect(document.activeElement).toBe(host.querySelector('[aria-label="Immersive preview"]'));
   expect(animation.cancel).toHaveBeenCalled();
   const calls = animate.mock.calls.length;
   const reduced = vi.spyOn(window, "matchMedia").mockReturnValue({ matches: true } as MediaQueryList);
   try {
-    click("Expand preview");
+    click("Immersive preview");
     expect(api.hasMaximizedGroup()).toBe(true);
     expect(animate).toHaveBeenCalledTimes(calls);
-    click("Restore preview");
+    click("Exit immersive preview");
     expect(api.toJSON().grid).toEqual(grid);
   } finally {
     reduced.mockRestore();
@@ -606,8 +606,8 @@ it("collapses both MVP sides into rails, restores their tabs and widths, and pre
   });
   expect(left.width).toBe(48);
   expect(readStudioUiPreferences(undefined, "p1", "motion.mvp.dock.v1").dockLayout).toEqual(saved);
-  await click("Expand preview");
-  await click("Restore preview");
+  await click("Immersive preview");
+  await click("Exit immersive preview");
   expect(left.width).toBe(48);
   expect(right.width).toBe(48);
   expect(host.querySelector("iframe")).toBe(player);
@@ -620,7 +620,7 @@ it("collapses both MVP sides into rails, restores their tabs and widths, and pre
   expect(host.querySelectorAll(".hf-dock-side-rail")).toHaveLength(0);
   expect(host.querySelector("iframe")).toBe(player);
   await click("Collapse right panel");
-  await click("Expand preview");
+  await click("Immersive preview");
   await act(async () => useDockLayoutStore.getState().activatePanel("layers"));
   expect(api.hasMaximizedGroup()).toBe(false);
   expect(right.width).toBe(widths[1]);

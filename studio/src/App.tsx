@@ -75,6 +75,7 @@ export interface StudioAppProps {
 
 // fallow-ignore-next-line complexity
 export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: StudioAppProps = {}) {
+  const mvpEditor = useStudioHost()?.mvpEditor ?? false;
   const AppFrame = useStudioHost()?.AppFrame ?? Fragment;
   const EditorFrame = useStudioHost()?.EditorFrame ?? Fragment;
   const { projectId, resolving, waitingForServer } = useServerConnection();
@@ -253,11 +254,13 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
     waitForPendingDomEditSaves: previewPersistence.waitForPendingDomEditSaves,
   });
   const appHotkeys = useAppHotkeys({
+    disableRazorTool: mvpEditor,
     projectId,
     handleTimelineElementsDelete: timelineEditing.handleTimelineElementsDelete,
     handleLinkEdit: timelineEditing.handleLinkEdit,
     handleTimelineElementDeleteOnly: timelineEditing.handleTimelineElementDeleteOnly,
     handleTimelineElementSplit: timelineEditing.handleTimelineElementSplit,
+    handleSplitAtPlayhead: timelineEditing.handleSplitAtPlayhead,
     handleDomEditElementDelete: domEditDeleteBridge,
     domEditSelectionRef: domEditSelectionBridgeRef,
     clearDomSelectionRef,
@@ -458,9 +461,10 @@ export function StudioApp({ readOnlyPreview = false, readOnlyPreviewReason }: St
       <TimelineToolbar
         domEditSession={toolbarSession}
         onSplitElement={timelineEditing.handleTimelineElementSplit}
+        onSplitAtPlayhead={timelineEditing.handleSplitAtPlayhead}
       />
     ),
-    [toolbarSession, timelineEditing.handleTimelineElementSplit],
+    [toolbarSession, timelineEditing.handleTimelineElementSplit, timelineEditing.handleSplitAtPlayhead],
   );
   const handleExport = useCallback(() => {
     void previewPersistence

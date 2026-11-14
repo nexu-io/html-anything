@@ -137,7 +137,6 @@ describe("timeline motion styles", () => {
 
   it("keeps the playhead polish static, without transition-driven positioning", () => {
     expect(playheadSource).toContain("boxShadow");
-    expect(playheadSource).toContain("rotate(45deg)");
     expect(playheadSource).not.toContain("transition");
   });
 });

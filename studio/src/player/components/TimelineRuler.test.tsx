@@ -47,6 +47,11 @@ describe("TimelineRuler", () => {
       });
     const settle = () => act(() => vi.advanceTimersByTime(TIMELINE_SCROLL_SETTLE_MS));
 
+    const label = host.querySelector<HTMLElement>("[data-timeline-ruler-label]")!;
+    expect(label.closest("[data-timeline-zoom-scale]")).toBeNull();
+    expect(label.closest("[data-timeline-ruler]")).not.toBeNull();
+    expect(label.style.transform).toBe("");
+    expect(label.parentElement!.dataset.timelineRulerTime).toBe("0");
     expect(mask()).toBeNull();
     // The 10s label starts at 200 - 0.5 + 5 = 204.5 in ruler space.
     scrollTo(204);

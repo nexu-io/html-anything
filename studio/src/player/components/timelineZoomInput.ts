@@ -51,6 +51,8 @@ const MAX_PREVIEW_SCALE = 4;
 /** Rounding at a drawn edge (whole-pixel content width, the fit track's 2px) is not a gap. */
 const EDGE_SLACK_PX = 2;
 const SCALED = "[data-timeline-zoom-scale]";
+const RULER_MARKS = "[data-timeline-ruler-time]";
+const PREVIEW_NODES = `${SCALED}, ${RULER_MARKS}`;
 
 let viewport: TimelineZoomViewport | null = null;
 /** While a preview shows, scales rows and strips React mounts into the timeline before they paint. */
@@ -143,7 +145,10 @@ function clearScaled(scroll: HTMLElement) {
     el.style.transform = "";
     el.style.transformOrigin = "";
     el.style.willChange = "";
-    el.style.removeProperty("--timeline-zoom-inverse");
+  });
+  scroll.querySelectorAll<HTMLElement>(RULER_MARKS).forEach((el) => {
+    el.style.transform = "";
+    el.style.removeProperty("--timeline-ruler-scale");
   });
 }
 
@@ -166,19 +171,26 @@ function drawnRange(scroll: HTMLDivElement, pps: number, contentOrigin: number):
 function scalePreview(scroll: HTMLElement) {
   if (!preview) return;
   const transform = `translateX(${preview.shift}px) scaleX(${preview.pps / preview.basePps})`;
-  const inverseScale = String(preview.basePps / preview.pps);
   scroll.querySelectorAll<HTMLElement>(SCALED).forEach((el) => {
     // The attribute's value is where time zero sits in the element, when not at its left edge.
     el.style.transformOrigin = `${el.dataset.timelineZoomScale || 0}px 0`;
     el.style.willChange = "transform";
     el.style.transform = transform;
-    // Keep ruler glyphs at their natural width while their tick positions scale.
-    el.style.setProperty("--timeline-zoom-inverse", inverseScale);
+  });
+  // Translate each tick instead of rasterizing text inside a scaled parent.
+  // Inverse child scaling can preserve DOM bounds while glyphs still stretch during compositing.
+  const deltaPps = preview.pps - preview.basePps;
+  const shift = preview.shift;
+  const scale = String(preview.pps / preview.basePps);
+  scroll.querySelectorAll<HTMLElement>(RULER_MARKS).forEach((el) => {
+    const time = Number(el.dataset.timelineRulerTime);
+    el.style.transform = `translateX(${time * deltaPps + shift}px)`;
+    el.style.setProperty("--timeline-ruler-scale", scale);
   });
 }
 
 const holdsScaled = (node: Node) =>
-  node instanceof Element && (node.matches(SCALED) || node.querySelector(SCALED) !== null);
+  node instanceof Element && (node.matches(PREVIEW_NODES) || node.querySelector(PREVIEW_NODES) !== null);
 
 function watchMounts(scroll: HTMLElement): MutationObserver {
   const observer = new MutationObserver((records) => {

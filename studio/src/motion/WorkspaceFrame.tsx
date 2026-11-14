@@ -103,7 +103,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
 
 function PrivacySettingsButton() {
   const { t } = useI18n(); const [open, setOpen] = useState(false);
-  return <><button className="motion-icon-button" aria-label={t('Privacy settings')} title={t('Privacy settings')} onClick={() => setOpen(true)}><RemixIcon name="settings-3-line" size={16} /></button>
+  return <><Tooltip label={t('Privacy settings')}><button type="button" className="motion-icon-button" aria-label={t('Privacy settings')} onClick={() => setOpen(true)}><RemixIcon name="settings-3-line" size={16} /></button></Tooltip>
     {open && <Suspense fallback={null}><PrivacySettings onClose={() => setOpen(false)} /></Suspense>}</>;
 }
 
@@ -148,8 +148,13 @@ function WorkspaceSidebar({ currentId, close }: { currentId?: string; close: () 
       </button>)}
     </nav>
     <footer className="motion-sidebar-footer">
-      <button type="button" className="motion-byok-entry motion-button motion-button-quiet" onClick={openModelSettings}><RemixIcon name="key-2-line" size={16} />{t('Media providers')}</button>
-      <div className="motion-sidebar-settings"><PrivacySettingsButton /><ThemeToggle /><LanguageMenu /></div>
+      <div className="motion-sidebar-settings">
+        <PrivacySettingsButton />
+        <Tooltip label={t('Generation service API settings')} description={t('Use your own API key to generate images, video and audio.')}>
+          <button type="button" className="motion-icon-button" aria-label={t('Generation service API settings')} onClick={openModelSettings}><RemixIcon name="plug-line" size={16} /></button>
+        </Tooltip>
+        <ThemeToggle /><LanguageMenu />
+      </div>
     </footer>
   </aside>;
 }

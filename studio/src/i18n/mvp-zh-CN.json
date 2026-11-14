@@ -1180,5 +1180,22 @@
   "No editable properties": "暂无可编辑属性",
   "Select a layer inside this composition to edit its properties.": "请选择此合成内的图层，以编辑其属性。",
   "Select another layer or ask the agent to edit this element.": "请选择其他图层，或让智能体修改此元素。",
-  "Use": "使用"
+  "Use": "使用",
+  "Blade tool": "刀片工具",
+  "Split the selected clip at the playhead.": "在播放头所在位置，将选中的片段分成两段。",
+  "Split at playhead": "在播放头处分割",
+  "Split at playhead ({value0})": "在播放头处分割（{value0}）",
+  "Blade ({blade}): click a clip to cut at the pointer. Split ({split}): cut the selected clip at the playhead immediately. Select ({select}): return to selecting and moving clips.": "刀片（{blade}）：切换工具后，点击片段上的位置进行切割。分割（{split}）：立即在播放头位置切开选中的片段。选择（{select}）：返回选择和移动片段。",
+  "Select ({select}): select and move clips. Blade ({blade}): click a clip to cut at the pointer. Split ({split}) cuts at the playhead.": "选择（{select}）：选择和移动片段。刀片（{blade}）：点击片段上的位置切割。分割（{split}）：在播放头处切割。",
+  "No eligible clips at the playhead. Move it inside a clip; selected clips limit the cut.": "播放头处没有可分割的片段。请移到片段内部；有选中项时只分割选中片段。",
+  "Cut selected clips at the playhead. With no selection, cut all editable clips under it.": "在播放头处切开选中的片段；没有选中项时，切开播放头穿过的所有可编辑片段。",
+  "Drop video, audio or images here": "可直接拖入视频、音频或图片",
+  "Immersive preview": "沉浸预览",
+  "Exit immersive preview": "退出沉浸预览",
+  "Focus on a larger preview. Press Esc to return to editing.": "放大预览区域，按 Esc 返回编辑。",
+  "Split ({value0})": "分割（{value0}）",
+  "Snapping": "吸附",
+  "Snapping ({value0})": "吸附（{value0}）",
+  "Generation service API settings": "生成服务 API 设置",
+  "Use your own API key to generate images, video and audio.": "使用你自己的 API Key 生成图片、视频和音频"
 }

@@ -62,13 +62,14 @@ const HeaderSlicedLabelMask = memo(function HeaderSlicedLabelMask({
   return (
     <div
       data-timeline-ruler-label-mask=""
+      data-timeline-ruler-time={major[index]}
       className="absolute pointer-events-none"
       style={{
         left: labelLeft,
         top: 4,
         height: 12,
         // Up to the next label, so only this label's text band is covered.
-        width: next === undefined ? 80 : (next - major[index]!) * pps - TICK_LABEL_INSET_PX,
+        width: next === undefined ? 80 : `calc(${(next - major[index]!) * pps}px * var(--timeline-ruler-scale, 1) - ${TICK_LABEL_INSET_PX}px)`,
         background,
       }}
     />
@@ -152,7 +153,7 @@ export const TimelineRuler = memo(function TimelineRuler({
         {/* Breathing pad before 00:00 is folded into contentOrigin (see
             Timeline.tsx: GUTTER + TRACKS_LEFT_PAD), so no separate pad div. */}
         <div
-          data-timeline-zoom-scale=""
+          data-timeline-ruler=""
           className="relative overflow-hidden"
           style={{
             height: RULER_H,
@@ -170,6 +171,7 @@ export const TimelineRuler = memo(function TimelineRuler({
             <div
               key={`m-${t}`}
               data-timeline-grid-cell="minor"
+              data-timeline-ruler-time={t}
               className="absolute bottom-0"
               style={{ left: t * pps - 0.5 }}
             >
@@ -181,6 +183,7 @@ export const TimelineRuler = memo(function TimelineRuler({
             <div
               key={`M-${t}`}
               data-timeline-grid-cell="major"
+              data-timeline-ruler-time={t}
               className="absolute top-0"
               style={{ left: t * pps - 0.5 }}
             >
@@ -189,11 +192,9 @@ export const TimelineRuler = memo(function TimelineRuler({
                 className="absolute font-mono tabular-nums leading-none whitespace-nowrap"
                 style={{
                   color: theme.tickText,
-                  left: `calc(${TICK_LABEL_INSET_PX}px * var(--timeline-zoom-inverse, 1))`,
+                  left: TICK_LABEL_INSET_PX,
                   top: 5,
                   fontSize: 10,
-                  transform: "scaleX(var(--timeline-zoom-inverse, 1))",
-                  transformOrigin: "left top",
                 }}
               >
                 {rulerTickText(t, tickFrameRate, effectiveDuration, majorTickInterval)}

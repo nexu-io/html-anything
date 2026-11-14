@@ -252,17 +252,25 @@ it('dismissing a write-blocking notice does not enable project creation', () => 
 });
 
 
-it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr'])('opens the community beside Export with a localized label (%s)', locale => {
+it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr'])('orders the localized community and GitHub links ahead of the history actions and Export (%s)', locale => {
   localStorage.setItem('motion.studio.locale', locale);
   render();
   const link = container.querySelector<HTMLAnchorElement>('.motion-community-link')!;
   expect(link.href).toBe(COMMUNITY_URL);
   expect(link.target).toBe('_blank');
   expect(link.rel).toContain('noopener');
-  expect(container.querySelector<HTMLAnchorElement>(`a[href="${GITHUB_REPOSITORY}"]`)?.target).toBe('_blank');
+  const github = container.querySelector<HTMLAnchorElement>(`a[href="${GITHUB_REPOSITORY}"]`)!;
+  expect(github.target).toBe('_blank');
   expect(link.querySelector('img')?.getAttribute('src')).toBe(discordLogo);
   expect(link.getAttribute('aria-label')).toBeTruthy();
+  const historyActions = container.querySelector('.motion-header-history-actions')!;
   const exportButton = container.querySelector('[data-testid="header-export"]')!;
+  // Right-side order: Community, GitHub, Undo, Redo, History, Export.
+  expect(link.compareDocumentPosition(github) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  expect(github.nextElementSibling).toBe(historyActions);
+  // The grouped actions are Undo, Redo and the Version history trigger.
+  expect(historyActions.querySelectorAll('button')).toHaveLength(3);
+  expect(historyActions.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(link.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 });
 

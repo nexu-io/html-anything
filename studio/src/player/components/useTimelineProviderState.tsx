@@ -15,7 +15,6 @@ import { useTimelineEditPinning } from "./useTimelineEditPinning";
 import { useTimelineStackingSync } from "./useTimelineStackingSync";
 import { useTimelineGeometry } from "./useTimelineGeometry";
 import { useAutoExpandKeyframedClips } from "./useAutoExpandKeyframedClips";
-import { GUTTER } from "./timelineLayout";
 import { useTimelineLabelColumn } from "./useTimelineLabelColumn";
 import { useTimelineKeyframeData } from "./useTimelineKeyframeData";
 import { useTimelineScrollViewport } from "./useTimelineScrollViewport";
@@ -124,7 +123,7 @@ export function useTimelineProviderState({
   const selectedElementIds = usePlayerStore((s) => s.selectedElementIds);
   const focusedEaseSegment = usePlayerStore((s) => s.focusedEaseSegment);
   const { gsapAnimations, keyframeCache } = useTimelineKeyframeData(showKeyframes);
-  const { labelMode, contentOrigin } = useTimelineLabelColumn(gsapAnimations, timelineElements);
+  const { labelMode, contentOrigin, labelColumnWidth } = useTimelineLabelColumn(gsapAnimations, timelineElements);
   const setSelectedElementId = usePlayerStore((s) => s.setSelectedElementId);
   const currentTime = usePlayerStore((s) => s.currentTime);
   const beatDragging = usePlayerStore((s) => s.beatDragging);
@@ -455,7 +454,7 @@ export function useTimelineProviderState({
     minor,
     pps,
     contentOrigin,
-    contentGutter: labelMode ? GUTTER : 0,
+    contentGutter: labelMode ? contentOrigin - labelColumnWidth : 0,
     trackContentWidth: displayContentWidth,
     totalH: displayLayout.totalH,
     effectiveDuration,
@@ -546,6 +545,7 @@ export function useTimelineProviderState({
     [holdNewClipContent, renderClipContent],
   );
   const timelineMeta = buildTimelineShellMeta({
+    labelColumnWidth,
     isDragOver: assetDrop.isDragOver,
     hasFileDrop: !!onFileDrop && !readOnlyPress,
     drop: {

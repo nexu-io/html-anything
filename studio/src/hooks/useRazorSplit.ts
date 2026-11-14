@@ -4,7 +4,7 @@ import type { TimelineElement } from "../player";
 import { usePlayerStore } from "../player";
 import { getTimelineElementLabel } from "../utils/studioHelpers";
 import { trackStudioRazorSplit } from "../telemetry/events";
-import { canSplitElementAt, selectSplittableElements } from "../utils/timelineElementSplit";
+import { canSplitElementAt, selectSplittableElements, selectPlayheadSplitElements } from "../utils/timelineElementSplit";
 import { linkedMembersOf } from "../player/components/audioClipLink";
 import { isLinkedSelectionOn } from "../utils/linkedClipPreferences";
 import { buildAtomicCutIntents, runAtomicCutTransaction } from "../utils/razorSplitTransaction";
@@ -150,6 +150,32 @@ export function useRazorSplit({
     [isRecordingRef, runCut, showToast],
   );
 
+  const playheadCutPendingRef = useRef(false);
+  const handleSplitAtPlayhead = useCallback(
+    async (splitTime: number) => {
+      if (playheadCutPendingRef.current) return;
+      if (isRecordingRef?.current) {
+        showToast("Cannot edit timeline while recording", "error");
+        return;
+      }
+      const targets = selectPlayheadSplitElements(usePlayerStore.getState(), splitTime);
+      if (targets.length === 0) return;
+      playheadCutPendingRef.current = true;
+      try {
+        const result = await runCut(targets, splitTime, targets.length === 1 ? "single" : "all");
+        if (result && !result.syncFailed) {
+          showToast(`Split ${result.splitCount} clips at ${splitTime.toFixed(2)}s`, "info");
+        }
+      } catch (error) {
+        console.warn("Timeline split failed", error);
+        showToast(splitFailureMessage(error), "error");
+      } finally {
+        playheadCutPendingRef.current = false;
+      }
+    },
+    [isRecordingRef, runCut, showToast],
+  );
+
   const handleFreezeFrame = useFreezeFrame({
     projectId,
     activeCompPath,
@@ -162,5 +188,5 @@ export function useRazorSplit({
     isRecordingRef,
   });
 
-  return { handleRazorSplit, handleRazorSplitAll, handleFreezeFrame };
+  return { handleRazorSplit, handleRazorSplitAll, handleSplitAtPlayhead, handleFreezeFrame };
 }

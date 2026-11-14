@@ -1,7 +1,7 @@
 import { RemixIcon } from "../icons/RemixIcons";
 import { useI18n } from "../i18n/I18n";
 import { useMvpEditor } from "../motion/StudioHost";
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { ArrowLineLeft, ArrowLineRight, CaretDown } from "../icons/RemixIcons";
 import { usePlayerStore } from "../player";
 import { Scissors } from "../icons/SystemIcons";
@@ -24,13 +24,16 @@ interface ToolRow {
   run: () => void;
 }
 
-/** The MVP exposes its two tools directly; the full editor retains the tool menu. */
-export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
+/** The MVP exposes selection only; the full editor retains its pointer-mode menu. */
+export function TimelineToolPicker({ showSelectAroundPlayhead = true, splitShortcut }: { showSelectAroundPlayhead?: boolean; splitShortcut?: string }) {
   const { t } = useI18n();
   const mvp = useMvpEditor();
   const activeTool = usePlayerStore((s) => s.activeTool);
   const keys = useStudioKeys();
   const store = () => usePlayerStore.getState();
+  useEffect(() => {
+    if (mvp) usePlayerStore.getState().setActiveTool("select");
+  }, [mvp]);
   const rows: ToolRow[] = [
     {
       label: "Select",
@@ -40,7 +43,7 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
       run: () => store().setActiveTool("select"),
     },
     {
-      label: "Split",
+      label: "Blade tool",
       shortcut: keyHint("razorTool", keys),
       icon: <Scissors size={16} />,
       active: activeTool === "razor",
@@ -48,32 +51,12 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
     },
   ];
   if (mvp) {
-    return (
-      <div role="group" aria-label={t("Timeline tools")} className="flex items-center gap-0.5">
-        {rows.map((row) => (
-          <Tooltip
-            key={row.label}
-            side="bottom"
-            label={`${t(row.label)} (${row.shortcut})`}
-            description={row.label === "Split"
-              ? t("Click a clip where you want to split it. Switch back to Select to move or select clips.")
-              : undefined}
-          >
-            <button
-              type="button"
-              aria-label={t(row.label)}
-              aria-pressed={row.active}
-              className={row.active ? flatActive : flatIdle}
-              onClick={row.run}
-            >
-              {row.icon}
-            </button>
-          </Tooltip>
-        ))}
-      </div>
-    );
+    return <Tooltip label={`${t("Select")} (${keyHint("selectTool", keys)})`}>
+      <button type="button" aria-label={t("Select")} aria-pressed={true} className={flatActive}
+        onClick={() => store().setActiveTool("select")}><SelectIcon /></button>
+    </Tooltip>;
   }
-  if (showSelectAroundPlayhead) {
+  if (showSelectAroundPlayhead && !mvp) {
     rows.push(
       {
         label: "Select leftward",
@@ -93,6 +76,10 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
   }
   const current = rows.find((row) => row.active) ?? rows[0];
   return (
+    <Tooltip
+      label={t("Timeline tool: {value0}", { value0: t(current.label) })}
+      description={t("Select ({select}): select and move clips. Blade ({blade}): click a clip to cut at the pointer. Split ({split}) cuts at the playhead.", { select: keyHint("selectTool", keys), blade: keyHint("razorTool", keys), split: splitShortcut ?? keyHint("split", keys) })}
+    >
     <Menu
       aria-label={t("Timeline tools")}
       trigger={
@@ -121,5 +108,6 @@ export function TimelineToolPicker({ showSelectAroundPlayhead = true }) {
         </MenuItem>
       ))}
     </Menu>
+    </Tooltip>
   );
 }

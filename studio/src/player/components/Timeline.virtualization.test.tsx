@@ -438,11 +438,16 @@ describe("Timeline without row virtualization", { timeout: 30_000 }, () => {
       const scroller = host.querySelector<HTMLElement>("[data-timeline-scroll-viewport]")!;
       const layer = () => host.querySelector<HTMLElement>("[data-timeline-playhead-layer]");
       if (mvp) {
-        expect(host.querySelector<HTMLElement>('[role="rowheader"]')?.style.width).toBe("200px");
-        expect(scroller.dataset.timelineAutoScrollLeftInset).toBe("200");
-        expect(host.querySelector<HTMLElement>(".sticky.left-0")?.style.width).toBe("232px");
+        expect(host.querySelector<HTMLElement>('[role="rowheader"]')?.style.width).toBe("132px");
+        expect(scroller.dataset.timelineAutoScrollLeftInset).toBe("132");
+        expect(host.querySelector<HTMLElement>(".sticky.left-0")?.style.width).toBe("144px");
         expect(host.textContent).toContain("Clip 0");
       }
+      const trackHeader = host.querySelector<HTMLElement>('[role="rowheader"]')!;
+      const lane = host.querySelector<HTMLElement>('[role="gridcell"][data-timeline-zoom-scale]')!;
+      const rulerOrigin = host.querySelector<HTMLElement>(".sticky.left-0")!;
+      // Clips and the ruler must agree on time zero after compacting the leading gap.
+      expect(parseFloat(trackHeader.style.width) + parseFloat(lane.style.marginLeft)).toBe(parseFloat(rulerOrigin.style.width));
       await scrollTimelineHorizontally(scroller, 166);
       // The ruler's corner is as wide as the track headers; the glow may overhang by 6.5px.
       const headerWidth = parseFloat(

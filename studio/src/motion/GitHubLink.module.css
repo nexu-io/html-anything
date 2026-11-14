@@ -1,4 +1,8 @@
-.link { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; gap: 6px; min-height: 32px; padding: 6px 10px; border: 1px solid var(--color-border-input); border-radius: 8px; color: var(--color-text-1); background: transparent; font-size: 12px; font-weight: 500; text-decoration: none; white-space: nowrap; }
+.link { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; gap: var(--motion-space-6); box-sizing: border-box; height: var(--spacing-ctl); padding: 0 var(--motion-space-10); border: 1px solid var(--color-border-input); border-radius: var(--motion-radius-md); color: var(--color-text-1); background: transparent; font-size: var(--motion-text-sm); font-weight: var(--motion-weight-medium); text-decoration: none; white-space: nowrap; }
 .link:hover { background: var(--color-hover); text-decoration: none; }
 .link:focus-visible { outline: 2px solid var(--color-text-1); outline-offset: 2px; }
 .link svg { flex: none; }
+.count { font-variant-numeric: tabular-nums; }
+@container (max-width: 480px) {
+  :global(.motion-studio-header-centered) .count { display: none; }
+}

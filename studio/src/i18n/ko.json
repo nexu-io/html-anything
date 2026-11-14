@@ -755,7 +755,7 @@
   "Reading versions…": "읽기 버전...",
   "Changes are recorded automatically. Pin important versions to keep them.": "변경 사항이 자동으로 기록됩니다. 중요한 버전을 고정하여 보관하세요.",
   "No pinned versions yet. Select an entry to pin it.": "아직 고정된 버전이 없습니다. 고정할 항목을 선택하세요.",
-  "No edits yet. Changes made in the canvas, code, or by an agent will appear here.": "아직 수정사항이 없습니다. 캔버스, 코드 또는 에이전트에 의한 변경 사항이 여기에 표시됩니다.",
+  "No edits yet": "아직 수정 기록이 없습니다",
   "Manual edit": "수동 편집",
   "External change": "외부 수정",
   "Changes in this version": "이번 수정",

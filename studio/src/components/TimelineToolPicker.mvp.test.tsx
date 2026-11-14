@@ -12,8 +12,8 @@ afterEach(() => {
   usePlayerStore.setState({ activeTool: "select" });
 });
 
-it.each(["zh-CN", "en"] as const)("exposes both tools and keeps selection in sync in %s", (locale) => {
-  usePlayerStore.setState({ activeTool: "select" });
+it.each(["zh-CN", "en"] as const)("offers only selection and clears a stale blade mode in %s", async (locale) => {
+  usePlayerStore.setState({ activeTool: "razor" });
   const host = mountHost(
     <I18nProvider initialLocale={locale}>
       <StudioHostContext.Provider value={{ mvpEditor: true }}>
@@ -21,14 +21,12 @@ it.each(["zh-CN", "en"] as const)("exposes both tools and keeps selection in syn
       </StudioHostContext.Provider>
     </I18nProvider>,
   );
-  const buttons = [...host.querySelectorAll("button")];
-  expect(buttons.map((button) => button.getAttribute("aria-label"))).toEqual(
-    locale === "zh-CN" ? ["选择", "分割"] : ["Select", "Split"],
-  );
+  expect(host.querySelectorAll("button")).toHaveLength(1);
   expect(host.querySelector('[aria-haspopup="menu"]')).toBeNull();
-  act(() => buttons[1].click());
-  expect(usePlayerStore.getState().activeTool).toBe("razor");
-  expect(buttons.map((button) => button.getAttribute("aria-pressed"))).toEqual(["false", "true"]);
-  act(() => usePlayerStore.getState().setActiveTool("select"));
-  expect(buttons.map((button) => button.getAttribute("aria-pressed"))).toEqual(["true", "false"]);
+  const select = host.querySelector<HTMLButtonElement>("button")!;
+  expect(select.getAttribute("aria-label")).toBe(locale === "zh-CN" ? "选择" : "Select");
+  expect(usePlayerStore.getState().activeTool).toBe("select");
+  await act(async () => { select.click(); });
+  expect(document.querySelector('[role="menuitem"]')).toBeNull();
+  expect(usePlayerStore.getState().activeTool).toBe("select");
 });

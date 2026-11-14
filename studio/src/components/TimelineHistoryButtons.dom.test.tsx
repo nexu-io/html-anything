@@ -113,7 +113,7 @@ it("shows the Split tool on the picker while the razor is active", async () => {
   usePlayerStore.setState({ activeTool: "razor" });
   try {
     const host = mount(<TimelineToolbar />);
-    expect(host.querySelector('button[aria-label="Timeline tool: Split"]')).not.toBeNull();
+    expect(host.querySelector('button[aria-label="Timeline tool: Blade tool"]')).not.toBeNull();
   } finally {
     usePlayerStore.setState({ activeTool: "select" });
   }

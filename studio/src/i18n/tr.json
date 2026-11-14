@@ -755,7 +755,7 @@
   "Reading versions…": "Sürüm okunuyor...",
   "Changes are recorded automatically. Pin important versions to keep them.": "Değişiklikler otomatik olarak kaydedilir. Önemli sürümleri saklamak için sabitleyin.",
   "No pinned versions yet. Select an entry to pin it.": "Henüz sabitlenmiş sürüm yok. Sabitlemek için bir giriş seçin.",
-  "No edits yet. Changes made in the canvas, code, or by an agent will appear here.": "Henüz düzenleme yok. Kanvasta, kodda veya bir aracı tarafından yapılan değişiklikler burada görünecektir.",
+  "No edits yet": "Henüz değişiklik yok",
   "Manual edit": "Manuel düzenleme",
   "External change": "Harici değişiklik",
   "Changes in this version": "Bu değişiklik",

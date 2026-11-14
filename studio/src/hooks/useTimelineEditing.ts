@@ -3,7 +3,7 @@ import { useRef } from "react";
 import { useStableHandlers } from "./useStableHandlers";
 import { usePlayerStore, type TimelineElement } from "../player";
 import { useRazorSplit } from "./useRazorSplit";
-import { selectSplittableElements } from "../utils/timelineElementSplit";
+import { selectSplittableElements, selectPlayheadSplitElements } from "../utils/timelineElementSplit";
 import { useTimelineAssetDropOps } from "./useTimelineAssetDropOps";
 import { useSetAudioGroupAttribute } from "./timelineAudioGroupVolume";
 import { useSetElementAttribute } from "./timelineElementFxAttribute";
@@ -204,7 +204,7 @@ export function useTimelineEditing({
   });
 
   const handleBlockedTimelineEdit = useBlockedTimelineEditToast(showToast);
-  const { handleRazorSplit, handleRazorSplitAll, handleFreezeFrame } = useRazorSplit({
+  const { handleRazorSplit, handleRazorSplitAll, handleSplitAtPlayhead, handleFreezeFrame } = useRazorSplit({
     projectId,
     activeCompPath,
     showToast,
@@ -297,6 +297,12 @@ export function useTimelineEditing({
       guard((element) => [element], linkEditing.handleDeleteElementOnly),
     ),
     handleLinkEdit: track(guard(linkEditTargets, linkEditing.handleLinkEdit)),
+    handleSplitAtPlayhead: track(
+      guard(
+        (splitTime) => selectPlayheadSplitElements(usePlayerStore.getState(), splitTime),
+        handleSplitAtPlayhead,
+      ),
+    ),
     handleTimelineElementSplit: trackedRazorSplit,
     handleRazorSplit: trackedRazorSplit,
     handleFreezeFrame: track(guard((element) => [element], handleFreezeFrame)),
