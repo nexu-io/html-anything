@@ -21,6 +21,20 @@ Every successful Agent-led OpenMotion installation opens the editor's template l
 
 Codex plugin setup reaches this same contract through the packaged `extensions.com.openai.onboardingSkill` entry. Reuse the installed connection; onboarding does not run setup again.
 
+### CLI installation: attach the calling chat before presentation
+
+CLI registration does not run the desktop install callback. Source and npm Codex setup return `onboarding.hostHandoff` after registration. They use an existing Codex app-server control socket to request `config/mcpServer/reload`, then inspect `mcpServerStatus/list` with the calling `CODEX_THREAD_ID` and read `openmotion_get_project` through that same thread. An unrelated daemon is refused before refresh. They never start another app-server to simulate a connected chat. `OPENMOTION_CODEX_SOCKET` may select an explicitly known local control socket; do not guess sockets or change the host's listener/security configuration.
+
+Working native tool discovery and a matching `openmotion_get_project` read in this chat supersede an earlier pending handoff result. When those native tools are already loaded, use them directly; do not require a control socket or repeat setup to clear a historical pending status.
+
+Set `OPENMOTION_ONBOARDING_LANGUAGE` from the latest user request when running setup; supported codes are listed below. The host Agent must still use that request language for the native presentation, regardless of the terminal/UI locale.
+
+- `ready_for_presentation` confirms the calling chat's workspace read and native presentation-tool discovery. Open the library, then call the discovered tool natively. `presentationVerified` remains false until the welcome and all three video cards are actually visible.
+- `refresh_requested` means the host queued a refresh. After the current tool step finishes, run the installed `scripts/codex-host-handoff.mjs --verify-only` once (with Node type stripping enabled and the same data-directory environment). That verification does not request another reload or present duplicate cards.
+- `host_action_required` keeps onboarding incomplete and supplies the exact host RPC handoff. A desktop host running only over private stdio may not expose a CLI control socket. Use an available supported host reload action; if none is accessible, explain that concrete limit and request the minimum user action to reload the existing chat. Do not report a complete onboarding, silently substitute a library-only welcome when full onboarding was requested, or repeat installation/probes. Never call the presentation through a shell RPC and claim it appeared in the conversation.
+
+This host handoff does not authorize project creation, export, host restart, or changes to unrelated host settings. Independent MCP diagnostics and ordinary non-UI hosts retain the library-only fallback; they do not establish native onboarding acceptance.
+
 ### Open the library without creating a project
 
 1. If the current chat has loaded MCP, call `openmotion_open_preview({target: "templates"})`. Do not supply a projectId/sessionId or create a placeholder project. The result is a page handoff without a project revision/version.

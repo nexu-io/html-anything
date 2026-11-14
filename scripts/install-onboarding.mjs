@@ -4,6 +4,7 @@ import { access, readFile, readdir } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runFile } from './runtime-assets.mjs';
+import { prepareCodexHostHandoff } from './codex-host-handoff.mjs';
 
 export async function installationInstructions(appRoot) {
   const guide = await readFile(path.join(appRoot, 'docs/install.md'), 'utf8');
@@ -85,6 +86,10 @@ if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToP
     const defaults = JSON.parse(await readFile(path.join(appRoot, 'shared/template-config.json'), 'utf8'));
     const options = { appRoot, dataDirectory: process.env.MOTION_DATA_DIR, templateEnvironment: process.env.MOTION_TEMPLATE_ENV || defaults.environment };
     const onboarding = await prepareInstallationOnboarding(options);
-    console.log(JSON.stringify({ ...onboarding, preview: await prepareInstallationPreview(options) }, null, 2));
+    const { WorkspaceStore } = await import('../workspace.ts');
+    const hostHandoff = await prepareCodexHostHandoff({ dataDirectory: options.dataDirectory || new WorkspaceStore().directory,
+      expectedVersion: JSON.parse(await readFile(path.join(appRoot, 'package.json'), 'utf8')).version });
+    console.log(JSON.stringify({ ...onboarding, hostSessionVerified: hostHandoff.hostSessionVerified,
+      hostHandoff, preview: await prepareInstallationPreview(options) }, null, 2));
   }
 }

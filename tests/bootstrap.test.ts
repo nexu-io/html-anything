@@ -17,12 +17,14 @@ async function fixture(run: (context: { directory: string; destination: string; 
     const destination = path.join(directory, 'new user', 'open-motion');
     const log = path.join(directory, 'commands.log');
     await mkdir(bin);
-    for (const file of ['scripts/install-motion.command', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs',
+    for (const file of ['scripts/install-motion.command', 'scripts/install-onboarding.mjs', 'scripts/codex-host-handoff.mjs', 'scripts/runtime-assets.mjs',
       'docs/install.md', 'shared/template-config.json', 'marketplace.example.json']) {
       await mkdir(path.dirname(path.join(source, file)), { recursive: true });
       await copyFile(path.join(root, file), path.join(source, file));
     }
     await writeFile(path.join(source, 'scripts/open-template-library.ts'), `import fs from 'node:fs'; fs.appendFileSync(process.env.MOTION_TEST_LOG, 'Template library prepared' + String.fromCharCode(10)); console.log(JSON.stringify({target:'templates',projectCreated:false,previewUrl:'http://127.0.0.1:4173/?templates=1&embed=1'}));`);
+    await writeFile(path.join(source, 'workspace.ts'), `export class WorkspaceStore { directory = '/isolated/test-workspace'; }`);
+    await writeFile(path.join(source, 'package.json'), JSON.stringify({ type: 'module', version: '0.0.1' }));
     // No remote catalog or template assets in this isolated checkout: exercise the bundled fallback.
     const commands = {
       git: 'echo "git $*" >> "$MOTION_TEST_LOG"\n[ "${MOTION_TEST_DOWNLOAD_FAIL:-0}" = 0 ] || exit 8\n[ "$1" = clone ] || exit 0\nfor destination; do :; done\nmkdir -p "$destination"\ncp -R "$MOTION_TEST_SOURCE/." "$destination/"',
@@ -35,6 +37,7 @@ async function fixture(run: (context: { directory: string; destination: string; 
     }
     await run({ directory, destination, log, env: { ...process.env, PATH: bin + path.delimiter + process.env.PATH,
       OPENMOTION_INSTALL_DIR: destination, OPENMOTION_REF: 'test-ref', MOTION_TEST_SOURCE: source,
+      OPENMOTION_CODEX_SOCKET: path.join(directory, 'absent-host.sock'),
       MOTION_TEST_NODE: process.execPath, MOTION_TEST_LOG: log } });
   } finally { await rm(directory, { recursive: true, force: true }); }
 }
@@ -52,6 +55,8 @@ test('remote entry point builds a fresh checkout before registering and checking
     assert.match(result.stdout, /OpenMotion registration and independent MCP preflight succeeded/);
     const onboarding = JSON.parse(result.stdout.slice(result.stdout.indexOf('\n{') + 1));
     assert.equal(onboarding.hostSessionVerified, false);
+    assert.equal(onboarding.hostHandoff.status, 'host_action_required');
+    assert.equal(onboarding.hostHandoff.presentationVerified, false);
     assert.match(onboarding.instructions, /OpenMotion 安装好啦/);
     assert.equal(onboarding.catalog.source, 'bundled');
     assert.equal(onboarding.preview.status, 'ready');

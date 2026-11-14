@@ -150,6 +150,11 @@ export async function setup(options) {
       await plan.register();
       for (const item of directories) await rm(item.backup, { recursive: true, force: true }).catch(error => console.error('Old instruction backup retained: ' + error.message));
       await startNativePreparation(appRoot).catch(error => console.error('OpenMotion: background preparation could not start; retry in Studio or run prepare. ' + error.message));
+      if (plan.host === 'codex') {
+        const { prepareCodexHostHandoff } = await import(pathToFileURL(path.join(appRoot, 'scripts/codex-host-handoff.mjs')).href);
+        onboarding.hostHandoff = await prepareCodexHostHandoff({ dataDirectory, expectedVersion: manifest.version, codex: options.codex });
+        onboarding.hostSessionVerified = onboarding.hostHandoff.hostSessionVerified;
+      }
       onboarding.preview = await prepareInstallationPreview({ appRoot, dataDirectory });
       return { ...state, host: plan.host, hostInstallation: plan.metadata, nativeDependencies: 'background-preparation; status and retry available in Studio', onboarding: { ...onboarding, directAccess: directAccess(home, plan.host, appRoot, options) } };
     } catch (error) {

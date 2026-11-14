@@ -35,7 +35,7 @@ async function setupFixture(t: any) {
   const directory = await fixture(t), application = path.join(directory, 'source'), home = path.join(directory, 'install'), skillsDirectory = path.join(directory, 'skills');
   for (const name of ['scripts', 'shared', 'studio/build', 'skills/openmotion-production', 'docs']) await mkdir(path.join(application, name), { recursive: true });
   for (const name of ['mcp.ts', 'scripts/npm-runtime.mjs', 'studio/build/index.html', 'README.md', 'AGENTS.md', 'CLAUDE.md']) await writeFile(path.join(application, name), 'fixture');
-  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/runtime-assets.mjs', 'scripts/open-template-library.ts', 'shared/workspace-url.ts']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
+  for (const file of ['docs/install.md', 'scripts/install-onboarding.mjs', 'scripts/codex-host-handoff.mjs', 'scripts/runtime-assets.mjs', 'scripts/open-template-library.ts', 'shared/workspace-url.ts']) await cp(new URL('../' + file, import.meta.url), path.join(application, file));
   await writeFile(path.join(application, 'workspace.ts'), 'export class WorkspaceStore { constructor(directory = process.env.MOTION_DATA_DIR) { this.directory = directory; } }');
   await writeFile(path.join(application, 'preview.ts'), `export async function ensureService(store) { if (store.directory !== process.env.MOTION_DATA_DIR) throw new Error('Wrong workspace'); return { previewUrl: 'http://127.0.0.1:4173' }; }`);
   await writeFile(path.join(application, 'skills/openmotion-production/SKILL.md'), '---\nname: openmotion-production\ndescription: fixture\n---\nFixture');
