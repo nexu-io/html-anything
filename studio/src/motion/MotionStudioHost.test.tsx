@@ -252,7 +252,7 @@ it('dismissing a write-blocking notice does not enable project creation', () => 
 });
 
 
-it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr'])('opens the community beside Export with a localized label (%s)', locale => {
+it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr'])('orders the localized community and GitHub links ahead of the history actions and Export (%s)', locale => {
   localStorage.setItem('motion.studio.locale', locale);
   render();
   const link = container.querySelector<HTMLAnchorElement>('.motion-community-link')!;
@@ -263,8 +263,11 @@ it.each(['zh-CN', 'en', 'ja', 'ko', 'de', 'fr', 'ru', 'es', 'pt-BR', 'it', 'tr']
   expect(github.target).toBe('_blank');
   expect(link.querySelector('img')?.getAttribute('src')).toBe(discordLogo);
   expect(link.getAttribute('aria-label')).toBeTruthy();
+  const historyActions = container.querySelector('.motion-header-history-actions')!;
   const exportButton = container.querySelector('[data-testid="header-export"]')!;
-  expect(github.nextElementSibling?.contains(exportButton)).toBe(true);
+  // Right-side order: Community, GitHub, divider, Undo, Redo, History, Export.
+  expect(github.nextElementSibling).toBe(historyActions);
+  expect(historyActions.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   expect(link.compareDocumentPosition(exportButton) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
 });
 
