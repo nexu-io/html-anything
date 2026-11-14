@@ -4,7 +4,7 @@ import { readFile, writeFile, rm, truncate } from 'node:fs/promises';
 import path from 'node:path';
 import { fixture } from './fixtures.ts';
 import { startServer } from '../server.ts';
-import { rpc } from '../mcp.ts';
+import { rpc, mcpRegistry } from '../mcp.ts';
 import { delay } from '../hyperframes.ts';
 const film = (color: string) => `<!doctype html><html><head><script src="assets/gsap.min.js"></script><style>body{margin:0}#main{width:320px;height:180px;position:relative;background:#10251f;overflow:hidden}#box{position:absolute;width:60px;height:60px;top:60px;left:20px;background:${color}}</style></head><body><div id="main" data-composition-id="main" data-start="0" data-duration="1" data-width="320" data-height="180" data-fps="10"><div id="box"></div></div><script>let tl=gsap.timeline({paused:true});tl.to('#box',{x:210,duration:1,ease:'none'},0);window.__timelines={main:tl};</script></body></html>`;
 
@@ -16,6 +16,9 @@ test('real per-round MCP playback keeps first and edited exports separate, reope
     const response: any = await rpc({ jsonrpc: '2.0', id: crypto.randomUUID(), method: 'tools/call', params: { name, arguments: args } }, store);
     assert.ok(!response.result.isError, JSON.stringify(response)); return response.result;
   };
+  const appState: any = {};
+  await rpc({ jsonrpc: '2.0', id: 'app-init', method: 'initialize', params: { capabilities: { extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: ['text/html;profile=mcp-app'] } } } } }, store, mcpRegistry(), undefined, appState);
+  const show = async (projectId: string, workId: string) => (await rpc({ jsonrpc: '2.0', id: crypto.randomUUID(), method: 'tools/call', params: { name: 'openmotion_show_video', arguments: { projectId, workId } } }, store, mcpRegistry(), undefined, appState) as any).result;
   const exportFile = async (jobId: string) => store.exportPath((await store.job(jobId))!);
   const view = async (projectId: string, workId: string, includeVideo = false) => call('openmotion_get_project', { projectId, workId, includeVideo });
   const wait = async (projectId: string, workId: string) => {
@@ -33,11 +36,16 @@ test('real per-round MCP playback keeps first and edited exports separate, reope
       const work = (await call('openmotion_open_preview', { projectId: p.projectId, action: 'begin', requestId, mode })).structuredContent.inlineWork;
       const saved = (await call('openmotion_edit_project', { projectId: p.projectId, workId: work.id, requestId: requestId + '-save', expectedRevision: before.revision, expectedVersionId: before.version.versionId, files: [{ path: 'index.html', content: film(color) }] })).structuredContent;
       assert.equal((await view(p.projectId, work.id)).structuredContent.inlineWork.playable, false);
+      assert.equal(saved.previewHandoff.state, 'deferred');
+      const premature = await show(p.projectId, work.id);
+      assert.equal(premature.isError, true);
+      assert.match(premature.structuredContent.error.message, /FINAL_VIDEO_NOT_READY/);
       await call('openmotion_export_request', { projectId: p.projectId, workId: work.id, requestId: requestId + '-export', expectedRevision: saved.revision, versionId: saved.version.versionId, audio: 'silent' });
       return { work: await wait(p.projectId, work.id), saved };
     }
     const first = await round('first', 'create', p, '#d7f6af');
-    const original = await view(p.projectId, first.work.id, true);
+    const original = await show(p.projectId, first.work.id);
+    assert.equal(original.isError, undefined);
     assert.ok(original._meta.inlineVideo.video.startsWith('data:video/mp4;base64,'));
     assert.ok(!JSON.stringify(original.structuredContent).includes('base64'));
     assert.ok(!original.content[0].text.includes('base64'));
@@ -45,8 +53,9 @@ test('real per-round MCP playback keeps first and edited exports separate, reope
     assert.deepEqual(one, await readFile(await exportFile(first.work.jobId)));
     const second = await round('second', 'modify', first.saved, '#ff9578');
     assert.notEqual(second.work.versionId, first.work.versionId);
-    const two = await view(p.projectId, second.work.id, true);
+    const two = await show(p.projectId, second.work.id);
     assert.notEqual(two._meta.inlineVideo.video, original._meta.inlineVideo.video);
+    assert.equal((await show(p.projectId, first.work.id))._meta.inlineVideo.video, original._meta.inlineVideo.video);
     const reopened = await rpc({ jsonrpc: '2.0', id: 'reopen', method: 'tools/call', params: { name: 'openmotion_get_project', arguments: { projectId: p.projectId, workId: first.work.id, includeVideo: true } } }, new (await import('../workspace.ts')).WorkspaceStore(store.directory));
     assert.equal((reopened as any).result._meta.inlineVideo.video, original._meta.inlineVideo.video);
     assert.equal((await view(p.projectId, first.work.id)).structuredContent.inlineWork.versionId, first.work.versionId);

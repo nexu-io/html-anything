@@ -54,7 +54,7 @@ If OpenMotion tools are unavailable or fail, disclose the connection status and 
 
 ## 会话与产物归属
 
-操作工程时用 `openmotion_get_project({projectId})` 核对项目、sessionId 和当前版本；没有 projectId 时先查分页列表。独立新任务通过 `openmotion_create_project` 创建项目，可传已有 OpenMotion sessionId 归属。Original creation, reference-video recreation and editable-template production complete the [editable preview handoff](native.md#editable-preview-handoff) when the requested HTML is ready. Existing-project content edits follow its [continuing-edit rules](native.md#continuing-edits) across all entries; other scopes open the GUI on request. 宿主聊天 ID 不自动等于 OpenMotion sessionId，未绑定时不能用全局最近项目猜测归属。
+操作工程时用 `openmotion_get_project({projectId})` 核对项目、sessionId 和当前版本；没有 projectId 时先查分页列表。独立新任务通过 `openmotion_create_project` 创建项目，可传已有 OpenMotion sessionId 归属。Original creation, reference-video recreation and editable-template production complete the [editable preview handoff](native.md#editable-preview-handoff) when the final requested video is complete and ready to preview. Existing-project content edits follow its [continuing-edit rules](native.md#continuing-edits) across all entries; other scopes open the GUI on request. 宿主聊天 ID 不自动等于 OpenMotion sessionId，未绑定时不能用全局最近项目猜测归属。
 
 ## 一份上下文
 

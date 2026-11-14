@@ -23,7 +23,7 @@ test('a negotiated native presentation is discoverable, readable and project-fre
   const before = await store.get();
   await call('initialize', { protocolVersion: '2025-06-18', capabilities });
   const listed = await call('tools/list');
-  assert.equal(listed.result.tools.length, 13);
+  assert.equal(listed.result.tools.length, 14);
   const definition = listed.result.tools.find((tool: any) => tool.name === name);
   assert.equal(definition.annotations.readOnlyHint, true);
   const shown = await call('tools/call', { name, arguments: { templateIds: ids } });
@@ -36,7 +36,7 @@ test('a negotiated native presentation is discoverable, readable and project-fre
   }
   const uri = definition._meta.ui.resourceUri;
   const resources = (await call('resources/list')).result.resources;
-  assert(resources.some((resource: any) => resource.uri === inlineVideoUri), 'Keep the existing video-progress component available');
+  assert(resources.some((resource: any) => resource.uri === inlineVideoUri), 'Keep the final video component available');
   assert(resources.some((resource: any) => resource.uri === uri), 'The recommendation resource is additive');
   const inline = await call('resources/read', { uri: inlineVideoUri });
   assert.equal(inline.result.contents[0].mimeType, 'text/html;profile=mcp-app');
@@ -55,7 +55,7 @@ test('presentation capability is connection-local and cleared by reinitializatio
     (rpc as any)(message(method, params), store, registry, undefined, state);
   await call(a, 'initialize', { capabilities });
   const toolsA = await call(a, 'tools/list');
-  assert.equal(toolsA.result.tools.length, 13);
+  assert.equal(toolsA.result.tools.length, 14);
   const uri = toolsA.result.tools.find((tool: any) => tool.name === name)._meta.ui.resourceUri;
   assert.equal((await call(b, 'tools/list')).result.tools.length, 12);
   const denied = await call(b, 'tools/call', { name, arguments: { templateIds: ids } });
@@ -67,7 +67,7 @@ test('presentation capability is connection-local and cleared by reinitializatio
   assert.ok(baseResources.result.resources.some((item: any) => item.uri.startsWith('openmotion://workflow/')));
   for (const invalid of [{}, { extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: ['text/html+skybridge'] } } }, { extensions: { 'io.modelcontextprotocol/ui': { mimeTypes: 'text/html;profile=mcp-app' } } }]) {
     await call(a, 'initialize', { capabilities });
-    assert.equal((await call(a, 'tools/list')).result.tools.length, 13);
+    assert.equal((await call(a, 'tools/list')).result.tools.length, 14);
     await call(a, 'initialize', { capabilities: invalid });
     assert.equal((await call(a, 'tools/list')).result.tools.length, 12);
     assert.equal((await call(a, 'resources/read', { uri })).error.code, -32602);
@@ -136,7 +136,7 @@ test('presentation carries every supported conversation language without changin
   assert.deepEqual(await store.get(), before);
 }));
 
-test('actual stdio preserves negotiated UI state and the disabled path stays exactly twelve', () => fixture(async store => {
+test('actual stdio preserves negotiated UI state and disabling template cards retains the final-video Tool', () => fixture(async store => {
   const requests = [message('initialize', { protocolVersion: '2025-06-18', capabilities }), message('tools/list'),
     message('tools/call', { name, arguments: { templateIds: ids } })];
   const input = requests.map(item => JSON.stringify(item)).join('\n') + '\n';
@@ -148,7 +148,7 @@ test('actual stdio preserves negotiated UI state and the disabled path stays exa
     });
     assert.equal(child.status, 0, child.stderr);
     const responses = child.stdout.trim().split('\n').map(line => JSON.parse(line));
-    assert.equal(responses[1].result.tools.length, disabled ? 12 : 13);
+    assert.equal(responses[1].result.tools.length, disabled ? 13 : 14);
     if (disabled) assert.equal(responses[2].result.structuredContent.error.code, 'MCP_TOOL_NOT_EXPOSED');
     else assert.deepEqual(responses[2].result.structuredContent.cards.map((card: any) => card.templateId), ids);
   }

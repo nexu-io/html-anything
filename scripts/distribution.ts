@@ -547,7 +547,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'scripts/diagnostics.mjs', 'scripts/diagnostic-redaction.mjs', 'scripts/zip.mjs',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
     'scripts/repository-media.ts', 'scripts/build-template-cards.mjs',
-    'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
+    'shared/workflow-entry.js', 'shared/inline-video-result.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
     'tracking/core.ts', 'tracking/node.ts', 'tracking/browser.ts', 'tracking/events.ts', 'tracking/studio-events.ts', 'tracking/studio-properties.ts', 'tracking/host.ts',
     // Required, reviewed native MCP presentation assets; do not widen media globs.
     'mcp-ui/template-recommendations/manifest.json',

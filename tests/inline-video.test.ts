@@ -63,12 +63,12 @@ test('a queued cancellation becomes terminal in the same round and never enables
   assert.equal(view.state, 'cancelled'); assert.equal(view.playable, false);
 }, false));
 
-test('the native UI declares embedded media without creating projects', () => fixture(async store => {
+test('the final UI declares embedded media without binding editor calls to a component', () => fixture(async store => {
   const list: any = await rpc({ jsonrpc: '2.0', id: 1, method: 'tools/list' }, store);
   const preview = list.result.tools.find((tool: any) => tool.name === 'openmotion_open_preview');
-  assert.ok(preview._meta.ui.resourceUri.startsWith('ui://'));
-  const resource: any = await rpc({ jsonrpc: '2.0', id: 2, method: 'resources/read', params: { uri: preview._meta.ui.resourceUri } }, store);
-  assert.deepEqual(resource.result.contents[0]._meta.ui.csp.resourceDomains, ['data:']);
+  assert.equal(preview._meta, undefined);
+  const resource: any = await rpc({ jsonrpc: '2.0', id: 2, method: 'resources/read', params: { uri: 'ui://openmotion/inline-video/v1/player.html' } }, store);
+  assert.deepEqual(resource.result.contents[0]._meta.ui.csp.resourceDomains, ['data:', 'blob:']);
   assert.match(resource.result.contents[0].mimeType, /profile=mcp-app/);
   assert.ok(resource.result.contents[0].text.includes('openmotion_get_project'));
   assert.deepEqual(await readdir(store.directory), []);

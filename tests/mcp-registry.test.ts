@@ -65,7 +65,7 @@ test('phase1 Skills reference only publicly callable Tool names', () => {
     for (const filename of readdirSync(root, { recursive: true }) as string[]) {
       if (!filename.endsWith('.md')) continue;
       const document = readFileSync(new URL(filename, root), 'utf8');
-      for (const match of document.matchAll(/\b(?:openmotion|motion|design)_[a-z_]+\b/g)) assert.ok(target.includes(match[0]), `${skill}/${filename} calls hidden ${match[0]}`);
+      for (const match of document.matchAll(/\b(?:openmotion|motion|design)_[a-z_]+\b/g)) assert.ok([...target, 'openmotion_show_video'].includes(match[0]), `${skill}/${filename} calls hidden ${match[0]}`);
     }
   }
 });

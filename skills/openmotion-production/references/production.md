@@ -15,9 +15,15 @@ Use only the OpenMotion MCP Tools actually returned by tools/list. Read [Native 
 
 When selecting, obtaining or replacing media, apply the [shared material policy](materials.md) within the selected workflow and existing authorization.
 
-## Inline video progress and playback
+## Final video delivery
 
-In a host that supports MCP Apps, default to an inline video frame for each actual video creation or content-edit turn. Begin one work round before the first content write with `openmotion_open_preview({action:"begin",projectId,requestId,mode:"create"|"modify"})`. Reuse the returned `inlineWork.id` as `workId` in each save and the final export. Render once the round is ready, not after intermediate saves. The MCP App polls that fixed work identity and enables click-to-play only after its own export passes technical verification. Keep earlier frames and their versions. Explicit editor-only requests, unchanged template opening, review-only and existing-link requests retain their current scope and do not begin or render a round. This final inline preview is part of the video turn and does not require a separate MP4-download request. Hosts without MCP Apps retain their existing workflow. Inline playback supplements the editable Studio handoff; it does not prove editor visibility or creative acceptance.
+During generation and editing, do not create an inline progress or video component and do not open the right-hand editor for intermediate saves. Begin a business work round silently with `openmotion_open_preview({action:"begin",projectId,requestId,mode:"create"|"modify"})`; retain `inlineWork.id` as `workId` through saves and the final export. This call presents no UI.
+
+Once the final authored video and supporting assets are ready for preview, complete the editable Studio handoff on the right. Do not open an empty carrier or partial draft merely to show activity. Explicit editor-only or show-now requests retain their scope, and an explicit background preference still skips presentation.
+
+For an actual video creation/content-edit turn, render the final version once. Wait for its MP4 export to complete and pass technical verification, then call the discovered `openmotion_show_video({projectId,workId})` once to display the final video in the chat. No intermediate, queued, checking or rendering state creates a chat video frame. The player loads that fixed completed export; earlier final videos retain their own versions. This final playback does not require a separate download request. Hosts without the presentation Tool keep the existing file/player delivery path. Explicit editor-only work, unchanged template opening, reviews and existing-link requests do not start an unwanted render.
+
+The final player and the editable Studio are separate delivery surfaces. Verify the actual final player and the current editor handoff; source save, a Tool success or a completed render does not prove either surface is visible or playable.
 
 ## Execution
 
@@ -42,7 +48,7 @@ If only an independent folder can be produced, state that the editable Studio ha
 2. Reuse the target projectId or explicitly create a new one. Read its current revision and content version. No global most-recent project fallback. Five is a list page size, not a retention policy.
 3. Use returned asset paths and native HTML/CSS/JS. Import and file save are separate operations. For configured BYOK media generation, use openmotion_media_use and read action=reference for the selected provider. Host media tools remain available within the request's scope. Missing media capabilities must be stated.
 4. Follow the [native loop](native.md), preserve locked content and existing Studio manifests. Inspect actual frames, motion and sound. A saved source file or successful lint is not creative acceptance.
-5. Export only when requested. Reuse an applicable job before submitting another. Save a stable requestId per action: exact retry returns the original outcome; changed input with the same requestId is rejected. Failed request correction uses a new requestId.
+5. Export for a requested finished video or content-edit delivery; do not export explicit draft, editor-only or review-only work. Reuse an applicable job before submitting another. Save a stable requestId per action: exact retry returns the original outcome; changed input with the same requestId is rejected. Failed request correction uses a new requestId.
 6. Poll the named job through project details. Only completed exposes its real MP4 and technical verification. Inspect [final playback and evidence](verification.md) separately; record unavailable checks as not_run.
 
 ## Handoff
