@@ -19,16 +19,26 @@ For npm network failures, automatically try `https://registry.npmjs.org` then `h
 
 Every successful Agent-led OpenMotion installation opens the editor's template library in the current conversation. Do not ask whether to experience a recommended template or wait for a yes/no reply before opening the library. Respect an explicit request not to open it, or a previous refusal/deferment. If the user already explicitly requested creation with an exact template, continue that authorized task directly.
 
+Codex plugin setup reaches this same contract through the packaged `extensions.com.openai.onboardingSkill` entry. Reuse the installed connection; onboarding does not run setup again.
+
 ### Open the library without creating a project
 
 1. If the current chat has loaded MCP, call `openmotion_open_preview({target: "templates"})`. Do not supply a projectId/sessionId or create a placeholder project. The result is a page handoff without a project revision/version.
 2. Otherwise use `onboarding.preview.previewUrl` and its `previewHandoff` from setup. The installer prepares the same local page independently of current-chat MCP discovery. Do not require a new chat, repeat installation, or create a project to obtain a link. `onboarding.catalog` is compatibility data, not a required recommendation or creation step.
-3. Follow the returned handoff to present the exact URL in the host's built-in browser/panel in the calling chat. Preserve embed/query parameters. Queue when the chat is inactive; only an explicit show-now request permits switching chats. Observe that the template library is visible before saying it opened. A prepared URL or queued acknowledgment does not establish visibility. Do not submit project `record_display` receipts for the library.
+3. Follow the returned handoff to present the exact URL in the host's built-in browser/panel in the calling chat. In Codex, use `open_in_codex` with `placement: "right"` and the exact browser URL, without another threadId. If no inspectable tab appears, use the calling chat’s IAB tab list to find the library (its URL may gain saved-project parameters); if absent, create an IAB tab for the same real previewUrl with `visible: true`. Check browser visibility and the actual library content. Native Codex app automation is unnecessary. Preserve embed/query parameters. Queue when the chat is inactive; only an explicit show-now request permits switching chats. Observe that the template library is visible before saying it opened. A prepared URL or queued acknowledgment does not establish visibility. Do not submit project `record_display` receipts for the library.
 4. If the host has no browser/panel, provide the actual library link and explain that it could not be opened automatically. If setup returned `onboarding.preview.status=unavailable`, report the installation result and the concrete preview failure; retry with the templates target when MCP is available. Never claim opening succeeded or silently create a fallback project.
 
-Reply structure, in the user's language:
-- Say only that installation is complete. Chinese: “OpenMotion 已安装完成。” Adapt naturally for other languages. Omit version/environment, configuration paths, MCP/Skill/tool counts, probe or connection results and background video-component preparation. Do not add a separate capability/selling paragraph or claim that the current chat is connected just because setup succeeded.
-- State the observed opening result and invite the user to browse/preview templates, then choose **Open and edit** for an editable template, or tell the Agent the exact template ID/name. Do not append a yes/no experience question or select a default template. Then wait.
+### Optional native recommendations in Codex
+
+After the library is visibly open, if this Codex chat **natively discovers** `openmotion_show_template_recommendations`, call it once with `templateIds: ["product-promo", "nyt-graph", "decision-tree"], onboarding: true, language: "zh"` (set `language` from the latest user request, not the host UI). Supported language codes are `zh`, `en`, `ja`, `ko`, `fr`, `es` and `pt`; use the user’s explicit output-language preference when given and `en` for unsupported languages. Always supply `language` for ordinary recommendations too. This first-run component owns the persistent welcome above three approved full-video cards. The Agent does not send that welcome as commentary or final text: Codex collapses commentary after the turn. The ordinary recommendation call omits `onboarding` and keeps its existing cards-only behavior. Preserve the returned card order and exact titles. A numbered reply selects the corresponding card and authorizes the offered editable sample copy unless the user supplies a different scope; carry any requirements forward. A generic yes still needs an exact selection.
+
+The optional presentation is available only when this connection declares the MCP Apps MIME capability and its bundled resources pass verification. Installation registration, the direct CLI client or another chat's successful call does not establish availability in this chat. If the tool is absent, disabled, fails or has not visibly appeared, keep the existing library and text guidance; do not force a reconnect/new chat or delay the installation reply, repeat the presentation call, render a preview or create a placeholder project. Never claim video playback from a cover alone.
+
+The card's **Recreate template** button (Chinese: **复刻模板**) prepares an editable prompt in the active composer, with the selected template title/ID and space for requirements. It uses the negotiated `openai/message` extension with `target: "active", send: false`, preserving the existing draft and attachments. Clicking the button does not submit a task or authorize creation/export. Unsupported clients show a copyable prompt instead of sending. Wait for the user to edit and send their brief, then continue the existing template Skill with the complete requirements and requested delivery. Do not replace a customized brief with the legacy frozen sample `createArgs`. For an explicitly accepted unchanged sample copy, retain the returned stable `requestId` and complete unchanged inputs on retry; do not append a current `sessionId`. Reuse a confirmed project from this experience, and never create a duplicate merely because cards were redisplayed.
+
+For native onboarding, the component renders the installation/library heading, the first-person product introduction, library search/browse guidance, the recommendation invitation and the card-button guidance, followed by three cards. Do not add a Motion.md explanation or numbered-reply invitation. Template titles and descriptions appear only in the cards, without a second numbered description list. The card button fills an unsent draft; a later user-sent brief starts creation. The separate Studio **Open and edit** action remains unchanged.
+
+After a successful native presentation, end without an additional text reply. Keep verification notes, tool visibility uncertainty, acknowledgments and duplicated invitations out of the user-facing onboarding. Verify inline behavior in the test report, not under the cards. Report an actual tool/presentation error briefly when it occurs; do not convert inability to inspect an inline widget into an unsolicited error message. For a non-UI host, use the library-only fallback below. Omit version/environment, configuration paths, MCP/Skill/tool counts, probe results and background preparation. Installation alone does not prove current-chat connection.
 
 Do not ask the user to refresh/reconnect, restart the host or open a new chat by default. When native tools are missing or stale, use setup’s `onboarding.directAccess`: run its `command` with `toolsArgs`, read the public input schemas, then run `callArgs` with the selected Tool and a JSON arguments file. It uses this installation’s actual registered MCP transport, version and data directory, so the current chat can continue without restarting or opening another chat. It does not refresh native discovery. Keep these technical details internal. Never bypass disabled tools, permission denials or host policy. Attempt supported host recovery only if direct access is unavailable or fails. If user action is still necessary, briefly explain the specific blocker and the minimum supported next step. Mention video-component preparation only when it blocks the requested operation. Preserve the accepted template choice and existing work across recovery.
 
@@ -36,13 +46,31 @@ Browsing, filtering, opening template details, playing a preview and closing the
 
 After acceptance, use openmotion-template-to-video only when the user explicitly asks the Agent to create with an exact template. Preserve that template ID, use unchanged sample content unless requested otherwise, and create one independent project with a stable requestId. A generic “yes/体验” without a selected template is insufficient; ask which template. Reuse an already created experience project and preserve existing work. Do not repeat optional material/brand/style questions or silently substitute another template on failure. Open the actual editable project and check loading/playback when the host supports it; otherwise provide its actual link and state the limitation. Export only on request. A refusal/deferment stops the experience. No invitation-state service or “invitation sent/seen” telemetry is implied.
 
-Example after the host has actually displayed the library:
+Reference copy rendered inside the native onboarding component, not a separate Agent message:
 
 ```text
-OpenMotion 已安装完成。
+🎉 **OpenMotion 安装好啦，右侧就是模板库！**
 
-模板库已打开，目前还没有创建项目。可以先浏览和预览，选好后点击“打开并编辑”，或把模板名称告诉我。
+我是你的开源视频创作搭档，我有丰富的高水准视频模板，也支持从参考视频或一个灵感出发，和你一起创作精彩的视频。
+
+模板库支持搜索，也可以随意浏览，找到喜欢的点击「复刻模板」就能开始你的创作！
+
+**不想自己找？先看看我挑的这 3 个 👇**
+
+你可以点击下方卡片上的「复刻模板」，然后补充「我的要求」或添加附件，发送后就开始创作！
 ```
+
+Example when the right-hand library is visible but native cards are unavailable:
+
+```text
+🎉 OpenMotion 安装好啦，右侧就是模板库！
+
+我是你的开源视频创作搭档，我有丰富的高水准视频模板，也支持从参考视频或一个灵感出发，和你一起创作精彩的视频。
+
+模板库支持搜索，也可以随意浏览，找到喜欢的点击「复刻模板」就能开始你的创作！
+```
+
+The first example documents component-owned content; never paste it into an Agent progress message. Use the library-only fallback when native presentation is unavailable. If the library is queued, blocked, declined or cannot be observed, replace the opening claim with that actual result and an exact usable link when available. If native presentation is unavailable before the welcome, use the library-only fallback without a card invitation.
 <!-- installation-onboarding:end -->
 
 ## Choose the selected host's setup command

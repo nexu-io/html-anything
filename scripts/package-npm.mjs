@@ -66,6 +66,11 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
   const lockfile = JSON.parse(await readFile(path.join(root, 'package-lock.json'), 'utf8'));
   const runtime = JSON.parse(await readFile(path.join(root, 'scripts/runtime-lock.json'), 'utf8'));
   checkReleaseLocks(pkg, lockfile, runtime);
+  const { checkTemplateCardsBuild } = await import('./build-template-cards.mjs');
+  await checkTemplateCardsBuild();
+  const { loadTemplatePresentation } = await import('../shared/mcp-template-recommendations.ts');
+  // Also validate direct function/CLI callers that skipped the npm build wrapper.
+  loadTemplatePresentation();
   version ??= pkg.version + '-local.1';
   const { mcpRegistry } = await import('../mcp.ts');
   const registry = mcpRegistry();
@@ -121,7 +126,9 @@ export async function packageNpm(output = path.join(root, 'dist/npm-local'), ver
       commit, run: process.env.GITHUB_RUN_ID || null, attempt: process.env.GITHUB_RUN_ATTEMPT || '1',
       application: { url: './' + path.basename(archive), sha256: await sha256(archive) },
       locks: { npm: await sha256(path.join(application, 'package-lock.json')), native: await sha256(path.join(root, 'scripts/runtime-lock.json')) },
-      mcp: { profile: registry.profile, tools: registry.tools.map(tool => tool.name) }, skills, runtime };
+      mcp: { profile: registry.profile, tools: registry.tools.map(tool => tool.name),
+        optionalExtensions: registry.profile === 'phase1' ? [{ name: 'openmotion_show_template_recommendations',
+          capability: 'io.modelcontextprotocol/ui', mimeType: 'text/html;profile=mcp-app' }] : [] }, skills, runtime };
     // The embedded manifest omits the containing tgz's identity to avoid a self-hash cycle.
     await mkdir(path.join(installer, 'payload'));
     await cp(archive, path.join(installer, 'payload', path.basename(archive)));

@@ -1,6 +1,6 @@
 {
   "name": "openmotion",
-  "version": "0.6.3",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "engines": {
@@ -16,7 +16,7 @@
     "package:phase1": "npm run build:studio && node --experimental-strip-types scripts/package.ts --mcp-profile=phase1",
     "package:test": "node scripts/test-package.mjs",
     "package:npm": "npm run build:studio && node scripts/package-npm.mjs",
-    "build:studio": "npm run build:inline && vite build --config studio/vite.config.ts",
+    "build:studio": "npm run build:inline && npm run build:template-cards && vite build --config studio/vite.config.ts",
     "build:tracking": "tsc -p tracking/tsconfig.json",
     "typecheck:studio": "tsc -p studio/tsconfig.json",
     "design:tokens": "node --experimental-strip-types scripts/design-tokens.ts",
@@ -38,7 +38,9 @@
     "design:dev": "node packages/design-system/workbench/server.js",
     "design:test": "node --test packages/design-system/workbench/*.test.js",
     "build:inline": "node scripts/build-inline-ui.mjs",
-    "typecheck:backend": "tsc --noEmit --target es2024 --module nodenext --moduleResolution nodenext --allowImportingTsExtensions --skipLibCheck --esModuleInterop mcp.ts phase1.ts inline-video.ts shared/phase1-tools.ts"
+    "typecheck:backend": "tsc --noEmit --target es2024 --module nodenext --moduleResolution nodenext --allowImportingTsExtensions --skipLibCheck --esModuleInterop mcp.ts phase1.ts inline-video.ts shared/phase1-tools.ts",
+    "typecheck:template-cards": "tsc -p mcp-ui/tsconfig.json",
+    "build:template-cards": "npm run typecheck:template-cards && node --experimental-strip-types scripts/build-template-cards.mjs"
   },
   "dependencies": {
     "@base-ui/react": "1.7.0",

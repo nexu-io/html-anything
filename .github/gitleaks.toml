@@ -6,3 +6,11 @@ useDefault = true
 description = "Existing public, write-only OpenMotion analytics identifier; not a management credential"
 regexTarget = "secret"
 regexes = ['''^phc_u5dHWkwdqN626opkbbjDKk7xNzxR2UsJbdQqx3DncbjU$''']
+
+[[allowlists]]
+description = "Owner-approved public OpenMotion Feishu invitation, limited to product READMEs"
+condition = "AND"
+targetRules = ["generic-api-key"]
+paths = ['''(^|/)(README\.md|README\.zh-CN\.md|docs/README\.(zh-CN|ja)\.md)$''']
+regexTarget = "secret"
+regexes = ['''^b6cs46dc-acb2-48ed-941d-c45642ead841$''']

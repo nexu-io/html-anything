@@ -169,6 +169,8 @@ const localReadmeResourceFiles = [
   'docs/readme/badges/built-by-opendesign.svg',
   'docs/readme/badges/built-by-opendesign.zh-CN.svg',
   'docs/readme/badges/discord.svg',
+  'docs/readme/badges/feishu.svg',
+  'docs/readme/badges/feishu.zh-CN.svg',
   'docs/readme/badges/license.ja.svg',
   'docs/readme/badges/license.svg',
   'docs/readme/badges/license.zh-CN.svg',
@@ -534,7 +536,7 @@ export async function distributionFiles(profile: string): Promise<string[]> {
   if (!['phase1', 'legacy'].includes(profile)) throw new Error('Unknown distribution profile: ' + profile);
   const files = [
     ...designSystemRuntimeFiles.map(file => 'packages/design-system/' + file),
-    ...distributionDocuments, 'LICENSE', '.codex-plugin/plugin.json', '.mcp.json', 'marketplace.example.json',
+    ...distributionDocuments, 'LICENSE', '.codex-plugin/plugin.json', '.codex-plugin/onboarding/SKILL.md', '.mcp.json', 'marketplace.example.json',
     'package.json', 'package-lock.json',
     'server.ts', 'browser.ts', 'workspace.ts', 'mcp.ts', 'mcp-tools.ts', 'editor-runtime.ts',
     'phase1.ts', 'phase1-versions.ts', 'inline-video.ts', 'preview.ts', 'hyperframes.ts', 'template-library.ts',
@@ -544,9 +546,20 @@ export async function distributionFiles(profile: string): Promise<string[]> {
     'scripts/install-onboarding.mjs', 'scripts/onboarding-catalog.ts', 'scripts/open-template-library.ts', 'scripts/install-library-skill.mjs',
     'scripts/diagnostics.mjs', 'scripts/diagnostic-redaction.mjs', 'scripts/zip.mjs',
     'scripts/verify-export.ts', 'scripts/export-adapters.ts', 'scripts/package.ts', 'scripts/distribution.ts',
-    'scripts/repository-media.ts',
+    'scripts/repository-media.ts', 'scripts/build-template-cards.mjs',
     'shared/workflow-entry.js', 'studio/LICENSE', 'studio/README.md', 'template-library/LICENSE', 'shared/editor-launch.pl',
     'tracking/core.ts', 'tracking/node.ts', 'tracking/browser.ts', 'tracking/events.ts', 'tracking/studio-events.ts', 'tracking/studio-properties.ts', 'tracking/host.ts',
+    // Required, reviewed native MCP presentation assets; do not widen media globs.
+    'mcp-ui/template-recommendations/manifest.json',
+    'mcp-ui/template-recommendations/LICENSE', 'mcp-ui/template-recommendations/NOTICE.md',
+    'mcp-ui/template-recommendations/build/app.js', 'mcp-ui/template-recommendations/build/app.css',
+    'mcp-ui/template-recommendations/build/identity.json',
+    'mcp-ui/template-recommendations/assets/product-promo.mp4',
+    'mcp-ui/template-recommendations/assets/product-promo.jpg',
+    'mcp-ui/template-recommendations/assets/nyt-graph.mp4',
+    'mcp-ui/template-recommendations/assets/nyt-graph.jpg',
+    'mcp-ui/template-recommendations/assets/decision-tree.mp4',
+    'mcp-ui/template-recommendations/assets/decision-tree.jpg',
   ];
   async function walk(directory: string, extensions: RegExp) {
     for (const entry of await readdir(path.join(root, directory), { withFileTypes: true })) {

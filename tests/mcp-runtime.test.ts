@@ -106,7 +106,9 @@ test('a live phase1 MCP connection survives a replaced or removed plugin directo
       }
       assert.equal(client.child.pid, pid);
       assert.equal(client.trace.filter((item: any) => item.method === 'initialize').length, 1);
-      assert.deepEqual(editor.calls, [{ name: 'openmotion_get_project', arguments: {} }, exportCall.params]);
+      // Host attribution is transport metadata; keep checking the exact domain calls.
+      assert.deepEqual(editor.calls.map(({ name, arguments: args }) => ({ name, arguments: args })),
+        [{ name: 'openmotion_get_project', arguments: {} }, exportCall.params]);
       assert.ok(!editor.requests.includes('/editor-api/shutdown'));
       assert.deepEqual((await readdir(directory)).sort(), ['.editor-runtime', 'preview.json']);
     } finally { await client.close(); await editor.close(); await rm(temporary, { recursive: true, force: true }); }

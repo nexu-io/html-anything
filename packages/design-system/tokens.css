@@ -87,6 +87,8 @@
   --motion-text-step-7: 7px;
   --motion-text-step-8: 8px;
   --motion-on-brand: #202020;
+  --motion-font-editorial: "Times New Roman", Times, serif;
+  --motion-collection-title-gradient: linear-gradient(120deg, var(--motion-brand) 0%, var(--motion-strong) 40%);
 }
 :where([data-motion-ui]) {
   color-scheme: light;

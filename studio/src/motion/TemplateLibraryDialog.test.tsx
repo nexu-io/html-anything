@@ -5,8 +5,11 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { I18nProvider, useI18n, type Locale } from '../i18n/I18n';
 import { TemplateLibraryDialog } from './TemplateLibraryDialog';
 import { MAX_TEMPLATE_PLAYERS } from './useTemplatePlayback';
-import { trackMotion } from './tracking';
-vi.mock('./tracking', () => ({ trackMotion: vi.fn(async () => 'queued') }));
+import { validProperties } from '../../../tracking/core.ts';
+import { studioEvents } from '../../../tracking/events.ts';
+
+const tracked = vi.hoisted(() => [] as { event: string; properties: Record<string, unknown> }[]);
+vi.mock('./tracking', () => ({ trackMotion: async (event: string, properties: Record<string, unknown>) => { tracked.push({ event, properties }); return 'queued'; } }));
 
 globalThis.IS_REACT_ACT_ENVIRONMENT = true;
 let root: Root, host: HTMLDivElement;
@@ -19,7 +22,7 @@ class Observer {
   static instances: Observer[] = [];
   elements: Element[] = [];
   disconnected = false;
-  constructor(public callback: IntersectionObserverCallback) { Observer.instances.push(this); }
+  constructor(public callback: IntersectionObserverCallback, public options?: IntersectionObserverInit) { Observer.instances.push(this); }
   observe(element: Element) { this.elements.push(element); }
   disconnect() { this.disconnected = true; }
   emit(ratio = 1, subset = this.elements) { this.callback(subset.map(target => ({ target, isIntersecting: ratio > 0, intersectionRatio: ratio }) as IntersectionObserverEntry), this as unknown as IntersectionObserver); }
@@ -29,9 +32,8 @@ function fetchItems(data = items) {
   vi.stubGlobal('fetch', vi.fn(async (url: string) => Response.json(url.endsWith('/integration') ? { templateEnvironment: 'dev', transport: { env: {} } } : { items: data, catalogVersion: 'v1', next: null, total: data.length })));
 }
 beforeEach(() => {
-  vi.clearAllMocks();
   window.happyDOM.settings.enableIframePageLoading = false;
-  Observer.instances = [];
+  Observer.instances = []; tracked.length = 0;
   vi.stubGlobal('IntersectionObserver', Observer);
   motionPreference = Object.assign(new EventTarget(), { matches: false });
   vi.stubGlobal('matchMedia', vi.fn(() => motionPreference));
@@ -90,6 +92,52 @@ it('shows author avatars and falls back to initials for unavailable images', asy
   expect(card.querySelector('img[src="/ada.jpg"]')).toBeNull();
   expect(card.textContent).toContain('AFirst');
 });
+it('filters brand templates directly and preserves category, search and reset behavior', async () => {
+  fetchItems([
+    ...items,
+    { ...items[0], id: 'unbranded', brand: '', sortOrder: 4 },
+    { ...items[0], id: 'blank-brand', brand: '  ', sortOrder: 5 },
+  ]);
+  await mount();
+  const categories = host.querySelector('[role=group][aria-label="Video purpose"]')!;
+  expect(categories.children[1]).toBe(button('TOP 100 brands'));
+  expect(cards()).toHaveLength(5);
+
+  await act(async () => button('TOP 100 brands').click());
+  expect(cards()).toEqual(['two', 'one', 'three']);
+  expect(button('TOP 100 brands').getAttribute('aria-pressed')).toBe('true');
+  expect(button('All').getAttribute('aria-pressed')).toBe('false');
+  expect(host.querySelector('[role=menu]')).toBeNull();
+  expect(events('ui_click', { element: 'category_select', filter_value: 'top-100-brands' })).toEqual([
+    expect.objectContaining({ filter_group: 'brand', selected: true, applied_filter_count: 0 }),
+  ]);
+  expect(events('template_filter_result').at(-1)).toMatchObject({ action: 'category_select', result_count: 3, applied_filter_count: 1 });
+
+  await act(async () => button('Product launch films').click());
+  expect(cards()).toEqual(['two', 'one', 'unbranded', 'blank-brand']);
+  expect(button('TOP 100 brands').getAttribute('aria-pressed')).toBe('false');
+  await act(async () => button('TOP 100 brands').click());
+  expect(cards()).toEqual(['two', 'one', 'three']);
+  expect(button('Product launch films').getAttribute('aria-pressed')).toBe('false');
+
+  await search('Ada');
+  expect(cards()).toEqual(['one']);
+  await act(async () => button('Remove filter TOP 100 brands').click());
+  expect(cards()).toEqual(['one', 'unbranded', 'blank-brand']);
+  expect(events('ui_click', { element: 'filter_option', filter_value: 'top-100-brands' }).at(-1)).toMatchObject({ selected: false, applied_filter_count: 1 });
+  expect(events('template_filter_result').at(-1)).toMatchObject({ action: 'filter_apply', result_count: 3, applied_filter_count: 0 });
+  await act(async () => button('TOP 100 brands').click());
+  await act(async () => button('Clear filters').click());
+  expect(cards()).toHaveLength(5);
+  expect(button('All').getAttribute('aria-pressed')).toBe('true');
+
+  await act(async () => button('TOP 100 brands').click());
+  await act(async () => button('All').click());
+  expect(cards()).toHaveLength(5);
+  expect(button('Remove filter TOP 100 brands')).toBeUndefined();
+  expect(events('template_filter_result').at(-1)).toMatchObject({ action: 'category_select', result_count: 5, applied_filter_count: 0 });
+  for (const item of tracked) expect(validProperties(studioEvents, item.event, item.properties), JSON.stringify(item)).toBe(true);
+});
 it('tries the bundled brand logo after a published logo fails, then falls back to initials', async () => {
   fetchItems([{ ...items[0], brand: 'Notion', brandLogoUrl: 'https://example.com/notion.svg' } as typeof items[0]]);
   await mount();
@@ -115,9 +163,6 @@ it('copies the exact DEV prompt, retains guides and gates editable-project openi
   expect(navigator.clipboard.writeText).toHaveBeenCalledWith('使用说明：请使用 OpenMotion 插件。如未安装，请按 https://releases.open-design.ai/open-motion/dev/install.md 安装并接入后继续。\n指定模板：First（one）\n创作要求：基于模板，结合我的要求和附件创作，默认保留主要动效与风格，并交付 HTML 和 MP4。\n我的要求：\n');
   await act(async () => button('打开并编辑').click());
   expect(onOpen).toHaveBeenCalledWith('one');
-  expect(trackMotion).toHaveBeenCalledWith('ui_click', { page_name: 'studio', area: 'templates', element: 'select_template' });
-  expect(vi.mocked(trackMotion).mock.calls.filter(([name, fields]) => name === 'ui_click' && 'element' in fields && fields.element === 'copy_template')).toHaveLength(1);
-  expect(trackMotion).toHaveBeenCalledWith('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'clipboard_written' });
   await act(async () => button('预览模板 Second', host.querySelector('main')!).click());
   expect(button('打开并编辑')).toBeUndefined();
 });
@@ -261,8 +306,6 @@ it('keeps failed clipboard content selectable inline, including the contribution
   expect(host.querySelector<HTMLTextAreaElement>('textarea')?.value).toContain('pull request');
   expect(host.querySelectorAll('dialog[open]')).toHaveLength(2);
   expect(document.querySelector('[data-feedback-layer]')?.textContent).toContain('Copy failed. Select and copy the instruction below.');
-  expect(trackMotion).toHaveBeenCalledWith('template_instruction_copy_result', { host_product: 'mcp', copy_status: 'manual_fallback_shown' });
-  expect(trackMotion).not.toHaveBeenCalledWith('template_instruction_copy_result', expect.objectContaining({ copy_status: 'clipboard_written' }));
 });
 
 it('uses the shared radio menu for sorting and industry filters inside the native dialog', async () => {
@@ -335,4 +378,197 @@ it('keeps discovery available while project status prevents editable opening', a
   await act(async () => button('Close template preview').click());
   await act(async () => button('Close template library').click());
   expect(onClose).toHaveBeenCalledOnce();
+});
+
+const events = (event: string, match: Record<string, unknown> = {}) => tracked.filter(item => item.event === event && Object.entries(match).every(([key, value]) => item.properties[key] === value)).map(item => item.properties);
+const impressions = () => Observer.instances.filter(item => !item.disconnected && item.options?.threshold === 0.5).at(-1)!;
+const uuid = /^[0-9a-f-]{36}$/;
+it('distinguishes brand-filtered impressions even when all templates have a brand', async () => {
+  vi.useFakeTimers();
+  try {
+    await mount();
+    const card = [host.querySelector('[data-template-id="two"]')!];
+    await act(async () => impressions().emit(1, card));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(events('surface_view', { area: 'template_card' })).toHaveLength(1);
+
+    await act(async () => button('TOP 100 brands').click());
+    expect(cards()).toEqual(['two', 'one', 'three']);
+    await act(async () => impressions().emit(1, card));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(events('surface_view', { area: 'template_card' })).toEqual([
+      expect.objectContaining({ template_id: 'two', applied_filter_count: 0 }),
+      expect.objectContaining({ template_id: 'two', applied_filter_count: 1 }),
+    ]);
+    for (const item of tracked) expect(validProperties(studioEvents, item.event, item.properties), JSON.stringify(item)).toBe(true);
+  } finally { vi.useRealTimers(); }
+});
+it('reports the library funnel with registered fields: library, card open, detail, instruction, copy and download', async () => {
+  await mount();
+  expect(events('surface_view', { area: 'template_library' })).toEqual([{ page_name: 'studio', area: 'template_library', element: 'library' }]);
+  await act(async () => preview('First'));
+  expect(events('ui_click', { element: 'open_detail' })).toEqual([{ page_name: 'studio', area: 'template_card', element: 'open_detail', template_id: 'one', resource_kind: 'editable_project', placement: 'catalog', position: 2, sort: 'recommended', applied_filter_count: 0 }]);
+  const [shown] = events('surface_view', { area: 'template_detail' });
+  expect(shown).toMatchObject({ template_id: 'one', placement: 'catalog', position: 2, detail_mode: 'modal' });
+  expect(shown.detail_view_id).toMatch(uuid);
+  await act(async () => Observer.instances.find(item => item.elements.some(element => element.matches('section[aria-label="Template instruction"] p')))!.emit());
+  expect(events('surface_view', { area: 'template_instruction' })).toEqual([expect.objectContaining({ template_id: 'one', instruction_kind: 'template_use', detail_view_id: shown.detail_view_id })]);
+  const detail = host.querySelector('dialog[aria-label="Template preview"]')!;
+  await act(async () => button('Recreate template', detail).click());
+  expect(events('ui_click', { element: 'start_use' })).toEqual([expect.objectContaining({ template_action: 'recreate', template_id: 'one', detail_view_id: shown.detail_view_id })]);
+  expect(events('ui_click', { element: 'select_template' })).toHaveLength(0);
+  expect(events('ui_click', { element: 'copy_template' })).toHaveLength(0);
+  expect(events('ui_click', { element: 'copy_instruction' })).toHaveLength(0);
+  expect(events('template_instruction_copy_result')).toEqual([expect.objectContaining({ copy_status: 'clipboard_written', host_product: 'codex', instruction_kind: 'template_use', template_id: 'one' })]);
+  await act(async () => button('Recreate and submit', detail).click());
+  expect(events('ui_click', { element: 'start_use', template_action: 'recreate_submit' })).toHaveLength(1);
+  expect(events('template_instruction_copy_result', { instruction_kind: 'recreate_submit' })).toHaveLength(1);
+  vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('denied'));
+  await act(async () => [...detail.querySelectorAll('button')].find(node => node.textContent === 'Copied' || node.textContent === 'Copy')!.click());
+  const [click] = events('ui_click', { element: 'copy_instruction' });
+  expect(events('template_instruction_copy_result', { copy_status: 'manual_fallback_shown' })).toEqual([expect.objectContaining({ copy_attempt_id: click.copy_attempt_id })]);
+  vi.stubGlobal('fetch', vi.fn(async () => new Response('', { status: 404 })));
+  await act(async () => button('Download motion.md', detail).click());
+  const [download] = events('ui_click', { element: 'download_guide' });
+  expect(events('resource_download_result')).toEqual([expect.objectContaining({ delivery_status: 'fetch_failed', error_code: 'HTTP_404', download_attempt_id: download.download_attempt_id, template_id: 'one' })]);
+  for (const item of tracked) expect(validProperties(studioEvents, item.event, item.properties), JSON.stringify(item)).toBe(true);
+});
+it('reports discovery choices with the list they produced, and one search per settled keyword', async () => {
+  vi.useFakeTimers();
+  try {
+    await mount();
+    await act(async () => button('Product launch films').click());
+    expect(events('ui_click', { element: 'category_select' })).toEqual([{ page_name: 'studio', area: 'template_discovery', element: 'category_select', filter_group: 'uses', filter_value: 'product-launch-films', selected: true, sort: 'recommended', applied_filter_count: 0 }]);
+    expect(events('template_filter_result')).toEqual([{ page_name: 'studio', area: 'template_discovery', action: 'category_select', result_count: 2, outcome: 'success', sort: 'recommended', applied_filter_count: 1 }]);
+    await search('Ad'); await search('Ada');
+    expect(events('template_search_result')).toHaveLength(0);
+    await act(async () => { vi.advanceTimersByTime(500); });
+    const [found] = events('template_search_result');
+    expect(found).toMatchObject({ search_keyword: 'Ada', query_length: 3, result_count: 1, applied_filter_count: 1 });
+    await act(async () => { vi.advanceTimersByTime(2000); });
+    expect(events('template_search_result')).toHaveLength(1);
+    await act(async () => preview('First'));
+    expect(events('ui_click', { element: 'open_detail' })[0]).toMatchObject({ search_id: found.search_id, position: 1 });
+    await act(async () => host.querySelector<HTMLDialogElement>('dialog[aria-label="Template preview"]')!.close());
+    await act(async () => button('Clear filters').click());
+    expect(events('ui_click', { element: 'filter_clear' })).toHaveLength(1);
+    expect(events('template_filter_result', { action: 'filter_clear' })).toEqual([expect.objectContaining({ result_count: 3, applied_filter_count: 0 })]);
+    await act(async () => button('Sort').click());
+    await act(async () => [...host.querySelectorAll<HTMLElement>('[role=menuitemradio]')].find(el => el.textContent === 'Duration')!.click());
+    expect(events('ui_click', { element: 'sort_option' })).toEqual([expect.objectContaining({ sort: 'duration', previous_sort: 'recommended', changed: true })]);
+    expect(events('template_filter_result', { action: 'sort_change' })).toHaveLength(1);
+    await act(async () => button('Surprise me').click());
+    expect(events('ui_click', { element: 'surprise_me' })).toEqual([expect.objectContaining({ result_count: 3, sort: 'duration' })]);
+    expect(events('surface_view', { area: 'template_detail', placement: 'random' })).toHaveLength(1);
+    await act(async () => button('Next template').click());
+    expect(events('ui_click', { element: 'detail_next' })).toHaveLength(1);
+    expect(events('surface_view', { area: 'template_detail', placement: 'navigation' })).toHaveLength(1);
+    for (const item of tracked) expect(validProperties(studioEvents, item.event, item.properties), JSON.stringify(item)).toBe(true);
+  } finally { vi.useRealTimers(); }
+});
+it('counts a card impression after an unbroken visible second, once per result set and never under the detail', async () => {
+  vi.useFakeTimers();
+  try {
+    await mount();
+    const seen = () => events('surface_view', { area: 'template_card' });
+    const card = (id: string) => [host.querySelector(`[data-template-id="${id}"]`)!];
+    await act(async () => impressions().emit(1, card('two')));
+    await act(async () => { vi.advanceTimersByTime(900); });
+    await act(async () => impressions().emit(0.3, card('two')));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen()).toHaveLength(0);
+    await act(async () => impressions().emit(1, card('two')));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen()).toEqual([{ page_name: 'studio', area: 'template_card', element: 'card', template_id: 'two', resource_kind: 'reference', placement: 'catalog', position: 1, sort: 'recommended', applied_filter_count: 0 }]);
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    expect(seen()).toHaveLength(1);
+    await act(async () => button('Sort').click());
+    await act(async () => [...host.querySelectorAll<HTMLElement>('[role=menuitemradio]')].find(el => el.textContent === 'Name Z–A')!.click());
+    await act(async () => impressions().emit(1, card('two')));
+    await act(async () => { vi.advanceTimersByTime(1000); });
+    expect(seen()).toHaveLength(2);
+    expect(seen()[1]).toMatchObject({ template_id: 'two', sort: 'reverse', position: 2 });
+    await act(async () => preview('Third'));
+    expect(Observer.instances.filter(item => !item.disconnected && item.options?.threshold === 0.5)).toHaveLength(0);
+    await act(async () => { vi.advanceTimersByTime(3000); });
+    expect(seen()).toHaveLength(2);
+    for (const item of tracked) expect(validProperties(studioEvents, item.event, item.properties), JSON.stringify(item)).toBe(true);
+  } finally { vi.useRealTimers(); }
+});
+
+it('counts each library opening while catalog loading is pending or failed, without repeating on retry', async () => {
+  let fail!: (reason: Error) => void;
+  vi.stubGlobal('fetch', vi.fn((url: string) => url.endsWith('/integration') ? Promise.resolve(Response.json({}))
+    : new Promise<Response>((_resolve, reject) => { fail = reject; })));
+  await mount();
+  expect(events('surface_view', { area: 'template_library' })).toEqual([
+    { page_name: 'studio', area: 'template_library', element: 'library' },
+  ]);
+  await act(async () => fail(new Error('CATALOG_OFFLINE')));
+  expect(host.querySelector('[role="alert"]')?.textContent).toContain('CATALOG_OFFLINE');
+  fetchItems();
+  await act(async () => button('Retry').click());
+  expect(cards()).toHaveLength(3);
+  expect(events('surface_view', { area: 'template_library' })).toHaveLength(1);
+  const render = (open: boolean) => root.render(<I18nProvider initialLocale="en"><TemplateLibraryDialog open={open} busy={false} error="" onClose={() => {}} onOpen={() => {}} /></I18nProvider>);
+  await act(async () => render(false));
+  await act(async () => render(true));
+  expect(events('surface_view', { area: 'template_library' })).toHaveLength(2);
+});
+
+it('counts instruction text only when visible, once per detail, and ignores callbacks from an old detail', async () => {
+  await mount();
+  await act(async () => preview('First'));
+  const exposures = () => events('surface_view', { area: 'template_instruction' });
+  const textObserver = () => Observer.instances.find(item => !item.disconnected
+    && item.elements.some(element => element.matches('section[aria-label="Template instruction"] p, section[aria-label="Template instruction"] textarea')))!;
+  expect(exposures()).toHaveLength(0);
+  const first = textObserver();
+  const hidden = vi.spyOn(document, 'hidden', 'get').mockReturnValue(true);
+  await act(async () => first.emit());
+  expect(exposures()).toHaveLength(0);
+  hidden.mockReturnValue(false);
+  await act(async () => document.dispatchEvent(new Event('visibilitychange')));
+  expect(exposures()).toHaveLength(1);
+  await act(async () => first.emit());
+  expect(exposures()).toHaveLength(1);
+  await act(async () => button('Close template preview').click());
+  await act(async () => preview('First'));
+  await act(async () => first.emit());
+  expect(exposures()).toHaveLength(1);
+  await act(async () => textObserver().emit());
+  expect(exposures()).toHaveLength(2);
+  expect(exposures()[0].detail_view_id).not.toBe(exposures()[1].detail_view_id);
+});
+
+it('joins repeated recreate and submit attempts to their own copy results', async () => {
+  await mount();
+  await act(async () => preview('First'));
+  await act(async () => button('Recreate template').click());
+  vi.mocked(navigator.clipboard.writeText).mockRejectedValueOnce(new Error('Clipboard denied'));
+  await act(async () => button('Recreate and submit').click());
+  const intents = events('ui_click', { element: 'start_use' });
+  const results = events('template_instruction_copy_result');
+  expect(intents.map(item => item.copy_attempt_id)).toEqual(results.map(item => item.copy_attempt_id));
+  expect(new Set(results.map(item => item.copy_attempt_id)).size).toBe(2);
+  expect(results.map(item => item.copy_status)).toEqual(['clipboard_written', 'manual_fallback_shown']);
+  await act(async () => button('Open and edit').click());
+  expect(events('ui_click', { template_action: 'open_edit' })[0]).not.toHaveProperty('copy_attempt_id');
+});
+
+it('observes a positive instruction threshold so zero-area edge contact can progress to visible text', async () => {
+  await mount();
+  await act(async () => preview('First'));
+  const text = Observer.instances.find(item => !item.disconnected
+    && item.elements.some(element => element.matches('section[aria-label="Template instruction"] p')))!;
+  expect(text.options?.threshold).toBe(0.01);
+  const emit = async (intersectionRatio: number) => act(async () => text.callback([
+    { target: text.elements[0], isIntersecting: true, intersectionRatio } as IntersectionObserverEntry,
+  ], text as unknown as IntersectionObserver));
+  await emit(0);
+  await emit(0.005);
+  expect(events('surface_view', { area: 'template_instruction' })).toHaveLength(0);
+  await emit(0.01);
+  await emit(1);
+  expect(events('surface_view', { area: 'template_instruction' })).toHaveLength(1);
 });

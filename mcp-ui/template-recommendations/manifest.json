@@ -1,0 +1,360 @@
+{
+  "schemaVersion": 1,
+  "runtime": {
+    "hyperframes": "0.9.7",
+    "gsap": "3.15.0"
+  },
+  "templates": [
+    {
+      "id": "product-promo",
+      "title": "Product Promo",
+      "description": "从图标开场到多人协作，查看多场景动画与字幕编排。",
+      "durationSeconds": 20,
+      "width": 960,
+      "height": 540,
+      "video": {
+        "path": "assets/product-promo.mp4",
+        "sha256": "f89384c0b9bc7b5e5662483524dcb7cc0714369a97b193b403b0da6df0339278",
+        "bytes": 137951,
+        "mimeType": "video/mp4"
+      },
+      "poster": {
+        "path": "assets/product-promo.jpg",
+        "sha256": "150e8c037923221e1b90ca315c342f8d6ff80e9bbf716d39476eb16131684bc7",
+        "bytes": 2958,
+        "mimeType": "image/jpeg"
+      },
+      "sourceFiles": [
+        {
+          "path": "template-library/product-promo/assets/figma-cursors.svg",
+          "sha256": "fc502bfd3a3068bdbcf9eae4e6db8d24961ade74c784f2874b087042c24dab2a",
+          "bytes": 1477
+        },
+        {
+          "path": "template-library/product-promo/assets/figma-logo-pieces.svg",
+          "sha256": "983a9465d8f3e58655a1a66f4dd9f294d720de046d68fa9e4540c7a821d4bb4b",
+          "bytes": 760
+        },
+        {
+          "path": "template-library/product-promo/assets/figma-logo-pills.svg",
+          "sha256": "0260247a846428be258ffa69a70cb94cb03de3dd99de9cb30d5df54ae31638ba",
+          "bytes": 446
+        },
+        {
+          "path": "template-library/product-promo/compositions/scene1-logo-intro.html",
+          "sha256": "beb49d57f541cfb71582b3e9031b70d5bf42f3f5a0863829024abd0173e35e71",
+          "bytes": 5610
+        },
+        {
+          "path": "template-library/product-promo/compositions/scene2-4-canvas.html",
+          "sha256": "a133b6a3aaee671035e66f50d5f070bd8d2ab8d578c62354efac69e7568ff724",
+          "bytes": 16229
+        },
+        {
+          "path": "template-library/product-promo/compositions/scene5-logo-outro.html",
+          "sha256": "d3fe96a2136ac198d7ecc690f5bf01b6f60c7fdf641928265ed28e8e777c4c09",
+          "bytes": 7298
+        },
+        {
+          "path": "template-library/product-promo/index.html",
+          "sha256": "619a962ed80ff2422accb00e8611cef825644718a5e26e527afe014c4859384c",
+          "bytes": 4494
+        },
+        {
+          "path": "template-library/product-promo/poster.jpg",
+          "sha256": "3eb71becfea30857a4bf54fed62f0a2afa5ac287908bfec92b273d784dfa9098",
+          "bytes": 27288
+        },
+        {
+          "path": "template-library/product-promo/registry-item.json",
+          "sha256": "79efd07c5523e6e91c1552aecbe07c2bef624d57660de1bf14d6751b71bcebdc",
+          "bytes": 3245
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter-1b08e7fc267a.ttf",
+          "sha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+          "bytes": 324820
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter-5b717029a2c4.ttf",
+          "sha256": "5b717029a2c4cfca2167e97be1157edb24151591e5ec96eb484745c392817a7a",
+          "bytes": 327260
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter-8c883f63b2c4.ttf",
+          "sha256": "8c883f63b2c4157d997319f2c8bc6995ed4357ef371940d31ca159004a4aae63",
+          "bytes": 325304
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter-OFL.txt",
+          "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+          "bytes": 4377
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter-b37284b5701b.ttf",
+          "sha256": "b37284b5701b6b168dfc770aa1a4ac492106422fd3ba76bc7641e37434e8019c",
+          "bytes": 326468
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter-d0f4bc7faca4.ttf",
+          "sha256": "d0f4bc7faca468376e3db9b5e57afcdc2192134c9ac82a9511f32767b56853a4",
+          "bytes": 325748
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter-e7a1aaf7eda9.ttf",
+          "sha256": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
+          "bytes": 326048
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter-eec66af7f233.ttf",
+          "sha256": "eec66af7f2337bd34fe6e801cf92ededcb57a20c0d7bc40a61d4eefcbe3dd40c",
+          "bytes": 327324
+        },
+        {
+          "path": "template-library/product-promo/vendor/fonts/inter.css",
+          "sha256": "49e25a73ba83dc58df53dc0035ee9802628d2eba9dfbd91fb1cc4a264ff4199d",
+          "bytes": 1113
+        },
+        {
+          "path": "template-library/product-promo/vendor/gsap-3.14.2/LICENSE.txt",
+          "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b",
+          "bytes": 5494
+        },
+        {
+          "path": "template-library/product-promo/vendor/gsap-3.14.2/README.md",
+          "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0",
+          "bytes": 6199
+        },
+        {
+          "path": "template-library/product-promo/vendor/gsap-3.14.2/dist/gsap.min.js",
+          "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+          "bytes": 72779
+        },
+        {
+          "path": "template-library/product-promo/vendor/manifest.json",
+          "sha256": "cfe5ffe56812842702877139a2a0ad223ba862f9e2ccd6b5c37e0e097d783ee0",
+          "bytes": 3642
+        }
+      ]
+    },
+    {
+      "id": "nyt-graph",
+      "title": "NYT Graph",
+      "description": "报刊风格的动态图表，查看数据、标注与图形的节奏。",
+      "durationSeconds": 15,
+      "width": 960,
+      "height": 540,
+      "video": {
+        "path": "assets/nyt-graph.mp4",
+        "sha256": "629781fe3d78874ab777819bfabbcd445b05e12862da8069299132622781c70d",
+        "bytes": 27580,
+        "mimeType": "video/mp4"
+      },
+      "poster": {
+        "path": "assets/nyt-graph.jpg",
+        "sha256": "37bf9ff043901396fba01400a01dbb9ea0d53d8a0aa98507e160edc33241af5d",
+        "bytes": 4271,
+        "mimeType": "image/jpeg"
+      },
+      "sourceFiles": [
+        {
+          "path": "template-library/nyt-graph/compositions/nyt-chart.html",
+          "sha256": "aab294f5cd9a598c00160866e3b0506057eca33c3773bf146cd29c5d6f75a2db",
+          "bytes": 13384
+        },
+        {
+          "path": "template-library/nyt-graph/index.html",
+          "sha256": "c30eccbea5721dc238b9c2bedeb6caa234ba3fc607c6e4268b5bd0dfa84ecdfe",
+          "bytes": 1164
+        },
+        {
+          "path": "template-library/nyt-graph/poster.jpg",
+          "sha256": "47e8d143dbbad5f9fb4ac1123367a0dc813fa0c4b3d6cbb7b9edb3d641cd3418",
+          "bytes": 25709
+        },
+        {
+          "path": "template-library/nyt-graph/registry-item.json",
+          "sha256": "c04f5a3e0c8721dd0a61869d2eefa491704531d6c785b65bff471b0556452a24",
+          "bytes": 2761
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-baskerville-8b008ffdae31.ttf",
+          "sha256": "8b008ffdae31b314657cb8e28d822da09893035d06bad9b1ab53ea762549cbd1",
+          "bytes": 106752
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-baskerville-OFL.txt",
+          "sha256": "3624eddd4c8f8a908130a417ae7cd089c9da69899c4e0ca1a5217d0a6fae16fd",
+          "bytes": 4542
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-baskerville-f5bc4341f15d.ttf",
+          "sha256": "f5bc4341f15de5e877d8d95b6b14b33e9a3da1f8fef4ed0700ed407f096cffb6",
+          "bytes": 106728
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-baskerville.css",
+          "sha256": "6a8c1130c87fa46e9f2cf0d6afe5a1f92d40813c346ad2127ba753f09bbc9b6e",
+          "bytes": 366
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-franklin-04f71a680a40.ttf",
+          "sha256": "04f71a680a400bb36a367d4347b243bb23867288c21e11705aa766968939fb96",
+          "bytes": 106412
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-franklin-OFL.txt",
+          "sha256": "2710268527181a27b8e938617551bae29e714e6525247be6679bf897a9942a60",
+          "bytes": 4495
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-franklin-b03fb188d888.ttf",
+          "sha256": "b03fb188d88811436d8b7d7b2b4964921a2c4416f0c042c7ecdb443dcd6e999d",
+          "bytes": 106428
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-franklin-fa16f76d2aff.ttf",
+          "sha256": "fa16f76d2affcb19286661cd13e58ae092eb8de8ec8638103371e7e37dd285db",
+          "bytes": 106392
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre-franklin.css",
+          "sha256": "53c1c2adc60ce580413fc701491e18a563b82b501f6a91393796b34bf9b49122",
+          "bytes": 531
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/fonts/libre.css",
+          "sha256": "805d83c653033ebf4e494147bd98cb84ef9de817dc8b4bc7f5eedee9ffe987d0",
+          "bytes": 77
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/gsap-3.14.2/LICENSE.txt",
+          "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b",
+          "bytes": 5494
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/gsap-3.14.2/README.md",
+          "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0",
+          "bytes": 6199
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/gsap-3.14.2/dist/gsap.min.js",
+          "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+          "bytes": 72779
+        },
+        {
+          "path": "template-library/nyt-graph/vendor/manifest.json",
+          "sha256": "a33fdf9502edad740d1bd2b27f4d84ec763aa85c3e04ed8f09f13eb81193ec79",
+          "bytes": 3941
+        }
+      ]
+    },
+    {
+      "id": "decision-tree",
+      "title": "Decision Tree",
+      "description": "逐步展开的决策树，查看节点、连线与分支动画。",
+      "durationSeconds": 10,
+      "width": 960,
+      "height": 540,
+      "video": {
+        "path": "assets/decision-tree.mp4",
+        "sha256": "5af976fdd53666b31611c5a48acb66582bed4ca4d27010f715fbab7a8452104f",
+        "bytes": 53942,
+        "mimeType": "video/mp4"
+      },
+      "poster": {
+        "path": "assets/decision-tree.jpg",
+        "sha256": "42489f17f7fb819e3c0fad4e5cdf6805ecef1d04bf4ef99ef67b5b46acd317b9",
+        "bytes": 3047,
+        "mimeType": "image/jpeg"
+      },
+      "sourceFiles": [
+        {
+          "path": "template-library/decision-tree/compositions/decision_tree.html",
+          "sha256": "0dcc6b19e76ff3ff69c20d5eb9645fa0005e36ae86d659e40ad6e47625aec366",
+          "bytes": 12828
+        },
+        {
+          "path": "template-library/decision-tree/index.html",
+          "sha256": "1c3d6deb8d290cbabaf075429c68a28edd731e65ca92f1ac726ef4671589fbf2",
+          "bytes": 1294
+        },
+        {
+          "path": "template-library/decision-tree/poster.jpg",
+          "sha256": "3aa941c14daf198406933651971cb0e9549fd82bc953b92cc7f2a5d35303d89e",
+          "bytes": 31940
+        },
+        {
+          "path": "template-library/decision-tree/registry-item.json",
+          "sha256": "2ef4ef0691d2593e3083b3b8d4fd12b3b979f0f20da29e687d0e5d1dd65677b8",
+          "bytes": 2501
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter-1b08e7fc267a.ttf",
+          "sha256": "1b08e7fc267a5c7e1d614100f604b83e7e8a0be241f0f288faa2b3ac93a683ba",
+          "bytes": 324820
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter-5b717029a2c4.ttf",
+          "sha256": "5b717029a2c4cfca2167e97be1157edb24151591e5ec96eb484745c392817a7a",
+          "bytes": 327260
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter-8c883f63b2c4.ttf",
+          "sha256": "8c883f63b2c4157d997319f2c8bc6995ed4357ef371940d31ca159004a4aae63",
+          "bytes": 325304
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter-OFL.txt",
+          "sha256": "5b9321a4298cfeb6b34354164a1c3afc3db114569984c502b9b35d988fd58c57",
+          "bytes": 4377
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter-b37284b5701b.ttf",
+          "sha256": "b37284b5701b6b168dfc770aa1a4ac492106422fd3ba76bc7641e37434e8019c",
+          "bytes": 326468
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter-d0f4bc7faca4.ttf",
+          "sha256": "d0f4bc7faca468376e3db9b5e57afcdc2192134c9ac82a9511f32767b56853a4",
+          "bytes": 325748
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter-e7a1aaf7eda9.ttf",
+          "sha256": "e7a1aaf7eda9f2fad4131725fa556265ec75ca7b2d756260173a040363e8d4f7",
+          "bytes": 326048
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter-eec66af7f233.ttf",
+          "sha256": "eec66af7f2337bd34fe6e801cf92ededcb57a20c0d7bc40a61d4eefcbe3dd40c",
+          "bytes": 327324
+        },
+        {
+          "path": "template-library/decision-tree/vendor/fonts/inter.css",
+          "sha256": "49e25a73ba83dc58df53dc0035ee9802628d2eba9dfbd91fb1cc4a264ff4199d",
+          "bytes": 1113
+        },
+        {
+          "path": "template-library/decision-tree/vendor/gsap-3.14.2/LICENSE.txt",
+          "sha256": "7a80b07c07db0ae2b7570bc0c8c32ccb0c99ae8b5c7fd3d8b6960b5fe1c81b3b",
+          "bytes": 5494
+        },
+        {
+          "path": "template-library/decision-tree/vendor/gsap-3.14.2/README.md",
+          "sha256": "36224e521bdd9b79dc74ef262effc1a636d960b9be918bc2412ed69f9eee27b0",
+          "bytes": 6199
+        },
+        {
+          "path": "template-library/decision-tree/vendor/gsap-3.14.2/dist/gsap.min.js",
+          "sha256": "c174bfce53a729418d57a8ad8625e7247c793a22fef8e2851e3cfa3de9cd8280",
+          "bytes": 72779
+        },
+        {
+          "path": "template-library/decision-tree/vendor/manifest.json",
+          "sha256": "cfe5ffe56812842702877139a2a0ad223ba862f9e2ccd6b5c37e0e097d783ee0",
+          "bytes": 3642
+        }
+      ]
+    }
+  ]
+}

@@ -16,6 +16,11 @@ async function main() {
   const templateConfig = packageTemplateConfig(flags.find(flag => flag.startsWith('--template-env='))?.split('=')[1]);
   const { mcpRegistry } = await import('../mcp.ts');
   const registry = mcpRegistry(profile);
+  const { checkTemplateCardsBuild } = await import('./build-template-cards.mjs');
+  await checkTemplateCardsBuild();
+  const { loadTemplatePresentation } = await import('../shared/mcp-template-recommendations.ts');
+  // Raw packaging must not turn optional runtime degradation into a release.
+  loadTemplatePresentation();
   const { check } = await import('./check.ts');
   await check();
   const manifest = JSON.parse(await readFile(path.join(root, '.codex-plugin/plugin.json'), 'utf8'));
