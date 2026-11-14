@@ -99,7 +99,7 @@ MCP-only 使用 resources/read `openmotion://workflow/director/start` 读取本�
 
 根据实际素材、配音与布局调整时间，更新脚本中受影响的决定。脚本是工作记录，不是禁止修改的预设。
 
-Once this turn's requested HTML output is saved, complete the [editable preview handoff](../openmotion-production/references/native.md#editable-preview-handoff) automatically, before export or delivery.
+Once this turn's final video HTML and assets are complete and ready for preview, complete the [editable preview handoff](../openmotion-production/references/native.md#editable-preview-handoff) automatically, before final export or delivery. Keep intermediate authoring silent; present the final chat video only after its verified MP4 export through the shared production workflow.
 
 ### 5. 观看、修正、交付
 

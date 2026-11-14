@@ -18,7 +18,7 @@ export function createToolRegistry<T extends { name: string }, E extends { name:
   assert.equal(missing.length, 0, `MCP_PROFILE_INCOMPLETE (${profile}): missing registrations: ${missing.join(', ')}. Existing names are not equivalent adapters; no partial phase-one package was produced.`);
   const extensionNames = extensions.map(tool => tool.name);
   assert(extensions.length === 0 || profile === 'phase1', 'MCP extensions require the phase-one profile');
-  assert(extensionNames.every(name => name === 'openmotion_show_template_recommendations'), 'Unknown MCP optional extension');
+  assert(extensionNames.every(name => ['openmotion_show_template_recommendations', 'openmotion_show_video'].includes(name)), 'Unknown MCP optional extension');
   assert.equal(new Set(extensionNames).size, extensionNames.length, 'Duplicate MCP optional extensions');
   assert(extensionNames.every(name => !byName.has(name)), 'MCP optional extension shadows an implementation');
   return { profile, tools: [...names.map(name => byName.get(name)!), ...extensions] as (T | E)[], instructions: definition.instructions === null ? null : workflowEntryGuide + ' ' + (profile === 'phase1' ? templateDiscoveryGuide + ' ' : '') + definition.instructions };

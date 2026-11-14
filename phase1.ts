@@ -119,6 +119,10 @@ export class Phase1Service {
         const owner = this.store.projectCatalog().sessions!.find(session => session.artifacts.some(artifact => artifact.projectId === args.projectId))!;
         result.previewHandoff = previewHandoff(this.context.origin(), { projectId: args.projectId, sessionId: owner.id,
           revision: result.revision, versionId: result.version.versionId }, args.presentation);
+        if (args.workId && args.presentation !== 'now' && args.presentation !== 'background') {
+          result.previewHandoff = { ...result.previewHandoff, state: 'deferred', hostActionRequired: false, nextAction: null,
+            instructions: 'Production is still in progress. Keep the editor closed until the final authored video is complete and ready for preview. Then prepare and present the latest version with openmotion_open_preview; after MP4 export verification, present only the final video with the discovered openmotion_show_video.' };
+        }
       }
       return result;
     };

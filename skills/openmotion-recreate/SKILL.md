@@ -64,7 +64,7 @@ Apply the changes with care: fit longer text with related layout and reading-tim
 
 Sound: when the reference has sound, the remix has sound. Keep the reference soundtrack by default (extract it as AAC `.m4a` and import it) and re-time it to the new cut; remove a voiceover that names the reference's brand or product. Deliver a silent film only when the user asks or the reference is silent.
 
-Once this turn's requested HTML output is saved, complete the [editable preview handoff](../openmotion-production/references/native.md#editable-preview-handoff) automatically, before export or delivery.
+Once this turn's final video HTML and assets are complete and ready for preview, complete the [editable preview handoff](../openmotion-production/references/native.md#editable-preview-handoff) automatically, before final export or delivery. Keep intermediate authoring silent; present the final chat video only after its verified MP4 export through the shared production workflow.
 
 ## 6. Export and check
 
