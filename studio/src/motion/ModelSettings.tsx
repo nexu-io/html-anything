@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { mediaProviders } from '../../../shared/gateway';
 import { useI18n } from '../i18n/I18n';
+import { MotionIcon } from './icons';
 import { gatewayRequest, type GatewayStatus } from './gatewayClient';
 
 export function ModelSettings({ onClose }: { onClose: () => void }) {
@@ -23,8 +24,9 @@ export function ModelSettings({ onClose }: { onClose: () => void }) {
     finally { setBusy(false); }
   }
   return <dialog ref={dialog} className="motion-model-dialog motion-byok-dialog motion-media-surface" aria-labelledby="model-settings-title" onKeyDown={event => event.stopPropagation()} onCancel={event => { event.preventDefault(); onClose(); }}>
-    <header><h2 id="model-settings-title">{t('Media generation settings')}</h2><button className="motion-media-close" onClick={onClose} aria-label={t('Close model settings')}>×</button></header>
-    <p className="motion-media-muted">{t('Save a key to enable a provider.')}</p>
+    <header><h2 id="model-settings-title">{t('Generation service API settings')}</h2><button type="button" className="motion-media-close" onClick={onClose} aria-label={t('Close')}><MotionIcon name="close" size={20} /></button></header>
+    <div className="motion-byok-content">
+    <p className="motion-media-muted">{t('Use your own API key to generate images, video and audio.')}</p>
     {error && <p role="alert" className="motion-media-error">{t(error)}</p>}
     {!data && !error && <p role="status">{t('Loading providers…')}</p>}
     {data && <section className="motion-provider-grid">
@@ -47,5 +49,6 @@ export function ModelSettings({ onClose }: { onClose: () => void }) {
         <small className="motion-media-muted">{t(provider.credentialSource === 'environment' ? 'Using environment key' : 'Keys stay on this computer and are never returned by the API.')}</small>
       </article>)}
     </section>}
+    </div>
   </dialog>;
 }

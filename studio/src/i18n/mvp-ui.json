@@ -310,7 +310,8 @@
     "Exit immersive preview": "没入型プレビューを終了",
     "Focus on a larger preview. Press Esc to return to editing.": "プレビューを大きく表示します。Esc で編集に戻ります。",
     "Snapping": "スナップ",
-    "Media generation settings": "メディア生成設定",
+    "Generation service API settings": "生成サービス API 設定",
+    "Use your own API key to generate images, video and audio.": "自分の API キーで画像・動画・音声を生成します。",
     "Split ({value0})": "分割 ({value0})",
     "Snapping ({value0})": "スナップ ({value0})"
   },
@@ -625,7 +626,8 @@
     "Exit immersive preview": "몰입형 미리보기 종료",
     "Focus on a larger preview. Press Esc to return to editing.": "미리보기를 크게 표시합니다. Esc를 눌러 편집으로 돌아갑니다.",
     "Snapping": "스냅",
-    "Media generation settings": "미디어 생성 설정",
+    "Generation service API settings": "생성 서비스 API 설정",
+    "Use your own API key to generate images, video and audio.": "본인의 API 키로 이미지, 동영상, 오디오를 생성하세요.",
     "Split ({value0})": "분할 ({value0})",
     "Snapping ({value0})": "스냅 ({value0})"
   },
@@ -940,7 +942,8 @@
     "Exit immersive preview": "Immersive Vorschau beenden",
     "Focus on a larger preview. Press Esc to return to editing.": "Größere Vorschau anzeigen. Mit Esc zur Bearbeitung zurückkehren.",
     "Snapping": "Einrasten",
-    "Media generation settings": "Einstellungen zur Mediengenerierung",
+    "Generation service API settings": "API-Einstellungen für Generierungsdienste",
+    "Use your own API key to generate images, video and audio.": "Mit deinem eigenen API-Schlüssel Bilder, Videos und Audio generieren.",
     "Split ({value0})": "Teilen ({value0})",
     "Snapping ({value0})": "Einrasten ({value0})"
   },
@@ -1255,7 +1258,8 @@
     "Exit immersive preview": "Quitter l’aperçu immersif",
     "Focus on a larger preview. Press Esc to return to editing.": "Agrandissez l’aperçu. Appuyez sur Échap pour revenir au montage.",
     "Snapping": "Magnétisme",
-    "Media generation settings": "Paramètres de génération de médias",
+    "Generation service API settings": "Paramètres API des services de génération",
+    "Use your own API key to generate images, video and audio.": "Utilisez votre propre clé API pour générer des images, des vidéos et du son.",
     "Split ({value0})": "Scinder ({value0})",
     "Snapping ({value0})": "Magnétisme ({value0})"
   },
@@ -1570,7 +1574,8 @@
     "Exit immersive preview": "Выйти из режима просмотра",
     "Focus on a larger preview. Press Esc to return to editing.": "Увеличенный предпросмотр. Нажмите Esc, чтобы вернуться к монтажу.",
     "Snapping": "Привязка",
-    "Media generation settings": "Настройки генерации медиа",
+    "Generation service API settings": "Настройки API сервисов генерации",
+    "Use your own API key to generate images, video and audio.": "Используйте свой API-ключ для генерации изображений, видео и аудио.",
     "Split ({value0})": "Разделить ({value0})",
     "Snapping ({value0})": "Привязка ({value0})"
   },
@@ -1885,7 +1890,8 @@
     "Exit immersive preview": "Salir de la vista previa inmersiva",
     "Focus on a larger preview. Press Esc to return to editing.": "Amplía la vista previa. Pulsa Esc para volver a editar.",
     "Snapping": "Ajuste magnético",
-    "Media generation settings": "Ajustes de generación multimedia",
+    "Generation service API settings": "Ajustes API de servicios de generación",
+    "Use your own API key to generate images, video and audio.": "Usa tu propia clave API para generar imágenes, vídeo y audio.",
     "Split ({value0})": "Dividir ({value0})",
     "Snapping ({value0})": "Ajuste magnético ({value0})"
   },
@@ -2200,7 +2206,8 @@
     "Exit immersive preview": "Sair da prévia imersiva",
     "Focus on a larger preview. Press Esc to return to editing.": "Amplie a prévia. Pressione Esc para voltar à edição.",
     "Snapping": "Encaixe",
-    "Media generation settings": "Configurações de geração de mídia",
+    "Generation service API settings": "Configurações de API dos serviços de geração",
+    "Use your own API key to generate images, video and audio.": "Use sua própria chave de API para gerar imagens, vídeos e áudio.",
     "Split ({value0})": "Dividir ({value0})",
     "Snapping ({value0})": "Encaixe ({value0})"
   },
@@ -2515,7 +2522,8 @@
     "Exit immersive preview": "Esci dall’anteprima immersiva",
     "Focus on a larger preview. Press Esc to return to editing.": "Ingrandisci l’anteprima. Premi Esc per tornare al montaggio.",
     "Snapping": "Aggancio",
-    "Media generation settings": "Impostazioni di generazione multimediale",
+    "Generation service API settings": "Impostazioni API dei servizi di generazione",
+    "Use your own API key to generate images, video and audio.": "Usa la tua chiave API per generare immagini, video e audio.",
     "Split ({value0})": "Dividi ({value0})",
     "Snapping ({value0})": "Aggancio ({value0})"
   },
@@ -2830,7 +2838,8 @@
     "Exit immersive preview": "Sürükleyici önizlemeden çık",
     "Focus on a larger preview. Press Esc to return to editing.": "Önizlemeyi büyütün. Düzenlemeye dönmek için Esc tuşuna basın.",
     "Snapping": "Yapışma",
-    "Media generation settings": "Medya oluşturma ayarları",
+    "Generation service API settings": "Üretim hizmeti API ayarları",
+    "Use your own API key to generate images, video and audio.": "Kendi API anahtarınızla görsel, video ve ses oluşturun.",
     "Split ({value0})": "Böl ({value0})",
     "Snapping ({value0})": "Yapışma ({value0})"
   }
