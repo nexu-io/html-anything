@@ -86,7 +86,8 @@ test('PostHog adapter uses public ingest only, privacy fields and real receipt s
   assert.equal(await sender([event], new AbortController().signal), 'accepted');
   const data = seen[0].batch[0];
   assert.equal(data.uuid, event.event_id); assert.equal(data.timestamp, event.occurred_at);
-  assert.equal(data.properties.distinct_id, identity.installation_id); assert.equal(data.properties.device_id, identity.installation_id);
+  assert.equal(data.properties.distinct_id, identity.installation_id);
+  assert.equal(data.properties.device_id, 'unknown'); assert.equal(data.properties.device_id_source, 'unavailable');
   assert.equal(data.properties.utm_source, 'alice'); assert.equal(data.properties.event_schema_version, 1);
   assert.equal(data.properties.$ip, '0.0.0.0'); assert.equal(data.properties.$geoip_disable, true);
   assert.equal(data.properties.$process_person_profile, false);
