@@ -188,7 +188,7 @@ button, input, select, textarea { font-family: inherit; }
 .motion-history-badge { flex-shrink: 0; border: 1px solid var(--motion-border); border-radius: var(--motion-radius-step-3); padding: 1px 4px; color: var(--motion-muted); font-size: var(--motion-text-step-9); }
 .motion-history-badge-latest { border-color: transparent; background: var(--motion-accent-soft); color: var(--motion-accent); }
 .motion-history-entry-meta { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 6px; color: var(--motion-dim); font-size: var(--motion-text-step-10); line-height: 1.6; }
-.motion-history-empty { padding: 24px 12px; color: var(--motion-dim); text-align: center; line-height: 1.8; }
+.motion-history-empty { padding: 24px 12px; color: var(--motion-control-disabled); text-align: center; line-height: 1.8; }
 .motion-history-detail { flex-shrink: 0; padding: 14px 16px; border-top: 1px solid var(--motion-border); background: var(--motion-panel); }
 .motion-history-detail-title { margin-bottom: 8px; color: var(--motion-muted); font-size: var(--motion-text-xs); }
 .motion-history-detail ul { max-height: 90px; overflow: auto; margin: 0 0 14px; padding: 0; list-style: none; }

@@ -755,7 +755,7 @@
   "Reading versions…": "Читаем версию...",
   "Changes are recorded automatically. Pin important versions to keep them.": "Изменения записываются автоматически. Закрепите важные версии, чтобы сохранить их.",
   "No pinned versions yet. Select an entry to pin it.": "Закрепленных версий пока нет. Выберите запись, чтобы закрепить ее.",
-  "No edits yet. Changes made in the canvas, code, or by an agent will appear here.": "Правок пока нет. Здесь будут отображаться изменения, внесенные в холст, код или агентом.",
+  "No edits yet": "Изменений пока нет",
   "Manual edit": "Ручное редактирование",
   "External change": "Внешняя модификация",
   "Changes in this version": "Эта модификация",

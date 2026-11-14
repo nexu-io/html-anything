@@ -103,7 +103,7 @@ export function WorkspaceFrame({ children, waitForSaves, projectId, sessionId, b
 
 function PrivacySettingsButton() {
   const { t } = useI18n(); const [open, setOpen] = useState(false);
-  return <><button className="motion-icon-button" aria-label={t('Privacy settings')} title={t('Privacy settings')} onClick={() => setOpen(true)}><RemixIcon name="settings-3-line" size={16} /></button>
+  return <><Tooltip label={t('Privacy settings')}><button type="button" className="motion-icon-button" aria-label={t('Privacy settings')} onClick={() => setOpen(true)}><RemixIcon name="settings-3-line" size={16} /></button></Tooltip>
     {open && <Suspense fallback={null}><PrivacySettings onClose={() => setOpen(false)} /></Suspense>}</>;
 }
 
